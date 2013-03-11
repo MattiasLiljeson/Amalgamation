@@ -664,6 +664,7 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 				slotPacket.slot = i;
 				slotPacket.networkIdentity = networkSynced->getNetworkIdentity();
 				slotPacket.active = true;
+				slotPacket.inEditMode = true;
 				m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
 			}
 		}
@@ -677,6 +678,7 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		slotPacket.networkIdentity = parentNetworkSynced->getNetworkIdentity();
 		slotPacket.moduleType = networkSynced->getNetworkType();
 		slotPacket.active = false;
+		slotPacket.inEditMode = true;
 
 		//Consider adding data concerning the connected entity
 
@@ -842,6 +844,7 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 					slotPacket.slot = i;
 					slotPacket.networkIdentity = networkSynced->getNetworkIdentity();
 					slotPacket.active = false;
+					slotPacket.inEditMode = true;
 					m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
 				}
 			}
@@ -853,6 +856,7 @@ bool ServerPickingSystem::attemptDetach(PickComponent& p_ray)
 			slotPacket.slot = slot;
 			slotPacket.networkIdentity = parentNetworkSynced->getNetworkIdentity();
 			slotPacket.active = true;
+			slotPacket.inEditMode = true;
 			slotPacket.moduleType = networkSynced->getNetworkType();
 			slotPacket.shipSlot = shipSlot;
 			m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );

@@ -539,12 +539,6 @@
     <ClInclude Include="ShieldModuleActivation.h">
       <Filter>Components\Modules\Events\Module Events %28Server%29</Filter>
     </ClInclude>
-    <ClInclude Include="CircularMovementSystem.h">
-      <Filter>Systems\Debugging</Filter>
-    </ClInclude>
-    <ClInclude Include="CircularMovement.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="ShieldPlate.h">
       <Filter>Components\Modules</Filter>
     </ClInclude>
@@ -849,6 +843,12 @@
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="ClientModuleCounterSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitalMovement.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitalMovementSystem.h">
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
     <ClInclude Include="DisconnectPacket.h">
@@ -1206,9 +1206,6 @@
     <ClCompile Include="ShieldPlatingSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="CircularMovementSystem.cpp">
-      <Filter>Systems\Debugging</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleTriggerPacket.cpp">
       <Filter>Systems\Debugging</Filter>
     </ClCompile>
@@ -1464,6 +1461,12 @@
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="ClientModuleCounterSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="AxisRotate.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="OrbitalMovementSystem.cpp">
       <Filter>Systems\Debugging</Filter>
     </ClCompile>
     <ClCompile Include="DisconnectPacket.cpp">

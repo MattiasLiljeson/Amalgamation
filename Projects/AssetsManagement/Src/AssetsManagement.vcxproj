@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AmbientRangeSoundDataCollection.h" />
     <ClInclude Include="ConnectionPointCollection.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="InstanceInstruction.h" />

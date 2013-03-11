@@ -19,6 +19,7 @@ public:
 	int			slot;
 	int			shipSlot;
 	bool		active;
+	bool		inEditMode;
 	AglVector3	translationOffset;
 	AglVector3	forwardDirection;
 	int			moduleType;

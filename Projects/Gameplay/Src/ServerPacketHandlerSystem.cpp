@@ -249,6 +249,7 @@ void ServerPacketHandlerSystem::handleIngame()
 							slotPacket.slot = slots[i].index;
 							slotPacket.networkIdentity = netSync->getNetworkIdentity();
 							slotPacket.active = true;
+							slotPacket.inEditMode = true;
 
 							m_server->unicastPacket(slotPacket.pack(), packet.getSenderId() );
 						}
@@ -279,6 +280,7 @@ void ServerPacketHandlerSystem::handleIngame()
 							slotPacket.slot = -1;
 							slotPacket.networkIdentity = -1;
 							slotPacket.active = false;
+							slotPacket.inEditMode = false;
 
 							m_server->unicastPacket(slotPacket.pack(), packet.getSenderId() );
 						}

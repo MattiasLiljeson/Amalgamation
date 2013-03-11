@@ -43,6 +43,8 @@ private:
 
 	virtual void setUpParticles(Entity* p_entity, ModelResource* p_modelResource);
 	virtual void setUpAnimation(Entity* p_entity, ModelResource* p_modelResource);
+	virtual void setUpLights(Entity* p_entity, ModelResource* p_modelResource);
+	virtual void setUpAmbientRangeSound(Entity* p_entity, ModelResource* p_modelResource);
 
 	ModelBaseFactory* m_modelBaseFactory;
 };

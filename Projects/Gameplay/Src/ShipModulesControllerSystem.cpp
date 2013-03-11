@@ -244,15 +244,36 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 							 m->m_value/m->getMaxValue());
 
 	//Change particle effects on slots
-	if (m_editMode)
+	if (true) //m_editMode
 	{
 		Entity* parentShip = p_parent;
 		ShipModule* parentModule = static_cast<ShipModule*>(parentShip->getComponent(ComponentType::ShipModule));
+		Entity* firstChild = toDrop;
 		while (parentModule)
 		{
+			firstChild = parentShip;
 			parentShip = m_world->getEntity(parentModule->m_parentEntity);
 			parentModule = static_cast<ShipModule*>(parentShip->getComponent(ComponentType::ShipModule));
 		}
+
+		int shipSlot = -1;
+		if (firstChild == toDrop)
+			shipSlot = p_slot;
+		else
+		{
+			ConnectionPointSet* shipcps = static_cast<ConnectionPointSet*>(
+				m_world->getComponentManager()->getComponent(parentShip,
+				ComponentType::getTypeFor(ComponentType::ConnectionPointSet)));
+			for (unsigned int i = 0; i < shipcps->m_connectionPoints.size(); i++)
+			{
+				if (shipcps->m_connectionPoints[i].cpConnectedEntity == firstChild->getIndex())
+				{
+					shipSlot = i;
+					break;
+				}
+			}
+		}
+
 		NetworkSynced* parentNetworkSynced = static_cast<NetworkSynced*>(
 			p_parent->getComponent(ComponentType::NetworkSynced));
 		NetworkSynced* shipNetworkSynced = static_cast<NetworkSynced*>(
@@ -269,6 +290,7 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 				slotPacket.slot = i;
 				slotPacket.networkIdentity = networkSynced->getNetworkIdentity();
 				slotPacket.active = false;
+				slotPacket.inEditMode = m_editMode;
 				m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
 			}
 		}
@@ -280,6 +302,9 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 		slotPacket.slot = p_slot;
 		slotPacket.networkIdentity = parentNetworkSynced->getNetworkIdentity();
 		slotPacket.active = true;
+		slotPacket.inEditMode = m_editMode;
+		slotPacket.moduleType = networkSynced->getNetworkType();
+		slotPacket.shipSlot = shipSlot;
 		m_server->unicastPacket(slotPacket.pack(), shipNetworkSynced->getNetworkOwner() );
 
 		//Send a packet back to the client telling him how the edit sphere should be oriented

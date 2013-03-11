@@ -32,7 +32,7 @@
 #include "ParticleSystemAndTexture.h"
 
 GraphicsWrapper::GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p_windowed,
-								 bool p_useHdr )
+								 bool p_enableHdr, bool p_enableEffects )
 {
 	m_device		= NULL;
 	m_deviceContext = NULL;
@@ -44,7 +44,8 @@ GraphicsWrapper::GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p
 	m_height= p_height;
 	m_lowResDivider = 4;
 	m_windowed = p_windowed;
-	m_useHdr = p_useHdr;
+	m_enableHdr = p_enableHdr;
+	m_enableEffects = p_enableEffects;
 	m_wireframeMode = false;
 	m_renderingShadows = false;
 
@@ -71,7 +72,7 @@ GraphicsWrapper::GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p
 	m_solidWhiteTexture = createTexture("1x1_solid_white.png", TEXTUREPATH);
 	m_randomNormalTextures = createTexture("randNormals.jpg",TEXTUREPATH);
 	m_deferredRenderer = new DeferredRenderer( m_device, m_deviceContext, 
-							   m_width, m_height, m_useHdr );
+							   m_width, m_height, m_enableHdr, m_enableEffects );
 	m_particleRenderer = new ParticleRenderer( m_device, m_deviceContext);
 	m_shadowMapRenderer = new ShadowMapRenderer(m_device, m_deviceContext, m_shaderFactory);
 	m_gpuTimer = new GPUTimer(m_device,m_deviceContext);

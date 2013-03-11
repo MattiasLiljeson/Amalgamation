@@ -59,7 +59,8 @@ private:
 	int m_scrWidth;
 	int m_scrHeight;
 	bool m_windowed;
-	bool m_useHdr;
+	bool m_enableHdr;
+	bool m_enableEffects;
 	bool m_vsync;
 	bool m_tesselation;
 	bool m_wireframe;

@@ -29,7 +29,8 @@ public:
 		SPAWNPOINT,
 		POINTLIGHT,
 		DIRLIGHT,
-		SPOTLIGHT
+		SPOTLIGHT,
+		AMBIENTRANGESOUND
 	};
 
 	///-----------------------------------------------------------------------------------
@@ -43,6 +44,8 @@ public:
 		string instanceSpecFilename;				///< For instance points (file name)
 		string spawnSpecName;						///< For spawn points (action name)
 		LightCreationData lightSpec;				///< Light specific
+		float volume,minrange,maxrange;				///< sound specific
+		int channels;								///< sound specific
 	};
 
 	static pair<Data,Token> parse(const string& p_string);
@@ -61,6 +64,7 @@ private:
 	static string lightpoint;
 	static string lightdir;
 	static string lightspot;
+	static string ambientrangesound;
 /*	static string lighthex;*/
 // 	static string pointlightType;
 // 	static string spotlightType;

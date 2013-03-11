@@ -402,7 +402,31 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 
 				break;
 			}
+		case MeshNameScriptParser::AMBIENTRANGESOUND:	
+			{
+				bool isOk = false;
+				if (p_source.modelNumber!=-1) // call from parent
+					isOk = (cp->parentMesh == p_source.modelNumber);
+				else // call from global
+					isOk = (cp->parentMesh == -1 && p_model!=NULL);
 
+				if (isOk)
+				{
+					AmbientRangeSoundCreationData sd;
+					AglMatrix mat = AglMatrix::identityMatrix();
+					mat.SetTranslation(cp->transform.GetTranslation());
+					FixTransform(mat);
+					sd.transform = mat*p_offset;
+					sd.filename = parsedAction.first.name;
+					sd.minRange = parsedAction.first.minrange;
+					sd.maxRange = parsedAction.first.maxrange;
+					sd.volume = parsedAction.first.volume;
+					sd.channels = parsedAction.first.channels;
+					p_model->ambientRangeSoundCollection.m_collection.push_back(sd);
+				}
+
+				break;
+			}
 
 			
 		default:				
