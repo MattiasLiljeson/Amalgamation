@@ -110,6 +110,8 @@
 #include "ClientConnectToServerSystem.h"
 #include "MenuSystem.h"
 #include <OutputLogger.h>
+#include "PlayerReadyPacket.h"
+#include "libRocketBackendSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -736,6 +738,13 @@ void ClientPacketHandlerSystem::handleIngameState()
 			// Convert from seconds to milliseconds.
 			m_currentPing = (totalElapsedTime - pongPacket.timeStamp)*1000.0f;
 		}
+		else if (packetType == (char)PacketType::ClientDisconnect)
+		{
+			DisconnectPacket dcPacket;
+			dcPacket.unpack(packet);
+
+			handlePlayerDisconnect(dcPacket);
+		}
 		else if(packetType == (char)PacketType::UpdateClientStats)
 		{
 			UpdateClientStatsPacket updateClientPacket;
@@ -1111,7 +1120,26 @@ void ClientPacketHandlerSystem::handleLobby()
 
 			handlePlayerDisconnect(dcPacket);
 		}
-
+		else if (packetType == (char)PacketType::PlayerReadyPacket)
+		{
+			PlayerReadyPacket readyPacket;
+			readyPacket.unpack(packet);
+			
+			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))
+				->setPlayerReady(readyPacket.playerId, readyPacket.ready);
+			auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+				m_world->getSystem(SystemType::LibRocketBackendSystem));
+			
+			int lobbyDocIdx = rocketBackend->getDocumentByName("lobby");
+			if (readyPacket.ready)
+			{
+				rocketBackend->updateElement(lobbyDocIdx, "player_ready", "Unready");
+			}
+			else
+			{
+				rocketBackend->updateElement(lobbyDocIdx, "player_ready", "Ready");
+			}
+		}
 		else if(packetType == (char)PacketType::ChangeStatePacket){
 			ChangeStatePacket changeState;
 			changeState.unpack(packet);
@@ -1156,6 +1184,13 @@ void ClientPacketHandlerSystem::handleLoading()
 			if(changeState.m_serverState == ServerStates::SENTALLPACKETS){
 				m_gameState->setQueuedState(GameStates::FINISHEDLOADING);
 			}
+		}
+		else if (packetType == (char)PacketType::ClientDisconnect)
+		{
+			DisconnectPacket dcPacket;
+			dcPacket.unpack(packet);
+
+			handlePlayerDisconnect(dcPacket);
 		}
 		else
 		{
@@ -1291,6 +1326,13 @@ void ClientPacketHandlerSystem::handleFinishedLoading()
 				hudSystem->setHUDData(HudSystem::SERVERNAME,"TheOnServ");
 			}
 		}
+		else if (packetType == (char)PacketType::ClientDisconnect)
+		{
+			DisconnectPacket dcPacket;
+			dcPacket.unpack(packet);
+
+			handlePlayerDisconnect(dcPacket);
+		}
 		else
 		{
 			//printPacketTypeNotHandled("Finished Loading", (int)packetType);
@@ -1409,8 +1451,8 @@ void ClientPacketHandlerSystem::handlePlayerDisconnect( const DisconnectPacket& 
 	// If this player is the host (id = 0) then request to shut down the server.
 	if (p_dcPacket.playerID == 0)
 	{
-		static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
-			setEnabled(true);
+		//static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
+		//	setEnabled(true);
 		m_world->requestToQuitServer();
 	}
 }

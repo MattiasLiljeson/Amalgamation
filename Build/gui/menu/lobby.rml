@@ -18,8 +18,8 @@
 			</div>
 		</div>
 		<div class="lowerPanel" id="buttons">
-			<button onclick="goto main_menu; leave_server">Leave</button>
-			<button onclick="start_game; play_confirm;">Ready</button>
+			<button id="leave_lobby" onclick="goto main_menu; leave_server">Leave</button>
+			<button id="player_ready" onclick="start_game; play_confirm;">Ready</button>
 		</div>
 
 	</body>

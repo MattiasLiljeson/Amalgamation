@@ -91,9 +91,12 @@ void MenuSystem::displayDisconnectPopup()
 	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
 		m_world->getSystem(SystemType::LibRocketBackendSystem));
 
-	auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
-		m_world->getSystem(SystemType::LibRocketEventManagerSystem));
+	// Must check that it isn't visible first!
+	if (!rocketBackend->isDocumentVisible(m_disconnectPopupIdx))
+	{
+		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
+			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
 
-	rocketEventManager->loadWindow("connection_lost", Rocket::Core::ElementDocument::FOCUS);
-	//rocketBackend->showDocument(m_disconnectPopupIdx, Rocket::Core::ElementDocument::FOCUS);
+		rocketEventManager->loadWindow("connection_lost", Rocket::Core::ElementDocument::FOCUS);
+	}
 }

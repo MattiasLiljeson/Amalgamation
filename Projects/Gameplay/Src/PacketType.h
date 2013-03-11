@@ -21,6 +21,8 @@ public:
 		Ping,
 		Pong,
 		ChangeStatePacket, 
+		PlayerReadyPacket,
+		PlayerInfo,
 
 		// Server -> Client:
 		EntityCreation,
@@ -59,7 +61,6 @@ public:
 		SpawnExplosionPacket,
 		EditSphereUpdatePacket,
 		SelectionMarkerUpdatePacket,
-		PlayerInfo,
 		HighlightEntityPacket,
 		RootBoundingSpherePacket,
 	};

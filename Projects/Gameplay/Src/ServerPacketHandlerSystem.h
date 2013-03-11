@@ -55,6 +55,7 @@ private:
 	int m_finishedLoadingPlayers;
 	int m_readyLoadingPlayers;
 	int m_resultsPlayers; //Stupid name for a stupid variable
+	int m_readyLobbyPlayers;
 
 	const static int roundTime = 1500;
 };

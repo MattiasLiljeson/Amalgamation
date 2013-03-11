@@ -42,6 +42,8 @@ public:
 
 	void initialize();
 	void updateRow(int p_row, const LobbyStats& p_stats);
+	void setPlayerReady(int p_playerId, bool p_ready);
+	bool isPlayerReady(int p_playerId) const;
 	void addNewPlayer(const NewlyConnectedPlayerPacket& p_packet);
 	void removePlayer(const DisconnectPacket& p_packet);
 	void resetAllPlayers();

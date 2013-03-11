@@ -58,6 +58,7 @@
 #include "LevelPieceRoot.h"
 #include "RootBoundingSpherePacket.h"
 #include "DisconnectPacket.h"
+#include "PlayerReadyPacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -69,6 +70,7 @@ ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	m_finishedLoadingPlayers = 0;
 	m_readyLoadingPlayers = 0;
 	m_resultsPlayers = 0;
+	m_readyLobbyPlayers = 0;
 }
 
 ServerPacketHandlerSystem::~ServerPacketHandlerSystem()
@@ -473,6 +475,35 @@ void ServerPacketHandlerSystem::handleLobby()
 			// Broadcast the dc packet back to all clients, including the one who sent it.
 			m_server->broadcastPacket(packet);
 		}
+		else if(packetType == (char)PacketType::PlayerReadyPacket){
+			// Broadcast the ready packet back to all clients, including the one who sent it.
+			m_server->broadcastPacket(packet);
+
+			PlayerReadyPacket readyPacket;
+			readyPacket.unpack(packet);
+
+			// Check so that all players are ready!
+			if (readyPacket.ready)
+			{
+				m_readyLobbyPlayers++;
+			}
+			else
+			{
+				m_readyLobbyPlayers--;
+			}
+
+			m_world->getOutputLogger()->write( ("Players ready: " + toString(m_readyLobbyPlayers)).c_str() );
+			PlayerSystem* playerSystem = static_cast<PlayerSystem*>
+				(m_world->getSystem(SystemType::PlayerSystem));
+			if (m_readyLobbyPlayers >= playerSystem->getActiveEntities().size())
+			{
+				ChangeStatePacket newState;
+				newState.m_serverState = ServerStates::LOADING;
+				m_stateSystem->setQueuedState(ServerStates::LOADING);
+				m_server->broadcastPacket(newState.pack());
+			}
+		}
+
 		else
 		{
 			printPacketTypeNotHandled("Lobby", (int)packetType);

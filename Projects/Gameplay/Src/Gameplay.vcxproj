@@ -49,6 +49,7 @@
     <ClInclude Include="ModuleHighlightSystem.h" />
     <ClInclude Include="ModuleOnChamberStartPoint.h" />
     <ClInclude Include="ModuleStatusVisualizationMode.h" />
+    <ClInclude Include="PlayerReadyPacket.h" />
     <ClInclude Include="PortalCullingSystem.h" />
     <ClInclude Include="RootBoundingSpherePacket.h" />
     <ClInclude Include="SettingsSystem.h" />
@@ -353,6 +354,7 @@
     <ClCompile Include="LookAtSystem.cpp" />
     <ClCompile Include="ModuleHighlightSystem.cpp" />
     <ClCompile Include="ModuleStatusVisualizationMode.cpp" />
+    <ClCompile Include="PlayerReadyPacket.cpp" />
     <ClCompile Include="PortalCullingSystem.cpp" />
     <ClCompile Include="RootBoundingSpherePacket.cpp" />
     <ClCompile Include="SettingsSystem.cpp" />
