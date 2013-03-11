@@ -69,12 +69,19 @@ private:
 	void handleParticleSystemUpdate( const ParticleUpdatePacket& p_data );
 	void printPacketTypeNotHandled(string p_stateName, int p_packetType);
 
+	// Disconnect-handling
+	void handleServerDisconnect();
+	void handlePlayerDisconnect(int p_playerId);
+
+	// State-handling
 	void handleIngameState();
 	void handleMenu();
 	void handleLobby();
 	void handleLoading();
 	void handleFinishedLoading();
 	void handleResults();
+	//
+
 	void handleHitIndicationPacket( Packet& p_packet );
 
 private:
