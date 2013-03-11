@@ -117,7 +117,7 @@ int PlayerSystem::findPlayerId( int p_fromNetworkOwnerId )
 	{
 		if (m_playerComponents[i]->m_networkID == p_fromNetworkOwnerId)
 		{
-			return m_playerComponents[i]->m_networkID;
+			return m_playerComponents[i]->m_playerID;
 		}
 	}
 	return -1;

@@ -868,17 +868,24 @@ void ServerPacketHandlerSystem::handleClientDisconnect()
 			m_world->getSystem(SystemType::PlayerSystem));
 
 		int playerId = playerSys->findPlayerId(clientId);
+		if (playerId >= 0)
+		{
+			playerSys->deletePlayerEntity(playerId);
 
-		playerSys->deletePlayerEntity(playerId);
+			DisconnectPacket dcPacket;
+			dcPacket.playerID = playerId;
+			dcPacket.clientNetworkIdentity = clientId;
 
-		DisconnectPacket dcPacket;
-		dcPacket.playerID = playerId;
-
-		m_server->broadcastPacket(dcPacket.pack());
+			m_server->broadcastPacket(dcPacket.pack());
 		
-		memset(&m_lobbyPlayerReadyStates, 0, sizeof(m_lobbyPlayerReadyStates));
 
-		m_world->getOutputLogger()->write(("Server detected a disconnecting player: " + toString(dcPacket.playerID) + "\n").c_str());
-		// Here needs to do more, for instance, removing entities!
+			memset(&m_lobbyPlayerReadyStates, 0, sizeof(m_lobbyPlayerReadyStates));
+
+			m_world->getOutputLogger()->write(("Server detected a disconnecting player: " + toString(dcPacket.playerID) + "\n").c_str());
+			// Here needs to do more, for instance, removing entities!
+		}
+		else {
+			m_world->getOutputLogger()->write("Server detected a disconnecting player but the player has already been handled. Ignored request.\n");
+		}
 	}
 }
