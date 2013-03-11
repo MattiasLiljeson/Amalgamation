@@ -1119,11 +1119,15 @@ void ClientPacketHandlerSystem::handleLobby()
 			dcPacket.unpack(packet);
 
 			// Reset all ready states.
-			if (dcPacket.playerID != m_tcpClient->getPlayerID())
-			{
-				static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))
-					->setAllPlayersReady(false);
-			}
+			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))
+				->setAllPlayersReady(false);
+
+			// Reset ready button
+			auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+				m_world->getSystem(SystemType::LibRocketBackendSystem));
+			int lobbyDocIdx = rocketBackend->getDocumentByName("lobby");
+			rocketBackend->updateElement(lobbyDocIdx, "player_ready", "Ready");
+
 			handlePlayerDisconnect(dcPacket);
 		}
 		else if (packetType == (char)PacketType::PlayerReadyPacket)

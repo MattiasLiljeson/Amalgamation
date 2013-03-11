@@ -474,7 +474,7 @@ void ServerPacketHandlerSystem::handleLobby()
 
 			// Broadcast the dc packet back to all clients, including the one who sent it.
 			m_server->broadcastPacket(packet);
-			// Broadcast a ready packet to all clients that forces them to set unready.
+			// Force all players to be set unready.
 			memset(&m_lobbyPlayerReadyStates, 0, sizeof(m_lobbyPlayerReadyStates));
 		}
 		else if(packetType == (char)PacketType::PlayerReadyPacket){
@@ -490,7 +490,7 @@ void ServerPacketHandlerSystem::handleLobby()
 			for (int i = 0; i < MAXPLAYERS; i++)
 			{
 				if (m_lobbyPlayerReadyStates[i])
-					m_readyLoadingPlayers++;
+					m_readyLobbyPlayers++;
 			}
 
 			m_world->getOutputLogger()->write( ("Players ready: " + toString(m_readyLobbyPlayers) + "\n").c_str() );
