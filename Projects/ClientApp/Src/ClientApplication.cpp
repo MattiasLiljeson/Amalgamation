@@ -11,7 +11,7 @@
 #include <AudioInfo.h>
 #include <AudioListener.h>
 #include <BodyInitData.h>
-#include <CircularMovement.h>
+#include <OrbitalMovement.h>
 #include <ConnectionPointSet.h>
 #include <Connector1to2Module.h>
 #include <DebugMove.h>
@@ -46,7 +46,7 @@
 #include <AxisRotationSystem.h>
 #include <CameraInfo.h>
 #include <CameraSystem.h>
-#include <CircularMovementSystem.h>
+#include <OrbitalMovementSystem.h>
 #include <ClientConnectToServerSystem.h>
 #include <ClientEntityCountSystem.h>
 #include <ClientMeasurementSystem.h>
@@ -480,7 +480,7 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	m_world->setSystem( new DebugMovementSystem(), false );
 	m_world->setSystem( new MenuBackgroundSceneSystem() );
-	m_world->setSystem( new CircularMovementSystem() );
+	m_world->setSystem( new OrbitalMovementSystem() );
 	m_world->setSystem( new AxisRotationSystem() );
 	m_world->setSystem( new MoveShipLightsSystem() );
 	m_world->setSystem( new ClientMeasurementSystem() );

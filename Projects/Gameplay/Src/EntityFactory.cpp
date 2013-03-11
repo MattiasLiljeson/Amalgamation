@@ -50,7 +50,7 @@
 #include "InterpolationComponent2.h"
 #include "AnomalyBomb.h"
 #include "AnomalyBombEffectPiece.h"
-#include "CircularMovement.h"
+#include "OrbitalMovementSystem.h"
 #include <RandomUtil.h>
 #include "TeslaCoilModule.h"
 #include "TeslaEffectPiece.h"
@@ -774,6 +774,13 @@ Entity* EntityFactory::createAnomalyPieces(int p_parentIndex)
 	}
 
 	return NULL;
+}
+
+void EntityFactory::createBackgroundScene()
+{
+	//Entity* testEntity = entityFromRecipeOrFile( "test",
+	//	"Assemblages/BackgroundScene/test.asd" );
+	//m_world->addEntity(testEntity);
 }
 
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
