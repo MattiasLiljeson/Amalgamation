@@ -92,6 +92,8 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 	m_stateSystem = static_cast<ServerStateSystem*>(
 		m_world->getSystem(SystemType::ServerStateSystem));
 
+	handleClientDisconnect();
+
 	switch (m_stateSystem->getCurrentState())
 	{
 	case ServerStates::INGAME:
