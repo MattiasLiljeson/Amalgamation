@@ -560,7 +560,7 @@ void ServerPacketHandlerSystem::handleLoading()
 			levelGen->generateLevel(m_readyLoadingPlayers);
 		}
 		
-		if (levelHandler->hasLevel())
+		if (levelHandler->hasLevel() && spawnPointSys->isSpawnPointsReady())
 		{
 			/************************************************************************/
 			/* Send the already networkSynced objects located on the server to the	*/
