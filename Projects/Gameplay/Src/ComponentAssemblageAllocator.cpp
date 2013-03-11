@@ -39,6 +39,7 @@
 #include "TeslaEffectPiece.h"
 #include "Transform.h"
 #include "Vibration.h"
+#include "AxisRotate.h"
 
 // unsorted automatically added includes. Sort them when added!
 #include <Component.h>
@@ -83,4 +84,5 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<TeslaEffectPiece>();
 	handle<Transform>();
 	handle<Vibration>();
+	handle<AxisRotate>();
 }

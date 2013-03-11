@@ -84,6 +84,16 @@ void ClientMeasurementSystem::initialize()
 		TwType::TW_TYPE_INT32, cull2->getCulledChambers(),
 		"group='Culling'" );
 
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT, "Collides with gate",
+		TwType::TW_TYPE_BOOLCPP, cull2->getCollidesWithGate(),
+		"group='Culling'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT, "Collides with chamber",
+		TwType::TW_TYPE_BOOLCPP, cull2->getCollidesWithChamber(),
+		"group='Culling'" );
+
 	//ES time
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::MEASUREMENT, "ES Time",

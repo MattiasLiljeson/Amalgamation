@@ -30,11 +30,11 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile(string p_path, strin
 		inFile >> ignore;
 		inFile >> m_settings.windowed;
 		inFile >> ignore;
-		inFile >> m_settings.useHdr;
+		inFile >> m_settings.enableHdr;
 		inFile >> ignore;
 		inFile >> m_settings.enableTesselation;
 		inFile >> ignore;
-		inFile >> m_settings.enableSSAO;
+		inFile >> m_settings.enableEffects;
 		inFile >> ignore;
 		inFile >> m_settings.enableVSYNC;
 
@@ -89,11 +89,11 @@ SettingsSystem::FileStatus SettingsSystem::writeSettingsFile(string p_path, stri
 		outFile << "Windowed= ";
 		outFile << m_settings.windowed			<< "\n";
 		outFile << "HDRLights= ";
-		outFile << m_settings.useHdr			<< "\n";
+		outFile << m_settings.enableHdr			<< "\n";
 		outFile << "EnableTesselation= ";
 		outFile << m_settings.enableTesselation	<< "\n";
-		outFile << "EnableSSAO= ";
-		outFile << m_settings.enableSSAO		<< "\n";
+		outFile << "EnableEffects= ";
+		outFile << m_settings.enableEffects		<< "\n";
 		outFile << "EnableVSYNC= ";
 		outFile << m_settings.enableVSYNC		<< "\n";
 

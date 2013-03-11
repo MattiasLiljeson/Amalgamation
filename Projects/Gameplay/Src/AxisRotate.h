@@ -2,6 +2,7 @@
 #include <Component.h>
 #include <AglVector3.h>
 #include <AglQuaternion.h>
+#include <ComponentFactory.h>
 // =======================================================================================
 // AxisRotate
 // =======================================================================================
@@ -14,17 +15,10 @@
 class AxisRotate: public Component
 {
 public:
+	AxisRotate();
 	AxisRotate(AglVector3 p_axis, AglVector3 p_startRotation,
-		AglQuaternion p_originRotation, float p_angularVelocity, float p_angle=0.0f)
-		: Component(ComponentType::AxisRotate)
-	{
-		axis = p_axis;
-		axis.normalize();
-		startVector = p_startRotation;
-		originRotation = p_originRotation;
-		angularVelocity = p_angularVelocity;
-		angle = p_angle;
-	}
+		AglQuaternion p_originRotation, float p_angularVelocity, float p_angle=0.0f);
+	void init( vector<ComponentData> p_initData ) final;
 
 public:
 	AglVector3 axis;
@@ -32,4 +26,7 @@ public:
 	AglQuaternion originRotation;
 	float angularVelocity;
 	float angle;
+
+public:
+	static ComponentRegister<AxisRotate> s_reg;
 };

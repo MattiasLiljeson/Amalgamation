@@ -62,7 +62,7 @@ public:
 
 public:
 	DeferredRenderer( ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
-		int p_width, int p_height, bool p_useHdr );
+		int p_width, int p_height, bool p_enableHdr, bool p_enableEffects );
 	virtual ~DeferredRenderer();
 	// Setup
 	void initRendertargetsAndDepthStencil( int p_width, int p_height );
@@ -179,5 +179,6 @@ private:
 
 	int m_width;
 	int m_height;
-	bool m_useHdr;
+	bool m_enableHdr;
+	bool m_enableEffects;
 };

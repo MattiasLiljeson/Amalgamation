@@ -10,25 +10,24 @@
 #include "ClientStateSystem.h"
 #include "MenuSystem.h"
 #include "TimerSystem.h"
+#include "GameSettingsInfo.h"
 
 GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphicsBackend,
-											   ShadowSystem*	p_shadowSystem,
-											   RenderInterface* p_mesh, 
-											   RenderInterface* p_libRocket, 
-											   RenderInterface* p_particle, 
-											   RenderInterface* p_antTweakBar, 
-											   RenderInterface* p_light) 
-											   : EntitySystem(
-											   SystemType::GraphicsRendererSystem){
-	m_backend				= p_graphicsBackend;
-	m_shadowSystem			= p_shadowSystem;
-	m_meshRenderer			= p_mesh;
-	m_libRocketRenderSystem = p_libRocket;
-	m_particleRenderSystem	= p_particle;
-	m_antTweakBarSystem		= p_antTweakBar;
-	m_lightRenderSystem		= p_light;
-	m_shouldRender			= true;
-	m_enteredIngamePreviousFrame = false;
+	ShadowSystem*	p_shadowSystem, RenderInterface* p_mesh, RenderInterface* p_libRocket, 
+	RenderInterface* p_particle, RenderInterface* p_antTweakBar, RenderInterface* p_light,
+	GameSettingsInfo& p_settings ) 
+	: EntitySystem( SystemType::GraphicsRendererSystem )
+{
+	m_backend						= p_graphicsBackend;
+	m_shadowSystem					= p_shadowSystem;
+	m_meshRenderer					= p_mesh;
+	m_libRocketRenderSystem			= p_libRocket;
+	m_particleRenderSystem			= p_particle;
+	m_antTweakBarSystem				= p_antTweakBar;
+	m_lightRenderSystem				= p_light;
+	m_shouldRender					= true;
+	m_enteredIngamePreviousFrame	= false;
+	m_enableEffects					= p_settings.enableEffects;
 
 	m_activeShadows			= new int[MAXSHADOWS];
 	m_shadowViewProjections = new AglMatrix[MAXSHADOWS];
@@ -149,19 +148,21 @@ void GraphicsRendererSystem::renderTheScene()
 	endLightPass();
 	m_wrapper->getGPUTimer()->Stop(m_profiles[LIGHT].profile);
 
-	//SSAO
-	m_wrapper->getGPUTimer()->Start(m_profiles[SSAO].profile);
-	beginSsao();
-	m_wrapper->generateSsao();
-	endSsao();
-	m_wrapper->getGPUTimer()->Stop(m_profiles[SSAO].profile);
+	if( m_enableEffects ) {
+		//SSAO
+		m_wrapper->getGPUTimer()->Start(m_profiles[SSAO].profile);
+		beginSsao();
+		m_wrapper->generateSsao();
+		endSsao();
+		m_wrapper->getGPUTimer()->Stop(m_profiles[SSAO].profile);
 
-	// DoF generation pass
-	m_wrapper->getGPUTimer()->Start(m_profiles[DOF].profile);
-	beginDofGenerationPass();
-	m_wrapper->generateDof();
-	endDofGenerationPass();
-	m_wrapper->getGPUTimer()->Stop(m_profiles[DOF].profile);
+		// DoF generation pass
+		m_wrapper->getGPUTimer()->Start(m_profiles[DOF].profile);
+		beginDofGenerationPass();
+		m_wrapper->generateDof();
+		endDofGenerationPass();
+		m_wrapper->getGPUTimer()->Stop(m_profiles[DOF].profile);
+	}
 
 	//Compose
 	m_wrapper->getGPUTimer()->Start(m_profiles[COMPOSE].profile);
@@ -176,7 +177,6 @@ void GraphicsRendererSystem::renderTheScene()
 	renderParticles();
 	endParticlePass();
 	m_wrapper->getGPUTimer()->Stop(m_profiles[PARTICLE].profile);
-
 
 	//GUI
 	m_wrapper->getGPUTimer()->Start(m_profiles[GUI].profile);

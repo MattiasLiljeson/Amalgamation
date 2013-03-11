@@ -1,21 +1,21 @@
 #pragma once
 #include <EntitySystem.h>
 // =======================================================================================
-// CircularMovementSystem
+// OrbitalMovementSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Brief...
+/// \brief Orbits objects around a center and an axis.
 ///        
-/// # CircularMovementSystem
+/// # OrbitalMovementSystem
 /// Detailed description...
 /// Created on: 11-2-2013 
 ///---------------------------------------------------------------------------------------
-class CircularMovementSystem: public EntitySystem
+class OrbitalMovementSystem: public EntitySystem
 {
 public:
-	CircularMovementSystem();
-	~CircularMovementSystem();
+	OrbitalMovementSystem();
+	~OrbitalMovementSystem();
 	virtual void processEntities(const vector<Entity*>& p_entities) final;
 
 };
