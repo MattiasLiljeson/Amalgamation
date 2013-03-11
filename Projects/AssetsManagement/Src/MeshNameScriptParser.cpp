@@ -12,6 +12,7 @@ string MeshNameScriptParser::spawnpoint = "SP";
 string MeshNameScriptParser::lightpoint = "LP";
 string MeshNameScriptParser::lightdir = "LD";
 string MeshNameScriptParser::lightspot = "LS";
+string MeshNameScriptParser::ambientrangesound = "AR";
 // string MeshNameScriptParser::lighthex = "LX";
 // string MeshNameScriptParser::pointlightType = "point";
 // string MeshNameScriptParser::spotlightType = "spot";
@@ -61,39 +62,15 @@ pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token>
 		}
 		// raw data
 		int offset=0;
-		// if ( instr==light ) // rgb
-		// {
-			float diffuseR = getFloatFromDecimalString(extractPart(p_string,0));
-			float diffuseG = getFloatFromDecimalString(extractPart(p_string,1));
-			float diffuseB = getFloatFromDecimalString(extractPart(p_string,2));
-// 			float specR = getFloatFromDecimalString(extractPart(p_string,4));
-// 			float specG = getFloatFromDecimalString(extractPart(p_string,5));
-// 			float specB = getFloatFromDecimalString(extractPart(p_string,6));
-// 			float ambientR = getFloatFromDecimalString(extractPart(p_string,7));
-// 			float ambientG = getFloatFromDecimalString(extractPart(p_string,8));
-// 			float ambientB = getFloatFromDecimalString(extractPart(p_string,9));
-			// store data
-			data.lightSpec.diffuse = AglVector3(diffuseR,diffuseG,diffuseB);
+		float diffuseR = getFloatFromDecimalString(extractPart(p_string,0));
+		float diffuseG = getFloatFromDecimalString(extractPart(p_string,1));
+		float diffuseB = getFloatFromDecimalString(extractPart(p_string,2));
+		// store data
+		data.lightSpec.diffuse = AglVector3(diffuseR,diffuseG,diffuseB);
 
-			// hardcode:
-			data.lightSpec.specular = AglVector3(0.0f,0.0f,0.0f);
-			data.lightSpec.ambient = AglVector3(0.0f,0.0f,0.0f);
-// 			data.lightSpec.specular = AglVector3(specR,specG,specB);
-// 			data.lightSpec.ambient = AglVector3(ambientR,ambientG,ambientB);
-			// for further data when rgb
-			// offset=6;
-		// }
-// 		else // hex
-// 		{
-// 			string diffuse = extractPart(p_string,1);
-// 			string specular = extractPart(p_string,2);
-// 			string ambient = extractPart(p_string,3);
-// 			// store hex as rgb
-// 			getRGB(data.lightSpec.diffuse,diffuse);
-// 			getRGB(data.lightSpec.specular,specular);
-// 			getRGB(data.lightSpec.ambient,ambient);
-// 			// no offset when hex
-// 		}
+		// hardcode:
+		data.lightSpec.specular = AglVector3(0.0f,0.0f,0.0f);
+		data.lightSpec.ambient = AglVector3(0.0f,0.0f,0.0f);
 		// string glossFloat = extractPart(p_string,offset+3);
 		string distFloat = extractPart(p_string,offset+3);
 		string pwrFloat = extractPart(p_string,offset+4);
@@ -107,6 +84,14 @@ pair<MeshNameScriptParser::Data,MeshNameScriptParser::Token>
 		data.lightSpec.attenuation.x = 0.0f;
 		data.lightSpec.attenuation.y = getFloatFromDecimalString(linAttFloat);
 		data.lightSpec.attenuation.z = getFloatFromDecimalString(quadAttFloat);
+	}
+	else if (instr==ambientrangesound)
+	{
+		tokenVal = AMBIENTRANGESOUND;
+		data.name = extractPart(p_string,0);
+		data.minrange = getFloatFromDecimalString(extractPart(p_string,1));
+		data.maxrange = getFloatFromDecimalString(extractPart(p_string,2));
+		data.volume = getFloatFromDecimalString(extractPart(p_string,3));
 	}
 	return pair<Data,Token>(data,tokenVal);
 }

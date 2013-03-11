@@ -7,8 +7,10 @@
 #include "LightDataCollection.h"
 #include "InstanceInstruction.h"
 #include "ParticleSystemInstruction.h"
+#include "AmbientRangeSoundDataCollection.h"
 #include <AglLooseBspTree.h>
 #include <AglScene.h>
+
 
 // =======================================================================================
 //                                    ModelResource
@@ -56,6 +58,7 @@ public:
     ConnectionPointCollection	connectionPoints;
 	SpawnPointCollection		spawnPoints;
 	LightDataCollection			lightCollection;
+	AmbientRangeSoundDataCollection ambientRangeSoundCollection;
     ParticleSystemInstructionCollection	particleSystems;
     AglMatrix					transform;
     vector<InstanceInstruction> instances;
