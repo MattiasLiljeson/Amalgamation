@@ -1109,39 +1109,7 @@ void ClientPacketHandlerSystem::handleLobby()
 			DisconnectPacket dcPacket;
 			dcPacket.unpack(packet);
 
-			// If this is the same player as the current client player, 
-			// then the following should be done:
-			// * Remove all players from the client!
-			// * Clear lobby data!
-			// * Enable the 'connect to server' system!
-			// * Queue state to menu!
-			// This is done in 'reset from disconnect'!
-			// Additionally 
-			// * Disconnect from server immediately!
-			if (dcPacket.clientNetworkIdentity == m_tcpClient->getId())
-			{
-				resetFromDisconnect();
-				m_tcpClient->disconnect();
-			}
-			// Else, the client player should:
-			// * Remove player from lobby.
-			// * Remove player from player system.
-			else
-			{
-				static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
-					removePlayer(dcPacket);
-				static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
-					deletePlayerEntity(dcPacket.playerID);
-				m_world->getOutputLogger()->write(("Player " + toString(dcPacket.playerID)).c_str());
-			}
-
-			// If this player is the host (id = 0) then request to shut down the server.
-			if (dcPacket.playerID == 0)
-			{
-				static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
-					setEnabled(true);
-				m_world->requestToQuitServer();
-			}
+			handlePlayerDisconnect(dcPacket);
 		}
 
 		else if(packetType == (char)PacketType::ChangeStatePacket){
@@ -1407,5 +1375,42 @@ void ClientPacketHandlerSystem::handleServerDisconnect()
 	{
 		static_cast<MenuSystem*>(m_world->getSystem(SystemType::MenuSystem))
 			->displayDisconnectPopup();
+	}
+}
+
+void ClientPacketHandlerSystem::handlePlayerDisconnect( const DisconnectPacket& p_dcPacket )
+{
+	// If this is the same player as the current client player, 
+	// then the following should be done:
+	// * Remove all players from the client!
+	// * Clear lobby data!
+	// * Enable the 'connect to server' system!
+	// * Queue state to menu!
+	// This is done in 'reset from disconnect'!
+	// Additionally 
+	// * Disconnect from server immediately!
+	if (p_dcPacket.clientNetworkIdentity == m_tcpClient->getId())
+	{
+		resetFromDisconnect();
+		m_tcpClient->disconnect();
+	}
+	// Else, the client player should:
+	// * Remove player from lobby.
+	// * Remove player from player system.
+	else
+	{
+		static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
+			removePlayer(p_dcPacket);
+		static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
+			deletePlayerEntity(p_dcPacket.playerID);
+		m_world->getOutputLogger()->write(("Player " + toString(p_dcPacket.playerID) + " has left the game.\n").c_str());
+	}
+
+	// If this player is the host (id = 0) then request to shut down the server.
+	if (p_dcPacket.playerID == 0)
+	{
+		static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
+			setEnabled(true);
+		m_world->requestToQuitServer();
 	}
 }

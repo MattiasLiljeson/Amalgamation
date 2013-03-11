@@ -16,6 +16,7 @@ using namespace std;
 class TcpClient;
 class EntityCreationPacket;
 class EntityDeletionPacket;
+class DisconnectPacket;
 class GameStateSystem;
 class ClientStateSystem;
 
@@ -71,7 +72,7 @@ private:
 
 	// Disconnect-handling
 	void handleServerDisconnect();
-	void handlePlayerDisconnect(int p_playerId);
+	void handlePlayerDisconnect(const DisconnectPacket& p_dcPacket);
 
 	// State-handling
 	void handleIngameState();
