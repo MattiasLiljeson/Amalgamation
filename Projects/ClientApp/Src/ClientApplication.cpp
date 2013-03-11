@@ -465,7 +465,7 @@ void ClientApplication::initSystems()
 	/* Graphics representer													*/
 	/************************************************************************/
 	m_world->setSystem( new GraphicsRendererSystem( graphicsBackend, shadowSystem,
-		renderer, rocketBackend, particleRender, antTweakBar, lightRender) );
+		renderer, rocketBackend, particleRender, antTweakBar, lightRender, settings ) );
 
 	/************************************************************************/
 	/* Destroyers															*/

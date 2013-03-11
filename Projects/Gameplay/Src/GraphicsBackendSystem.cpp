@@ -20,7 +20,7 @@ GraphicsBackendSystem::GraphicsBackendSystem(
 	: EntitySystem( SystemType::GraphicsBackendSystem )										 
 {
 	m_hInstance = p_hInstance;
-	applySettings(p_settings);
+	applySettings( p_settings );
 
 	m_newWidth = m_scrWidth;
 	m_newHeight = m_scrHeight;
@@ -82,7 +82,8 @@ void GraphicsBackendSystem::initialize()
 		m_scrWidth, 
 		m_scrHeight, 
 		m_windowed,
-		m_useHdr );
+		m_enableHdr,
+		m_enableEffects );
 
 	AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice());
 
@@ -184,10 +185,11 @@ AglVector2 GraphicsBackendSystem::getWindowSize(){
 
 void GraphicsBackendSystem::applySettings( GameSettingsInfo& p_settings )
 {
-	m_scrWidth = p_settings.screenWidth;
-	m_scrHeight = p_settings.screenHeight;
-	m_windowed = p_settings.windowed;
-	m_useHdr = p_settings.useHdr;
-	m_vsync = p_settings.enableVSYNC;
-	m_tesselation = p_settings.enableTesselation;
+	m_scrWidth		= p_settings.screenWidth;
+	m_scrHeight		= p_settings.screenHeight;
+	m_windowed		= p_settings.windowed;
+	m_enableHdr		= p_settings.enableHdr;
+	m_enableEffects = p_settings.enableEffects;
+	m_vsync			= p_settings.enableVSYNC;
+	m_tesselation	= p_settings.enableTesselation;
 }

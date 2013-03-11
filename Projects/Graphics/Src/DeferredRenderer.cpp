@@ -15,14 +15,15 @@
 
 DeferredRenderer::DeferredRenderer(
 	ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, int p_width, 
-	int p_height, bool p_useHdr )
+	int p_height, bool p_enableHdr, bool p_enableEffects )
 {
 	m_device		= p_device;
 	m_deviceContext = p_deviceContext;
 
 	m_width			= p_width;
 	m_height		= p_height;
-	m_useHdr		= p_useHdr;
+	m_enableHdr		= p_enableHdr;
+	m_enableEffects = p_enableEffects;
 
 	m_shaderFactory = new ShaderFactory(m_device,m_deviceContext, 
 		m_device->GetFeatureLevel());
@@ -471,8 +472,13 @@ void DeferredRenderer::initShaders()
 		L"Shaders/Game/deferredBaseTessleationHS.hlsl",
 		L"Shaders/Game/deferredBaseTessleationDS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");
 
-	m_composeShader = m_shaderFactory->createDeferredComposeShader(
-		L"Shaders/Game/deferredCompose.hlsl");
+	if( m_enableEffects ) {
+		m_composeShader = m_shaderFactory->createDeferredComposeShader(
+			L"Shaders/Game/deferredCompose.hlsl");
+	} else {
+		m_composeShader = m_shaderFactory->createDeferredComposeShader(
+			L"Shaders/Game/deferredComposeSimple.hlsl");
+	}
 
 	m_lightShader = m_shaderFactory->createLightShader(
 		L"Shaders/Game/lighting.hlsl");

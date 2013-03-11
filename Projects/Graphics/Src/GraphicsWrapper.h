@@ -52,7 +52,7 @@ class GraphicsWrapper
 {
 public:
 	GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p_windowed,
-		bool p_useHdr );
+		bool p_useHdr, bool p_enableEffects );
 	virtual ~GraphicsWrapper();
 	///-----------------------------------------------------------------------------------
 	/// Clears the back buffer with a non black color
@@ -240,7 +240,8 @@ private:
 	int m_solidWhiteTexture;
 
 	bool m_windowed;
-	bool m_useHdr;
+	bool m_enableHdr;
+	bool m_enableEffects;
 	bool m_wireframeMode;
 	bool m_renderingShadows;
 

@@ -2,17 +2,15 @@
 
 using namespace std;
 
-// THIS COMMENT IS HERE TO LET GIT KNOW THAT THIS FILE HAS BEEN UPDATED!
-
 struct GameSettingsInfo
 {
 	// Gfx settings
 	int screenHeight;
 	int screenWidth;
 	int windowed;			// Treated as bool
-	int useHdr;				// Treated as bool
+	int enableHdr;				// Treated as bool
 	int enableTesselation;	// Treated as bool
-	int enableSSAO;			// Treated as bool
+	int enableEffects;			// Treated as bool
 	int enableVSYNC;		// Treated as bool
 
 	// Sound settings
@@ -35,9 +33,9 @@ struct GameSettingsInfo
 		screenHeight		= 720;
 		screenWidth			= 1280;
 		windowed			= true;
-		useHdr				= false;
+		enableHdr				= false;
 		enableTesselation	= false;
-		enableSSAO			= true;
+		enableEffects			= true;
 		enableVSYNC			= false;
 
 		// Sound settings
@@ -46,7 +44,7 @@ struct GameSettingsInfo
 		musicVolume			= 75;		// Percentage, %
 		
 		// Network settings
-		playerName			= "Bicen";
+		playerName			= "PlayerName";
 		ip					= "194.47.150.30";
 		port				= "1337";
 

@@ -9,6 +9,7 @@ class GraphicsWrapper;
 class ShadowSystem;
 
 struct AglMatrix;
+struct GameSettingsInfo;
 
 // =======================================================================================
 //                                      GraphicsRendererSystem
@@ -29,7 +30,8 @@ public:
 	GraphicsRendererSystem(GraphicsBackendSystem* p_graphicsBackend,
 		ShadowSystem* p_shadowSystem, RenderInterface* p_mesh, 
 		RenderInterface* p_libRocket, RenderInterface* p_particle,
-		RenderInterface* p_antTweakBar, RenderInterface* p_light);
+		RenderInterface* p_antTweakBar, RenderInterface* p_light,
+		GameSettingsInfo& p_settings);
 	virtual ~GraphicsRendererSystem();
 
 	virtual void initialize();
@@ -89,4 +91,5 @@ private:
 	int		m_currentFrame;
 	bool	m_enteredIngamePreviousFrame;
 	bool	m_shouldRender;
+	bool	m_enableEffects;
 };
