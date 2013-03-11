@@ -658,12 +658,12 @@ void GraphicsWrapper::unmapDepth(){
 	m_deferredRenderer->unmapDepth();
 }
 
-void GraphicsWrapper::generateSsao(){
-	m_deferredRenderer->generateSsao();
+void GraphicsWrapper::generateEffects(){
+	m_deferredRenderer->generateEffects();
 }
 
-void GraphicsWrapper::generateDof(){
-	m_deferredRenderer->generateDof();
+void GraphicsWrapper::generateLowRes(){
+	m_deferredRenderer->generateLowRes();
 }
 
 void GraphicsWrapper::renderComposeStage(){

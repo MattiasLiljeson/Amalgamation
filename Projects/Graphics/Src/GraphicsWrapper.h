@@ -158,8 +158,8 @@ public:
 	void setWireframeMode(bool p_wireframe);
 
 	void renderParticleSystem( ParticleSystemAndTexture* p_system, InstanceData p_transform );
-	void generateSsao();
-	void generateDof();
+	void generateEffects();
+	void generateLowRes();
 	void renderComposeStage();
 	void updateRenderSceneInfo(const RendererSceneInfo& p_sceneInfo);
 	void mapGbuffers();

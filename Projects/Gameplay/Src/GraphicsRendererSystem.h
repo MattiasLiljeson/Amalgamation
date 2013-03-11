@@ -48,11 +48,11 @@ private:
 	void initLightPass();
 	void endLightPass();
 
-	void beginSsao();
-	void endSsao();
+	void beginEffects();
+	void endEffects();
 
-	void beginDofGenerationPass();
-	void endDofGenerationPass();
+	void beginGenerateLowRes();
+	void endGenerateLowRes();
 
 	void initComposePass();
 	void endComposePass();
@@ -71,7 +71,7 @@ private:
 	void updateTimers();
 private:
 	enum Passes {
-		MESH, LIGHT, SSAO, DOF, COMPOSE, PARTICLE, GUI, TOTAL, NUMRENDERINGPASSES
+		MESH, LIGHT, EFFECTS, LOW_RES, COMPOSE, PARTICLE, GUI, TOTAL, NUMRENDERINGPASSES
 	};
 private:
 	GraphicsWrapper* m_wrapper;

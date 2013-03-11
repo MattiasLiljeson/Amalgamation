@@ -73,8 +73,8 @@ DeferredRenderer::~DeferredRenderer()
 	delete m_bufferFactory;
 	delete m_baseShader;
 	delete m_lightShader;
-	delete m_ssaoShader;
-	delete m_dofGenerationShader;
+	delete m_effectShader;
+	delete m_lowResGenerationShader;
 	delete m_composeShader;
 	delete m_fullscreenQuad;
 	delete m_animatedBaseShader;
@@ -124,19 +124,19 @@ void DeferredRenderer::setDofRenderTargets()
 
 }
 
-void DeferredRenderer::generateSsao()
+void DeferredRenderer::generateEffects()
 {
-	m_ssaoShader->setSSAOBufferData(m_ssaoData);
-	m_ssaoShader->apply();
+	m_effectShader->setSSAOBufferData(m_ssaoData);
+	m_effectShader->apply();
 	m_fullscreenQuad->apply();
 
 	m_deviceContext->Draw(6,0);
 }
 
-void DeferredRenderer::generateDof()
+void DeferredRenderer::generateLowRes()
 {
-	m_dofGenerationShader->setSSAOBufferData(m_ssaoData);
-	m_dofGenerationShader->apply();
+	m_lowResGenerationShader->setSSAOBufferData(m_ssaoData);
+	m_lowResGenerationShader->apply();
 	m_fullscreenQuad->apply();
 
 	m_deviceContext->Draw(6,0);
@@ -458,11 +458,11 @@ void DeferredRenderer::initShaders()
 		L"Shaders/Game/deferredBaseTessleationVS.hlsl", L"Shaders/Game/deferredBaseTessleationHS.hlsl",
 		L"Shaders/Game/deferredBaseTessleationDS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");
 
-	m_ssaoShader = m_shaderFactory->createDeferredComposeShader(
-		L"Shaders/Game/ssaoGenerate.hlsl");
+	m_effectShader = m_shaderFactory->createDeferredComposeShader(
+		L"Shaders/Game/effect.hlsl");
 
-	m_dofGenerationShader = m_shaderFactory->createDeferredComposeShader(
-		L"Shaders/Game/dofGeneration.hlsl");
+	m_lowResGenerationShader = m_shaderFactory->createDeferredComposeShader(
+		L"Shaders/Game/lowResGeneration.hlsl");
 
 	m_animatedBaseShader = m_shaderFactory->createDeferredAnimatedShader(
 		L"Shaders/Game/deferredBaseAnimatedVS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");

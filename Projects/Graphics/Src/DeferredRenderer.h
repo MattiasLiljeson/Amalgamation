@@ -71,9 +71,9 @@ public:
 	// Buffers as RTs
 	void setBasePassRenderTargets();
 	void setLightRenderTargets();
-	void generateSsao();
+	void generateEffects();
 	void setDofRenderTargets();
-	void generateDof();
+	void generateLowRes();
 	void renderComposeStage();
 
 	void setViewPortSize( float p_width, float p_height );
@@ -159,8 +159,8 @@ private:
 	DeferredTessAnimatedBaseShader*	m_tessAnimatedBaseShader;
 
 	LightShader*			m_lightShader;
-	DeferredComposeShader*	m_ssaoShader;
-	DeferredComposeShader*	m_dofGenerationShader;
+	DeferredComposeShader*	m_effectShader;
+	DeferredComposeShader*	m_lowResGenerationShader;
 	DeferredComposeShader*	m_composeShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;

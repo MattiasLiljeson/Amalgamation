@@ -102,13 +102,17 @@ VertexOut VS(VertexIn p_input)
 
 PixelOut PS(VertexOut input)
 {
+	uint3 index;
+	index.xy = input.position.xy;
+	index.z = 0;
+
 	//float depth = gDepth.Sample(shadowSampler, input.texCoord).r;
-	float depth = gDepth.Sample(pointSampler, input.texCoord).r;
+	float depth = gDepth.Load( index ).r;
 	//float3 position = getPosition(input.texCoord);
 	float3 position = getPosition(input.texCoord, depth);
 	float pixelDepthW = length(position-gCameraPos.xyz);
 
-	float3 normal 	= convertSampledNormal(gNormalMap.Sample(pointSampler, input.texCoord).rgb);
+	float3 normal 	= convertSampledNormal(gNormalMap.Load( index ).rgb);
 	float2 rand 	= getRandomVector( position.xy );
 
 	float ao = 0.0f;
