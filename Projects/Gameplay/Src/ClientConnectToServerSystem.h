@@ -27,12 +27,11 @@ public:
 
 	~ClientConnectToServerSystem();
 
-	virtual void process();
+	void process();
 
-	virtual void initialize();
+	void initialize();
 
 	void connectToNetworkAddress();
-
 	bool setAddressAndConnect(const std::string& p_address, const std::string& p_port);
 	bool setConnectionAddress(const std::string& p_address, const std::string& p_port);
 private:
