@@ -38,26 +38,27 @@ float4 PoissonDOF( float2 texCoord, uint3 index )
 	float2 gDX_TexDOF = gDX_Tex/g_lowResDivider;
 	for( int i=0; i<NUM_TAPS; i++ )
 	{
-		SamplerState samplerState = g_samplerPointClamp;
 		// Get the tex-coords for high- and low-res tap
-		float2 coordLow = texCoord + (gDX_TexDOF * poisson[i] * discRadiusLow);
-		float2 coordHigh = texCoord + (gDX_Tex * poisson[i] * discRadius);
 			
-		float4 diffBuffLow  	= g_diffuseLowRes.Sample( samplerState, coordLow );
-		float4 diffLightLow  	= g_specLightLowRes.Sample( samplerState, coordLow );
+		SamplerState lowSampler = g_samplerAnisotropicClamp;
+		float2 coordLow = texCoord + (gDX_TexDOF * poisson[i] * discRadiusLow);
+		float4 diffBuffLow  	= g_diffuseLowRes.Sample( lowSampler, coordLow );
+		float4 diffLightLow  	= g_specLightLowRes.Sample( lowSampler, coordLow );
 		float4 diffLow = diffBuffLow * diffLightLow * g_LIGHT_MULT;
 
-		float4 specBuffLow  	= g_specularLowRes.Sample( samplerState, coordLow );
-		float4 specLightLow  	= g_diffLightLowRes.Sample( samplerState, coordLow );
+		float4 specBuffLow  	= g_specularLowRes.Sample( lowSampler, coordLow );
+		float4 specLightLow  	= g_diffLightLowRes.Sample( lowSampler, coordLow );
 		float4 specLow = specBuffLow * specLightLow * g_LIGHT_MULT;
 		float4 finalLow 		= diffLow + specLow;
 
-		float4 diffBuffHigh  	= g_diffuse.Sample( samplerState, coordHigh );
-		float4 diffLightHigh	= g_diffLight.Sample( samplerState, coordHigh );
+		SamplerState highSampler = g_samplerPointClamp;
+		float2 coordHigh = texCoord + (gDX_Tex * poisson[i] * discRadius);
+		float4 diffBuffHigh  	= g_diffuse.Sample( highSampler, coordHigh );
+		float4 diffLightHigh	= g_diffLight.Sample( highSampler, coordHigh );
 		float4 diffHigh = diffBuffHigh * diffLightHigh * g_LIGHT_MULT;
 
-		float4 specBuffHigh  	= g_specular.Sample( samplerState, coordHigh );
-		float4 specLightHigh  	= g_specLight.Sample( samplerState, coordHigh );
+		float4 specBuffHigh  	= g_specular.Sample( highSampler, coordHigh );
+		float4 specLightHigh  	= g_specLight.Sample( highSampler, coordHigh );
 		float4 specHigh = specBuffHigh * specLightHigh * g_LIGHT_MULT;
 		float4 finalHigh = diffHigh + specHigh;
 
