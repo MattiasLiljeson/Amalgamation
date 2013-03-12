@@ -36,6 +36,15 @@ ServerUpdateSystem::~ServerUpdateSystem()
 
 void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	static float timestamp = m_world->getElapsedTime();
+	bool timeStampTime = false;
+	if(m_world->getElapsedTime() >
+		timestamp + 1.0f)
+	{
+		timestamp = m_world->getElapsedTime();
+		timeStampTime = true;
+	}
+
 	NetworkSynced* netSync = NULL;
 	Transform* transform = NULL;
 	PhysicsBody* physicsBody = NULL;
@@ -117,9 +126,10 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 									}
 								}
 
-								if(hasChanged || m_world->getElapsedTime() >
-									m_previousParticles[psServerComp].timestamp + 1.0f)
+								if(hasChanged || timeStampTime || psServerComp->particleSystems[psIdx].firstNetworkPass)
 								{
+									psServerComp->particleSystems[psIdx].firstNetworkPass = false;
+
 									m_previousParticles[psServerComp].particleHeader =
 										*updateData;
 									m_previousParticles[psServerComp].timestamp =
