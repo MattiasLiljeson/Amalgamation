@@ -510,7 +510,12 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 					particleSys->setSpawnPoint(		pos, p_data.forceParticleMove);
 					particleSys->setSpawnDirection(	p_data.direction);
 					particleSys->setSpawnSpeed(		p_data.speed);
-					particleSys->setSpawnFrequency(	p_data.spawnFrequency);
+					if (p_data.spawnFrequency != -1)
+						particleSys->setSpawnFrequency(	p_data.spawnFrequency);
+					else
+					{
+						particleSys->restart();
+					}
 					particleSys->setColor(p_data.color);
 				}
 			}
@@ -526,6 +531,17 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 			int breakHere = 1;
 		}
 	}
+}
+
+void ClientPacketHandlerSystem::handleEntitySounds(const SoundPacket& p_data)
+{
+	NetsyncDirectMapperSystem* directMapper = static_cast<NetsyncDirectMapperSystem*>
+		( m_world->getSystem( SystemType::NetsyncDirectMapperSystem ) );
+
+	Entity* entity = directMapper->getEntity( p_data.target );
+
+	SoundComponent* sound = static_cast<SoundComponent*>(entity->getComponent(ComponentType::SoundComponent));
+	sound->getSoundHeaderByIndex((AudioHeader::SoundType)p_data.soundType, p_data.targetSlot)->queuedPlayingState = (AudioHeader::PlayState)p_data.queuedPlayingState;
 }
 
 void ClientPacketHandlerSystem::handleParticleSystemCreation( const ParticleSystemCreationInfo& p_creationInfo )
@@ -590,6 +606,12 @@ void ClientPacketHandlerSystem::handleIngameState()
 			ParticleSystemCreationInfo info;
 			packet.ReadData( &info, sizeof(ParticleSystemCreationInfo) );
 			handleParticleSystemCreation( info );
+		}
+		else if (packetType == (char)PacketType::SoundPacket)
+		{
+			SoundPacket spacket;
+			spacket.unpack(packet);
+			handleEntitySounds(spacket);
 		}
 
 		else if (packetType == (char)PacketType::ParticleUpdate)

@@ -134,6 +134,9 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 									updatePacket.spawnFrequency		= updateData->spawnFrequency;
 									updatePacket.color				= updateData->color;
 
+									if (updatePacket.spawnFrequency == -1)
+										updateData->spawnFrequency = psServerComp->particleSystems[psIdx].originalSettings.spawnFrequency;
+
 									updatePacket.forceParticleMove = false;
 									if (updateData->particleSpace == (char)AglParticleSystemHeader::AglSpace_SCREEN)
 										updatePacket.forceParticleMove = true;

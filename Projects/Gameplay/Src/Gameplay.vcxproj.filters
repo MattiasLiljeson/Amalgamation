@@ -854,6 +854,8 @@
     <ClInclude Include="DisconnectPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="SoundPacket.h">
+    </ClInclude>
     <ClInclude Include="GlowAnimation.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
@@ -1480,6 +1482,8 @@
     </ClCompile>
     <ClCompile Include="DisconnectPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundPacket.cpp">
     </ClCompile>
     <ClCompile Include="GlowAnimation.cpp">
       <Filter>Components\Gameplay</Filter>
