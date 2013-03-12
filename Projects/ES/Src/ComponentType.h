@@ -128,6 +128,7 @@ public:	//Enums
 		TeslaCoilEffect,
 		ShipHighlight,
 		ShineSpawn,
+		GlowAnimation,
 		NUM_COMPONENT_TYPES
 	};
 

@@ -36,6 +36,8 @@ public:
 	void addActivateEvent(int p_index);
 	void addDeactivateEvent(int p_index);
 	void setEditMode(bool p_editMode);
+	vector<Entity*> getModulesBySlot(Entity* p_shipEntity, int p_slotId);
+	void getConnectedChildren(Entity* p_root, vector<Entity*>* p_list);
 
 private:
 	void checkDrop_ApplyScoreAndDamage(Entity* p_parent);
