@@ -103,7 +103,6 @@
     <ClInclude Include="EnumGameStates.h" />
     <ClInclude Include="Extrapolate.h" />
     <ClInclude Include="ExtrapolationSystem.h" />
-    <ClInclude Include="GameOptionsSystem.h" />
     <ClInclude Include="GamepadRumbleSystem.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GameState.h" />
@@ -325,7 +324,6 @@
     <ClCompile Include="EnvironmentValues.cpp" />
     <ClCompile Include="ExtrapolationSystem.cpp" />
     <ClCompile Include="FlareGunModule.cpp" />
-    <ClCompile Include="GameOptionsSystem.cpp" />
     <ClCompile Include="GamepadRumbleSystem.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GradientComponent.cpp" />
