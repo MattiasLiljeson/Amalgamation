@@ -44,5 +44,5 @@ private:
 		AglParticleSystemHeader particleHeader;
 		float timestamp;
 	};
-	map<int, ParticleRecord> m_previousParticles;
+	map<AglParticleSystemHeader*, ParticleRecord> m_previousParticles;
 };
