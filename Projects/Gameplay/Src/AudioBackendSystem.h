@@ -1,9 +1,8 @@
 #pragma once
 #include <AntTweakBarWrapper.h>
-#include <PositionalSoundCreationInfo.h>
-#include <BasicSoundCreationInfo.h>
-#include <SoundEnums.h>
 #include "EntitySystem.h"
+#include <AudioHeader.h>
+#include "SoundOrientation.h"
 
 class SoundWrapper;
 
@@ -26,22 +25,17 @@ class AudioBackendSystem : public EntitySystem
 public:
 	AudioBackendSystem();
 	virtual ~AudioBackendSystem();
+
+	
 	void processEntities(const vector<Entity*>& p_entities);
 	void updateListener(const SoundOrientation& p_listenerInfo);
-	int createAmbientSound(BasicSoundCreationInfo* p_info);
-	int createPositionalSound(BasicSoundCreationInfo* p_info,
-		PositionalSoundCreationInfo* p_positionalInfo );
-	void changeAudioInstruction(int p_index, const SoundEnums::Instructions& p_instruction);
+
+	void changeAudioInstruction(unsigned int p_index, 
+		const AudioHeader::PlayState& p_instruction);
 	void updateListenerVolume(float p_volume);
 	void updateOutputMatrix(int p_index);
 	SoundWrapper* getSoundWrapper();
 private:
 	SoundWrapper* m_soundWrapper;
-	/************************************************************************/
-	/* DEBUG FUNCTIONS ONLY! */
-	/************************************************************************/
-	static AudioBackendSystem* m_selfPointer;
-private:
-	static void TW_CALL stopOrPlaySound(void* p_clientData);
 	string m_label;
 };

@@ -6,8 +6,8 @@
 #include <utility>
 
 class AnalogueControl;
-class DigitalControl;
 class Control;
+class Cursor;
 class DigitalControl;
 class KeyControl;
 
@@ -49,14 +49,14 @@ public:
 	/// where the string denotes a name of the control which is based on its enum 
 	/// identifier.
 	///-----------------------------------------------------------------------------------
-	vector<pair<string, Control*>> create360controllerAnalogAll();
+	vector<pair<string, Control*>> createAll360Analogs();
 
 	///-----------------------------------------------------------------------------------
 	/// Create a Control mapped to the supplied input.
 	/// \param p_axis Stick/trigger enum identifier.
 	/// \return Control* A Control allocated on the stack.
 	///-----------------------------------------------------------------------------------
-	Control* create360controllerAnalog( InputHelper::XBOX360_CONTROLLER_ANALOG p_axis );
+	Control* create360Analog( InputHelper::Xbox360Analogs p_axis );
 
 	///-----------------------------------------------------------------------------------
 	/// Create Controls for all digitals (buttons/dpad) on the gamepad.
@@ -64,7 +64,7 @@ public:
 	/// where the string denotes a name of the control which is based on its enum
 	/// identifier.
 	///-----------------------------------------------------------------------------------
-	vector<pair<string, Control*>> create360controllerDigitalAll();
+	vector< pair<string, Control*> > createAll360Digitals();
 
 
 	///-----------------------------------------------------------------------------------
@@ -72,7 +72,7 @@ public:
 	/// \param p_btn Button/dpad enum identifier.
 	/// \return Control* A Control allocated on the stack.
 	///-----------------------------------------------------------------------------------
-	Control* create360controllerDigital( InputHelper::XBOX360_CONTROLLER_DIGITAL p_btn );
+	Control* create360Digital( InputHelper::Xbox360Digitals p_btn );
 
 	// Mouse & Keyboard
 	///-----------------------------------------------------------------------------------
@@ -81,28 +81,48 @@ public:
 	/// where the string denotes a name of the control which is based on its enum 
 	/// identifier.
 	///-----------------------------------------------------------------------------------
-	vector<pair<string, Control*>> createKeysAToZ();
+	vector< pair<string, Control*> > createAToZ();
+
+
+	///-----------------------------------------------------------------------------------
+	/// Create Controls for all numbers on the keyboard.
+	/// \return vector<pair<string, Control*>>
+	///-----------------------------------------------------------------------------------
+	vector< pair<string, Control*> > create0To9();
+
+	///-----------------------------------------------------------------------------------
+	/// Create Controls for all numpad numbers on the keyboard.
+	/// \return vector<pair<string, Control*>>
+	///-----------------------------------------------------------------------------------
+	vector< pair<string, Control*> > createNumpad0ToNumpad9();
 
 	///-----------------------------------------------------------------------------------
 	/// Create a Control mapped to the supplied input.
 	/// \param p_key Key enum identifier.
 	/// \return Control* A Control allocated on the stack.
 	///----------------------------------------------------------------------------------
-	Control* createKeyboardKey( InputHelper::KEYBOARD_KEY p_key );
+	Control* createKeyboardKey( InputHelper::KeyboardKeys p_key );
 	
+	vector< pair<string, Control*> > createAllMouseAxes();
+	vector< pair<string, Control*> > createAllMouseButtons();
+
 	///-----------------------------------------------------------------------------------
 	/// Create a Control mapped to the supplied input.
 	/// \param p_btn Mouse button enum identifier.
 	/// \return Control* A Control allocated on the stack.
 	///----------------------------------------------------------------------------------
-	Control* createMouseButton( InputHelper::MOUSE_BTN p_btn );
+	Control* createMouseButton( InputHelper::MouseButtons p_btn );
 
 	///-----------------------------------------------------------------------------------
 	/// Create a Control mapped to the supplied input.
 	/// \param p_axis Mouse axis enum identifier.
 	/// \return Control* A Control allocated on the stack.
 	///----------------------------------------------------------------------------------
-	Control* createMouseMovement( InputHelper::MOUSE_AXIS p_axis );
+	Control* createMouseAxis( InputHelper::MouseAxes p_axis );
+
+	// DOESNT WORK!
+	//Cursor* createMouseCursor();
+	//Cursor* createGamepadCursor();
 
 };
 

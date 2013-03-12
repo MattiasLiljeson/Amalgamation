@@ -29,6 +29,7 @@ class IEntityObserver;
 class IPerformer;
 class SystemManager;
 class SystemType;
+class OutputLogger;
 
 class EntityWorld
 {
@@ -56,6 +57,14 @@ public:
 	 */
 	ComponentManager* getComponentManager();
 	
+	/**
+	 * Returns a manager that takes care of all the systems in the world.
+	 * 
+	 * @return system manager.
+	 */
+	SystemManager* getSystemManager();
+	
+
 	/**
 	 * Add a manager into this world. It can be retrieved later.
 	 * World will notify this manager of changes to entity.
@@ -97,6 +106,19 @@ public:
 	 * @param p_dt time since last game loop.
 	 */
 	void setDelta( float p_dt );
+
+	/**
+	 * The aspect ratio of the screen
+	 * 
+	 */
+	float getAspectRatio();
+
+	/**
+	 * Specify the aspect ratio of the screen
+	 * 
+	 * @param p_aspectRatio
+	 */
+	void setAspectRatio(float p_aspectRatio);
 
 	/**
 	 * Adds a entity to this world.
@@ -159,6 +181,17 @@ public:
 	/**
 	 * Will add a system to this world.
 	 *  
+	 * @param p_system The system to add.
+	 * @param p_enabled Wether or not this system will be processed by World.process().
+	 * Defaults to true.
+	 * @return The added system.
+	 */
+	EntitySystem* setSystem( EntitySystem* p_system,
+		bool p_enabled = true );
+
+	/**
+	 * Will add a system to this world.
+	 *  
 	 * @param p_type Type of system.
 	 * @param p_system The system to add.
 	 * @param p_enabled Wether or not this system will be processed by World.process().
@@ -178,10 +211,8 @@ public:
 	 * @return The added system.
 	 */
 	EntitySystem* setSystem( SystemType::SystemTypeIdx p_typeIdx, EntitySystem* p_system,
-		bool p_enabled = false );
+		bool p_enabled = true );
 
-	EntitySystem* setSystem( EntitySystem* p_system,
-		bool p_enabled = false );
 
 	/**
 	 * Remove the specified system from the manager.
@@ -216,6 +247,13 @@ public:
 	EntitySystem* getSystem( SystemType::SystemTypeIdx p_typeIdx );
 
 	/**
+	 * Retrieve the output logger system.
+	 * 
+	 * @return instance of the system in this world.
+	 */
+	OutputLogger* getOutputLogger();
+
+	/**
 	 * Performs an action on each entity.
 	 * @param entities
 	 * @param performer
@@ -224,14 +262,24 @@ public:
 
 	void process();
 
-	//<T extends Component> ComponentMapper<T> getMapper(Class<T> type);
+	void requestToShutDown();
+
+	bool shouldShutDown();
+
+	void requestToHostServer();
+	void requestToQuitServer();
+	bool isHostingServer();
+
+	const double& getTotalSystemsTime() const;
 
 private:
-	//void deleteSystemFromBag(EntitySystem* system);
+	void prePerformManagers();
+	void postPerformManagers();
 
 private:
 	float m_delta;
 	float m_totalGameTime; ///< number of seconds elapsed since the start of the application
+	float m_aspectRatio; // aspect ratio of screen, added by Jarl 01-02-2013
 	EntityManager* m_entityManager;
 	ComponentManager* m_componentManager;
 	SystemManager* m_systemManager;
@@ -246,5 +294,8 @@ private:
 
 	// From Java, needed?
 	vector<Manager*> m_managersBag;
+
+	bool m_shutdown;
+	bool m_hostServer;
 };
 

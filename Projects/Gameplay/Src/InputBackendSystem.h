@@ -4,10 +4,11 @@
 
 #include "InputHelper.h"
 
-class inputControlFactory;
-class InputManager;
-class GraphicsBackendSystem;
 class Control;
+class Cursor;
+class GraphicsBackendSystem;
+class InputManager;
+class inputControlFactory;
 // =======================================================================================
 //                                      InputSystem
 // =======================================================================================
@@ -23,7 +24,6 @@ class Control;
 class InputBackendSystem : public EntitySystem
 {
 public:
-
 	///-----------------------------------------------------------------------------------
 	/// Constructor. HINSTANCE is needed to fetch input from a window. The 
 	/// GraphicsBackendSystem is also needed to fetch input from a window.
@@ -41,6 +41,8 @@ public:
 	///-----------------------------------------------------------------------------------
 	void process();
 	
+	Cursor* getCursor();
+
 	///-----------------------------------------------------------------------------------
 	/// Get a pointer to a Control by supplying a string with the name the Control has
 	/// been registered with. O(log(n)).
@@ -55,11 +57,31 @@ public:
 	/// \param p_key The control registered to the key/btn/whatever you want to get.
 	/// \return Control* A ptr to a Control that is updated each frame with fresh input
 	///-----------------------------------------------------------------------------------
-	Control* getControlByEnum( InputHelper::KEYBOARD_KEY p_key );
-	Control* getControlByEnum( InputHelper::MOUSE_BTN p_btn );
-	Control* getControlByEnum( InputHelper::MOUSE_AXIS p_axis );
-	Control* getControlByEnum( InputHelper::XBOX360_CONTROLLER_DIGITAL p_digital );
-	Control* getControlByEnum( InputHelper::XBOX360_CONTROLLER_ANALOG p_analog );
+	Control* getControlByEnum( InputHelper::KeyboardKeys p_key );
+	Control* getControlByEnum( InputHelper::MouseButtons p_btn );
+	Control* getControlByEnum( InputHelper::MouseAxes p_axis );
+	Control* getControlByEnum( InputHelper::Xbox360Digitals p_digital );
+	Control* getControlByEnum( InputHelper::Xbox360Analogs p_analog );
+	
+	const double getDeltaByEnum( InputHelper::KeyboardKeys p_key );
+	const double getDeltaByEnum( InputHelper::MouseButtons p_btn );
+	const double getDeltaByEnum( InputHelper::MouseAxes p_axis );
+	const double getDeltaByEnum( InputHelper::Xbox360Digitals p_digital );
+	const double getDeltaByEnum( InputHelper::Xbox360Analogs p_analog );
+	
+	const double getStatusByEnum( InputHelper::KeyboardKeys p_key );
+	const double getStatusByEnum( InputHelper::MouseButtons p_btn );
+	const double getStatusByEnum( InputHelper::MouseAxes p_axis );
+	const double getStatusByEnum( InputHelper::Xbox360Digitals p_digital );
+	const double getStatusByEnum( InputHelper::Xbox360Analogs p_analog );
+
+	///-----------------------------------------------------------------------------------
+	/// Activates rumble on controller. Provide values between 
+	/// 0-100 indicating motor percentage use.
+	///-----------------------------------------------------------------------------------
+	void setControllerVibration(float p_leftMotor, float p_rightMotor);
+	void setMouseSensitivity( const float p_sensitivity );
+	const float getMouseSensitivity() const;
 
 private:
 	///-----------------------------------------------------------------------------------
@@ -74,7 +96,7 @@ private:
 	/// often the same as items in the different enums
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void saveControl( InputHelper::INPUT_DEVICE_TYPE p_deviceType, int p_controlType,
+	void saveControl( InputHelper::InputDeviceTypes p_deviceType, int p_controlType,
 		Control* p_control, const string& p_name );
 
 	///-----------------------------------------------------------------------------------
@@ -83,7 +105,7 @@ private:
 	/// \return vector<int>* a pointer to the vector of the type given above. This vector
 	/// is allocated on the stack
 	///-----------------------------------------------------------------------------------
-	vector<int>* vectorFromDeviceType( InputHelper::INPUT_DEVICE_TYPE p_deviceType );
+	vector<int>* vectorFromDeviceType( InputHelper::InputDeviceTypes p_deviceType );
 
 	///-----------------------------------------------------------------------------------
 	/// Helper function. Expand a vector if it's size is too small for the given index.
@@ -98,6 +120,8 @@ private:
 	GraphicsBackendSystem* m_graphicsBackend;
 	HINSTANCE m_hInstance;
 	InputManager* m_inputManager;
+
+	Cursor* m_cursor;
 
 	map<string, int> m_controlIdxs;
 	vector<int> m_mouseMoveIdxsbyEnum;

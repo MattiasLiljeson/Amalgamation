@@ -1,54 +1,164 @@
 #include "SoundFactory.h"
+#include <Globals.h>
+#include <DebugUtil.h>
 
 SoundFactory::SoundFactory(IXAudio2* p_soundDevice)
 {
 	m_soundDevice = p_soundDevice;
+	/*SoundBufferAndHeader* bufferAndHeader = new SoundBufferAndHeader();
+	BasicSoundCreationInfo basicInfo("default_what.wav", SOUNDROOTPATH.c_str());
+	initBuffer(bufferAndHeader->buffer, &basicInfo);
+	createSoundBuffer(basicInfo.getFullFilePathString().c_str(),
+		bufferAndHeader->buffer, bufferAndHeader->waveFormatEx);
+	m_soundBufferManager.addResource(basicInfo.fileName, bufferAndHeader);*/
 }
 
 SoundFactory::~SoundFactory()
-{
-
+{	
 }
 
-Sound* SoundFactory::createAmbientSound( BasicSoundCreationInfo* p_info )
+Sound* SoundFactory::createSoundFromHeader( const AudioHeader* p_audioHeader )
 {
-	XAUDIO2_BUFFER buffer = {0};
-	initBuffer(&buffer, p_info);
+	Sound* newSound = NULL;
+	SoundBufferAndHeader* bufferAndHeader =
+		m_soundBufferManager.getResource(p_audioHeader->file);
+	if(bufferAndHeader == NULL)
+	{
+		try
+		{
+			bufferAndHeader = new SoundBufferAndHeader();
+			initBuffer(bufferAndHeader->buffer, p_audioHeader);
+			createSoundBuffer(p_audioHeader,bufferAndHeader);
+			m_soundBufferManager.addResource(p_audioHeader->file, bufferAndHeader);
+		}
+		catch (XAudio2Exception& e)
+		{
+			DEBUGWARNING((e.what()));
+			delete bufferAndHeader;
+			return NULL;
+		}
+	}
 
-	IXAudio2SourceVoice* soundVoice = createSourceVoice(
-		p_info->getFullFilePathString().c_str(), buffer );
-	return new Sound(soundVoice,buffer,p_info->volume);
+	switch (p_audioHeader->soundType)
+	{
+	case AudioHeader::AMBIENT:
+		{
+			IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
+				*bufferAndHeader->waveFormatEx, p_audioHeader->maxFrequencyOffeset);
+			newSound = new Sound(soundVoice, bufferAndHeader->buffer);
+			break;
+		}
+	case AudioHeader::AMBIENTRANGE:
+		{
+			IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
+				*bufferAndHeader->waveFormatEx, p_audioHeader->maxFrequencyOffeset);
+			newSound = new Sound(soundVoice, bufferAndHeader->buffer);
+			break;
+		}
+
+	case AudioHeader::POSITIONALSOUND:
+		{
+			X3DAUDIO_EMITTER		emitter = {0};
+			X3DAUDIO_DSP_SETTINGS	dspSettings = {0};
+			PositionalSoundInfo info;
+
+			initEmitter(&emitter, p_audioHeader);
+			initDSPSettings(&dspSettings, 2, p_audioHeader);
+
+			info.emitter = emitter;
+			info.settings = dspSettings;
+
+			IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
+				*bufferAndHeader->waveFormatEx, p_audioHeader->maxFrequencyOffeset);
+			newSound = new PositionalSound(soundVoice, bufferAndHeader->buffer, info);
+			break;
+		}
+	default:
+		throw XAudio2Exception("XAudio2 sound factory error: Unknown sound type",
+			__FILE__,__FUNCTION__,__LINE__);
+		break;
+	}
+
+	return newSound;
 }
 
-PositionalSound* SoundFactory::createPositionalSound(BasicSoundCreationInfo* p_basicSoundInfo, 
-													 PositionalSoundCreationInfo* p_positionalInfo)
+void SoundFactory::initEmitter(X3DAUDIO_EMITTER* p_emitter, const AudioHeader* p_audioHeader)
 {
-	XAUDIO2_BUFFER buffer				= {0};
-	X3DAUDIO_EMITTER emitter			= {0};
-	X3DAUDIO_DSP_SETTINGS dspSettings	= {0};
+	/************************************************************************/
+	/* The emitter should be able to receive any predefined audio cone, it's*/
+	/* now hard coded.														*/
+	/************************************************************************/
+	p_emitter->pCone = NULL;
+	if (p_emitter->pCone)
+	{
+		p_emitter->pCone->InnerAngle = 0.0f;
+		p_emitter->pCone->OuterAngle = 0.0f;
+		p_emitter->pCone->InnerVolume = 0.0f;
+		p_emitter->pCone->OuterVolume = 1.0f;
+		p_emitter->pCone->InnerLPF = 0.0f;
+		p_emitter->pCone->OuterLPF = 1.0f;
+		p_emitter->pCone->InnerReverb = 0.0f;
+		p_emitter->pCone->OuterReverb = 1.0f;
 
-	initBuffer(&buffer, p_basicSoundInfo);
-	initEmitter(&emitter, p_positionalInfo->soundOrientation);
-	initDSPSettings(&dspSettings,p_positionalInfo->destChannels);
-
-	PositionalSoundInfo info;
-	info.emitter	= emitter;
-	info.settings	= dspSettings; 
-	info.previousPosition = p_positionalInfo->soundOrientation.listenerPos;
-
-	IXAudio2SourceVoice* soundVoice = createSourceVoice(
-		p_basicSoundInfo->getFullFilePathString().c_str(), buffer );
-	return new PositionalSound( soundVoice, buffer, info, p_basicSoundInfo->volume);
-}
-
-
-void SoundFactory::initBuffer( XAUDIO2_BUFFER* p_audioBuffer, 
-							  BasicSoundCreationInfo* p_basicSoundInfo )
-{
-	if (p_basicSoundInfo->loopPlayback)
-		p_audioBuffer->LoopCount = XAUDIO2_LOOP_INFINITE;
+		p_emitter->InnerRadius = 2.0f;
+		p_emitter->InnerRadiusAngle = X3DAUDIO_PI/4.0f;
+	}
 	else
-		p_audioBuffer->LoopCount = p_basicSoundInfo->loopPlayback;
+	{
+		p_emitter->InnerRadius = 0.0f;
+		p_emitter->InnerRadiusAngle = 0.0f;
+	}
+	X3DAUDIO_VECTOR pos = { p_audioHeader->pos.x, p_audioHeader->pos.y, 
+		p_audioHeader->pos.z};
+
+	X3DAUDIO_VECTOR orientFront = { p_audioHeader->front.x, p_audioHeader->front.y,
+		p_audioHeader->front.z};
+
+	X3DAUDIO_VECTOR orientTop	= { p_audioHeader->top.x, p_audioHeader->top.y,
+		p_audioHeader->top.z};
+
+	X3DAUDIO_VECTOR velocity	= { p_audioHeader->velocity.x, p_audioHeader->velocity.y,
+		p_audioHeader->velocity.z};
+
+	p_emitter->Position		= pos;
+	p_emitter->OrientFront	= orientFront;
+	p_emitter->OrientTop	= orientTop;
+	p_emitter->Velocity		= velocity;
+	p_emitter->ChannelCount		= 1;
+	p_emitter->ChannelRadius	= 1.0f;
+	p_emitter->pChannelAzimuths = new FLOAT32[1]; ///< UNKOWN VARIABLE
+
+	p_emitter->pVolumeCurve = (X3DAUDIO_DISTANCE_CURVE*)&X3DAudioDefault_LinearCurve;
+	p_emitter->pLFECurve    = (X3DAUDIO_DISTANCE_CURVE*)&Emitter_LFE_Curve;
+	p_emitter->pLPFDirectCurve = NULL; // use default curve
+	p_emitter->pLPFReverbCurve = NULL; // use default curve
+	p_emitter->pReverbCurve    = (X3DAUDIO_DISTANCE_CURVE*)&Emitter_Reverb_Curve;
+	p_emitter->CurveDistanceScaler	= p_audioHeader->maxRange;
+	p_emitter->DopplerScaler		= p_audioHeader->dopplerScalar;
+}
+
+void SoundFactory::initBuffer(XAUDIO2_BUFFER* p_audioBuffer, 
+							  const AudioHeader* p_audioHeader)
+{
+	switch (p_audioHeader->playInterval)
+	{
+	case AudioHeader::ONCE:
+		p_audioBuffer->LoopCount = 0;
+		break;
+	case AudioHeader::TIMERBASED:
+		p_audioBuffer->LoopCount = 1;
+		break;
+	case AudioHeader::TWICE:
+		p_audioBuffer->LoopCount = 1;
+		break;
+	case AudioHeader::FOREVER:
+		p_audioBuffer->LoopCount = XAUDIO2_LOOP_INFINITE;
+		break;
+	default:
+		throw XAudio2Exception("XAudio2 sound factory error: Unknown play interval",
+			__FILE__,__FUNCTION__,__LINE__);
+		break;
+	}		
 }
 
 void SoundFactory::initDSPSettings( X3DAUDIO_DSP_SETTINGS* p_dspSettings, int p_destChannels)
@@ -58,19 +168,28 @@ void SoundFactory::initDSPSettings( X3DAUDIO_DSP_SETTINGS* p_dspSettings, int p_
 	p_dspSettings->pMatrixCoefficients = new FLOAT32[1*p_destChannels];
 }
 
-IXAudio2SourceVoice* SoundFactory::createSourceVoice(const char* p_fullFilePath, 
-													 XAUDIO2_BUFFER& p_buffer, 
-													 float maxFreqOffset/* =1.0f */)
+void SoundFactory::initDSPSettings(X3DAUDIO_DSP_SETTINGS* p_dspSettings, 
+								   unsigned int p_destChannels, 
+								   const AudioHeader* p_audioHeader)
 {
-	HRESULT hr = S_OK;
-	WAVEFORMATEX waveFormatEx;
-	DWORD chunkSize, chunkPosition, fileType;
+	p_dspSettings->pDelayTimes = NULL;
+	p_dspSettings->SrcChannelCount = p_audioHeader->sourceChannels;
+	p_dspSettings->DstChannelCount = p_destChannels;
+	p_dspSettings->pMatrixCoefficients = 
+		new FLOAT32[p_dspSettings->SrcChannelCount*p_dspSettings->DstChannelCount];
+	p_dspSettings->DopplerFactor = p_audioHeader->dopplerFactor;
+}
 
+
+void SoundFactory::createSoundBuffer(const AudioHeader* p_audioHeader, 
+									 SoundBufferAndHeader* p_soundBuffer)
+{
+	DWORD chunkSize, chunkPosition, fileType;
 	ZeroMemory(&m_file, sizeof(HANDLE));
-	initFile(p_fullFilePath);
+	initFile(toString(p_audioHeader->path + p_audioHeader->file).c_str());
 
 	findChunk( m_file, fourccRIFF, chunkSize, chunkPosition);
-	readChunkData(m_file,&fileType,sizeof(DWORD), chunkPosition);
+	readChunkData(m_file, &fileType, sizeof(DWORD), chunkPosition);
 
 	if (fileType != fourccWAVE)
 		throw XAudio2Exception("Unsupported sound format",__FILE__,__FUNCTION__,__LINE__);
@@ -78,43 +197,88 @@ IXAudio2SourceVoice* SoundFactory::createSourceVoice(const char* p_fullFilePath,
 	/*************************************************************************/
 	/* Locate the fmt chunk and copy its contents into a WAVEFORMATEXTENSIBLE*/
 	/*************************************************************************/
-	findChunk(m_file,fourccFMT,chunkSize,chunkPosition);
-	readChunkData(m_file,&waveFormatEx,chunkSize,chunkPosition);
+	findChunk(m_file, fourccFMT, chunkSize, chunkPosition);
+	readChunkData(m_file, p_soundBuffer->waveFormatEx, chunkSize, chunkPosition);
 
 	/************************************************************************/
 	/* Locate the data chunk and read its contents into a buffer            */
 	/************************************************************************/
-	findChunk(m_file, fourccDATA,chunkSize,chunkPosition);
+	findChunk(m_file, fourccDATA, chunkSize, chunkPosition);
 	BYTE* dataBuffer = new BYTE[chunkSize];
-	readChunkData(m_file,dataBuffer,chunkSize, chunkPosition);
+	readChunkData(m_file, dataBuffer, chunkSize, chunkPosition);
 
 	/************************************************************************/
 	/* HACK: Most options of the buffer should be sent into the function	*/
 	/* rather than the hard coded way below									*/
 	/************************************************************************/
-	p_buffer.AudioBytes = chunkSize;
-	p_buffer.pAudioData = dataBuffer;
-	p_buffer.Flags = XAUDIO2_END_OF_STREAM;
-	p_buffer.LoopBegin = 0;
-	//p_buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+	p_soundBuffer->buffer->AudioBytes = chunkSize;
+	p_soundBuffer->buffer->pAudioData = dataBuffer;
+	p_soundBuffer->buffer->Flags = XAUDIO2_END_OF_STREAM;
+	p_soundBuffer->buffer->LoopBegin = 0;
+	p_soundBuffer->buffer->LoopLength = 0;
+}
 
+void SoundFactory::createSoundBuffer(const char* p_fullFilePath, XAUDIO2_BUFFER* p_buffer,
+									 WAVEFORMATEX* p_waveFormatEx)
+{
+	DWORD chunkSize, chunkPosition, fileType;
+
+	ZeroMemory(&m_file, sizeof(HANDLE));
+	initFile(p_fullFilePath);
+
+	findChunk( m_file, fourccRIFF, chunkSize, chunkPosition);
+	readChunkData(m_file, &fileType, sizeof(DWORD), chunkPosition);
+
+	if (fileType != fourccWAVE)
+		throw XAudio2Exception("Unsupported sound format",__FILE__,__FUNCTION__,__LINE__);
+
+	/*************************************************************************/
+	/* Locate the fmt chunk and copy its contents into a WAVEFORMATEXTENSIBLE*/
+	/*************************************************************************/
+	findChunk(m_file, fourccFMT, chunkSize, chunkPosition);
+	readChunkData(m_file, p_waveFormatEx, chunkSize, chunkPosition);
+
+	/************************************************************************/
+	/* Locate the data chunk and read its contents into a buffer            */
+	/************************************************************************/
+	findChunk(m_file, fourccDATA, chunkSize, chunkPosition);
+	BYTE* dataBuffer = new BYTE[chunkSize];
+	readChunkData(m_file, dataBuffer, chunkSize, chunkPosition);
+
+	/************************************************************************/
+	/* HACK: Most options of the buffer should be sent into the function	*/
+	/* rather than the hard coded way below									*/
+	/************************************************************************/
+	p_buffer->AudioBytes = chunkSize;
+	p_buffer->pAudioData = dataBuffer;
+	p_buffer->Flags = XAUDIO2_END_OF_STREAM;
+	p_buffer->LoopBegin = 0;
+	p_buffer->LoopLength = 0;
+}
+
+IXAudio2SourceVoice* SoundFactory::createSourceVoice(XAUDIO2_BUFFER& p_buffer, 
+													 WAVEFORMATEX& p_waveFormatEx, 
+													 float maxFreqOffset)
+{
 	/************************************************************************/
 	/* Create the source voice after the buffers has been formated.			*/
 	/************************************************************************/
 	IXAudio2SourceVoice* soundVoice;
 	UINT32 flags = 0;
-	IXAudio2VoiceCallback* callback = NULL;
 	XAUDIO2_VOICE_SENDS* sendList = NULL;
 	XAUDIO2_EFFECT_CHAIN* effectChain = NULL;
 
-	if (FAILED(hr = m_soundDevice->CreateSourceVoice( &soundVoice, 
-		&waveFormatEx, flags , maxFreqOffset, callback, sendList, effectChain)))
-		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
+	HRESULT hr = m_soundDevice->CreateSourceVoice(&soundVoice, &p_waveFormatEx, flags,
+		maxFreqOffset, NULL, sendList, effectChain);
+	if (FAILED(hr))
+	{
+		throw XAudio2Exception(hr, __FILE__, __FUNCTION__, __LINE__);
+	}
 	return soundVoice;
 }
 
 void SoundFactory::findChunk(HANDLE hFile, DWORD fourcc, DWORD& dwChunkSize, 
-							   DWORD& dwChunkDataPosition)
+							 DWORD& dwChunkDataPosition)
 {
 	HRESULT hr = S_OK;
 	if( INVALID_SET_FILE_POINTER == SetFilePointer( hFile, 0, NULL, FILE_BEGIN ) )
@@ -180,7 +344,7 @@ void SoundFactory::findChunk(HANDLE hFile, DWORD fourcc, DWORD& dwChunkSize,
 }
 
 void SoundFactory::readChunkData(HANDLE hFile, void* buffer, DWORD bufferSize, 
-								   DWORD bufferOffset)
+								 DWORD bufferOffset)
 {
 	HRESULT hr = S_OK;	
 	DWORD dwRead;
@@ -200,79 +364,18 @@ void SoundFactory::readChunkData(HANDLE hFile, void* buffer, DWORD bufferSize,
 void SoundFactory::initFile(const char* p_filePath)
 {
 	HRESULT hr = S_OK;
-	m_file = CreateFile(p_filePath,GENERIC_READ,FILE_SHARE_READ,NULL,
-		OPEN_EXISTING,0,NULL);
+	m_file = CreateFile(p_filePath, GENERIC_READ, FILE_SHARE_READ, NULL,
+		OPEN_EXISTING, 0, NULL);
 
 	if (INVALID_HANDLE_VALUE == m_file)
 	{
 		hr = HRESULT_FROM_WIN32( GetLastError() );
-		throw XAudio2Exception(hr,p_filePath, __FILE__,__FUNCTION__,__LINE__);
+		throw XAudio2Exception(hr, p_filePath, __FILE__, __FUNCTION__, __LINE__);
 	}
 
-	if ( INVALID_SET_FILE_POINTER == SetFilePointer(m_file,0,NULL,FILE_BEGIN) )
+	if ( INVALID_SET_FILE_POINTER == SetFilePointer(m_file, 0, NULL, FILE_BEGIN) )
 	{
 		hr = HRESULT_FROM_WIN32( GetLastError() );
-		throw XAudio2Exception(hr, __FILE__,__FUNCTION__,__LINE__);
+		throw XAudio2Exception(hr, __FILE__, __FUNCTION__, __LINE__);
 	}
-}
-
-void SoundFactory::initEmitter(X3DAUDIO_EMITTER* p_emitter, 
-							   SoundOrientation p_soundOrientation)
-{
-	/************************************************************************/
-	/* The emitter should be able to receive any predefined audio cone, it's*/
-	/* now hard coded.														*/
-	/************************************************************************/
-	p_emitter->pCone = NULL;
-	if (p_emitter->pCone)
-	{
-		p_emitter->pCone->InnerAngle = 0.0f;
-		p_emitter->pCone->OuterAngle = 0.0f;
-		p_emitter->pCone->InnerVolume = 0.0f;
-		p_emitter->pCone->OuterVolume = 1.0f;
-		p_emitter->pCone->InnerLPF = 0.0f;
-		p_emitter->pCone->OuterLPF = 1.0f;
-		p_emitter->pCone->InnerReverb = 0.0f;
-		p_emitter->pCone->OuterReverb = 1.0f;
-
-		p_emitter->InnerRadius = 2.0f;
-		p_emitter->InnerRadiusAngle = X3DAUDIO_PI/4.0f;
-	}
-	else
-	{
-		p_emitter->InnerRadius = 0.0f;
-		p_emitter->InnerRadiusAngle = 0.0f;
-	}
-	X3DAUDIO_VECTOR pos = {
-		p_soundOrientation.listenerPos[0],
-		p_soundOrientation.listenerPos[1],
-		p_soundOrientation.listenerPos[2]};
-	X3DAUDIO_VECTOR orientFront = {
-		p_soundOrientation.listenerOrientFront[0],
-		p_soundOrientation.listenerOrientFront[1],
-		p_soundOrientation.listenerOrientFront[2]};
-	X3DAUDIO_VECTOR orientTop	= {
-		p_soundOrientation.listenerOrientTop[0],
-		p_soundOrientation.listenerOrientTop[1],
-		p_soundOrientation.listenerOrientTop[2]};
-	X3DAUDIO_VECTOR velocity	= {
-		p_soundOrientation.listenerVelocity[0],
-		p_soundOrientation.listenerVelocity[1],
-		p_soundOrientation.listenerVelocity[2]};
-
-	p_emitter->Position		= pos;
-	p_emitter->OrientFront	= orientFront;
-	p_emitter->OrientTop	= orientTop;
-	p_emitter->Velocity		= velocity;
-	p_emitter->ChannelCount		= 1;
-	p_emitter->ChannelRadius	= 1.0f;
-	p_emitter->pChannelAzimuths = new FLOAT32[1]; ///< UNKOWN VARIABLE
-
-	p_emitter->pVolumeCurve = (X3DAUDIO_DISTANCE_CURVE*)&X3DAudioDefault_LinearCurve;
-	p_emitter->pLFECurve    = (X3DAUDIO_DISTANCE_CURVE*)&Emitter_LFE_Curve;
-	p_emitter->pLPFDirectCurve = NULL; // use default curve
-	p_emitter->pLPFReverbCurve = NULL; // use default curve
-	p_emitter->pReverbCurve    = (X3DAUDIO_DISTANCE_CURVE*)&Emitter_Reverb_Curve;
-	p_emitter->CurveDistanceScaler	= 30.0f;
-	p_emitter->DopplerScaler		= 1.0f;
 }

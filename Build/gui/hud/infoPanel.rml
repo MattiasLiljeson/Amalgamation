@@ -1,0 +1,16 @@
+<rml>
+	<head>
+		<link type="text/rcss" href="infoPanel.rcss"/>
+		<title>Datagrid</title>
+	</head>
+	<body id="infoPanel">
+		<div id="title_bar">
+			<span id="title">The scores!</span>
+		</div>
+		<datagrid source="playerstats.infopanel">
+			<col fields="playerName" width="60%">Player:</col>
+			<col fields="score" width="30%">Score:</col>
+			<col fields="ping" width="10%">Ping:</col>
+		</datagrid>
+	</body>
+</rml>

@@ -2,6 +2,10 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="InstanceData.h" />
+    <ClInclude Include="RawTransformData.h" />
+    <ClInclude Include="LightInstanceData.h" />
+    <ClInclude Include="PlayerStates.h" />
+    <ClInclude Include="DamageAccumulator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InstanceData.cpp" />

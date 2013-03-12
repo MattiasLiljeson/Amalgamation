@@ -12,7 +12,7 @@
 #pragma once
 
 #include <Component.h>
-#include "NetworkType.h"
+#include "EntityType.h"
 
 class NetworkSynced: public Component
 {
@@ -22,30 +22,50 @@ public:
 	/// \return 
 	///-----------------------------------------------------------------------------------
 	NetworkSynced()
+		: Component( ComponentType::NetworkSynced )
 	{
 		m_networkIdentity = -1;
 		m_owner = -1;
-		m_networkType.type = NetworkType::NON_EXISTENT;
+		m_playerID = -1;
+		m_networkType = EntityType::NON_EXISTENT;
+		m_componentTypeId = ComponentType::NetworkSynced;
 	}
 
 	///-----------------------------------------------------------------------------------
 	/// Sets the private networkIdentity to argument's value.
-	/// Sets the private owner to argument's value.
+	/// Sets the private owner to argument's value. //Whats an "owner"? //ML
 	/// \param p_networkIdentity
 	/// \return 
 	///-----------------------------------------------------------------------------------
 	NetworkSynced( int p_networkIdentity, int p_owner )
+		: Component( ComponentType::NetworkSynced )
 	{
 		m_networkIdentity = p_networkIdentity;
 		m_owner = p_owner;
-		m_networkType.type = NetworkType::NON_EXISTENT;
+		m_playerID = -1;
+		m_networkType = EntityType::NON_EXISTENT;
+		m_componentTypeId = ComponentType::NetworkSynced;
 	}
 
-	NetworkSynced( int p_networkIdentity, int p_owner, NetworkType::Network_T p_networkType )
+	NetworkSynced( int p_networkIdentity, int p_owner,
+		EntityType::EntityEnums p_networkType )
+		: Component( ComponentType::NetworkSynced )
 	{
 		m_networkIdentity = p_networkIdentity;
 		m_owner = p_owner;
-		m_networkType.type = p_networkType;
+		m_playerID = -1;
+		m_networkType = p_networkType;
+		m_componentTypeId = ComponentType::NetworkSynced;
+	}	
+	NetworkSynced( int p_networkIdentity, int p_owner, int p_playerID,
+		EntityType::EntityEnums p_networkType )
+		: Component( ComponentType::NetworkSynced )
+	{
+		m_networkIdentity = p_networkIdentity;
+		m_owner = p_owner;
+		m_playerID = p_playerID;
+		m_networkType = p_networkType;
+		m_componentTypeId = ComponentType::NetworkSynced;
 	}
 
 	~NetworkSynced()
@@ -70,13 +90,16 @@ public:
 		return m_owner;
 	}
 
+	int getPlayerID() const{
+		return m_playerID;
+	}
 	///-----------------------------------------------------------------------------------
 	/// Get the network type.
 	/// \return NetworkType
 	///-----------------------------------------------------------------------------------
-	NetworkType::Network_T getNetworkType() const
+	EntityType::EntityEnums getNetworkType() const
 	{
-		return m_networkType.type;
+		return m_networkType;
 	}
 
 	///-----------------------------------------------------------------------------------
@@ -99,13 +122,14 @@ public:
 		m_owner = p_owner;
 	}
 
-	void setNetworkType( NetworkType::Network_T p_networkType )
+	void setNetworkType( EntityType::EntityEnums p_networkType )
 	{
-		m_networkType.type = p_networkType;
+		m_networkType = p_networkType;
 	}
 
 private:
 	int m_networkIdentity;
 	int m_owner;
-	NetworkType m_networkType;
+	int m_playerID;
+	EntityType::EntityEnums m_networkType;
 };

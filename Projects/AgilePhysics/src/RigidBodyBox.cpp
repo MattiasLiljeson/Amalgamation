@@ -10,7 +10,7 @@ void RigidBodyBox::CalculateInertiaTensor()
     float z = (xfactor + yfactor) * GetMass() / 12.0f;
 	SetInertiaTensor(AglMatrix(x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1));
 }
-RigidBodyBox::RigidBodyBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic): RigidBody(pPosition, pMass, pVelocity, pAngularVelocity, pStatic)
+RigidBodyBox::RigidBodyBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, bool pImpulseEnabled): RigidBody(pPosition, pMass, pVelocity, pAngularVelocity, pStatic, false, pImpulseEnabled)
 {
 	mSize = pSize;
 	CalculateInertiaTensor();
@@ -19,6 +19,29 @@ RigidBodyBox::RigidBodyBox(AglVector3 pPosition, AglVector3 pSize, float pMass, 
 	mBoundingSphere.position = pPosition;
 	mBoundingSphere.radius = AglVector3::length(mSize)*0.5f;
 }
+RigidBodyBox::RigidBodyBox(AglOBB pShape, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, bool pImpulseEnabled)
+	: RigidBody(pShape.world, pMass, pVelocity, pAngularVelocity, pStatic, false, pImpulseEnabled)
+{
+	mSize = pShape.size;
+	CalculateInertiaTensor();
+
+	//Initialize bounding sphere
+	mBoundingSphere.position = pShape.world.GetTranslation();
+	mBoundingSphere.radius = AglVector3::length(mSize)*0.5f;
+}
+RigidBodyBox::RigidBodyBox(BoxInitData pInitData)
+	: RigidBody(pInitData.World, pInitData.Mass, pInitData.Velocity, pInitData.AngularVelocity, pInitData.Static, false, pInitData.ImpulseEnabled)
+{
+	mSize = pInitData.Size;
+	CalculateInertiaTensor();
+
+	//Initialize bounding sphere
+	mBoundingSphere.position = pInitData.World.GetTranslation();
+	mBoundingSphere.radius = AglVector3::length(mSize)*0.5f;
+	SetCollisionEnabled(pInitData.CollisionEnabled);
+	SetParent(pInitData.Parent);
+}
+
 RigidBodyBox::~RigidBodyBox()
 {
 

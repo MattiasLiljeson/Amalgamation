@@ -31,10 +31,31 @@ void CompoundBody::ComputeInertia()
 	mInertiaWorld = inertia;
 	mInverseInertiaWorld = AglMatrix::inverse(mInertiaWorld);
 }
-
-CompoundBody::CompoundBody(AglVector3 pPosition)
+AglBoundingSphere CompoundBody::MergeSpheres(AglBoundingSphere pS1, AglBoundingSphere pS2)
 {
-	mLocalTransform = mPreviousLocalTransform = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, pPosition.x, pPosition.y, pPosition.z, 1);
+	AglVector3 dVec = pS2.position - pS1.position;
+	float dist2 = AglVector3::dotProduct(dVec, dVec);
+	if ((pS2.radius-pS1.radius)*(pS2.radius-pS1.radius) >= dist2)
+	{
+		if (pS1.radius > pS2.radius)
+			return pS1;
+		else
+			return pS2;
+	}
+	else
+	{
+		AglBoundingSphere s;
+		float dist = sqrt(dist2);
+		s.radius = (dist+pS1.radius+pS2.radius)*0.5f;
+		s.position = pS1.position;
+		s.position += dVec * ((s.radius-pS1.radius) / dist);
+		return s;
+	}
+}
+
+CompoundBody::CompoundBody(AglMatrix pTransform)
+{
+	mLocalTransform = mPreviousLocalTransform = pTransform;
 	mInertiaTensor = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 	mVelocity = mPreviousVelocity = mForce = mAngularVelocity = mPreviousAngularVelocity = AglVector3(0, 0, 0);
 	mStatic = false;
@@ -58,6 +79,18 @@ void CompoundBody::AddChild(RigidBody* pRigidBody)
 	mChildren.push_back(pRigidBody);
 	pRigidBody->SetParent(this);
 }
+void CompoundBody::AddChild(RigidBody* pRigidBody, AglMatrix pLocalTransform)
+{
+	if (pRigidBody->IsStatic() != mStatic)
+	{
+		//CANNOT COMBINE STATIC AND NON-STATIC COMPONENTS
+		float k = 0;
+		k = 1.0f / k;
+		return;
+	}
+	mChildren.push_back(pRigidBody);
+	pRigidBody->SetParent(this, pLocalTransform);
+}
 void CompoundBody::DetachChild(RigidBody* pRigidBody)
 {
 	for (unsigned int i = 0; i < mChildren.size(); i++)
@@ -71,7 +104,7 @@ void CompoundBody::DetachChild(RigidBody* pRigidBody)
 		}
 	}
 }
-float CompoundBody::GetMass()
+float CompoundBody::GetMass() const
 {
 	float m = 0;
 	for (unsigned int i = 0; i < mChildren.size(); i++)
@@ -86,11 +119,11 @@ AglMatrix CompoundBody::GetWorld() const
 {
 	return mLocalTransform;
 }
-AglVector3 CompoundBody::GetVelocity()
+AglVector3 CompoundBody::GetVelocity() const
 {
 	return mVelocity;
 }
-AglVector3 CompoundBody::GetAngularVelocity()
+AglVector3 CompoundBody::GetAngularVelocity() const
 {
 	return mAngularVelocity;
 }
@@ -107,54 +140,20 @@ AglVector3 CompoundBody::GetCenterOfMass()
 	return com;
 }
 
+bool CompoundBody::IsCompoundBody()
+{
+	return true;
+}
+
 void CompoundBody::AddImpulse(AglVector3 pImpulse)
 {
 	if (!mStatic && !mTempStatic)
 		mVelocity += pImpulse * GetInvMass();
 }
-void CompoundBody::AddAngularImpulse(AglVector3 pAngularImpulse)
+void CompoundBody::AddAngularImpulse(AglVector3 pAngularImpulse, bool p_propagate)
 {
 	if (!mStatic && !mTempStatic)
 		mAngularVelocity += pAngularImpulse;
-}
-void CompoundBody::UpdateVelocity(float pElapsedTime)
-{
-	//Updates velocity and angular velocity only
-	if (!mStatic && !mTempStatic)
-	{
-		//mForce += AglVector3(0, -9.815f, 0);
-		mPreviousVelocity = mVelocity;
-		mPreviousAngularVelocity = mAngularVelocity;
-		mVelocity += mForce * pElapsedTime;
-		mForce = AglVector3(0, 0, 0);
-
-		//Damping
-		mVelocity *= (1 - 0.9f * pElapsedTime);
-		mAngularVelocity *= (1 - 0.9f * pElapsedTime);
-	}
-}
-void CompoundBody::UpdatePosition(float pElapsedTime)
-{
-	//Updates mWorld only
-	if (!mStatic && !mTempStatic)
-	{
-		mPreviousLocalTransform = mLocalTransform;
-		mLocalTransform[12] += mVelocity.x * pElapsedTime;
-		mLocalTransform[13] += mVelocity.y * pElapsedTime;
-		mLocalTransform[14] += mVelocity.z * pElapsedTime;
-
-		float a = AglVector3::length(mAngularVelocity);
-		if (a > 0)
-		{
-			AglVector3 s, t;
-			AglQuaternion r;
-			AglMatrix::matrixToComponents(mLocalTransform, s, r, t);
-			AglQuaternion r2 = AglQuaternion::constructFromAngularVelocity(mAngularVelocity * pElapsedTime);
-			r = r2 * r;
-			AglMatrix::componentsToMatrix(mLocalTransform, AglVector3(1, 1, 1), r, t);
-		}
-		ComputeInertia();
-	}
 }
 void CompoundBody::RevertVelocity()
 {
@@ -174,4 +173,20 @@ void CompoundBody::RevertPosition()
 AglMatrix CompoundBody::GetInverseInertiaWorld()
 {
 	return mInverseInertiaWorld;
+}
+AglBoundingSphere CompoundBody::GetBoundingSphere()
+{
+	if (mChildren.size() > 0)
+	{
+		AglBoundingSphere bs = mChildren[0]->GetBoundingSphere();
+		for (unsigned int i = 1; i < mChildren.size(); i++)
+		{
+			bs = MergeSpheres(bs, mChildren[i]->GetBoundingSphere());
+		}
+		return bs;
+	}
+	else
+	{
+		return AglBoundingSphere(GetWorld().GetTranslation(), 0);
+	}
 }

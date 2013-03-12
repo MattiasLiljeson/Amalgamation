@@ -12,6 +12,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Aspect.cpp" />
+    <ClCompile Include="AssemblageHelper.cpp" />
+    <ClCompile Include="AssemblageReader.cpp" />
+    <ClCompile Include="ComponentData.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentReader.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="ComponentType.cpp" />
@@ -19,11 +24,20 @@
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="EntitySystem.cpp" />
     <ClCompile Include="EntityWorld.cpp" />
+    <ClCompile Include="Ingredient.cpp" />
+    <ClCompile Include="OutputLogger.cpp" />
+    <ClCompile Include="Recipe.cpp" />
     <ClCompile Include="SystemManager.cpp" />
     <ClCompile Include="SystemType.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aspect.h" />
+    <ClInclude Include="AssemblageException.h" />
+    <ClInclude Include="AssemblageHelper.h" />
+    <ClInclude Include="AssemblageReader.h" />
+    <ClInclude Include="ComponentData.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentReader.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="ComponentType.h" />
@@ -33,9 +47,15 @@
     <ClInclude Include="EntityWorld.h" />
     <ClInclude Include="IEntityObserver.h" />
     <ClInclude Include="IPerformer.h" />
+    <ClInclude Include="OutputLogger.h" />
     <ClInclude Include="Manager.h" />
+    <ClInclude Include="Recipe.h" />
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="SystemType.h" />
+    <ClInclude Include="Tag.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ingredient.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{78BCBBD0-888F-41CD-8B6F-29539812F67E}</ProjectGuid>
@@ -47,14 +67,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -71,11 +91,15 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)Projects/Util/Src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)Projects/Util/Src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/Util/Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -84,11 +108,26 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WIN32_WINDOWS;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -99,6 +138,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_WIN32_WINDOWS;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -106,6 +146,13 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

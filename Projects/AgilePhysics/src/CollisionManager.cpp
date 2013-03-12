@@ -5,8 +5,9 @@ float theGlobal = 0;
 
 bool CheckCollision(RigidBody* p_r1, RigidBody* p_r2, PhyCollisionData* p_data)
 {
+	AglVector3 nothing;
 	//Do a bounding sphere check to provide early outs.
-	if (!CheckCollision(p_r1->GetBoundingSphere(), p_r2->GetBoundingSphere()))
+	if (!CheckCollision(p_r1->GetBoundingSphere(), p_r2->GetBoundingSphere(), nothing))
 		return false;
 
 	//Check types and do appropriate tests.
@@ -55,14 +56,31 @@ bool CheckCollision(PhyRay p_ray, RigidBody* p_rigidBody, RayCollisionData* p_co
 		return CheckCollision(p_ray, (RigidBodyConvexHull*)p_rigidBody, p_collisionData);
 	return false;
 }
-bool CheckCollision(AglBoundingSphere p_sphere, RigidBody* p_rigidBody)
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBody* p_rigidBody, float& p_t)
+{
+	//Check types and do appropriate tests.
+	if (p_rigidBody->GetType() == BOX)
+		return CheckCollision(p_lineSegment, (RigidBodyBox*)p_rigidBody, p_t);
+	else if (p_rigidBody->GetType() == SPHERE)
+		return CheckCollision(p_lineSegment, (RigidBodySphere*)p_rigidBody, p_t);
+	else if (p_rigidBody->GetType() == CONVEXHULL)
+		return false;
+	return false;
+}
+
+bool CheckCollision(AglBoundingSphere p_sphere, RigidBody* p_rigidBody, AglVector3& p_collisionPoint)
 {
 	if (p_rigidBody->GetType() == BOX)
-		return CheckCollision(p_sphere, (RigidBodyBox*)p_rigidBody);
+		return CheckCollision(p_sphere, (RigidBodyBox*)p_rigidBody, p_collisionPoint);
 	else if (p_rigidBody->GetType() == SPHERE)
-		return CheckCollision(p_sphere, p_rigidBody->GetBoundingSphere());
+		return CheckCollision(p_sphere, p_rigidBody->GetBoundingSphere(), p_collisionPoint);
 	else if (p_rigidBody->GetType() == CONVEXHULL)
+	{
+		//NOT SUPPORTED YET!
+		int k = 0;
+		k / 1.0f / k;
 		return CheckCollision(p_sphere, (RigidBodyConvexHull*)p_rigidBody);
+	}
 	return false;
 }
 bool CheckCollision(AglBoundingSphere pS, PhyRay pR)
@@ -220,14 +238,93 @@ bool CheckCollision(PhyRay p_ray, RigidBodyConvexHull* p_hull, RayCollisionData*
 	return true;
 }
 
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBodySphere* p_sphere, float& p_t)
+{
+	AglVector3 d = p_lineSegment.p2 - p_lineSegment.p1;
+	AglVector3::normalize(d);
+	//Sphere Info
+	AglVector3 C = p_sphere->GetPosition();
+	float radius = p_sphere->GetRadius();
+
+	//Sphere collision algorithm
+	float b = AglVector3::dotProduct(d, p_lineSegment.p1 - C);
+	float c = AglVector3::dotProduct(p_lineSegment.p1 - C, p_lineSegment.p1 - C) - radius*radius;
+	if (b*b - c >= 0)
+	{
+		float t1 = -b - sqrt(b*b-c);
+		float t2 = -b + sqrt(b*b-c);
+		if (t2 > 0 && t1 * t1 < AglVector3::lengthSquared(p_lineSegment.p2-p_lineSegment.p1))
+		{
+			if (t1 > 0)
+				p_t = t1;
+			else
+				p_t = t2;
+			return true;
+		}
+	}
+	return false;
+}
+bool CheckCollision(const LineSegment& p_lineSegment, AglVector3 p_min, AglVector3 p_max, float& p_t)
+{
+	AglVector3 d = p_lineSegment.p2 - p_lineSegment.p1;
+	d.normalize();
+
+	AglVector3 invD = AglVector3(1.0f / d.x, 1.0f / d.y, 1.0f / d.z);
+	float t1;
+	float t2;
+	AglVector3 diffMax = p_max - p_lineSegment.p1;	
+	//diffMax *= invD;
+	diffMax = AglVector3(diffMax.x*invD.x, diffMax.y*invD.y, diffMax.z*invD.z);
+	AglVector3 diffMin = p_min - p_lineSegment.p1;
+	//diffMin *= invD;
+	diffMin = AglVector3(diffMin.x*invD.x, diffMin.y*invD.y, diffMin.z*invD.z);
+
+	t1 = min(diffMin.x, diffMax.x);
+	t2 = max(diffMin.x, diffMax.x);
+
+	t1 = max(t1, min(diffMin.y, diffMax.y));
+	t2 = min(t2, max(diffMin.y, diffMax.y));
+
+	t1 = max(t1, min(diffMin.z, diffMax.z));
+	t2 = min(t2, max(diffMin.z, diffMax.z));
+
+	if (t1 > t2 || t2 < 0 || t1 * t1 > AglVector3::lengthSquared(p_lineSegment.p2 - p_lineSegment.p1))
+	{
+		return false;
+	}
+
+	if (t1 > 0)
+		p_t = t1;
+	else
+		p_t = t2;
+
+	return true;
+}
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBodyBox* p_box, float& p_t)
+{
+	AglMatrix wInv = p_box->GetWorld();
+	wInv = AglMatrix::inverse(wInv);
+
+	LineSegment l;
+	l.p1 = p_lineSegment.p1;
+	AglVec3Transform(l.p1, wInv);
+	l.p2 = p_lineSegment.p2;
+	AglVec3Transform(l.p2, wInv);
+
+	AglVector3 s = p_box->GetSizeAsVector3()*0.5f;
+	return CheckCollision(l, -s, s, p_t);
+}
+
 //---------------------------------BODY COLLISIONS----------------------------------------
 
-bool CheckCollision(AglBoundingSphere pS1, AglBoundingSphere pS2)
+bool CheckCollision(AglBoundingSphere pS1, AglBoundingSphere pS2, AglVector3& p_collisionPoint)
 {
 	AglVector3 dir = pS2.position - pS1.position;
 	float r = pS1.radius + pS2.radius;
     if (AglVector3::lengthSquared(dir) < r*r)
     {
+		dir.normalize();
+		p_collisionPoint = (pS1.position + dir * pS1.radius + pS2.position - dir * pS2.radius) * 0.5f;
         return true;
     }
     return false;
@@ -296,7 +393,7 @@ bool CheckCollision(RigidBodySphere* pSphere, RigidBodyBox* pBox, PhyCollisionDa
     return false;
 }
 
-bool CheckCollision(AglBoundingSphere pSphere, RigidBodyBox* pBox)
+bool CheckCollision(AglBoundingSphere pSphere, RigidBodyBox* pBox, AglVector3& p_collisionPoint)
 {
 	//Find the closest point on the box to the sphere
 	AglVector3 point = pBox->GetPosition();
@@ -323,6 +420,9 @@ bool CheckCollision(AglBoundingSphere pSphere, RigidBodyBox* pBox)
 	//Check the distance to this closest point
 	if (AglVector3::lengthSquared(pSphere.position - point) < pSphere.radius * pSphere.radius)
     {
+		dir = point - pSphere.position;
+		dir.normalize();
+		p_collisionPoint = (pSphere.position + dir * pSphere.radius + point) * 0.5f;
 		return true;
     }
     return false;
@@ -453,9 +553,10 @@ bool CheckCollision(RigidBodyBox* pB1, RigidBodyBox* pB2)
 }
 bool CheckCollision(RigidBodyBox* pB1, RigidBodyBox* pB2, PhyCollisionData* pData)
 {
-	if (!CheckCollision(pB1->GetBoundingSphere(), pB2))
+	AglVector3 nothing;
+	if (!CheckCollision(pB1->GetBoundingSphere(), pB2, nothing))
 		return false;
-	if (!CheckCollision(pB2->GetBoundingSphere(), pB1))
+	if (!CheckCollision(pB2->GetBoundingSphere(), pB1, nothing))
 		return false;
 
 	EPACollisionData EPAData;
@@ -625,7 +726,8 @@ bool CheckCollision(RigidBodyConvexHull* pR1, RigidBodyConvexHull* pR2, PhyColli
 }
 bool CheckCollision(RigidBodyBox* pB, RigidBodyConvexHull* pH, PhyCollisionData* pData)
 {
-	if (!CheckCollision(pH->GetBoundingSphere(), pB))
+	AglVector3 nothing;
+	if (!CheckCollision(pH->GetBoundingSphere(), pB, nothing))
 		return false;
 	EPACollisionData EPAData;
 
@@ -731,8 +833,9 @@ bool CheckCollision(RigidBodySphere* p_sphere, RigidBodyMesh* p_mesh,
 bool CheckCollision(RigidBodyBox* p_box, RigidBodyMesh* p_mesh, 
 					PhyCollisionData* p_collisionData)
 {
+	AglVector3 nothing;
 	PhyCollisionData* pData = p_collisionData;
-	if (!CheckCollision(p_mesh->GetBoundingSphere(), p_box))
+	if (!CheckCollision(p_mesh->GetBoundingSphere(), p_box, nothing))
 		return false;
 	if (!CheckCollision(p_box->GetBoundingSphere(), p_mesh->GetOBB()))
 		return false;
@@ -857,7 +960,9 @@ bool CheckCollision(RigidBodyMesh* p_mesh1, RigidBodyMesh* p_mesh2,
 			triangle2[2].transform(mesh2World);
 
 			EPACollisionData EPAData;
-			bool col = gjkCheckCollision(triangle1, triangle2, &EPAData);
+			bool col = CheckCollision(triangle1[0], triangle1[1], triangle1[2],
+									  triangle2[0], triangle2[1], triangle2[2],
+									  &EPAData);//gjkCheckCollision(triangle1, triangle2, &EPAData);
 			if (col)
 			{
 				doesCollide = true;
@@ -990,6 +1095,88 @@ bool CheckCollision(const AglBoundingSphere& p_sphere, const AglVector3& p_v1, c
 	return true;
 }
 
+bool CheckCollision(const AglVector3& p_t11, const AglVector3& p_t12, const AglVector3& p_t13,
+					const AglVector3& p_t21, const AglVector3& p_t22, const AglVector3& p_t23,
+					EPACollisionData* p_epaData)
+{
+	AglVector3 axes[11];
+	axes[0] = AglVector3::crossProduct(p_t12-p_t11, p_t13-p_t11); //Normal
+	axes[1] = AglVector3::crossProduct(p_t22-p_t21, p_t23-p_t21); //Normal
+	axes[2] = AglVector3::crossProduct(p_t12-p_t11, p_t22 - p_t21);
+	axes[3] = AglVector3::crossProduct(p_t12-p_t11, p_t23 - p_t21);
+	axes[4] = AglVector3::crossProduct(p_t12-p_t11, p_t23 - p_t22);
+	axes[5] = AglVector3::crossProduct(p_t13-p_t11, p_t22 - p_t21);
+	axes[6] = AglVector3::crossProduct(p_t13-p_t11, p_t23 - p_t21);
+	axes[7] = AglVector3::crossProduct(p_t13-p_t11, p_t23 - p_t22);
+	axes[8] = AglVector3::crossProduct(p_t13-p_t12, p_t22 - p_t21);
+	axes[9] = AglVector3::crossProduct(p_t13-p_t12, p_t23 - p_t21);
+	axes[10] = AglVector3::crossProduct(p_t13-p_t12, p_t23 - p_t22);
+
+	float minA, maxA;
+	float minB, maxB;
+
+	//Project points on the axis
+	float overlap = FLT_MAX;
+	AglVector3 axis;
+	for (unsigned int i = 0; i < 11; i++)
+	{
+		// min/max a
+		axes[i].normalize();
+		minA = maxA = AglVector3::dotProduct(axes[i], p_t11);
+		minA = min(AglVector3::dotProduct(axes[i], p_t12), minA);
+		minA = min(AglVector3::dotProduct(axes[i], p_t13), minA);
+		maxA = max(AglVector3::dotProduct(axes[i], p_t12), maxA);
+		maxA = max(AglVector3::dotProduct(axes[i], p_t13), maxA);
+
+		// min/max b
+		minB = maxB = AglVector3::dotProduct(axes[i], p_t21);
+		minB = min(AglVector3::dotProduct(axes[i], p_t22), minB);
+		minB = min(AglVector3::dotProduct(axes[i], p_t23), minB);
+		maxB = max(AglVector3::dotProduct(axes[i], p_t22), maxB);
+		maxB = max(AglVector3::dotProduct(axes[i], p_t23), maxB);
+
+		if (i > 1)
+		{
+			float lengthA = maxA - minA;
+			float lengthB = maxB - minB;
+
+			float minTotal = min(minA, minB);
+			float maxTotal = max(maxA, maxB);
+
+			float newOverlap = (lengthA + lengthB) - (maxTotal - minTotal);
+			if (newOverlap <= 0)
+			{
+				return false;
+			}
+			else if (newOverlap < overlap)
+			{
+				overlap = newOverlap;
+				axis = axes[i];
+			}
+		}
+		else if (i == 0)
+		{
+			float newOverlap = min(minA - minB, maxB - minA);
+			if (newOverlap < 0)
+				return false;
+			overlap = newOverlap;
+			axis = axes[i];
+		}
+		else
+		{
+			float newOverlap = min(minB - minA, maxA - minB);
+			if (newOverlap < 0)
+				return false;
+			overlap = newOverlap;
+			axis = axes[i];
+		}
+	}
+
+	p_epaData->Depth = overlap;
+	p_epaData->Normal = axis;
+	return true;
+}
+
 //---------------------------------SUPPORT FUNCTIONS--------------------------------------
 float OverlapAmount(RigidBodyBox* pB1, RigidBodyBox* pB2, AglVector3 pAxis)
 {
@@ -1061,6 +1248,46 @@ void  CalculateProjectionInterval(const vector<AglVector3>& p_points, const AglV
 			p_max = curr;
 	}
 }
+
+//NEW - OPTIMIZED
+
+float OverlapAmount(const AglVector3* p_points1, const AglVector3* p_points2, const AglVector3& p_axis)
+{
+	//Assumed to be normalized
+	//AglVector3::normalize(pAxis);
+
+	float minA = 0, maxA = 0, minB = 0, maxB = 0;
+	CalculateProjectionInterval(p_points1, p_axis, minA, maxA);
+	CalculateProjectionInterval(p_points2, p_axis, minB, maxB);
+
+	float lengthA = maxA - minA;
+	float lengthB = maxB - minB;
+
+	float minTotal = min(minA, minB);
+	float maxTotal = max(maxA, maxB);
+
+	if (maxTotal - minTotal >= lengthA + lengthB)
+	{
+		return 0;
+	}
+	return lengthA + lengthB - (maxTotal - minTotal);
+}
+
+void  CalculateProjectionInterval(const AglVector3* p_points, const AglVector3& p_axis, 
+								  float& p_min, float& p_max)
+{
+	p_min = p_max = AglVector3::dotProduct(p_axis, p_points[0]);
+	for (int i = 1; i < 8; i++)
+	{
+		float curr = p_axis.x * p_points[i].x + p_axis.y * p_points[i].y + p_axis.z * p_points[i].z;
+		if (curr < p_min)
+			p_min = curr;
+		else if (curr > p_max)
+			p_max = curr;
+	}
+}
+
+//NEW -- OPTIMIZED END
 
 
 vector<AglVector3> GetHitPoints(RigidBodyBox* pBox, AglVector3 pNormal, float pPenetration)

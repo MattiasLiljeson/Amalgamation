@@ -1,12 +1,5 @@
 #pragma once
-
-/************************************************************************/
-/* This defines if a local server should be created or not. Simply add	*/
-/* a _ before to use the local server. Otherwise start a separate server*/
-/* by compiling the server app and run it.								*/
-/************************************************************************/
-#define _COMBINE_CLIENT_AND_SERVER
-
+#include <AglVector3.h>
 /************************************************************************/
 /* ????	-Robin & Alex													*/
 /************************************************************************/
@@ -18,19 +11,22 @@
 /* be included as soon as possible. Johan: Haven't looked too			*/
 /* much into this yet.													*/
 /************************************************************************/
-#include <TcpClient.h> 
 #include <Globals.h>
-#include <windows.h>
+#include <TcpClient.h> 
 
+#ifndef _WINDEF_
+	class HINSTANCE__; // Forward or never
+	typedef HINSTANCE__* HINSTANCE;
+#endif
+
+class EntityFactory;
 class EntityWorld;
 class TcpClient;
 
-#ifdef _COMBINE_CLIENT_AND_SERVER
 namespace Srv
 {
 	class ServerApplication;
 };
-#endif // _COMBINE_CLIENT_AND_SERVER
 
 // =======================================================================================
 //	ClientApplication
@@ -50,14 +46,14 @@ class ClientApplication
 public:
 	ClientApplication( HINSTANCE p_hInstance );
 	~ClientApplication();
-
 	void run();
 
 private:
 	void initSystems();
 	void initEntities();
-	void initSounds();
-	void initSoundSystem();
+
+	void InitModulesTestByAnton();
+
 private:
 	HINSTANCE m_hInstance;
 
@@ -65,7 +61,5 @@ private:
 
 	EntityWorld* m_world;
 	TcpClient* m_client;
-#ifdef _COMBINE_CLIENT_AND_SERVER
 	Srv::ServerApplication* m_serverApp;
-#endif
 };

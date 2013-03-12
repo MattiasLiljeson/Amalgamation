@@ -21,15 +21,13 @@ private:
 	//HACK: TEMP TEMP TEMP FUCKING TEMP!!
 	int Avatar;
 	int toDetach;
-	int mesh;
 
 	Point PreviousMousePos;
 	Point CurrentMousePos;
 
 	DebugMesh* testMesh;
-	DebugMesh* toDraw;
 
-	AglMatrix coord;
+	AglOBB bound;
 
 public:
 	Game(HINSTANCE pInstanceHandle);

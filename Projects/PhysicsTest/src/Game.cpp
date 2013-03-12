@@ -112,7 +112,7 @@ bool Game::Update(float pElapsedTime)
 	if (Avatar && mPhysics)
 	{
 		RigidBody* av = (RigidBody*)mPhysics->GetBody(Avatar);
-		AglMatrix world = coord * av->GetWorld();
+		AglMatrix world = bound.world.inverse() * av->GetWorld();
 
 		//Mouse
 		GetCursorPos(&CurrentMousePos);
@@ -186,7 +186,7 @@ bool Game::Update(float pElapsedTime)
 			av->AddAngularImpulse(-world.GetForward()*pElapsedTime*4);
 		}
 
-		float distance = 10;
+		float distance = 30;
 		AglVector3 newPos = world.GetTranslation() + world.GetBackward() * distance;
 		//AglVector3 diff = newPos - Camera::GetInstance()->GetPosition();
 		//Camera::GetInstance()->Init(Camera::GetInstance()->GetPosition() + diff * pElapsedTime * 20.0f, world.GetTranslation(), world.GetUp(), mScreenWidth, mScreenHeight);
@@ -242,29 +242,39 @@ bool Game::Draw(float pElapsedTime)
 	mDeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	//mDeviceContext->RSSetState(mRasterState);
-	if (mPhysics)
-		mPhysics->DrawDebug();
 
 	bool drawthat = false;
 	if(GetAsyncKeyState(VK_UP) & 0x8000)
 	{
 		drawthat = true;
 	}
+	static int debuglevel = 0;
+	if(GetAsyncKeyState(0x31) & 0x8000)
+	{
+		debuglevel = 0;
+	}
+	if(GetAsyncKeyState(0x32) & 0x8000)
+	{
+		debuglevel = 1;
+	}
+	if(GetAsyncKeyState(0x33) & 0x8000)
+	{
+		debuglevel = 2;
+	}
+	if(GetAsyncKeyState(0x34) & 0x8000)
+	{
+		debuglevel = 3;
+	}
+
+	if (mPhysics)
+		mPhysics->DrawDebug(debuglevel);
 
 	AglMatrix mat = AglMatrix::createTranslationMatrix(AglVector3(0, 0, -40));
 
-	Body* b = mPhysics->GetBody(mesh);
-	if (drawthat)
-		testMesh->Draw(b->GetWorld());
-	else
-		toDraw->Draw(b->GetWorld());
 
-	b = mPhysics->GetBody(Avatar);
+	Body* b = mPhysics->GetBody(Avatar);
 	
-	if (drawthat)
-		testMesh->Draw(b->GetWorld());
-	else
-		toDraw->Draw(b->GetWorld());
+	testMesh->Draw(bound.world.inverse()*b->GetWorld());
 
     mSwapChain->Present(0,0);
 	return true;
@@ -363,28 +373,19 @@ void Game::Restart()
 		{
 			indices.push_back(ind[i]);
 		}
-		AglLooseBspTreeConstructor constructor(h.id, vertices, indices);
-		AglLooseBspTree* bsptree = constructor.createTree();
+
+		AglLooseBspTreeConstructor con(h.id, vertices, indices);
+
+		AglLooseBspTree* tree = con.createTree();
 
 		testMesh = new DebugMesh(mDevice, mDeviceContext, m[0]);
-		coord = s->getCoordinateSystemAsMatrix();
-		mesh = mPhysics->AddMeshBody(AglMatrix::identityMatrix(), AglVector3(20, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
-		Avatar = mPhysics->AddMeshBody(AglMatrix::identityMatrix(), AglVector3(0, 0, -40), m[0]->getHeader().minimumOBB, m[0]->getHeader().boundingSphere, bsptree);
+
+		bound = m[0]->getHeader().minimumOBB;
+		
+		//mPhysics->AddMeshBody(AglVector3(0, -20, -40), bound, h.boundingSphere, tree);
+		Avatar = mPhysics->AddBox(AglVector3(0, 0, -40), bound.size, 1, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, NULL);
+		//Avatar = mPhysics->AddMeshBody(AglVector3(0, 0, -40), bound, h.boundingSphere, tree);
 		//Avatar = mPhysics->AddSphere(AglVector3(0, 0, -40), 1.0f);
-
-
-
-		file = openfilename("Agile Files (*.agl*)\0*.agl*\0");
-
-		AglReader r2((char*)file.c_str());
-
-		AglScene* s2 = r2.getScene();
-
-		vector<AglMesh*> m2 = s2->getMeshes();
-		toDraw = new DebugMesh(mDevice, mDeviceContext, m2[0]);
-
-
-
 	}
 	else if (val == 2)
 	{

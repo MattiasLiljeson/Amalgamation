@@ -28,13 +28,15 @@ bool CheckCollision(RigidBody* p_r1, RigidBody* p_r2, PhyCollisionData* p_data);
 bool CheckCollision(PhyRay p_ray, RigidBody* p_rigidBody, 
 						RayCollisionData* p_collisionData);
 
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBody* p_rigidBody, float& p_t);
+
 ///-----------------------------------------------------------------------------------
 /// Check collision between a bounding sphere and a rigid body
 /// \param p_sphere The sphere
 /// \param p_rigidBody The rigid body
 /// \return Returns true on collision. False otherwise.
 ///-----------------------------------------------------------------------------------
-bool CheckCollision(AglBoundingSphere p_sphere, RigidBody* p_rigidBody);
+bool CheckCollision(AglBoundingSphere p_sphere, RigidBody* p_rigidBody, AglVector3& p_collisionPoint);
 
 ///-----------------------------------------------------------------------------------
 /// Checks collision between a sphere and a ray
@@ -91,13 +93,18 @@ bool CheckCollision(PhyRay p_ray, RigidBodyBox* p_box,
 ///-----------------------------------------------------------------------------------
 bool CheckCollision(PhyRay p_ray, RigidBodyConvexHull* p_hull, RayCollisionData* p_collisionData);
 
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBodySphere* p_sphere, float& p_t);
+bool CheckCollision(const LineSegment& p_lineSegment, AglVector3 p_min, AglVector3 p_max, float& p_t);
+bool CheckCollision(const LineSegment& p_lineSegment, RigidBodyBox* p_box, float& p_t);
+
+
 ///-----------------------------------------------------------------------------------
 /// Checks collision between two spheres
 /// \param p_sphere1 First Sphere
 /// \param p_sphere2 Second Sphere
 /// \return Returns true if there is a collision. False otherwise.
 ///-----------------------------------------------------------------------------------
-bool CheckCollision(AglBoundingSphere p_sphere1, AglBoundingSphere p_sphere2); 
+bool CheckCollision(AglBoundingSphere p_sphere1, AglBoundingSphere p_sphere2, AglVector3& p_collisionPoint); 
 
 ///-----------------------------------------------------------------------------------
 /// Checks collision between two spheres
@@ -123,7 +130,7 @@ bool CheckCollision(RigidBodySphere* p_sphere1, RigidBodySphere* p_sphere2,
 /// \param p_box The OBB
 /// \return Returns true if there is a collision. False otherwise.
 ///-----------------------------------------------------------------------------------
-bool CheckCollision(AglBoundingSphere p_sphere, RigidBodyBox* p_box); 
+bool CheckCollision(AglBoundingSphere p_sphere, RigidBodyBox* p_box, AglVector3& p_collisionPoint); 
 
 bool CheckCollision(AglBoundingSphere p_sphere, AglOBB p_box); 
 
@@ -217,6 +224,10 @@ bool CheckCollision(RigidBodyMesh* p_mesh1, RigidBodyMesh* p_mesh2,
 bool CheckCollision(const AglBoundingSphere& p_sphere, const AglVector3& p_v1, const AglVector3& p_v2, const AglVector3& p_v3,
 						EPACollisionData* p_epaData);
 
+bool CheckCollision(const AglVector3& p_t11, const AglVector3& p_t12, const AglVector3& p_t13,
+					const AglVector3& p_t21, const AglVector3& p_t22, const AglVector3& p_t23,
+					EPACollisionData* p_epaData);
+
 //--------------------------------SUPPORT FUNCTIONS---------------------------------------
 
 
@@ -243,6 +254,11 @@ void  CalculateProjectionInterval(RigidBodyBox* p_box, AglVector3 p_axis,
 float OverlapAmount(const vector<AglVector3>& p_points1, const vector<AglVector3>& p_points2, const AglVector3& p_axis);
 
 void  CalculateProjectionInterval(const vector<AglVector3>& p_points, const AglVector3& p_axis, 
+								  float& p_min, float& p_max);
+
+float OverlapAmount(const AglVector3* p_points1, const AglVector3* p_points2, const AglVector3& p_axis);
+
+void  CalculateProjectionInterval(const AglVector3* p_points, const AglVector3& p_axis, 
 								  float& p_min, float& p_max);
 
 

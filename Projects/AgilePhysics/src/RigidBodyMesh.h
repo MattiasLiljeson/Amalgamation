@@ -29,15 +29,18 @@ private:
 	AglInteriorSphereGrid* mSphereGrid;
 	vector<pair<float, AglVector3>> normalList;
 	int ind;
+	AglVector3 mSize;
 private:
 	void CalculateInertiaTensor();
 	bool Evaluate(AglVector3 p_c, float p_r, vector<EPACollisionData>& pData);
-	bool Evaluate(vector<AglVector3> p_points, AglVector3 p_u1, AglVector3 p_u2, AglVector3 p_u3, vector<AglVector3>& pData);
+	bool Evaluate(AglVector3* p_points, AglVector3 p_u1, AglVector3 p_u2, AglVector3 p_u3, vector<AglVector3>& pData);
 	bool Evaluate(AglVector3* p_axes, AglBspNode* p_n1, AglBspNode* p_n2, RigidBodyMesh* p_other, vector<AglVector3>& p_triangles);
 
 public:
-	RigidBodyMesh(AglMatrix pCoordinateSystem, AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
-					AglInteriorSphereGrid* pSphereGrid = NULL);
+	RigidBodyMesh(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree = NULL,
+					AglInteriorSphereGrid* pSphereGrid = NULL, bool pImpulseEnabled = true);
+	RigidBodyMesh(AglMatrix pWorld, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglVector3 pSize, AglLooseBspTree* pBSPTree = NULL);
+
 	virtual ~RigidBodyMesh();
 	RigidBodyType GetType();
 	AglVector3 GetLocalCenterOfMass(){ return GetOBB().world.GetTranslation(); }
@@ -45,16 +48,26 @@ public:
 	AglOBB GetOBB()
 	{
 		AglOBB obb = mOBB;
+
+		AglMatrix s = AglMatrix::createScaleMatrix(mSize);
+		AglVector3 trans = obb.world.GetTranslation();
+		trans.transform(s);
+
+		obb.world.SetTranslation(trans);
+
+		obb.size *= mSize;
 		obb.world *= GetWorld();
 		return obb; 
 	}
 	virtual AglBoundingSphere GetBoundingSphere() const
 	{
 		AglVector3 newPos = mBoundingSphere.position;
+		AglMatrix s = AglMatrix::createScaleMatrix(mSize);
+		newPos.transform(s);
 		newPos.transform(GetWorld());
 
 		AglBoundingSphere bs;
-		bs.radius = mBoundingSphere.radius;
+		bs.radius = mBoundingSphere.radius * max(mSize.x, max(mSize.y, mSize.z));
 		bs.position = newPos;
 		return bs; 
 	}
@@ -66,6 +79,10 @@ public:
 	{
 		RigidBody::UpdateVelocity(pElapsedTime);
 		ind++;
+	}
+	AglVector3 GetSize()
+	{
+		return mSize;
 	}
 };
 

@@ -1,10 +1,24 @@
 #pragma once
+
+#include "ComponentType.h"
+#include "ComponentData.h"
+#include "ComponentFactory.h"
+
+#include <vector>
+
+using namespace std;
+
 class Component
 {
 public:
-	Component();
+	Component( ComponentType::ComponentTypeIdx p_componentType );
 	virtual ~Component() = 0;
-private:
+
+	virtual void init( vector<ComponentData> p_initData );
+	virtual void setComponentTypeId( ComponentType::ComponentTypeIdx p_type );
+	virtual ComponentType::ComponentTypeIdx getComponentTypeId();
+protected:
+	ComponentType::ComponentTypeIdx m_componentTypeId;
 	static int m_counter;
 	int m_id;
 };

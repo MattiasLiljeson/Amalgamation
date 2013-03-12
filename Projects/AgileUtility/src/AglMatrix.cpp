@@ -190,6 +190,14 @@ AglMatrix& AglMatrix::operator*=(const float& pFactor)
 	return (*this);
 }
 
+bool AglMatrix::operator==(const AglMatrix& pOther) const
+{
+	for (unsigned int i = 0; i < 16; i++)
+		if (data[i] != pOther[i])
+			return false;
+	return true;
+}
+
 //Member function
 
 //Member Getters
@@ -220,6 +228,86 @@ AglVector3 AglMatrix::GetDown() const
 AglVector3 AglMatrix::GetTranslation() const
 {
 	return AglVector3(data[12], data[13], data[14]);
+}
+AglQuaternion AglMatrix::GetRotation() const
+{
+	AglVector3 row0(data[0], data[1], data[2]);
+	AglVector3 row1(data[4], data[5], data[6]);
+	AglVector3 row2(data[8], data[9], data[10]);
+
+	float lrow0 = AglVector3::length(row0);
+	float lrow1 = AglVector3::length(row1);
+	float lrow2 = AglVector3::length(row2);
+
+	row0 *= (1/lrow0);
+	row1 *= (1/lrow1);
+	row2 *= (1/lrow2);
+
+	//Find the largest factor.
+	float qx, qy, qz, qw;
+	if (row0[0] + row1[1] + row2[2] > 0.0f) //Use w
+	{
+		float t = row0[0] + row1[1] + row2[2] + data[15];
+		float s = 0.5f / sqrt(t);
+
+		qw = s * t;
+		qz = (row0[1] - row1[0]) * s;
+		qy = (row2[0] - row0[2]) * s;
+		qx = (row1[2] - row2[1]) * s;
+	}
+	else if (row0[0] > row1[1] && row0[0] > row2[2]) //Use x
+	{
+		float t = row0[0] - row1[1] - row2[2] + data[15];
+		float s = 0.5f / sqrt(t);
+
+		qx = s * t;
+		qy = (row0[1] + row1[0]) * s;
+		qz = (row2[0] + row0[2]) * s;
+		qw = (row1[2] - row2[1]) * s;
+	}
+	else if (row1[1] > row2[2]) //Use y
+	{
+		float t = -row0[0] + row1[1] - row2[2] + data[15];
+		float s = 0.5f / sqrt(t);
+
+		qy = s * t;
+		qx = (row0[1] + row1[0]) * s;
+		qw = (row2[0] - row0[2]) * s;
+		qz = (row1[2] + row2[1]) * s;
+	}
+	else //Use z
+	{
+		float t = -row0[0] - row1[1] + row2[2] + data[15];
+		float s = 0.5f / sqrt(t);
+
+		qz = s * t;
+		qw = (row0[1] - row1[0]) * s;
+		qx = (row2[0] + row0[2]) * s;
+		qy = (row1[2] + row2[1]) * s;
+	}
+	return AglQuaternion(qx, qy, qz, qw);
+}
+AglVector3 AglMatrix::GetScale() const
+{
+	AglVector3 row0(data[0], data[1], data[2]);
+	AglVector3 row1(data[4], data[5], data[6]);
+	AglVector3 row2(data[8], data[9], data[10]);
+
+	float lrow0 = AglVector3::length(row0);
+	float lrow1 = AglVector3::length(row1);
+	float lrow2 = AglVector3::length(row2);
+
+	return AglVector3(lrow0, lrow1, lrow2);
+}
+AglVector4 AglMatrix::getRow(int p_index) const
+{
+	int start = p_index*4;
+	return AglVector4(data[start], data[start+1], data[start+2], data[start+3]);
+}
+AglVector4 AglMatrix::getColumn(int p_index) const
+{
+	int start = p_index;
+	return AglVector4(data[start], data[start+4], data[start+8], data[start+12]);
 }
 
 //Member Setters

@@ -3,25 +3,25 @@
 #include "Buffer.h"
 #include "D3DException.h"
 #include "PTVertex.h"
-#include "RendererSceneInfo.h"
-#include "ResourceManager.h"
-#include <InstanceData.h>
+#include "RenderStateHelper.h"
 #include <d3d11.h>
 
 class BufferFactory;
+class ShaderBase;
 class DeferredBaseShader;
+class DeferredAnimatedBaseShader;
+class DeferredTessBaseShader;
+class DeferredTessAnimatedBaseShader;
 class DeferredComposeShader;
-class Mesh;
-class RocketShader;
+class LightShader;
+class GUIShader;
 class ShaderFactory;
-struct Texture;
+class RenderStateHelper;
 
-
-const static int NUMBUFFERS = 3;
-const static int DEPTH = 2;
-const static int NORMAL = 1;
-const static int DIFFUSE = 0;
-
+struct RasterizerFillMode;
+struct RasterizerCullMode;
+struct RasterizerFaceVertexOrder;
+struct BlendState;
 // =======================================================================================
 //                                      DeferredRenderer
 // =======================================================================================
@@ -37,77 +37,106 @@ const static int DIFFUSE = 0;
 class DeferredRenderer
 {
 public:
-	DeferredRenderer(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
-		int p_width, int p_height);
+	/************************************************************************/
+	/* See wiki for more details.											*/
+	/* https://github.com/BiceMaster/PA2505-Stort-Spelprojekt-Kod/wiki/GBuffers */
+	/************************************************************************/
+	const static int BASESHADERS = 3;
+	const static int RT0 = 0;
+	const static int RT1 = 1;
+	const static int RT2 = 2;
+	const static int RT3 = 3;
+	const static int RT4 = 4;
+	const static int DEPTH_IDX = 10;
+	//const static int RT5 = 5;
+	enum RenderTargets {
+		RenderTargets_NON_EXISTING	= -1,
+		RenderTargets_DIFFUSE		= RT0,
+		RenderTargets_NORMAL		= RT1,
+		RenderTargets_SPECULAR		= RT2,
+		RenderTargets_LIGHT_DIFFUSE = RT3,
+		RenderTargets_LIGHT_SPEC	= RT4,
+		//RenderTargets_DEPTH			= RT5,
+		RenderTargets_CNT,
+	};
+
+public:
+	DeferredRenderer( ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
+		int p_width, int p_height, bool p_enableHdr, bool p_enableEffects );
 	virtual ~DeferredRenderer();
+	// Setup
+	void initRendertargetsAndDepthStencil( int p_width, int p_height );
+	void releaseRenderTargetsAndDepthStencil();
 
-	///-----------------------------------------------------------------------------------
-	/// Clear the buffers used by the deferred renderer.
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void clearBuffers();
+	// Buffers as RTs
+	void setBasePassRenderTargets();
+	void setLightRenderTargets();
+	void generateEffects();
+	void setDofRenderTargets();
+	void generateLowRes();
+	void renderComposeStage();
 
-	///-----------------------------------------------------------------------------------
-	/// Sets the scene info, which can be regarded as "global" information to be used 
-	/// when rendering. For example a world-view-projection matrix.
-	/// \param p_sceneInfo
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void setSceneInfo(const RendererSceneInfo& p_sceneInfo);
+	void setViewPortSize( float p_width, float p_height );
 
-	///-----------------------------------------------------------------------------------
-	/// Set the gbuffer as render target.
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void beginDeferredBasePass();
-	
-	///-----------------------------------------------------------------------------------
-	/// HACK: Temporary function to update the per frame CB in the middle of the frame
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void updatePerFrameConstantBuffer();
+	// Buffers as resources
+	void mapNormal(ID3D11ShaderResourceView* p_shadowMap);
+	void mapNormal();
+	void unmapNormal();
+	void mapGbuffers();
+	void unmapGbuffers();
+	void mapDofBuffers();
+	void unmapDofBuffers();
+	void mapDepth();
+	void unmapDepth();
 
-	///-----------------------------------------------------------------------------------
-	/// Render mesh data
-	/// \param p_mesh
-	/// \param p_texture
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void renderMesh(Mesh* p_mesh,
-		Texture* p_texture);
+	// Buffer / RT manipulation
+	void clearRenderTargets();
+	ID3D11DepthStencilView* getDepthStencil();
+	ID3D11ShaderResourceView*const* getShaderResourceView(RenderTargets p_target);
 
-	///-----------------------------------------------------------------------------------
-	/// Render instanced mesh data
-	/// \param p_mesh
-	/// \param p_texture
-	/// \param p_instanceBuffer
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void renderMeshInstanced(Mesh* p_mesh,
-							 Texture* p_texture, 
-							 Buffer<InstanceData>* p_instanceBuffer );
+	// Blend states
+	void setBlendState(BlendState::Mode p_state);
+	void setBlendFactors(float p_red, float p_green, float p_blue, float p_alpha);
+	void setBlendFactors(float p_oneValue);
+	void setBlendMask(UINT p_mask);
+	BlendState::Mode getCurrentBlendStateType();
 
-	///-----------------------------------------------------------------------------------
-	/// Render a fullscreen quad textured with the gbuffer.
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void renderComposedImage();
+	// Rasterizer states
+	void setRasterizerStateSettings(RasterizerState::Mode p_state);
+	RasterizerState::Mode getCurrentRasterizerStateType();
 
-	
-	///-----------------------------------------------------------------------------------
-	/// Desc
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void renderRocketCompiledGeometry( Mesh* p_mesh, Texture* p_texture,
-		Buffer<InstanceData>* p_instanceBuffer );
+	// Sampler states
+	void setSamplerStates();
 
+	// Shader getters
+	DeferredBaseShader* getDeferredBaseShader();
+	DeferredAnimatedBaseShader* getDeferredAnimatedBaseShader();
+	DeferredTessBaseShader* getDeferredTessBaseShader();
+	DeferredTessAnimatedBaseShader* getDeferredTessAnimatedBaseShader();
+	LightShader* getDeferredLightShader();
+
+	// Debug
 	void hookUpAntTweakBar();
-protected:
+
 private:
 	void initDepthStencil();
 	void initGeometryBuffers();
-	void unMapGBuffers();
-	void initTestShaders();
+	void initLightBuffers();
+	void initDofBuffers();
+	void buildBlendStates();
+	void buildRasterizerStates();
+	void initShaders();
+	void initFullScreenQuad();
+	void initSSAO();
+
+	void unmapAllBuffers();
+
+	void checkHr( HRESULT p_hr, const string& p_file,
+		const string& p_function, int p_line );
+
+	void createSrvAndRtv( ID3D11ShaderResourceView** out_srv,
+		ID3D11RenderTargetView** out_rtv, int p_width, int p_height, DXGI_FORMAT p_format );
+
 private:
 	ID3D11Device*			m_device;
 	ID3D11DeviceContext*	m_deviceContext;
@@ -115,18 +144,47 @@ private:
 	ShaderFactory*			m_shaderFactory;
 	BufferFactory*			m_bufferFactory;
 
-	RendererSceneInfo		m_sceneInfo;
+	ID3D11ShaderResourceView*	m_srvDepth;
 
-	ID3D11RenderTargetView*		m_gBuffers[NUMBUFFERS];
-	ID3D11ShaderResourceView*	m_gBuffersShaderResource[NUMBUFFERS];
+	// Regular Gbuffers
+	ID3D11RenderTargetView*		m_rtvGBuffers[RenderTargets_CNT];
+	ID3D11ShaderResourceView*	m_srvGBuffers[RenderTargets_CNT];
+
+	// Dof
+	ID3D11RenderTargetView*		m_rtvDofBuffers[RenderTargets_CNT];
+	ID3D11ShaderResourceView*	m_srvDofBuffers[RenderTargets_CNT];
+
 	ID3D11DepthStencilView*		m_depthStencilView;
 
-	DeferredBaseShader*		m_baseShader;
+	DeferredBaseShader*				m_baseShader;
+	DeferredAnimatedBaseShader*		m_animatedBaseShader;
+	DeferredTessBaseShader*			m_tessBaseShader;
+	DeferredTessAnimatedBaseShader*	m_tessAnimatedBaseShader;
+
+	LightShader*			m_lightShader;
+	DeferredComposeShader*	m_effectShader;
+	DeferredComposeShader*	m_lowResGenerationShader;
 	DeferredComposeShader*	m_composeShader;
-	RocketShader*			m_rocketShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;
 
+	// blend states
+	vector<ID3D11BlendState*> m_blendStates;
+	BlendState::Mode m_currentBlendStateType;
+	float m_blendFactors[4];
+	UINT m_blendMask;
+
+	// rasterizer states
+	vector<ID3D11RasterizerState*> m_rasterizerStates;
+	RasterizerState::Mode m_currentRasterizerStateType;
+
+	// Sampler States
+	ID3D11SamplerState* m_samplerStates[SamplerState::SamplerState_CNT];
+
+	SSAOBuffer	m_ssaoData;
+
 	int m_width;
 	int m_height;
+	bool m_enableHdr;
+	bool m_enableEffects;
 };

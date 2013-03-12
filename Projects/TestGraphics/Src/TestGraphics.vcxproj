@@ -56,11 +56,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>AgileAssets_x86_$(Configuration).lib;Common_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;FreeImage.lib;AgileUtility_x86_$(Configuration).lib;Util_x86_$(Configuration).lib;AssetsManagement_x86_$(Configuration).lib;d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

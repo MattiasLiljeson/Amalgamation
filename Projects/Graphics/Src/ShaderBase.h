@@ -2,7 +2,7 @@
 
 #include <d3d11.h>
 #include "ShaderStageData.h"
-#include "ShaderInitStruct.h"
+#include "ShaderVariableContainer.h"
 
 // =======================================================================================
 //                                      ShaderBase
@@ -19,10 +19,12 @@
 class ShaderBase
 {
 public:
-	ShaderBase(ShaderInitStruct p_initData);
+	ShaderBase(ShaderVariableContainer p_initData);
 	virtual ~ShaderBase();
 	virtual void apply()=0;
 	void applyStages();
+	void unApplyStages();
+
 protected:
 	// D3D
 	ID3D11Device*			m_device;
@@ -37,7 +39,4 @@ protected:
 
 	// Input layout
 	ID3D11InputLayout* m_inputLayout;
-
-	// Sampler state
-	ID3D11SamplerState* m_samplerState;
 };

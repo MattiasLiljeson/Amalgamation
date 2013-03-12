@@ -107,7 +107,11 @@ Build/Assets/Sound/
 Build/Assets/Maps/
 Build/Assets/Misc/
 Build/Assets/Models/
+Build/Assets/Settings/
 Build/Assets/*
+Build/Assets/
+Build/ToConvert/
+Build/Converted/
 External/LibRocket/
 External/GTest/
 External/Visual Leak Detector/
@@ -118,21 +122,34 @@ External/XAudio2/
 External/*
 
 # Files
+*.bsc
 *.exe
 *.lastcodeanalysissucceeded
 /Build/*.dll.txt
 /Build/*.exe.txt
+/Build/log.txt
+/Build/log_server.txt
+/Build/log_client.txt
 
 *.agl
 *.fbx
 *.png
 *.dds
 *.tga
+*.jpg
+*.jpeg
 *.dll
+*.lib
+*.vsglog
+*.PIXExp
+*.dgml
+*.bsc
+*.vspx
+
+*/log.txt
 
 [Ll]oc[Mm]etrics*.*
 
-### ADD EXPCETIONS TO RULES ABOVE HERE!!!
->>>>>>> sprint3
+### ADD EXPCETIONS TO RULES ABOVE!!!
 # Exceptions
 

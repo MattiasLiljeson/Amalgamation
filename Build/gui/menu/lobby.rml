@@ -1,0 +1,26 @@
+<rml>
+	<head>
+		<title>Lobby</title>
+		<link type="text/template" href="window.rml" />
+		<link type="text/rcss" href="lobby.rcss" />
+	</head>
+	<body id="lobby" template="window" onshow="">
+		<div class="mainPanel">
+			<div id="lobbyWindow">
+				<datagrid source="connectedPlayers.lobbyPanel">
+					<col fields="playerName" width="33%">PlayerName:</col>
+					<col fields="ping" width="33%">Ping:</col>
+					<col fields="ready" width="5%">Ready:</col>
+				</datagrid>
+			</div>
+			<div id="serverWindow">
+				Server - Info
+			</div>
+		</div>
+		<div class="lowerPanel" id="buttons">
+			<button id="leave_lobby" onclick="goto main_menu; leave_server">Leave</button>
+			<button id="player_ready" onclick="start_game; play_confirm;">Ready</button>
+		</div>
+
+	</body>
+</rml>

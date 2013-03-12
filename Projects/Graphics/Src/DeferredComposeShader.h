@@ -1,7 +1,9 @@
 #pragma once
 
-#include "ShaderInitStruct.h"
+#include "ShaderVariableContainer.h"
 #include "ShaderBase.h"
+#include "SSAOCBuffer.h"
+#include "Buffer.h"
 
 // =======================================================================================
 //                                 DeferredComposeShader
@@ -19,10 +21,12 @@
 class DeferredComposeShader : public ShaderBase
 {
 public:
-	DeferredComposeShader( ShaderInitStruct p_initData);
+	DeferredComposeShader( Buffer<SSAOBuffer>* p_ssaoBuffer, 
+		ShaderVariableContainer p_initData);
 	virtual ~DeferredComposeShader();
 
 	void apply();
+	void setSSAOBufferData( const SSAOBuffer& p_newSSAOBuffer );
 private:
-
+	Buffer<SSAOBuffer>* m_ssaoBuffer;
 };

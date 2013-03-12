@@ -17,13 +17,52 @@ public:
 	enum
 	{
 		NON_EXISTENT = -1,
+		// Server <--> Client:
+		Ping,
+		Pong,
+		ChangeStatePacket, 
+		PlayerReadyPacket,
+		PlayerInfo,
+
 		// Server -> Client:
 		EntityCreation,
 		EntityUpdate,
+		EntityDeletion,
 		ClientDisconnect,
-		InitCredentials,
+		WelcomePacket,
+		NewlyConnectedPlayerPacket,
+		UpdateClientStats,
+		PlayerWinLose,
+		SpawnSoundEffect, // NOTE: (Johan) Should rather be replaced than be used more. (Move sound to client only)
+		ModuleTriggerPacket,
+		TransformPacket,
+		RemoveSoundEffect,
+		OnHitScoreEffectPacket,
+		ModuleStateChangePacket,
+		ModuleStatusEffectPacket,
+		BombActivationPacket,
+		TeslaHitPacket,
+		HitIndicatorPacket,
+
 		// Client -> Server:
-		PlayerInput,
+		/************************************************************************/
+		/* Client handles input and updates position, then sends it to the		*/
+		/* server for verification.												*/
+		/************************************************************************/
+		ThrustPacket,
+		RayPacket,
+		ModuleHighlightPacket,
+		SimpleEvent,
+		ParticleUpdate,
+		ParticleSystemCreationInfo,
+		CameraControlPacket,
+		AnimationUpdatePacket,
+		SlotParticleEffectPacket,
+		SpawnExplosionPacket,
+		EditSphereUpdatePacket,
+		SelectionMarkerUpdatePacket,
+		HighlightEntityPacket,
+		RootBoundingSpherePacket,
 	};
 
 };

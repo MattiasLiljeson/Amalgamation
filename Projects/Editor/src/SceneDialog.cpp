@@ -8,24 +8,69 @@ void TW_CALL SceneDialog::OpenMeshDialog(void *clientData)
 	int index = (int)clientData;
 	SceneDialog::GetInstance()->SetCurrentMesh(index);
 }
+void TW_CALL SceneDialog::OpenParticleSystemDialog(void *clientData)
+{
+	int index = (int)clientData;
+	SceneDialog::GetInstance()->SetCurrentParticleSystem(index);
+}
 void TW_CALL SceneDialog::OpenMaterialDialog(void *clientData)
 {
 	int index = (int)clientData;
 	SceneDialog::GetInstance()->SetCurrentMaterial(index);
 }
+void TW_CALL SceneDialog::OpenMergeDialog(void *clientData)
+{
+	SceneDialog::GetInstance()->m_materialDialog->hide();
+	SceneDialog::GetInstance()->m_particleSystemDialog->hide();
+	SceneDialog::GetInstance()->m_meshDialog->hide();
+	SceneDialog::GetInstance()->m_mergeDialog->show();
+}
 void TW_CALL SceneDialog::SetCOSystem(void *clientData)
 {
 	int index = (int)clientData;
 	if (index == 0)
-		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::DX());
+	{
+		//FLIP X
+		AglMatrix mat(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		Scene::GetInstance()->Transform(mat);
+	}
 	else if (index == 1)
-		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::GL());
+	{
+		//FLIP Y
+		AglMatrix mat(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		Scene::GetInstance()->Transform(mat);
+	}
 	else if (index == 2)
-		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem::BLENDER());
+	{
+		//FLIP Z
+		AglMatrix mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
+		Scene::GetInstance()->Transform(mat);
+	}
 	else if (index == 3)
-		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem(AglVector3(0, 1, 0), AglVector3(0, 0, 1), AglCoordinateSystem::LEFT));
+	{
+		//ROTATE X
+		AglMatrix mat(1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1);
+		mat = AglMatrix::inverse(mat);
+		Scene::GetInstance()->Transform(mat);
+	}
 	else if (index == 4)
-		Scene::GetInstance()->SetCoordinateSystem(AglCoordinateSystem(AglVector3(0, 0, 1), AglVector3(-1, 0, 0), AglCoordinateSystem::LEFT));
+	{
+		//ROTATE Y
+		AglMatrix mat(0, 0, -1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1);
+		mat = AglMatrix::inverse(mat);
+		Scene::GetInstance()->Transform(mat);
+	}
+	else if (index == 5)
+	{
+		//ROTATE Z
+		AglMatrix mat(0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		mat = AglMatrix::inverse(mat);
+		Scene::GetInstance()->Transform(mat);
+	}
+}
+void TW_CALL SceneDialog::RestartParticles(void *clientData)
+{
+	Scene::GetInstance()->RestartAllParticleSystems();
 }
 
 void TW_CALL SceneDialog::LoadAGL(void *clientData)
@@ -47,42 +92,97 @@ void TW_CALL SceneDialog::LoadAGL(void *clientData)
 		vector<AglMaterial*> materials = Scene::GetInstance()->GetMaterials();
 		for (unsigned int i = 0; i < materials.size(); i++)
 		{
-			string s = Scene::GetInstance()->GetName(materials[i]->nameID);
-			string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Materials'";
-
-			TwAddButton(sceneDialog->m_dialog, ("Material" + toString(materials[i]->id)).c_str(), OpenMaterialDialog, (void*)i, info.c_str());
+			sceneDialog->AddMaterial(materials[i]);
 		}
 
+		TwAddButton(sceneDialog->m_dialog, "Merge", OpenMergeDialog, NULL, "");
+
 		TwAddButton(sceneDialog->m_dialog, "AddMaterial", AddMaterial, sceneDialog, " label='Material' key=c help='Load an Agile file into the editor.' group='Add'");
-
-		TwAddButton(sceneDialog->m_dialog, "DirectXSystem", SetCOSystem, (void*)0, " label='DirectX' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
-		TwAddButton(sceneDialog->m_dialog, "OpenGLSystem", SetCOSystem, (void*)1, " label='OpenGL' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
-		TwAddButton(sceneDialog->m_dialog, "BlenderSystem", SetCOSystem, (void*)2, " label='Blender' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "AddParticleEffect", AddPE, sceneDialog, " label='Particle Effect' key=c help='Load an Agile file into the editor.' group='Add'");
 
 
-		TwAddButton(sceneDialog->m_dialog, "Sys1", SetCOSystem, (void*)3, " label='Up: Y Forward: Z L' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
-		TwAddButton(sceneDialog->m_dialog, "Sys2", SetCOSystem, (void*)4, " label='Up: Z Forward: -X L' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "FLIPX", SetCOSystem, (void*)0, " label='Flip X' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "FLIPY", SetCOSystem, (void*)1, " label='Flip Y' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "FLIPZ", SetCOSystem, (void*)2, " label='Flip Z' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+
+		TwAddButton(sceneDialog->m_dialog, "Rot90X", SetCOSystem, (void*)3, " label='Rotate 90 X' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "Rot90Y", SetCOSystem, (void*)4, " label='Rotate 90 Y' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		TwAddButton(sceneDialog->m_dialog, "Rot90Z", SetCOSystem, (void*)5, " label='Rotate 90 Z' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+
+
+		//TwAddButton(sceneDialog->m_dialog, "Sys1", SetCOSystem, (void*)3, " label='Up: Y Forward: Z L' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
+		//TwAddButton(sceneDialog->m_dialog, "Sys2", SetCOSystem, (void*)4, " label='Up: Z Forward: -X L' key=c help='Load an Agile file into the editor.' group='Coordinate System'");
 
 
 		TwAddVarRW(sceneDialog->m_dialog, "Sphere", TW_TYPE_BOOLCPP, &DRAWDEBUGSPHERE, "group='Debug'");
 		TwAddVarRW(sceneDialog->m_dialog, "Box", TW_TYPE_BOOLCPP, &DRAWDEBUGBOX, "group='Debug'");
+
+		vector<AglConnectionPoint> cps = Scene::GetInstance()->getConnectionPoints();
+		for (unsigned int i = 0; i < cps.size(); i++)
+		{
+			string name = Scene::GetInstance()->GetName(cps[i].nameID);
+			TwAddButton(sceneDialog->m_dialog, name.c_str(), NULL, (void*)0, "group='Connection Points'");
+		}
+		TwAddVarRW(sceneDialog->m_dialog, "Base Size", TW_TYPE_FLOAT, Scene::GetInstance()->GetConPointLengthPtr(), "group='Connection Points' min=0.0 max=1.0 step=0.001");
+
+		vector<ParticleSystem*> ps = Scene::GetInstance()->GetParticleSystems();
+		for (unsigned int i = 0; i < ps.size(); i++)
+		{
+			sceneDialog->AddPE(ps[i]->getParticleSystem(), i);
+		}
+
+		TwAddVarRW(sceneDialog->m_dialog, "Draw Scene Planes", TW_TYPE_BOOLCPP, Scene::GetInstance()->getDrawPlanes(), "group='Debug'");
+
+		TwAddButton(sceneDialog->m_dialog, "Restart PSystems", RestartParticles, (void*)0, "");
 	}
 }
 void TW_CALL SceneDialog::SaveAGL(void *clientData)
 {
 	string file = savefilename();
-	Scene::GetInstance()->Save(file);
+	if (file != "")
+		Scene::GetInstance()->Save(file);
 }
 void TW_CALL SceneDialog::AddMaterial(void *clientData)
 {
-	AglMaterial* mat = new AglMaterial();
-	mat->nameID = Scene::GetInstance()->AddName("");
-	Scene::GetInstance()->AddMaterial(mat, false, false);
-	string s = Scene::GetInstance()->GetName(mat->nameID);
-	string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Materials'";
-
 	SceneDialog* sceneDialog = (SceneDialog*)clientData;
-	TwAddButton(sceneDialog->m_dialog, ("Material" + toString(mat->id)).c_str(), OpenMaterialDialog, (void*)mat->id, info.c_str());
+	sceneDialog->AddMaterial(new AglMaterial());
+}
+void SceneDialog::AddMaterial(AglMaterial* pMaterial)
+{
+	if (pMaterial->id == -1)
+		Scene::GetInstance()->AddMaterial(pMaterial, false, false);
+	if (pMaterial->nameID == -1)
+		pMaterial->nameID = Scene::GetInstance()->AddName("Material" + toString(pMaterial->id));
+	string s = Scene::GetInstance()->GetName(pMaterial->nameID);
+	string info = " label='" + s + "' group='Materials'";
+	TwAddButton(m_dialog, ("Material" + toString(pMaterial->id)).c_str(), OpenMaterialDialog, (void*)pMaterial->id, info.c_str());
+}
+void TW_CALL SceneDialog::AddPE(void* clientData)
+{
+	SceneDialog* sceneDialog = (SceneDialog*)clientData;
+	sceneDialog->AddPE(new AglParticleSystem(), Scene::GetInstance()->GetParticleSystems().size()-1);
+}
+void SceneDialog::AddPE(AglParticleSystem* pParticleSystem, int p_index)
+{
+	int index = p_index;
+	if (Scene::GetInstance()->GetIndex(pParticleSystem) < 0)
+	{
+		Scene::GetInstance()->AddParticleSystem(pParticleSystem);
+		index = Scene::GetInstance()->GetIndex(pParticleSystem);
+	}
+	string s = "NoName";
+	string info = " label='" + s + "' group='Particle Effects'";
+	TwAddButton(m_dialog, ("Particle Effect" + toString(index)).c_str(), OpenParticleSystemDialog, (void*)index, info.c_str());
+}
+void SceneDialog::ClonePE(AglParticleSystemHeader pHeader)
+{
+	AglParticleSystem* ps = new AglParticleSystem(pHeader);
+	Scene::GetInstance()->AddParticleSystem(ps);
+	string s = "NoName";
+	string info = " label='" + s + "' help='Load an Agile file into the editor.' group='Particle Effects'";
+	int zero = Scene::GetInstance()->GetParticleSystems().size()-1;
+
+	TwAddButton(this->m_dialog, ("Particle Effect" + toString(zero)).c_str(), OpenParticleSystemDialog, (void*)zero, info.c_str());
 }
 
 SceneDialog::SceneDialog()
@@ -90,7 +190,7 @@ SceneDialog::SceneDialog()
 	// Create a tweak bar
     m_dialog = TwNewBar("Scene");
     TwDefine(" GLOBAL help='This example shows how to integrate AntTweakBar into a DirectX11 application.' "); // Message added to the help bar.
-    int barSize[2] = {200, 400};
+	int barSize[2] = {200, 1060};
     TwSetParam(m_dialog, NULL, "size", TW_PARAM_INT32, 2, barSize);
 	TwDefine(" Scene position='10 10' ");
 
@@ -114,11 +214,15 @@ SceneDialog::SceneDialog()
 
 	m_meshDialog = new MeshDialog();
 	m_materialDialog = new MaterialDialog();
+	m_particleSystemDialog = new ParticleSystemDialog();
+	m_mergeDialog = new MergeDialog();
 }
 SceneDialog::~SceneDialog()
 {
 	delete m_meshDialog;
 	delete m_materialDialog;
+	delete m_particleSystemDialog;
+	delete m_mergeDialog;
 }
 
 SceneDialog* SceneDialog::GetInstance()
@@ -133,9 +237,55 @@ void SceneDialog::Release()
 }
 void SceneDialog::SetCurrentMesh(int pIndex)
 {
+	m_materialDialog->hide();
+	m_particleSystemDialog->hide();
+	m_mergeDialog->hide();
 	m_meshDialog->setMesh(pIndex);
+}
+void SceneDialog::SetCurrentParticleSystem(int pIndex)
+{
+	m_materialDialog->hide();
+	m_meshDialog->hide();
+	m_mergeDialog->hide();
+
+	m_particleSystemDialog->setPS(pIndex);
 }
 void SceneDialog::SetCurrentMaterial(int pIndex)
 {
+	m_meshDialog->hide();
+	m_particleSystemDialog->hide();
+	m_mergeDialog->hide();
+
 	m_materialDialog->setMaterial(pIndex);
+}
+
+void SceneDialog::RemoveMaterial(AglMaterial* pMaterial)
+{
+	vector<AglMaterial*> materials = Scene::GetInstance()->GetMaterials();
+	for (unsigned int i = 0; i < materials.size(); i++)
+	{
+		string name = ("Material" + toString(materials[i]->id));
+		TwRemoveVar(m_dialog, name.c_str());
+	}
+	Scene::GetInstance()->RemoveMaterial(pMaterial);
+	materials = Scene::GetInstance()->GetMaterials();
+	for (unsigned int i = 0; i < materials.size(); i++)
+	{
+		AddMaterial(materials[i]);
+	}
+}
+void SceneDialog::RemoveParticleSystem(AglParticleSystem* pParticleSystem)
+{
+	vector<ParticleSystem*> ps = Scene::GetInstance()->GetParticleSystems();
+	for (unsigned int i = 0; i < ps.size(); i++)
+	{
+		string name = "Particle Effect" + toString(i);
+		TwRemoveVar(m_dialog, name.c_str());
+	}
+	Scene::GetInstance()->RemoveParticleSystem(pParticleSystem);
+	ps = Scene::GetInstance()->GetParticleSystems();
+	for (unsigned int i = 0; i < ps.size(); i++)
+	{
+		AddPE(ps[i]->getParticleSystem(), i);
+	}
 }

@@ -24,28 +24,34 @@ private:
 
 private:
 	void ComputeInertia();
+	AglBoundingSphere MergeSpheres(AglBoundingSphere pS1, AglBoundingSphere pS2);
 public:
-	CompoundBody(AglVector3 pPosition);
+	CompoundBody(AglMatrix pTransform);
 	virtual ~CompoundBody();
 
 	void AddChild(RigidBody* pRigidBody);
+	void AddChild(RigidBody* pRigidBody, AglMatrix pLocalTransform);
 	void DetachChild(RigidBody* pRigidBody);
-	float GetMass();
+	float GetMass() const;
 	float GetInvMass();
 	AglMatrix GetWorld() const;
-	AglVector3 GetVelocity();
-	AglVector3 GetAngularVelocity();
+	AglVector3 GetVelocity() const;
+	AglVector3 GetAngularVelocity() const;
 	AglVector3 GetCenterOfMass();
 
-	void AddImpulse(AglVector3 pImpulse);
-	void AddAngularImpulse(AglVector3 pAngularImpulse);
+	bool IsCompoundBody();
 
-	void UpdateVelocity(float pElapsedTime);
-	void UpdatePosition(float pElapsedTime);
+	void AddImpulse(AglVector3 pImpulse);
+	void AddAngularImpulse(AglVector3 pAngularImpulse, bool p_propagate = true);
+
 	void RevertVelocity();
 	void RevertPosition();
 
 	AglMatrix GetInverseInertiaWorld();
+
+	vector<RigidBody*> GetChildren(){ return mChildren; }
+
+	AglBoundingSphere GetBoundingSphere();
 };
 
 #endif // HEADER_H

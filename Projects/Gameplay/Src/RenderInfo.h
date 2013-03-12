@@ -15,10 +15,11 @@
 class RenderInfo : public Component
 {
 public:
-	RenderInfo();
-	RenderInfo( int p_mesh_id);
+	RenderInfo(bool p_shouldBeRendered=true);
+	RenderInfo( int p_mesh_id, bool p_shouldBeRendered=true);
 	virtual ~RenderInfo();
-	int m_instanceId;
 	int m_meshId;
-private:
+	bool m_shouldBeRendered;
+	bool m_shouldBeCulled;
+	bool m_shouldBeTesselated;
 };

@@ -33,7 +33,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	}
 	catch (exception &e)
 	{
-		DEBUGPRINT((e.what()));
+		DEBUGWARNING((e.what()));
 		return -1;
 	}
 
@@ -45,7 +45,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	QueryPerformanceCounter((LARGE_INTEGER*)&prevTimeStamp);
 
 	// Create a cube
-	unsigned int cubeId = graphicsWrapper->createMesh("P_cube");
+	unsigned int cubeId = graphicsWrapper->createMeshFromRaw("P_cube");
 
 	// Create a shitload of instances
 	vector<InstanceData>* instances = new vector<InstanceData>();
@@ -157,13 +157,13 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 			// * Deferred base system *            1
 			graphicsWrapper->clearRenderTargets();	      // clear render targets used           
-			graphicsWrapper->beginFrame();				  // prepare frame, set drawing to MRT   
+			graphicsWrapper->mapSceneInfo();				  // prepare frame, set drawing to MRT   
 
 			// * Render system *                   N
 			graphicsWrapper->renderMesh(cubeId,instances);	  // process a mesh						 
 
 			// * Deferred finalize system *        1
-			graphicsWrapper->finalizeFrame();			  // finalize, draw to backbuffer        
+			graphicsWrapper->mapDeferredBaseToShader();			  // finalize, draw to backbuffer        
 			AntTweakBarWrapper::getInstance()->render();
 			graphicsWrapper->flipBackBuffer();           // flip buffers						 
 		}

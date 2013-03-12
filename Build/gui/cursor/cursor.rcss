@@ -1,0 +1,14 @@
+body
+{
+	color: black;
+
+	background-decorator: image;
+	background-image-src: ../../Assets/gui/texture/cursor.png;
+	margin: auto;
+	
+	min-width: 21px;
+	max-width: 21px;
+	
+	min-height: 27x;
+	max-height: 27px;
+}

@@ -20,15 +20,18 @@ class InputBackendSystem;
 class CameraSystem : public EntitySystem
 {
 public:
-	CameraSystem( GraphicsBackendSystem* p_gfxBackend, 
-				  InputBackendSystem* p_inputBackend );
+	CameraSystem( GraphicsBackendSystem* p_gfxBackend );
 	~CameraSystem();
 
 	virtual void initialize();
 	virtual void processEntities( const vector<Entity*>& p_entities );
-
+	void updateRenderSceneInfo(Entity* p_entity);
+	void setRenderSceneInfoUsingPlayerCamera();
+	bool selectPlayerCamera( Entity* p_camera );
 private:
 	GraphicsBackendSystem* m_gfxBackend;
-	InputBackendSystem* m_inputBackend;
+	bool	m_renderFromShadowCamera;
+	Entity* m_playerCamera;
+	int m_lowResDivider;
 };
 

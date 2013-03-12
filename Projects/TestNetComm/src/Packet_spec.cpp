@@ -4,19 +4,15 @@ using namespace igloo;
 #include <Packet.h>
 #include <AglVector3.h>
 #include <AglQuaternion.h>
+#include "LargePacketStruct.h"
+
+static const int TEST_PACKET_TYPE = 100;
 
 Describe(a_packet)
 {
-	It(can_have_a_sender_id_defined_in_constructor)
-	{
-		Packet packet(55);
-
-		Assert::That(packet.getSenderId(), Equals(55));
-	}
-
 	It(can_have_a_sender_id_defined_in_setSenderId_method)
 	{
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		packet.setSenderId(77);
 
 		Assert::That(packet.getSenderId(), Equals(77));
@@ -24,7 +20,7 @@ Describe(a_packet)
 
 	It(can_contain_int_data)
 	{
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 
 		int i_src = 1;
 		packet << i_src;
@@ -36,7 +32,7 @@ Describe(a_packet)
 
 	It(can_contain_float_data)
 	{
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		float f_src = 13.37f;
 		packet << f_src;
 		float f_dst;
@@ -47,7 +43,7 @@ Describe(a_packet)
 
 	It(can_contain_bool_data)
 	{
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		bool b_src = true;
 		packet << b_src;
 		bool b_dst;
@@ -58,7 +54,7 @@ Describe(a_packet)
 
 	It(can_contain_char_data)
 	{
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		char c_src = 100;
 		packet << c_src;
 		char c_dst;
@@ -67,9 +63,20 @@ Describe(a_packet)
 		Assert::That(c_dst, Equals(c_src));
 	}
 
+	It(can_contain_unsigned_char_data)
+	{
+		Packet packet(TEST_PACKET_TYPE);
+		unsigned char c_src = 100;
+		packet << c_src;
+		unsigned char c_dst;
+		packet >> c_dst;
+
+		Assert::That(c_dst, Equals(c_src));
+	}
+
 	It(can_contain_short_data)
 	{
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		short s_src = 10000;
 		packet << s_src;
 		short s_dst;
@@ -80,7 +87,7 @@ Describe(a_packet)
 
 	It(can_contain_double_data)
 	{
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		double d_src = 1337.1435000000377;
 		packet << d_src;
 		double d_dst;
@@ -91,7 +98,7 @@ Describe(a_packet)
 
 	It(can_contain_vec3_data)
 	{
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		AglVector3 vec_src(1.0f, 2.0f, 3.0f);
 		packet << vec_src;
 		AglVector3 vec_dst;
@@ -104,7 +111,7 @@ Describe(a_packet)
 
 	It(can_contain_quaternion_data)
 	{
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		AglQuaternion quaternion_src(1.0f, 2.0f, 3.0f, 4.5f);
 		packet << quaternion_src;
 		AglQuaternion quaternion_dst;
@@ -116,9 +123,24 @@ Describe(a_packet)
 		Assert::That(quaternion_dst.v, Equals(quaternion_src.v));
 	}
 
+	It(can_contain_variable_string_data)
+	{
+		Packet packet(TEST_PACKET_TYPE);
+		string text_src = "Hello world!";
+		packet << text_src;
+		string text_dst;
+		packet >> text_dst;
+		Assert::That(text_dst, Equals(text_src)); // data is the same
+		Assert::That(packet.getDataSize(), Equals(
+			1						// Size byte for the string length
+			+ text_src.size()		// Size of the string itself.
+			+ Packet::HEADER_SIZE	// Packet's header size.
+			));
+	}
+
 	It(can_contain_multiple_int_data)
 	{
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 
 		int i_src[] = { 1, 2, 3 };
 		packet << i_src[0] << i_src[1] << i_src[2];
@@ -131,7 +153,7 @@ Describe(a_packet)
 
 	It(can_contain_multiple_types_of_data)
 	{
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		int i_src = 42;
 		float f_src = 13.37f;
 		packet << i_src << f_src;
@@ -145,7 +167,7 @@ Describe(a_packet)
 
 	It(can_be_cleared)
 	{
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		packet << 10 << 10.0f;
 
 		packet.clear();
@@ -154,40 +176,48 @@ Describe(a_packet)
 
 	It(can_return_data_size)
 	{
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 
 		int i_src[] = { 1, 2, 3 };
 		packet << i_src[0] << i_src[1] << i_src[2];
 		
-		Assert::That(packet.getDataSize(), Equals(sizeof(i_src) + 1));
+		Assert::That(packet.getDataSize(), Equals(sizeof(i_src) + Packet::HEADER_SIZE));
 	}
 
 	It(can_be_empty)
 	{
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		
 		Assert::That(packet.isEmpty(), IsTrue());
 	}
 
 	It(throws_an_exception_if_trying_to_stream_out_an_empty_packet)
 	{
-		Packet packet;
+		Packet packet(TEST_PACKET_TYPE);
 		int i_dst;
 		AssertThrows(std::out_of_range, (packet >> i_dst));
 	}
 
 	It(can_set_byte_data)
 	{
-		char* byteData = new char[5];
-		// Big endian order?
+		char* byteData = new char[4 + Packet::HEADER_SIZE];
+
+		// Header
 		byteData[0] = 4;
-		byteData[1] = 42;
+		byteData[1] = 0;
 		byteData[2] = 0;
 		byteData[3] = 0;
 		byteData[4] = 0;
+		byteData[5] = 0;
 
-		Packet packet;
-		packet.setData(byteData, 5);
+		// An int 
+		byteData[6] = 42;
+		byteData[7] = 0;
+		byteData[8] = 0;
+		byteData[9] = 0;
+
+		Packet packet(TEST_PACKET_TYPE);
+		packet.setDataTest(byteData, 4 + Packet::HEADER_SIZE);
 
 		int i_dst;
 		packet >> i_dst;
@@ -200,14 +230,14 @@ Describe(a_packet)
 	{
 		int i_src = 5;
 		float f_src = 6.9f;
-		Packet packet_src;
+		Packet packet_src(TEST_PACKET_TYPE);
 		packet_src << i_src << f_src;
 
 		unsigned int data_size = packet_src.getDataSize();
 		char* data_src = packet_src.getDataPtr();
 
-		Packet packet_dst;
-		packet_dst.setData(data_src, data_size);
+		Packet packet_dst(TEST_PACKET_TYPE);
+		packet_dst.setDataTest(data_src, data_size);
 
 		int i_dst;
 		float f_dst;
@@ -217,4 +247,26 @@ Describe(a_packet)
 		Assert::That(f_dst, Equals(f_src));
 	}
 
+	It(can_return_the_packet_byte_size)
+	{
+		Packet packet(TEST_PACKET_TYPE);
+		packet << 10 << 10.0f;
+		Assert::That(packet.getDataSize(), Equals(14));
+
+		int i_dst = 0;
+		packet >> i_dst;
+		Assert::That(packet.getDataSize(), Equals(14));
+	}
+
+	It(can_be_of_size_256_minus_header_size)
+	{
+		Packet packet(TEST_PACKET_TYPE);
+		LargePacketStruct large;
+		packet.WriteData(&large, sizeof(LargePacketStruct));
+		Assert::That(packet.getDataSize(), Equals(Packet::HEADER_SIZE + sizeof(LargePacketStruct)));
+
+		LargePacketStruct large_dst;
+		packet.ReadData(&large_dst, sizeof(LargePacketStruct));
+		Assert::That(packet.getDataSize(), Equals(Packet::HEADER_SIZE + sizeof(LargePacketStruct)));
+	}
 };

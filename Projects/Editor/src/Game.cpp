@@ -5,6 +5,7 @@
 #include "SphereMesh.h"
 #include "Globals.h"
 #include "BoxMesh.h"
+#include "ParticleStates.h"
 
 TwBar *bar;
 
@@ -42,6 +43,8 @@ bool Game::Initialize()
 	Camera::GetInstance()->Init(AglVector3(0, 0.0f, -2.25f), AglVector3(0, 0.0f, 0), AglVector3(0, 1, 0), mScreenWidth, mScreenHeight);
 	TextureManager::GetInstance()->Init(mDevice, mDeviceContext);
 	RasterManager::getInstance()->initialize(mDevice, mDeviceContext);
+
+	ParticleStates::Init(mDevice, mDeviceContext);
 	
 	AGLLoader::GetInstance()->Init(mDevice, mDeviceContext);
 
@@ -75,15 +78,27 @@ bool Game::Cleanup()
 	TwTerminate();
 	delete m_cameraController;
 	delete SPHEREMESH;
+	delete BOXMESH;
 	return true;
 }
 bool Game::Update(float pElapsedTime)
 {
 	DX11Application::Update(pElapsedTime);
-	if(GetAsyncKeyState(VK_F5) & 0x8000)
+	/*if(GetAsyncKeyState(VK_F5) & 0x8000)
 	{
 		TextureManager::GetInstance()->ReloadAll();
+	}*/
+	if(GetAsyncKeyState(VK_F5) & 0x8000)
+	{
+			Scene::GetInstance()->Save("");
 	}
+	else if(GetAsyncKeyState(VK_F6) & 0x8000)
+	{
+		string file = savefilename();
+		if (file != "")
+			Scene::GetInstance()->Save(file);
+	}
+
 	m_cameraController->Update(pElapsedTime);
 	Scene::GetInstance()->Update(pElapsedTime);
 	return true;

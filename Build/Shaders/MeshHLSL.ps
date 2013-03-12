@@ -6,11 +6,13 @@ cbuffer Material
 	float4 Emissive;
     float4 EyePosition;
     float4 Flags;
+	float4 gradientColors[10];
 };
 Texture2D DiffuseTexture;
 Texture2D SpecularTexture;
 Texture2D GlowTexture;
 Texture2D NormalTexture;
+Texture2D GradientTexture;
 SamplerState SampleType : register(s0);
 
 struct VOut
@@ -47,7 +49,21 @@ float4 PShader(VOut pIn) : SV_TARGET
         float3 diffuse;
         float3 specular;
         float3 glow;
-        if (Emissive.w != 0)
+		if (Flags.z != 0)
+		{
+			float gradient = GradientTexture.Sample(SampleType, pIn.texCoord).z;
+			int level = gradient * Flags.w;
+			level = min(level, Flags.w-1);
+			
+			diffuse = gradientColors[level];
+				
+			if (Emissive.w != 0)
+			{
+				diffuse = diffuse * DiffuseTexture.Sample(SampleType, pIn.texCoord).xyz;
+			}
+			
+		}
+        else if (Emissive.w != 0)
             diffuse = DiffuseTexture.Sample(SampleType, pIn.texCoord).xyz;
         else
             diffuse = Diffuse.xyz;
@@ -61,7 +77,13 @@ float4 PShader(VOut pIn) : SV_TARGET
             glow = float3(0, 0, 0); 
         float3 Color = float3(0,0,0);
         float3 lightDir = normalize(float3(0.0f, -1.0f, 0));
+		
+		float diff = max(dot(float3(0.0f, 1.0f, 0), n), 0);
+		diff += max(dot(float3(1.0f, 0.0f, 0), n), 0);
+		diff += max(dot(float3(0.0f, 0.0f, 1), n), 0);
+		
         float DiffuseFactor = min(max(dot(-lightDir, n), 0.2f), 1.0f);  
+		DiffuseFactor = min(diff, 1.0f);
         if (DiffuseFactor > 0)
         {
             float  Shininess       = Specular.w;
@@ -78,6 +100,6 @@ float4 PShader(VOut pIn) : SV_TARGET
     }
     else
     {
-        return float4(0, 0, 0, 0);
+        return float4(0, 0, 0, 1);
     }
 }

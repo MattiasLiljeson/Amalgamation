@@ -31,13 +31,16 @@ public:
 	int getTotalCreated() const;
 	int getTotalAdded() const;
 	int getTotalDeleted() const;
+	Entity* getFirstEntityByComponentType( ComponentType::ComponentTypeIdx p_componentType );
 
+	void postPerform();
 private:
 	// Use deque instead of vector maybe? 
 	// Profile and measure!
 	vector<Entity*> m_entities;
 	vector<bool> m_disabled;
 	stack<int> m_availableIds;
+	vector<Entity*> m_deleteOnPost;
 
 	int m_nextAvailableId;
 	int m_active;

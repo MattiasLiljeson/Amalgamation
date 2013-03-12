@@ -13,8 +13,11 @@
   <ItemGroup>
     <ClInclude Include="Packet.h" />
     <ClInclude Include="ProcessMessage.h" />
+    <ClInclude Include="ProcessMessageAskForCommProcessInfo.h" />
     <ClInclude Include="ProcessMessageClientConnected.h" />
+    <ClInclude Include="ProcessMessageCommProcessInfo.h" />
     <ClInclude Include="ProcessMessageConnectToServer.h" />
+    <ClInclude Include="ProcessMessagePacketOverflow.h" />
     <ClInclude Include="ProcessMessageSocketDisconnected.h" />
     <ClInclude Include="ProcessMessageReceivePacket.h" />
     <ClInclude Include="ProcessMessageSendPacket.h" />
@@ -32,8 +35,11 @@
   <ItemGroup>
     <ClCompile Include="Packet.cpp" />
     <ClCompile Include="ProcessMessage.cpp" />
+    <ClCompile Include="ProcessMessageAskForCommProcessInfo.cpp" />
     <ClCompile Include="ProcessMessageClientConnected.cpp" />
+    <ClCompile Include="ProcessMessageCommProcessInfo.cpp" />
     <ClCompile Include="ProcessMessageConnectToServer.cpp" />
+    <ClCompile Include="ProcessMessagePacketOverflow.cpp" />
     <ClCompile Include="ProcessMessageReceivePacket.cpp" />
     <ClCompile Include="ProcessMessageSendPacket.cpp" />
     <ClCompile Include="ProcessMessageSocketDisconnected.cpp" />
@@ -58,14 +64,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -101,14 +107,26 @@
       <PreprocessorDefinitions>_WIN32_WINDOWS;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ShowIncludes>false</ShowIncludes>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <BrowseInformation>false</BrowseInformation>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Util_x86_$(Configuration).lib;AgileUtility_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
     </Lib>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -119,6 +137,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_WIN32_WINDOWS;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -127,8 +146,12 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>Util_x86_$(Configuration).lib;AgileUtility_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

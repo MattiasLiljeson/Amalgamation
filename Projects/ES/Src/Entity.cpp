@@ -54,6 +54,18 @@ void Entity::addComponentBit( bitset<ComponentType::NUM_COMPONENT_TYPES> p_compo
 	m_componentBits |= p_componentBits;
 }
 
+void Entity::addComponent( Component* p_component )
+{
+	if( p_component->getComponentTypeId() != ComponentType::NON_EXISTING )
+	{
+		addComponent( p_component->getComponentTypeId(), p_component );
+	}
+	else
+	{
+		throw "addComponent(): ComponentType not set for this component";
+	}
+}
+
 void Entity::addComponent( ComponentType::ComponentTypeIdx p_typeIdx, Component* p_component )
 {
 	addComponent( ComponentType::getTypeFor(p_typeIdx), p_component );
@@ -61,6 +73,26 @@ void Entity::addComponent( ComponentType::ComponentTypeIdx p_typeIdx, Component*
 void Entity::addComponent( ComponentType p_type, Component* p_component )
 {
 	m_world->getComponentManager()->addComponent( this, p_type, p_component );
+}
+
+void Entity::addTag( ComponentType::ComponentTypeIdx p_typeIdx, Tag* p_tag )
+{
+	addComponent( p_typeIdx, static_cast<Component*>(p_tag) );
+}
+
+void Entity::removeComponent( ComponentType::ComponentTypeIdx p_typeIdx )
+{
+	removeComponent( ComponentType::getTypeFor(p_typeIdx) );
+}
+
+void Entity::removeComponent( ComponentType p_type )
+{
+	m_world->getComponentManager()->removeComponent( this, p_type );
+}
+
+void Entity::applyComponentChanges()
+{
+	m_world->changedEntity(this);
 }
 
 Component* Entity::getComponent( ComponentType::ComponentTypeIdx p_typeIdx )
@@ -107,4 +139,19 @@ bool Entity::isEnabled()
 void Entity::setEnabled( bool p_enabled )
 {
 	m_enabled = p_enabled;
+}
+
+const string& Entity::getName() const
+{
+	return m_name;
+}
+
+vector<ComponentType::ComponentTypeIdx> Entity::getComponentEnums()
+{
+	return m_world->getComponentManager()->getComponentEnumList(this);
+}
+
+vector<SystemType::SystemTypeIdx> Entity::getSystemEnums()
+{
+	return m_world->getSystemManager()->getSystemEnumList(this);
 }

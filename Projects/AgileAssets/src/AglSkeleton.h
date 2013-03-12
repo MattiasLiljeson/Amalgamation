@@ -2,6 +2,10 @@
 #define AGLSKELETON_H
 
 #include "Agl.h"
+#include <vector>
+
+using namespace std;
+
 
 class AglScene;
 
@@ -18,8 +22,10 @@ class AglScene;
 ///-------------------------------------------------------------------------------------------------
 struct AglSkeletonHeader
 {
-	int		nameID;		///< Index to the name of the skeleton
-	int		jointCount;	///< The number of the joints in the skeleton
+	int			nameID;		///< Index to the name of the skeleton
+	int			jointCount;	///< The number of the joints in the skeleton
+	AglMatrix	baseTransform; ///< Acts as an extra transform above the root node. 
+							   ///< Useful for coordinate switches
 };
 
 // =================================================================================================
@@ -91,7 +97,9 @@ public:
 	/// Gets the root joint.
 	/// \return The root joint.
 	///
-	AglJoint*	 getRoot();
+	AglJoint	 getRoot();
+
+	vector<AglJoint> getChildren(int p_parent);
 
 	///
 	/// Gets the global transform of a joint.
@@ -99,6 +107,8 @@ public:
 	/// \return A 4x4 matrix
 	///
 	AglMatrix	  getGlobalTransform(int p_joint);
+
+	AglMatrix	  getGlobalTransform(int p_joint, float p_time);
 
 	///
 	///Gets the inverse bind transform of a joint.

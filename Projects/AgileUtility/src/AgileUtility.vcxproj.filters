@@ -16,6 +16,7 @@
     <ClInclude Include="AglHull.h" />
     <ClInclude Include="AglBoxMesh.h" />
     <ClInclude Include="AglSphereMesh.h" />
+    <ClInclude Include="AglCollision.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AglAABB.cpp" />
@@ -32,5 +33,6 @@
     <ClCompile Include="AglHull.cpp" />
     <ClCompile Include="AglBoxMesh.cpp" />
     <ClCompile Include="AglSphereMesh.cpp" />
+    <ClCompile Include="AglCollision.cpp" />
   </ItemGroup>
 </Project>

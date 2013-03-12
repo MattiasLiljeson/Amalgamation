@@ -30,6 +30,7 @@ public:
 	void AddAnimation(AnimationData* pData);
 	void AddMaterial(MaterialData* pData);
 	void AddMaterialMapping(AglMaterialMapping* pData);
+	void AddConnectionPoint(pair<AglConnectionPoint, string> pCP);
 	void Write();
 };
 

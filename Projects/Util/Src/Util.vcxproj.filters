@@ -4,8 +4,40 @@
     <ClInclude Include="DebugUtil.h" />
     <ClInclude Include="ToString.h" />
     <ClInclude Include="UniqueIndexList.h" />
+    <ClInclude Include="FileCheck.h">
+      <Filter>Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ValueClamp.h" />
+    <ClInclude Include="..\..\Gameplay\Src\ComponentAssemblageAllocator.h" />
+    <ClInclude Include="PreciseTimer.h">
+      <Filter>PreciseTimer</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomUtil.h">
+      <Filter>RandomUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="util.cpp" />
+    <ClCompile Include="FileCheck.cpp">
+      <Filter>Filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="PreciseTimer.cpp">
+      <Filter>PreciseTimer</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomUtil.cpp">
+      <Filter>RandomUtil</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Filesystem">
+      <UniqueIdentifier>{b264805b-dc01-4223-a1cd-30c3db85cb3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PreciseTimer">
+      <UniqueIdentifier>{4036536b-2633-4970-9e98-6840eca2a662}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RandomUtil">
+      <UniqueIdentifier>{f90e7cdf-c5dd-4915-bb3c-f772ae2dfb72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

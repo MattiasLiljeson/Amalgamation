@@ -73,8 +73,15 @@ void SkinParser::ParseSkin(FbxSkin* pSkin)
 		JointData* j = new JointData();
 		j->ID = d->Joints.size();
 		j->NodeID = mParent->GetNodeID(node, c);
+		j->node = node;
+		
+		FbxNodeAttribute* attr = node->GetNodeAttribute();
+		FbxSkeleton* skel = (FbxSkeleton*)attr;
+		j->Type = skel->GetSkeletonType();
+
 		j->FbxParent = parentNode;
 		j->Parent = -1;
+		j->affectsVertices = true;
 		d->Joints.push_back(j);
     }
 
@@ -86,6 +93,9 @@ void SkinParser::ParseSkin(FbxSkin* pSkin)
 void SkinParser::ArrangeSkeleton(SkeletonData* pSkeleton)
 {
 	vector<JointData*>& joints = pSkeleton->Joints;
+
+	int sizebeforeadded = joints.size();
+
 	bool docheck = true;
 	while (docheck)
 	{
@@ -106,9 +116,9 @@ void SkinParser::ArrangeSkeleton(SkeletonData* pSkeleton)
 			{
 				//New Nested if
 				FbxNodeAttribute* na = joints[i]->FbxParent->GetNodeAttribute();
+				const char* name = joints[i]->FbxParent->GetName();
 				if (na && na->GetAttributeType() == FbxNodeAttribute::eSkeleton)
-				{	
-					const char* name = joints[i]->FbxParent->GetName();
+				{
 					docheck = true;
 				
 					FbxNode* newJoint = joints[i]->FbxParent;
@@ -120,11 +130,16 @@ void SkinParser::ArrangeSkeleton(SkeletonData* pSkeleton)
 					j->NodeID = mParent->GetNodeID(newJoint);
 					j->FbxParent = parent;
 					j->Parent = -1;
+					j->affectsVertices = false;
+					j->node = joints[i]->FbxParent;
+					FbxNodeAttribute* attr = newJoint->GetNodeAttribute();
+					FbxSkeleton* skel = (FbxSkeleton*)attr;
+					j->Type = skel->GetSkeletonType();
 					joints.push_back(j);
 				}
 			}
 		}
 	}
-	//Remove unnecessary nodes in the higher parts of the hierarchy
-
+	
+	return;
 }

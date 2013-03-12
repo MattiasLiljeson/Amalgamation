@@ -1,0 +1,571 @@
+body
+{
+	font-family: Armorhide;
+	font-style: normal;
+    font-charset: U+00??;
+	font-weight: bold;
+	font-size: 20;
+	color: white;
+	background: rgba(20, 20, 20, 80);
+	
+    /*shadow-font-effect: shadow;
+    shadow-offset: 2px 2px;
+    shadow-color: black;*/
+}
+
+body.window
+{
+	/*padding-top: 43px;
+	padding-bottom: 20px;
+	
+	min-width: 250px;
+	max-width: 800px;
+	
+	min-height: 135px;
+	max-height: 700px;*/
+/*background: grey;*/
+	
+	margin: 		auto;
+	margin-right: 	5%;
+	width:			350px;
+	height:			80%;
+	max-height: 	700px;
+	
+
+	/*padding-top: 	10%;
+	padding-bottom:	10%;*/
+}
+
+body.loading
+{
+	background-decorator: image;
+	background-image: ../../Assets/GUI/texture/vaderLoad.png;
+	width: 100%;
+	height: 100%;
+}
+
+body.Pop-up
+{
+	margin-right: 	5%;
+	margin:		 	auto;
+	width:			350px;
+	height: 		350px;
+	background: 	rgba(0,60,0,80);
+}
+
+div#title_bar
+{
+	z-index: 1;
+
+	/*position: 	absolute;
+	top: 		-30px;*/
+	left: 		15px;
+	height: 	auto;
+	shadow-font-effect: shadow;
+    shadow-offset: 2px 2px;
+    shadow-color: black;
+	
+	text-align: center;
+	font-size: 56;
+	font-weight: bold;
+}
+
+div#title_bar div#icon
+{
+	/*position: absolute;
+	left: 20px;
+	top: 2px;
+	
+	width: 51px;
+	height: 39px;*/
+	
+	/*icon-decorator: image;
+	icon-image-src: ../../Assets/gui/texture/invader.tga;*/
+}
+
+div#title_bar span
+{
+/*
+	padding-left: 2%;
+	padding-right: 25px;
+	padding-top: 17px;
+	padding-bottom: 48px;
+*/
+
+	/*background-decorator: tiled-horizontal;
+	background-left-image: ../../Assets/gui/texture/invader.tga 147px 0px 229px 85px;
+	background-center-image: ../../Assets/gui/texture/invader.tga stretch 229px 0px 230px 85px;
+	background-right-image: ../../Assets/gui/texture/invader.tga 231px 0px 246px 85px;*/
+}
+
+
+
+div#window
+{
+	width: auto;
+	padding: 10px 15px;
+
+	/*background-decorator: tiled-box;
+	background-top-left-image: ../../Assets/gui/texture/invader.tga 0px 0px 133px 140px;
+	background-top-right-image: ../../Assets/gui/texture/invader.tga 136px 0px 146px 140px;
+	background-top-image: ../../Assets/gui/texture/invader.tga stretch 134px 0px 135px 140px;
+	background-bottom-left-image: ../../Assets/gui/texture/invader.tga 0px 140px 11px 151px;
+	background-bottom-right-image: ../../Assets/gui/texture/invader.tga 136px 140px 146px 151px;
+	background-bottom-image: ../../Assets/gui/texture/invader.tga stretch 11px 140px 12px 151px;
+	background-left-image: ../../Assets/gui/texture/invader.tga stretch 0px 139px 10px 140px;
+	background-center-image: ../../Assets/gui/texture/invader.tga stretch 11px 139px 12px 140px;*/
+}
+
+div#content
+{
+	z-index: 2;
+	height: 75%;
+	overflow: hidden auto;
+	text-align: center;
+	padding-bottom: 8px;
+}
+
+p
+{
+	text-align: left;
+	margin-bottom: 1em;
+}
+
+h1
+{
+/*	margin-left: 0.4em;
+	margin-bottom: 0.4em;*/
+
+	text-align: center;
+	font-size: 40;
+	font-weight: bold;
+
+	/*
+	shadow-font-effect: shadow;
+	shadow-offset: 1px 1px;
+	shadow-color: black;*/
+}
+
+button,
+input.submit
+{
+	border-style:solid;
+	border-width:1px;
+	border-color: rgba(0,0,0,0);
+	
+	display: inline-block;
+	width: auto;
+	height: auto;
+
+	padding-top: 8px;
+	vertical-align: middle;
+	padding-bottom: 8px;
+	
+	font-size: 25;
+	text-align: center;
+	tab-index: auto;
+}
+
+button.Big
+{
+	font-size: 50;
+	
+	/*background-decorator: image;
+	background-image: ../../Assets/gui/texture/invader.tga 247px 0px 406px 45px;*/
+}
+
+button#back, input.submit#back
+{
+/*
+	position: absolute;
+	left: 23px;
+	bottom: 8px;
+	*/
+}
+
+input.submit#save
+{
+/*
+	position: absolute;
+	left: 23px;
+	bottom: 60px;
+	*/
+}
+
+button:focus,
+input.submit:focus
+{
+    font-weight: bold;
+	/*
+    shadow-font-effect: shadow;
+    shadow-offset: 1px 1px;
+    shadow-color: black;*/
+}
+
+button:hover,
+input.submit:hover
+{
+	border-color:white;
+}
+
+button:active,
+input.submit:active
+{
+}
+
+
+input.text
+{
+	margin-bottom: 8px;
+	height: auto;
+	width: auto;
+	border-width: 1px;
+	border-color: grey;
+	/*background: rgb(255, 128, 128);*/
+	/*background-decorator: tiled-horizontal;
+	background-left-image: ../../Assets/gui/texture/invader.tga 162px 192px 176px 223px;
+	background-center-image: ../../Assets/gui/texture/invader.tga stretch 176px 192px 177px 223px;*/
+}
+
+input.text,
+select,
+dataselect
+{
+	text-align: center;
+	color: 		white;
+	font-size: 	18;
+}
+
+datagrid input.text
+{
+	width: 100%;
+	height: auto;
+	margin: 0px;
+	padding: 0px 2px 0px;
+
+	border-width: 1px;
+	border-color: green;
+	background-color: green;
+
+	font-size: 15;
+	
+	background-decorator: none;
+}
+
+select,
+dataselect
+{
+	width: 175px;
+	height: 37px;
+}
+
+select selectvalue,
+dataselect selectvalue
+{
+	width: auto;
+	margin-right: 30px;
+	
+	height: 28px;
+	padding: 9px 10px 0px 10px;
+
+	/*background-decorator: image;
+	background-image: ../../Assets/gui/texture/invader.tga 162px 192px 307px 229px;*/
+}
+
+select selectvalue:hover,
+dataselect selectvalue:hover
+{
+	background-image-t: 230px 267px;
+}
+
+select selectarrow,
+dataselect selectarrow
+{
+	width: 30px;
+	height: 37px;
+	
+	/*icon-decorator: image;
+	icon-image: ../../Assets/gui/texture/invader.tga 307px 192px 337px 229px;*/
+}
+
+select selectarrow:hover,
+dataselect selectarrow:hover
+{
+	icon-image-t: 230px 267px;
+}
+
+select selectarrow:active,
+select selectarrow:checked,
+dataselect selectarrow:active,
+dataselect selectarrow:checked
+{
+	icon-image-t: 268px 305px;
+}
+
+select selectbox,
+dataselect selectbox
+{
+	margin-left: 1px;
+	margin-top: -7px;
+	width: 162px;
+	padding: 1px 4px 4px 4px;
+}
+
+select selectbox,
+dataselect selectbox,
+datagrid datagridbody
+{
+	/*background-decorator: tiled-box;
+	background-top-left-image: ../../Assets/gui/texture/invader.tga 281px 275px 292px 284px;
+	background-top-right-image: ../../Assets/gui/texture/invader.tga 294px 275px 305px 284px;
+	background-top-image: ../../Assets/gui/texture/invader.tga stretch 292px 275px 293px 284px;
+	background-bottom-left-image: ../../Assets/gui/texture/invader.tga 281px 285px 292px 296px;
+	background-bottom-right-image: ../../Assets/gui/texture/invader.tga 294px 285px 305px 296px;
+	background-bottom-image: ../../Assets/gui/texture/invader.tga stretch 292px 285px 293px 296px;
+	background-left-image: ../../Assets/gui/texture/invader.tga stretch 281px 283px 292px 284px;
+	background-center-image: ../../Assets/gui/texture/invader.tga stretch 292px 283px 293px 284px;*/
+}
+
+select selectbox option,
+dataselect selectbox option
+{
+	width: auto;
+	padding-left: 3px;
+}
+
+datagridrow{
+	margin-top: 10px;
+	color: rgb(230,230,230);
+	font-weight: normal;
+}
+
+select selectbox option:nth-child(even),
+dataselect selectbox option:nth-child(even),
+datagrid datagridrow:nth-child(even)
+{
+	background: rgba(0,0,0,255);
+}
+select selectbox option:nth-child(odd),
+dataselect selectbox option:nth-child(odd),
+datagrid datagridrow:nth-child(odd)
+{
+	background: rgba(23,23,23,255);
+}
+
+
+select selectbox option:hover,
+dataselect selectbox option:hover
+{
+	background: #FF5D5D;
+}
+
+
+
+input.radio,
+input.checkbox
+{
+	width: 30px;
+	height: 30px;
+
+	vertical-align: -11px;
+}
+
+input.radio
+{
+	/*icon-decorator: image;
+	icon-image: ../../Assets/gui/texture/invader.tga 407px 0px 437px 30px;*/
+}
+
+input.radio:hover
+{
+	icon-image-s: 437px 467px;
+}
+
+input.radio:active
+{
+	icon-image-s: 467px 497px;
+}
+
+input.radio:checked
+{
+	icon-image-t: 30px 60px;
+}
+
+input.radio:checked:hover
+{
+	icon-image-s: 437px 467px;
+	icon-image-t: 30px 60px;
+}
+
+input.radio:checked:active
+{
+	icon-image-s: 467px 497px;
+	icon-image-t: 30px 60px;
+}
+
+input.checkbox
+{
+	/*icon-decorator: image;
+	icon-image: ../../Assets/gui/texture/invader.tga 407px 60px 437px 90px;*/
+}
+
+input.checkbox:hover
+{
+	icon-image-s: 437px 467px;
+}
+
+input.checkbox:active
+{
+	icon-image-s: 467px 497px;
+}
+
+input.checkbox:checked
+{
+	icon-image-t: 90px 120px;
+}
+
+input.checkbox:checked:hover
+{
+	icon-image-s: 437px 467px;
+	icon-image-t: 90px 120px;
+}
+
+input.checkbox:checked:active
+{
+	icon-image-s: 467px 497px;
+	icon-image-t: 90px 120px;
+}
+
+
+
+datagrid datagridheader
+{
+	width: auto;
+	height: 25px;
+	padding: 5px 10px 0px 10px;
+
+	/*background-decorator: tiled-horizontal;
+	background-left-image: ../../Assets/gui/texture/invader.tga 127px 192px 143px 223px;
+	background-center-image: ../../Assets/gui/texture/invader.tga stretch 143px 192px 145px 223px;
+	background-right-image: ../../Assets/gui/texture/invader.tga 145px 192px 160px 223px;*/
+}
+
+datagrid datagridbody
+{
+	color: black;
+
+	margin-left: 4px;
+	margin-right: 3px;
+	padding: 0px 4px 4px 4px;
+}
+
+
+
+datagridexpand
+{
+	display: block;
+	
+	margin: 1px 0px 1px 5px;
+	height: 17px;
+	width: 17px;
+	
+	/*icon-decorator: image;
+	icon-image: ../../Assets/gui/texture/invader.tga 3px 232px 20px 249px;*/
+}
+
+datagridexpand:hover
+{
+	icon-image-s: 21px 38px;
+}
+
+datagridexpand:active
+{
+	icon-image-s: 39px 56px;
+}
+
+datagridexpand.collapsed
+{
+	icon-image-t: 250px 267px;
+}
+
+
+
+scrollbarvertical
+{
+	margin-top: -6px;
+	margin-bottom: -6px;
+	margin-right: -11px;
+	width: 27px;
+}
+
+scrollbarvertical slidertrack
+{
+	/*background-decorator: tiled-vertical;
+	background-top-image: ../../Assets/gui/texture/invader.tga 70px 199px 97px 201px;
+	background-center-image: ../../Assets/gui/texture/invader.tga stretch 70px 201px 97px 202px;
+	background-bottom-image: ../../Assets/gui/texture/invader.tga 70px 203px 97px 204px;*/
+}
+
+scrollbarvertical sliderbar
+{
+	margin-left: 4px;
+	width: 23px;
+	min-height: 46px;
+
+	/*background-decorator: tiled-vertical;
+	background-top-image: ../../Assets/gui/texture/invader.tga 56px 152px 79px 175px;
+	background-center-image: ../../Assets/gui/texture/invader.tga stretch 56px 175px 79px 175px;
+	background-bottom-image: ../../Assets/gui/texture/invader.tga 56px 176px 79px 198px;*/
+}
+
+scrollbarvertical sliderbar:hover
+{
+	background-top-image-s: 80px 103px;
+	background-center-image-s: 80px 103px;
+	background-bottom-image-s: 80px 103px;
+}
+
+scrollbarvertical sliderbar:active
+{
+	background-top-image-s: 104px 127px;
+	background-center-image-s: 104px 127px;
+	background-bottom-image-s: 104px 127px;
+}
+
+scrollbarvertical sliderarrowdec
+{
+	width: 27px;
+	height: 24px;
+	
+	/*icon-decorator: image;
+	icon-image: ../../Assets/gui/texture/invader.tga 0px 152px 27px 176px;*/
+}
+
+scrollbarvertical sliderarrowdec:hover,
+scrollbarvertical sliderarrowinc:hover
+{
+	icon-image-t: 177px 201px;
+}
+
+scrollbarvertical sliderarrowdec:active,
+scrollbarvertical sliderarrowinc:active
+{
+	icon-image-t: 202px 226px;
+}
+
+scrollbarvertical sliderarrowinc
+{
+	width: 27px;
+	height: 24px;
+	
+	/*icon-decorator: image;
+	icon-image: ../../Assets/gui/texture/invader.tga 28px 152px 55px 176px;*/
+}
+
+
+
+scrollbarhorizontal
+{
+	width: 0px;
+	height: 0px;
+}

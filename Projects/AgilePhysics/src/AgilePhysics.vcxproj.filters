@@ -31,6 +31,8 @@
     <ClCompile Include="RigidBodyMesh.cpp">
       <Filter>Bodies</Filter>
     </ClCompile>
+    <ClCompile Include="Octree.cpp" />
+    <ClCompile Include="AxisPruner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CollisionManager.h" />
@@ -60,6 +62,8 @@
     <ClInclude Include="RigidBodyMesh.h">
       <Filter>Bodies</Filter>
     </ClInclude>
+    <ClInclude Include="Octree.h" />
+    <ClInclude Include="AxisPruner.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Bodies">

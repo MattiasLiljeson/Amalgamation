@@ -15,10 +15,12 @@
 #include <AglVector3.h>
 #include <AglQuaternion.h>
 #include <Component.h>
-
+#include <ComponentFactory.h>
 #include <InstanceData.h>
 
-class Transform: public Component
+
+
+class Transform : public Component
 {
 public:
 	///-----------------------------------------------------------------------------------
@@ -43,20 +45,27 @@ public:
 	/// \param p_scale
 	/// \return 
 	///-----------------------------------------------------------------------------------
-	Transform(AglVector3 p_translation, AglQuaternion p_rotation, AglVector3 p_scale);
+	Transform(const AglVector3& p_translation, const AglQuaternion& p_rotation, 
+		const AglVector3& p_scale);
+
+	Transform(const AglMatrix& p_matrix);
 
 	~Transform();
+
+	virtual void init( vector<ComponentData> p_initData );
 
 	///-----------------------------------------------------------------------------------
 	/// \return The translation vector.
 	///-----------------------------------------------------------------------------------
 	const AglVector3& getTranslation() const;
+
+	const AglVector3 getLookAt() const;
 	
 	///-----------------------------------------------------------------------------------
 	/// \param p_translation The new translation as a vector
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void setTranslation( const AglVector3 p_translation );
+	void setTranslation( const AglVector3& p_translation );
 
 	///-----------------------------------------------------------------------------------
 	/// \return The scale vector.
@@ -67,7 +76,7 @@ public:
 	/// \param p_scale The new scale as a vector
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void setScale( const AglVector3 p_scale );
+	void setScale( const AglVector3& p_scale );
 
 	///-----------------------------------------------------------------------------------
 	/// \return The rotation quaternion.
@@ -78,13 +87,56 @@ public:
 	/// \param p_rotation The new rotation as a quaternion
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void setRotation( const AglQuaternion p_rotation );
+	void setRotation( const AglQuaternion& p_rotation );
+
+	///-----------------------------------------------------------------------------------
+	/// Set forward direction of matrix, doesn't affect scale.
+	/// \param p_forward
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setForwardDirection( const AglVector3& p_forward );
+
+	///-----------------------------------------------------------------------------------
+	/// Set right direction of matrix, doesn't affect scale.
+	/// \param p_right
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	// void setRightDirection( const AglVector3& p_right ); TODO
+
+	///-----------------------------------------------------------------------------------
+	/// Set up direction of matrix, doesn't affect scale.
+	/// \param p_up
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	// void setUpDirection( const AglVector3& p_up ); TODO
+
+	///-----------------------------------------------------------------------------------
+	/// Set the matrix and update vectors
+	/// \param p_matrix
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void setMatrix(const AglMatrix& p_matrix);
 
 	///-----------------------------------------------------------------------------------
 	/// Getter that fetches the pre-calculated matrix that is the sum of all vectors 
 	/// \return A pointer to the transform matrix.
 	///----------------------------------------------------------------------------------
 	const AglMatrix& getMatrix() const;
+
+	float* getWorldMatrix();
+
+	inline AglVector3 getForward() const{
+		return m_compositionMatrix.GetForward();
+	}
+
+	inline AglVector3 getRight() const{
+		return m_compositionMatrix.GetRight();
+	}
+
+	inline AglVector3 getUp() const{
+		return m_compositionMatrix.GetUp();
+	}
+
 
 	///-----------------------------------------------------------------------------------
 	/// Get the translated transform matrix packaged in a InstanceVertex.
@@ -108,14 +160,24 @@ public:
 	///----------------------------------------------------------------------------------
 	InstanceData* getInstanceDataPtr() ;
 
-private:
 	///-----------------------------------------------------------------------------------
 	/// Calculates the composited matrix for all translation members
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void calcCompMatrix();
 
+	///-----------------------------------------------------------------------------------
+	/// Calculate components from matrix
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void calcComponents(bool p_calcScale=true, bool p_calcRotation=true, 
+						bool p_calcTranslation=true);
 private:
+
+
+private:
+	static ComponentRegister<Transform> s_reg;
+
 	AglMatrix m_compositionMatrix;
 	InstanceData m_instanceData;
 	//AglMatrix m_transposedCompositionMatrix;

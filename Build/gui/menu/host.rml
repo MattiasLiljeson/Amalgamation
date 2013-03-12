@@ -1,0 +1,25 @@
+<rml>
+	<head>
+		<title>Host</title>
+		<link type="text/template" href="window.rml" />
+	</head>
+	<body class="Pop-up" template="window" onshow="">
+		<form onsubmit="host_server; play_confirm;">
+			<div>
+				Server Name:
+				<Input name="server_name" type="text" size="15"
+				maxlength="10" value="Untitled Server" />
+				<br/>
+				Server Port:
+				<Input name="server_port" type="text" size="5"
+				maxlength="5" value="1337" />
+				<br/>
+				Player Name:
+				<Input name="player_name" type="text" size="15"
+				maxlength="10" value="Max" />
+			</div>
+			<input type="submit" value="accept">Create</input>
+			<button onclick="goto previous">Cancel</button>
+		</form>
+	</body>
+</rml>

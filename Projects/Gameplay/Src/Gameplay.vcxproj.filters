@@ -1,26 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Utilities">
-      <UniqueIdentifier>{8573d510-e781-4bb1-9a99-5cfb1ae614c5}</UniqueIdentifier>
+    <Filter Include="Components">
+      <UniqueIdentifier>{6896154a-b653-4ad0-bac7-13fda941d97c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Utilities\QueueList">
-      <UniqueIdentifier>{6f7c2329-cd25-41f7-b8b9-beceae9ff2a7}</UniqueIdentifier>
+    <Filter Include="Components\GFX">
+      <UniqueIdentifier>{b76a3f38-43d2-476d-9588-523fa3b4c051}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Utilities\Vector3">
-      <UniqueIdentifier>{451be5ff-6e8c-49f6-a74f-ffdff8c1de41}</UniqueIdentifier>
+    <Filter Include="Components\Audio">
+      <UniqueIdentifier>{aa22ac64-9492-409e-919e-a6c09be5005a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\GUI">
+      <UniqueIdentifier>{9b451e1d-4250-48a9-b153-f724e60047a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Physics">
+      <UniqueIdentifier>{e0545ecf-2bca-4bcb-b57a-5431f87bec15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Modules">
+      <UniqueIdentifier>{da8af97e-ab37-4be7-b186-fa265addd428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Tags">
+      <UniqueIdentifier>{3b95b3e8-1f89-4116-8a09-3aa212603498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Gameplay">
+      <UniqueIdentifier>{2fc3b5f8-d1b0-4fac-aeef-640197930b79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structs">
+      <UniqueIdentifier>{a00554af-c0bc-4968-87f2-f05f087071ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{abfb1759-38b6-4daa-b150-f1567ada88be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\States">
+      <UniqueIdentifier>{9e022492-9da3-4858-bcdf-adee07cbdfdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Modules\Events">
+      <UniqueIdentifier>{121a2fd9-a9e7-4cee-899f-dc895e1013ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Modules\Events\Module Events %28Server%29">
+      <UniqueIdentifier>{7d99334e-e016-4792-a741-2e4a2c01a176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Modules\Events\Module Events %28Client%29">
+      <UniqueIdentifier>{8f00b4f6-313a-4252-bc3c-5fd2302d76ec}</UniqueIdentifier>
     </Filter>
     <Filter Include="Systems">
       <UniqueIdentifier>{3b4ffbfb-44ad-46fd-9668-cf5457cf2378}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components">
-      <UniqueIdentifier>{6896154a-b653-4ad0-bac7-13fda941d97c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Systems\GFX">
       <UniqueIdentifier>{3cf7ed56-f6e3-4758-9c65-96d8487c2889}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\GFX">
-      <UniqueIdentifier>{b76a3f38-43d2-476d-9588-523fa3b4c051}</UniqueIdentifier>
     </Filter>
     <Filter Include="Systems\Network">
       <UniqueIdentifier>{c8d90dbd-1e98-4c08-bd45-970976832584}</UniqueIdentifier>
@@ -37,32 +64,56 @@
     <Filter Include="Systems\Network\Packet Translation">
       <UniqueIdentifier>{c6fa6994-fa76-4a62-870f-55e97305c635}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Gameplay">
-      <UniqueIdentifier>{46d7a489-37b9-49e1-81d5-e026f4628ed8}</UniqueIdentifier>
+    <Filter Include="Systems\Network\Packet Translation\Packetizer">
+      <UniqueIdentifier>{c5530950-a1ec-448f-b7f3-e286ad528221}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\libRocket">
-      <UniqueIdentifier>{32749578-2c15-494f-a6cd-c24748b3f952}</UniqueIdentifier>
+    <Filter Include="Systems\Network\Packet Translation\Packet Structs">
+      <UniqueIdentifier>{92b625fb-ffd2-4ec4-bcce-f5f181b31237}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components\Audio">
-      <UniqueIdentifier>{aa22ac64-9492-409e-919e-a6c09be5005a}</UniqueIdentifier>
+    <Filter Include="Systems\Network\Physics">
+      <UniqueIdentifier>{a720c3fd-ebf9-479a-9496-2f8856fc4d20}</UniqueIdentifier>
     </Filter>
     <Filter Include="Systems\Audio">
       <UniqueIdentifier>{17697685-e7f0-41c7-b82a-0934c2c51555}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Physics">
-      <UniqueIdentifier>{a720c3fd-ebf9-479a-9496-2f8856fc4d20}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Systems\Input">
       <UniqueIdentifier>{026ec2f5-acc1-4d85-b1ba-897b977a46d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\GUI">
+      <UniqueIdentifier>{32749578-2c15-494f-a6cd-c24748b3f952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\GUI\LibRocket">
+      <UniqueIdentifier>{c3b9b8b0-4900-44df-a134-d16a84443ec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay">
+      <UniqueIdentifier>{46d7a489-37b9-49e1-81d5-e026f4628ed8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay\Client Only">
+      <UniqueIdentifier>{76ad3c20-f53a-48b9-abee-cdb92bd51253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay\Client Only\Highlight">
+      <UniqueIdentifier>{ddf2a0ab-1f23-45a9-99e5-a94587b57780}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay\Server Only">
+      <UniqueIdentifier>{2078725b-b88b-46bc-a0c5-98d2a2907c9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay\Server Only\Modules">
+      <UniqueIdentifier>{4743a9da-7b5e-4fa7-982b-efcfc41244df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Gameplay\Tracking">
+      <UniqueIdentifier>{a4501ea5-e7b0-427f-8cd2-c4bb9d149621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Timer">
+      <UniqueIdentifier>{72cfdd05-70c4-46af-b896-f310e2ad1fa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Debugging">
+      <UniqueIdentifier>{b0682e0a-4a1a-4deb-a524-b4063533bd5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Level">
+      <UniqueIdentifier>{4cd67128-583a-453a-a2c4-7b2dd76d0bfd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="QueueList.h">
-      <Filter>Utilities\QueueList</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector3.h">
-      <Filter>Utilities\Vector3</Filter>
-    </ClInclude>
     <ClInclude Include="NetworkSynced.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -72,16 +123,10 @@
     <ClInclude Include="Input.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkClientControllable.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="CameraSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsBackendSystem.h">
-      <Filter>Systems\GFX</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderPrepSystem.h">
       <Filter>Systems\GFX</Filter>
     </ClInclude>
     <ClInclude Include="RenderInfo.h">
@@ -90,50 +135,11 @@
     <ClInclude Include="CameraInfo.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkListenerSystem.h">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkConnectToServerSystem.h">
-      <Filter>Systems\Network\Client only</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsBody.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkInputHandlerSystem.h">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClInclude>
     <ClInclude Include="ProcessingMessagesSystem.h">
       <Filter>Systems\Network\Shared</Filter>
     </ClInclude>
     <ClInclude Include="PacketType.h">
       <Filter>Systems\Network\Packet Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkType.h">
-      <Filter>Systems\Network\Packet Translation</Filter>
-    </ClInclude>
-    <ClInclude Include="ShipControllerSystem.h">
-      <Filter>Systems\Gameplay</Filter>
-    </ClInclude>
-    <ClInclude Include="ShipController.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="BodyInitData.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkUpdateSystem.h">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClInclude>
-    <ClInclude Include="LookAtEntity.h">
-      <Filter>Components\GFX</Filter>
-    </ClInclude>
-    <ClInclude Include="libRocketBackendSystem.h">
-      <Filter>Systems\libRocket</Filter>
-    </ClInclude>
-    <ClInclude Include="LibRocketRenderInterface.h">
-      <Filter>Systems\libRocket</Filter>
-    </ClInclude>
-    <ClInclude Include="LibRocketSystemInterface.h">
-      <Filter>Systems\libRocket</Filter>
     </ClInclude>
     <ClInclude Include="AudioInfo.h">
       <Filter>Components\Audio</Filter>
@@ -144,9 +150,6 @@
     <ClInclude Include="AudioBackendSystem.h">
       <Filter>Systems\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="AudioController.h">
-      <Filter>Systems\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="AudioListenerSystem.h">
       <Filter>Systems\Audio</Filter>
     </ClInclude>
@@ -154,23 +157,712 @@
       <Filter>Systems\Input</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsSystem.h">
-      <Filter>Systems\Physics</Filter>
+      <Filter>Systems\Network\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkCommunicatorSystem.h">
+    <ClInclude Include="LevelGenSystem.h">
+      <Filter>Systems\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuSystem.h">
+      <Filter>Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="HudSystem.h">
+      <Filter>Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="HudElement.h">
+      <Filter>Components\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayPlayerScoreSystem.h">
       <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="BodyInitData.h">
+      <Filter>Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsBody.h">
+      <Filter>Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelPiece.h">
+      <Filter>Systems\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBoosterModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectionPointSet.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MinigunModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerPacketHandlerSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerScoreSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerUpdateSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientPacketHandlerSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayTags.h">
+      <Filter>Components\Tags</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipEditController.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipFlyController.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipEditControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipFlyControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipInputProcessingSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="LookAtEntity.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="LookAtSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCameraControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCameraController.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="MineLayerModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardMine.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="MineControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="RocketLauncherModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Connector1to2Module.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="MineLayerModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="MinigunModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="RocketLauncherModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientConnectToServerSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityType.h">
+      <Filter>Systems\Network\Packet Translation</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerDynamicObjectsSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerStaticObjectsSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerWelcomeSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerSystem.h">
+      <Filter>Systems\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="ThrustPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="Packetizer.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="PingPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="PongPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="PickComponent.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="RayPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityCreationPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="WelcomePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="UpdateClientStatsPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipModulesControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientPickingSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerPickingSystem.h">
+      <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClInclude>
+    <ClInclude Include="HighlightSlotPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRenderSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="AntTweakBarSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="LightRenderSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleRenderSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleEventPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipManagerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtrapolationSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="Extrapolate.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardRocket.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="RocketControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="LightsComponent.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h">
+      <Filter>Systems\Network\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemEmitter.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemEmitterSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingVolumeInitData.h">
+      <Filter>Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsRendererSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMesh.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMeshSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityParent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformParentHandlerSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionalSoundSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStatsSystem.h">
+      <Filter>Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerStats.h">
+      <Filter>Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientInfo.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerClientInfoSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayGameStats.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnSoundEffectPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionalSoundSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugMove.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugMovementSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="NetsyncDirectMapperSystem.h">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityFactory.h" />
+    <ClInclude Include="MoveShipLightsSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityDeletionPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="LightBlinkerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="LightBlinker.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packet Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayersWinLosePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="WinningConditionSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemCreationInfo.h">
+      <Filter>Systems\Network\Packet Translation\Packet Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemServerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipModulesTrackerSystem.h">
+      <Filter>Systems\Gameplay\Tracking</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleEvent.h">
+      <Filter>Components\Modules\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoveSoundEffectPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBoostModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshOffsetTransform.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationComponent.h" />
+    <ClInclude Include="Vibration.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticProp.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuItem.h">
+      <Filter>Components\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketBackendSystem.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketRenderInterface.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketSystemInterface.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketInputHelper.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOptionsSystem.h">
+      <Filter>Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="LibRocketEventManagerSystem.h">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientMeasurementSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerMeasurementSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraControlPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipConnectionPointHighlights.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientEntityCountSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="InputActionsBackendSystem.h">
+      <Filter>Systems\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipSlotControllerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemsComponent.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="AntTweakBarEnablerSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumGameStates.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Components\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldPlatingSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBoostModuleActivation.h">
+      <Filter>Components\Modules\Events\Module Events %28Server%29</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldModuleActivation.h">
+      <Filter>Components\Modules\Events\Module Events %28Server%29</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldPlate.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleTriggerPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldModuleActivationClient.h">
+      <Filter>Components\Modules\Events\Module Events %28Client%29</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnPointSet.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalAnimation.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalAnimationSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingSphere.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreWorldVisualizerSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="OnHitScoreEffectPacket.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelHandlerSystem.h">
+      <Filter>Systems\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelPieceRoot.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBox.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="GradientMapping.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GamepadRumbleSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMeshSystemServer.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMeshSystemClient.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleStateChangePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="CullingSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectionVisualizerSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="SlotParticleEffectPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedFovAdjustSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelInfo.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelInfoLoader.h">
+      <Filter>Systems\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="AxisRotate.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AxisRotationSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnExplosionPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GradientComponent.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentValues.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBufferUpdaterSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBuffer.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipParticleSystemUpdater.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="EditSphereSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="EditSphereUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelPieceFileData.h">
+      <Filter>Systems\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="DestroyOnParticlesDeathSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="DestroyOnParticlesDeath.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleHelper.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreRuleHelper.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionMarker.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionMarkerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionMarkerUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientStateSystem.h" />
+    <ClInclude Include="LobbySystem.h" />
+    <ClInclude Include="NewlyConnectedPlayerPacket.h" />
+    <ClInclude Include="ServerStateSystem.h" />
+    <ClInclude Include="PlayerInfo.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="AnomalyBomb.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="HighlightEntityPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="EmpModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="FlareGunModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationComponent2.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationSystem2.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSystem.h" />
+    <ClInclude Include="PlayerComponent.h" />
+    <ClInclude Include="AnomalyAcceleratorModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="AnomalyBombEffectPiece.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="AnomalyBombControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClInclude>
+    <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClInclude>
+    <ClInclude Include="AnomalyBombEffectSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="BombActivationPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="TempModuleSpawner.h" />
+    <ClInclude Include="SpawnPointSystem.h">
+      <Filter>Systems\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="EmpRocketLauncherModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="EmpRocketLancherModuleSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerDynamicPhysicalObjectsSystem.h">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClInclude>
+    <ClInclude Include="SlotHighlightParticleMakerSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="ModuleStatusEffectPacket.h" />
+    <ClInclude Include="SpriteSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="GameSettingsInfo.h">
+      <Filter>Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="SlotMarkerSystem.h">
+      <Filter>Systems\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="SlotMarker.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageVisualizerSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageUpdaterSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorTone.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleStatusVisualizationMode.h">
+      <Filter>Components\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleStatusEffectSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleVisualEffectServerBufferSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipModuleStatsSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaCoilModule.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaEffectPiece.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaHitPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaEffectSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaCoilModuleControllerSystem.h">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipHiglightSystem.h">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipHighlight.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleHighlightSystem.h">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundComponent.h">
+      <Filter>Components\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleOnChamberStartPoint.h">
+      <Filter>Components\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ShineSpawn.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="PortalCullingSystem.h">
+      <Filter>Systems\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="RootBoundingSpherePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipEngineSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="ThrustComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaLightningSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="TeslaCoilEffect.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldPlaterSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClInclude>
+    <ClInclude Include="AddToParentSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientModuleCounterSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitalMovement.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitalMovementSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="DisconnectPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerReadyPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Vector3.cpp">
-      <Filter>Utilities\Vector3</Filter>
-    </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="CameraSystem.cpp">
-      <Filter>Systems\GFX</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderPrepSystem.cpp">
       <Filter>Systems\GFX</Filter>
     </ClCompile>
     <ClCompile Include="RenderInfo.cpp">
@@ -179,35 +871,8 @@
     <ClCompile Include="CameraInfo.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
-    <ClCompile Include="NetworkListenerSystem.cpp">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkConnectToServerSystem.cpp">
-      <Filter>Systems\Network\Client only</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkInputHandlerSystem.cpp">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClCompile>
     <ClCompile Include="ProcessingMessagesSystem.cpp">
       <Filter>Systems\Network\Shared</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkCommunicatorSystem.cpp">
-      <Filter>Systems\Network\Client only</Filter>
-    </ClCompile>
-    <ClCompile Include="ShipControllerSystem.cpp">
-      <Filter>Systems\Gameplay</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkUpdateSystem.cpp">
-      <Filter>Systems\Network\Server only</Filter>
-    </ClCompile>
-    <ClCompile Include="LibRocketBackendSystem.cpp">
-      <Filter>Systems\libRocket</Filter>
-    </ClCompile>
-    <ClCompile Include="LibRocketRenderInterface.cpp">
-      <Filter>Systems\libRocket</Filter>
-    </ClCompile>
-    <ClCompile Include="LibRocketSystemInterface.cpp">
-      <Filter>Systems\libRocket</Filter>
     </ClCompile>
     <ClCompile Include="AudioInfo.cpp">
       <Filter>Components\Audio</Filter>
@@ -218,9 +883,6 @@
     <ClCompile Include="AudioBackendSystem.cpp">
       <Filter>Systems\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="AudioController.cpp">
-      <Filter>Systems\Audio</Filter>
-    </ClCompile>
     <ClCompile Include="AudioListenerSystem.cpp">
       <Filter>Systems\Audio</Filter>
     </ClCompile>
@@ -228,10 +890,590 @@
       <Filter>Systems\Input</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSystem.cpp">
-      <Filter>Systems\Physics</Filter>
+      <Filter>Systems\Network\Physics</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsBackendSystem.cpp">
       <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuSystem.cpp">
+      <Filter>Systems\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="HudSystem.cpp">
+      <Filter>Systems\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="HudElement.cpp">
+      <Filter>Components\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayPlayerScoreSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsBody.cpp">
+      <Filter>Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelGenSystem.cpp">
+      <Filter>Systems\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelPiece.cpp">
+      <Filter>Systems\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedBoosterModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectionPointSet.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MinigunModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerPacketHandlerSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerScoreSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerUpdateSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientPacketHandlerSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipEditControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipFlyControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipInputProcessingSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="LookAtSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="MineLayerModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="StandardMine.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="MineControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="RocketLauncherModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Connector1to2Module.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="MineLayerModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="MinigunModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="RockerLauncherModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientConnectToServerSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerDynamicObjectsSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerStaticObjectsSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerWelcomeSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerSystem.cpp">
+      <Filter>Systems\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCameraControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ThrustPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="PingPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="PongPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="RayPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="WelcomePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityCreationPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="UpdateClientStatsPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipModulesControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientPickingSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerPickingSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClCompile>
+    <ClCompile Include="HighlightSlotPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRenderSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="AntTweakBarSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="LightRenderSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleRenderSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleEventPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipManagerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtrapolationSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="StandardRocket.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="RocketControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="LightsComponent.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp">
+      <Filter>Systems\Network\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystemEmitterSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleUpdatePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsRendererSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentAssemblageAllocator.cpp" />
+    <ClCompile Include="LoadMesh.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="BodyInitData.cpp">
+      <Filter>Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformParentHandlerSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionalSoundSystem.cpp">
+      <Filter>Systems\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStatsSystem.cpp">
+      <Filter>Systems\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientInfo.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerClientInfoSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayGameStats.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnSoundEffectPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugMovementSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="NetsyncDirectMapperSystem.cpp">
+      <Filter>Systems\Network\Client only</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityFactory.cpp" />
+    <ClCompile Include="MoveShipLightsSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityDeletionPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="LightBlinkerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityUpdatePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packet Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayersWinLosePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="WinningConditionSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipModulesTrackerSystem.cpp">
+      <Filter>Systems\Gameplay\Tracking</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoveSoundEffectPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedBoostModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="LightBlinker.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Vibration.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuItem.cpp">
+      <Filter>Components\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketBackendSystem.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketRenderInterface.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketSystemInterface.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketInputHelper.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOptionsSystem.cpp">
+      <Filter>Systems\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="LibRocketEventManagerSystem.cpp">
+      <Filter>Systems\GUI\LibRocket</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientMeasurementSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerMeasurementSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraControlPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipConnectionPointHighlights.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientEntityCountSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="InputActionsBackendSystem.cpp">
+      <Filter>Systems\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipSlotControllerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystemsComponent.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystemInstructionTranslatorSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="AntTweakBarEnablerSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Components\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldPlatingSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleTriggerPacket.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnPointSet.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalAnimationSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationUpdatePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreWorldVisualizerSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="OnHitScoreEffectPacket.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelHandlerSystem.cpp">
+      <Filter>Systems\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelPieceRoot.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GamepadRumbleSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystemServer.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMeshSystemClient.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="InterpolationSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStateChangePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="CullingSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectionVisualizerSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="SlotParticleEffectPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedFovAdjustSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelInfo.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelInfoLoader.cpp">
+      <Filter>Systems\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="AxisRotationSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuBackgroundSceneSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnExplosionPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GradientComponent.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentValues.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedBufferUpdaterSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedBuffer.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipParticleSystemUpdater.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="EditSphereSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="EditSphereUpdatePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="DestroyOnParticlesDeathSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="DestroyOnParticlesDeath.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalAnimation.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleHelper.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreRuleHelper.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionMarkerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionMarkerUpdatePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientStateSystem.cpp" />
+    <ClCompile Include="LobbySystem.cpp" />
+    <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
+    <ClCompile Include="ServerStateSystem.cpp" />
+    <ClCompile Include="PlayerInfo.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="AnomalyBomb.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="HighlightEntityPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="EmpModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="FlareGunModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="InterpolationSystem2.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSystem.cpp" />
+    <ClCompile Include="PlayerComponent.cpp" />
+    <ClCompile Include="AnomalyAcceleratorModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClCompile>
+    <ClCompile Include="AnomalyBombControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClCompile>
+    <ClCompile Include="AnomalyBombEffectSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="BombActivationPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="TempModuleSpawner.cpp" />
+    <ClCompile Include="SpawnPointSystem.cpp">
+      <Filter>Systems\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="EmpRocketLauncherModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="EmpRocketLancherModuleSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerDynamicPhysicalObjectsSystem.cpp">
+      <Filter>Systems\Network\Server only</Filter>
+    </ClCompile>
+    <ClCompile Include="SlotHighlightParticleMakerSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStatusEffectPacket.cpp" />
+    <ClCompile Include="SpriteSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SlotMarkerSystem.cpp">
+      <Filter>Systems\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="DamageComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DamageVisualizerSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="DamageUpdaterSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorTone.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStatusVisualizationMode.cpp">
+      <Filter>Components\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleStatusEffectSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleVisualEffectServerBufferSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipModuleStatsSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaCoilModule.cpp">
+      <Filter>Components\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaEffectPiece.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaHitPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaEffectSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaCoilModuleControllerSystem.cpp">
+      <Filter>Systems\Gameplay\Server Only\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipHighlightSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleHighlightSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSystem.cpp">
+      <Filter>Systems\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundComponent.cpp">
+      <Filter>Components\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="PortalCullingSystem.cpp">
+      <Filter>Systems\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="RootBoundingSpherePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipEngineSystem.cpp">
+      <Filter>Systems\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="ThrustComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaLightningSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="TeslaCoilEffect.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldPlaterSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
+    </ClCompile>
+    <ClCompile Include="AddToParentSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientModuleCounterSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="AxisRotate.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="OrbitalMovementSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="DisconnectPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerReadyPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

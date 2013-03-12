@@ -7,6 +7,7 @@
 
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/io_service.hpp>
+#include <boost/thread/thread.hpp>
 
 using namespace boost::asio::ip;
 
@@ -49,6 +50,8 @@ void TcpConnecterProcess::body()
 	// The client will try to connect until a response from the server has been done, with a timeout.
 	while (m_running)
 	{
+
+		DEBUGPRINT(("Attempting to connect to server...\n"));
 		error = boost::asio::error::host_not_found;
 		endpointIterator = tcpResolver.resolve( tcpQuery );
 
@@ -56,7 +59,6 @@ void TcpConnecterProcess::body()
 		while( error && endpointIterator != end )
 		{
 			activeSocket->close();
-			DEBUGPRINT(("Attempting to connect to server...\n"));
 			activeSocket->connect( *endpointIterator, error );
 
 			*endpointIterator++;
@@ -87,20 +89,19 @@ void TcpConnecterProcess::body()
 
 void TcpConnecterProcess::processMessages()
 {
-	while( getMessageCount() > 0 )
+	queue< ProcessMessage* > messages;
+	messages = checkoutMessageQueue();
+
+	while( messages.size() > 0 )
 	{
-		queue< ProcessMessage* > messages;
-		messages = checkoutMessageQueue();
+		ProcessMessage* msg = messages.front();
+		messages.pop();
 
-		while( messages.size() > 0 )
-		{
-			ProcessMessage* msg = messages.front();
-			messages.pop();
+		boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
-			if( msg->type = MessageType::TERMINATE )
-				m_running = false;
+		if( msg->type = MessageType::TERMINATE )
+			m_running = false;
 
-			delete msg;
-		}
+		delete msg;
 	}
 }

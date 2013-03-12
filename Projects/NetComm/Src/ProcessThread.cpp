@@ -12,8 +12,6 @@ ProcessThread::ProcessThread()
 
 ProcessThread::~ProcessThread()
 {
-//	throw string("ThreadSafeMessaging instance terminated with some messages remaining");
-
 	stop();
 }
 
@@ -64,6 +62,13 @@ void ProcessThread::interrupt()
 		delete m_thread;
 		m_thread = NULL;
 	}
+}
+
+void ProcessThread::sleep( UINT32 p_milliSeconds )
+{
+
+	boost::this_thread::sleep(boost::posix_time::milliseconds(p_milliSeconds));
+
 }
 
 int ProcessThread::s_nextId = 0;

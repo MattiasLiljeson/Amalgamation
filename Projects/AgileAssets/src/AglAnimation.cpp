@@ -60,10 +60,45 @@ void AglAnimation::update(float p_dt)
 		}
 	}
 }
+void AglAnimation::setTime(float p_t)
+{
+	if (!m_limitsSet)
+		determineTimeLimits();
+
+		m_currentTime = p_t;
+
+		for (unsigned int i = 0; i < m_header.layerCount; i++)
+		{
+			AglAnimationLayer* l = m_scene->getAnimationLayer(m_layers[i]);
+			l->evaluate(m_currentTime);
+		}
+}
 void AglAnimation::play()
 {
 	m_isPlaying = true;
 	if (!m_limitsSet)
 		determineTimeLimits();
 	m_currentTime = m_minTime;
+}
+AglMatrix AglAnimation::evaluate(float p_time, unsigned int p_node)
+{
+	AglMatrix mat = AglMatrix::zeroMatrix();
+	for (unsigned int i = 0; i < m_header.layerCount; i++)
+	{
+		AglAnimationLayer* l = m_scene->getAnimationLayer(m_layers[i]);
+		mat = l->evaluate(p_time, p_node) * 1.0f; //Should have a weight here
+	}
+	return mat;
+}
+float AglAnimation::getMinTime()
+{
+	if (!m_limitsSet)
+		determineTimeLimits();
+	return m_minTime;
+}
+float AglAnimation::getMaxTime()
+{
+	if (!m_limitsSet)
+		determineTimeLimits();
+	return m_maxTime;
 }

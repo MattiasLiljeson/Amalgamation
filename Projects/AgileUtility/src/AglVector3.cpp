@@ -107,7 +107,10 @@ AglVector3 AglVector3::operator-() const
 
 bool AglVector3::operator==(const AglVector3& p_other) const
 {
-	if (x == p_other.x && y == p_other.y && z == p_other.z)
+	float epsilon = 0.0001f;
+	if (fabs(x - p_other.x) < epsilon &&
+		fabs(y - p_other.y) < epsilon &&
+		fabs(z - p_other.z) < epsilon)
 		return true;
 	return false;
 }
@@ -149,7 +152,7 @@ void AglVector3::transformNormal(const AglMatrix& pMatrix)
 //Static functions
 float AglVector3::dotProduct(const AglVector3& pV1, const AglVector3& pV2)
 {
-	return pV1[0] * pV2[0] + pV1[1] * pV2[1] + pV1[2] * pV2[2];
+	return pV1.x * pV2.x + pV1.y * pV2.y + pV1.z * pV2.z;
 }
 AglVector3 AglVector3::crossProduct(const AglVector3& pV1, const AglVector3& pV2)
 {
@@ -181,4 +184,69 @@ AglVector3 AglVector3::createDirection(const AglVector3& p_from, const AglVector
 	AglVector3 dir = p_to - p_from;
 	dir.normalize();
 	return dir;
+}
+
+AglVector3 AglVector3::minOf( const AglVector3& p_v1, const AglVector3& p_v2 )
+{
+	AglVector3 minV;
+	if (p_v1.x < p_v2.x) minV.x = p_v1.x;
+	else				 minV.x = p_v2.x;
+	if (p_v1.y < p_v2.y) minV.y = p_v1.y;
+	else				 minV.y = p_v2.y;
+	if (p_v1.z < p_v2.z) minV.z = p_v1.z;
+	else				 minV.z = p_v2.z;
+	return minV;
+}
+
+AglVector3 AglVector3::maxOf( const AglVector3& p_v1, const AglVector3& p_v2 )
+{
+	AglVector3 maxV;
+	if (p_v1.x > p_v2.x) maxV.x = p_v1.x;
+	else				 maxV.x = p_v2.x;
+	if (p_v1.y > p_v2.y) maxV.y = p_v1.y;
+	else				 maxV.y = p_v2.y;
+	if (p_v1.z > p_v2.z) maxV.z = p_v1.z;
+	else				 maxV.z = p_v2.z;
+	return maxV;
+}
+
+AglVector3 AglVector3::rotateAroundAxis( const AglVector3& p_toRotate,
+	const AglVector3& p_axis, const float& p_radians )
+{
+	AglVector3 rotated = p_toRotate * cosf(p_radians) + crossProduct(p_axis, p_toRotate) * sinf(p_radians) +
+		p_axis * dotProduct(p_axis, p_toRotate) * (1.0f - cosf(p_radians));
+	return rotated;
+}
+
+AglVector3 AglVector3::right()
+{
+	return AglVector3(1, 0, 0);
+}
+AglVector3 AglVector3::left()
+{
+	return AglVector3(-1, 0, 0);
+}
+AglVector3 AglVector3::up()
+{
+	return AglVector3(0, 1, 0);
+}
+AglVector3 AglVector3::down()
+{
+	return AglVector3(0, -1, 0);
+}
+AglVector3 AglVector3::forward()
+{
+	return AglVector3(0, 0, 1);
+}
+AglVector3 AglVector3::backward()
+{
+	return AglVector3(0, 0, -1);
+}
+AglVector3 AglVector3::one()
+{
+	return AglVector3(1, 1, 1);
+}
+AglVector3 AglVector3::zero()
+{
+	return AglVector3(0, 0, 0);
 }

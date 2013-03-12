@@ -17,7 +17,7 @@ GeometryShader::GeometryShader(ID3D11Device* pDevice, string p_path, string p_ma
 			k++;
 		}
 		mDevice->CreateGeometryShader(compiled->GetBufferPointer(), compiled->GetBufferSize(), NULL, &mData);
-		saveShaderBlob(p_path + ".blob", compiled);
+		//saveShaderBlob(p_path + ".blob", compiled);
 	}
 	else
 	{

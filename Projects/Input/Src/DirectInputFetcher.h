@@ -9,6 +9,10 @@
 #include "InputHelper.h"
 
 #include <dinput.h>
+#include <wtypesbase.h>
+#include <string>
+
+using namespace std;
 
 #ifndef DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0800
@@ -22,7 +26,7 @@
 ///        
 /// Detailed description.....
 /// Created on: 4-12-2012 
-///\author Mattias Liljeson
+///	\author		Mattias Liljeson
 ///---------------------------------------------------------------------------------------
 
 class DirectInputFetcher : public IMouseKeyboardFetcher
@@ -43,14 +47,19 @@ public:
 	~DirectInputFetcher();
 	
 	void update();
-	InputHelper::KEY_STATE getKeyState( int p_key );
-	InputHelper::KEY_STATE getMouseBtnState( int p_key );
+	InputHelper::KeyStates getKeyState( int p_key );
+	InputHelper::KeyStates getMouseBtnState( int p_key );
 	int getMousePos( int p_axis );
 	int getMouseTravel( int p_axis );
+	void setMouseSensitivity( const float p_sensitivity );
+	const float getMouseSensitivity() const;
 
 private:
 	void init();
 	void createInterfacesAndDevices();
+	void acquireDevices();
+	void checkDirectInputHr( HRESULT p_hr, const string &p_file, const string& p_func,
+		int p_line );
 	void setCooperation();
 	void createDikKeyMap();
 	void reset();
@@ -61,6 +70,7 @@ private:
 	HWND m_hWnd;
 	bool m_onlyForeground;
 	bool m_exclusive;
+	float m_mouseSensitivity;
 
 	LPDIRECTINPUT8 m_din;    // the pointer to our DirectInput interface
 	LPDIRECTINPUTDEVICE8 m_dinkeyboard;    // the pointer to the keyboard device
@@ -69,9 +79,9 @@ private:
 	BYTE m_keystate[NUM_KEYS];    // the storage for the key-information
 	DIMOUSESTATE m_mousestate;    // the storage for the mouse-information
 
-	int m_mousePos[InputHelper::NUM_MOUSE_AXIS];
-	int m_mouseTravel[InputHelper::NUM_MOUSE_AXIS];
-	InputHelper::KEY_STATE m_mouseBtns[InputHelper::NUM_MOUSE_BTNS];
-	InputHelper::KEY_STATE m_kbKeys[InputHelper::NUM_KEYBOARD_KEYS];
-	int m_dikFromKeyMap[InputHelper::NUM_KEYBOARD_KEYS];
+	int m_mousePos[InputHelper::MouseAxes_CNT];
+	int m_mouseTravel[InputHelper::MouseAxes_CNT];
+	InputHelper::KeyStates m_mouseBtns[InputHelper::MouseButtons_CNT];
+	InputHelper::KeyStates m_kbKeys[InputHelper::KeyboardKeys_CNT];
+	int m_dikFromKeyMap[InputHelper::KeyboardKeys_CNT];
 };

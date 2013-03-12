@@ -23,6 +23,10 @@ AglReader::AglReader(const char* p_path)
 	{
 		desc.materials.push_back(readMaterial());
 	}
+	for (int i = 0; i < m_topHeader.gradientCount; i++)
+	{
+		desc.gradients.push_back(readGradient());
+	}
 	for (int i = 0; i < m_topHeader.materialMappingCount; i++)
 	{
 		desc.materialMappings.push_back(readMaterialMapping());
@@ -60,6 +64,15 @@ AglReader::AglReader(const char* p_path)
 	for (int i = 0; i < m_topHeader.SphereGridCount; i++)
 	{
 		desc.sphereGrids.push_back(readSphereGrid());
+	}
+	for (int i = 0; i < m_topHeader.connectionPointCount; i++)
+	{
+		desc.connectionPoints.push_back(readConnectionPoint());
+	}
+	for (int i = 0; i < m_topHeader.particleSystemCount; i++)
+	{
+		AglParticleSystem* ps = new AglParticleSystem(readParticleSystem());
+		desc.particleSystems.push_back(ps);
 	}
 
 	desc.coordinateSystem = m_topHeader.coordinateSystem;
@@ -135,6 +148,22 @@ AglMaterial* AglReader::readMaterial()
 	m_file.read((char*)material, sizeof(AglMaterial));
 	return material;
 }
+AglGradient* AglReader::readGradient()
+{
+	AglGradient* gradient = new AglGradient();
+	
+	unsigned int size = 0;
+	m_file.read((char*)&size, sizeof(unsigned int));
+
+	for (unsigned int i = 0; i < size; i++)
+	{
+		AglGradientMaterial* mat = new AglGradientMaterial();
+		m_file.read((char*)mat, sizeof(AglGradientMaterial));
+		gradient->addLayer(mat);
+	}
+
+	return gradient;
+}
 AglMaterialMapping AglReader::readMaterialMapping()
 {
 	AglMaterialMapping mm;
@@ -200,10 +229,13 @@ AglLooseBspTree* AglReader::readBspTree()
 	unsigned int* triangles = new unsigned int[header.triangleCount];
 	m_file.read((char*)&triangles[0], sizeof(unsigned int)*header.triangleCount);
 
+	AglVector3* triangles2 = new AglVector3[header.triangleCount*3];
+	m_file.read((char*)&triangles2[0], sizeof(AglVector3)*header.triangleCount*3);
+
 	AglBspNode* nodes = new AglBspNode[header.nodeCount];
 	m_file.read((char*)&nodes[0], sizeof(AglBspNode)*header.nodeCount);
 
-	return new AglLooseBspTree(header, triangles, nodes);
+	return new AglLooseBspTree(header, triangles, triangles2, nodes);
 }
 AglInteriorSphereGrid* AglReader::readSphereGrid()
 {
@@ -214,6 +246,20 @@ AglInteriorSphereGrid* AglReader::readSphereGrid()
 	m_file.read((char*)&spheres[0], sizeof(AglInteriorSphere)*header.sphereCount);
 
 	return new AglInteriorSphereGrid(header, spheres);
+}
+
+AglConnectionPoint AglReader::readConnectionPoint()
+{
+	AglConnectionPoint cp;
+	m_file.read((char*)&cp, sizeof(AglConnectionPoint));
+	return cp;
+}
+
+AglParticleSystemHeader AglReader::readParticleSystem()
+{
+	AglParticleSystemHeader ps;
+	m_file.read((char*)&ps, sizeof(AglParticleSystemHeader));
+	return ps;
 }
 
 AglScene* AglReader::getScene()

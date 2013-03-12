@@ -17,6 +17,7 @@
 class AudioInfo : public Component
 {
 public:
+	AudioInfo();
 	AudioInfo(int p_soundId, bool p_isPositionalSound);
 	~AudioInfo();
 	int getSoundId() const;

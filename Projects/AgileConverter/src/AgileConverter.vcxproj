@@ -44,16 +44,16 @@
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)External/Fbx/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)External/Fbx/lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)External/Fbx/include;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)External/Fbx/lib;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Target)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)External/Fbx/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)External/Fbx/lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)External/Fbx/include;$(SolutionDir)External/Visual Leak Detector/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)External/Fbx/lib;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -62,12 +62,22 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>AgileUtility_x86_Debug.lib;AgileAssets_x86_Debug.lib;fbxsdk-2014.0d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>fbxsdk-2014.0d.lib;AgileAssets_x86_$(Configuration).lib;AgileUtility_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -78,14 +88,18 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>AgileUtility_x86_Release.lib;AgileAssets_x86_Release.lib;fbxsdk-2014.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>fbxsdk-2014.0.lib;AgileAssets_x86_$(Configuration).lib;AgileUtility_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AGLExporter.cpp" />
@@ -97,6 +111,7 @@
     <ClCompile Include="MaterialParser.cpp" />
     <ClCompile Include="MeshParser.cpp" />
     <ClCompile Include="SkinParser.cpp" />
+    <ClCompile Include="Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AGLExporter.h" />
@@ -104,6 +119,7 @@
     <ClInclude Include="AnimationParser.h" />
     <ClInclude Include="FBXManager.h" />
     <ClInclude Include="FBXParser.h" />
+    <ClInclude Include="FileManagement.h" />
     <ClInclude Include="MaterialParser.h" />
     <ClInclude Include="MeshParser.h" />
     <ClInclude Include="SkinParser.h" />

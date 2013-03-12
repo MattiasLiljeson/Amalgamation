@@ -32,7 +32,6 @@ struct BufferConfig
 		BUFFER_TYPE_COUNT
 	};
 
-
 	enum BUFFER_USAGE
 	{
 		BUFFER_DEFAULT,
@@ -43,18 +42,37 @@ struct BufferConfig
 		BUFFER_USAGE_COUNT
 	};
 
+	/************************************************************************/
+	/* SOMETHING UNCLEAR? ASK ROBIN T										*/
+	/************************************************************************/
+	enum BUFFER_SLOT
+	{
+		PERFRAME,
+		PEROBJECT,
+		SHADOWBUFFER,
+		SLOT0,
+		SLOT1,
+	};
+	enum VERTEX_BUFFER_SLOT{
+		MISCSLOT,
+		SHIPSLOT,
+	};
+
 	struct BUFFER_INIT_DESC
 	{
 		BUFFER_TYPE		Type;
 		UINT32			NumElements;
 		UINT32			ElementSize;
 		BUFFER_USAGE	Usage;
+		BUFFER_SLOT		Slot;
 	};
 
 	BufferConfig(BUFFER_INIT_DESC& p_initDesc);
 
 	BUFFER_TYPE		type;
 	BUFFER_USAGE	usage;
+
+	UINT32			slot;
 
 	UINT32			elementSize;
 	UINT32			elementCount;

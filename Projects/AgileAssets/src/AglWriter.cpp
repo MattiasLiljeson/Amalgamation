@@ -7,6 +7,7 @@ AglWriter::AglWriter(string p_path)
 	m_header.version = AGLVERSION;
 	m_header.meshCount = 0;
 	m_header.materialCount = 0;
+	m_header.gradientCount = 0;
 	m_header.materialMappingCount = 0;
 	m_header.nodeCount = 0;
 	m_header.skeletonCount = 0;
@@ -14,6 +15,8 @@ AglWriter::AglWriter(string p_path)
 	m_header.nodeAnimationCount = 0;
 	m_header.animationLayerCount = 0;
 	m_header.animationCount = 0;
+	m_header.connectionPointCount = 0;
+	m_header.particleSystemCount = 0;
 }
 void AglWriter::write(AglScene* p_scene)
 {
@@ -43,7 +46,10 @@ void AglWriter::write(AglScene* p_scene)
 	m_header.animationCount			= d.animations.size();
 	m_header.looseBspCount			= d.bspTrees.size();
 	m_header.SphereGridCount		= d.sphereGrids.size();
+	m_header.connectionPointCount	= d.connectionPoints.size();
+	m_header.particleSystemCount	= d.particleSystems.size();
 	m_header.coordinateSystem		= d.coordinateSystem;
+	m_header.gradientCount			= d.gradients.size();
 
 	ofstream file;
 
@@ -66,6 +72,7 @@ void AglWriter::write(AglScene* p_scene)
 		buf[ind++] = '\0';
 	}
 	file.write(buf, sizeof(char) * NameArrayLength);
+	delete[] buf;
 
 	//Write all the mesh data to the file
 	for (unsigned int i = 0; i < d.meshes.size(); i++)
@@ -94,6 +101,28 @@ void AglWriter::write(AglScene* p_scene)
 	{
 		buf = (char*)&materials[0];
 		file.write(buf, sizeof(AglMaterial) * m_header.materialCount);
+	}
+
+
+	//Write all the gradient data to the file
+	for (unsigned int i = 0; i < d.gradients.size(); i++)
+	{
+		vector<AglGradientMaterial*> gms = d.gradients[i]->getLayers();
+		unsigned int size = gms.size();
+		buf = (char*)&size;
+		file.write(buf, sizeof(unsigned int));
+
+		vector<AglGradientMaterial> gms2;
+		for (unsigned int j = 0; j < gms.size(); j++)
+		{
+			gms2.push_back(*gms[j]);
+		}
+
+		if (gms2.size() > 0)
+		{
+			buf = (char*)&gms2[0];
+			file.write(buf, sizeof(AglGradientMaterial) * gms2.size());
+		}
 	}
 
 	//Write all the material mapping data to the file
@@ -182,6 +211,11 @@ void AglWriter::write(AglScene* p_scene)
 		buf = (char*)&triangles[0];
 		file.write(buf, sizeof(unsigned int) * bspheader.triangleCount);
 
+		//Write the triangles2 of the bsp tree
+		AglVector3* triangles2 = d.bspTrees[i]->getTriangles2();
+		buf = (char*)&triangles2[0];
+		file.write(buf, sizeof(AglVector3) * bspheader.triangleCount*3);
+
 		//Write the nodes of the bsp tree
 		AglBspNode* nodes = d.bspTrees[i]->getNodes();
 		buf = (char*)&nodes[0];
@@ -198,6 +232,20 @@ void AglWriter::write(AglScene* p_scene)
 		AglInteriorSphere* spheres = d.sphereGrids[i]->getSpheres();
 		buf = (char*)&spheres[0];
 		file.write(buf, sizeof(AglInteriorSphere) * gridheader.sphereCount);
+	}
+
+	//Write all the connection points to the file
+	if (d.connectionPoints.size() > 0)
+	{
+		buf = (char*)&d.connectionPoints[0];
+		file.write(buf, sizeof(AglConnectionPoint) * m_header.connectionPointCount);
+	}
+	for (unsigned int i = 0; i < d.particleSystems.size(); i++)
+	{
+		//Write the particle system headers to the file
+		const AglParticleSystemHeader* psheader = d.particleSystems[i]->getHeaderPtr();
+		buf = (char*)psheader;
+		file.write(buf, sizeof(AglParticleSystemHeader));
 	}
 
 	file.close();

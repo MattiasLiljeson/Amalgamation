@@ -30,6 +30,8 @@ struct AglQuaternion
 	AglQuaternion& operator*=(const AglQuaternion& p_other);
 	AglQuaternion operator*(const float& p_scalar) const;
 	AglQuaternion operator+(const AglQuaternion& p_other) const;
+	
+	bool operator==(const AglQuaternion& p_other) const;
 
 	//Construction Functions
 	static AglQuaternion identity();
@@ -38,13 +40,20 @@ struct AglQuaternion
 	static AglQuaternion rotateToFrom(AglVector3 p_from, AglVector3 p_to);
 	
 	//Functions
-	AglQuaternion conjugate();
+	AglQuaternion conjugate() const;
 	void		  normalize();
-	void		  transformVector(AglVector3& p_vector);
+	void		  transformVector(AglVector3& p_vector) const;
 
 	//Static functions
-	static AglQuaternion lerp(const AglQuaternion& p_q1, const AglQuaternion& p_q2, const float& p_t);
-	static AglQuaternion slerp(const AglQuaternion& p_q1, const AglQuaternion& p_q2, const float& p_t);
+	static float dotProduct(const AglQuaternion& pV1, const AglQuaternion& pV2);
+	static AglQuaternion lerp(const AglQuaternion& p_q1, const AglQuaternion& p_q2, 
+		const float& p_t);
+	static AglQuaternion slerp(const AglQuaternion& p_q1, const AglQuaternion& p_q2, 
+		const float& p_t, const bool p_shortestWay=false);
+
+private:
+	// for quaternion slerp, added by Jarl 2013-02-01
+	static const float minslerpdiff;
 };
 
 #endif

@@ -41,8 +41,8 @@ DX11Application::DX11Application(HINSTANCE pInstanceHandle)
 	mDevice					= NULL;
 	mDeviceContext			= NULL; 
 	mWindowHandle			= 0;
-	mScreenWidth			= 800;
-	mScreenHeight			= 600;
+	mScreenWidth			= 1920;
+	mScreenHeight			= 1080;
 }
 bool DX11Application::Initialize()
 {
@@ -68,8 +68,8 @@ bool DX11Application::Initialize()
                           L"WindowClass",
                           L"DX11 Template",
                           WS_OVERLAPPEDWINDOW,
-                          100,
-                          100,
+                          0,
+                          0,
                           wr.right - wr.left,
                           wr.bottom - wr.top,
                           NULL,

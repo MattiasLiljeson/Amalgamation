@@ -23,10 +23,15 @@ AglScene::~AglScene()
 		delete m_bspTrees[i];
 	for (unsigned int i = 0; i < m_sphereGrids.size(); i++)
 		delete m_sphereGrids[i];
+	for (unsigned int i = 0; i < m_particleSystems.size(); i++)
+		delete m_particleSystems[i];
+	for (unsigned int i = 0; i < m_gradients.size(); i++)
+		delete m_gradients[i];
 }
 void AglScene::init(AglSceneDesc p_desc)
 {
 	m_meshes = p_desc.meshes;
+	m_particleSystems = p_desc.particleSystems;
 	m_nodes = p_desc.nodes;
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
 	{
@@ -44,8 +49,14 @@ void AglScene::init(AglSceneDesc p_desc)
 	m_skeletonMappings = p_desc.skeletonMappings;
 	m_bspTrees = p_desc.bspTrees;
 	m_sphereGrids = p_desc.sphereGrids;
+	m_connectionPoints = p_desc.connectionPoints;
+	m_particleSystems = p_desc.particleSystems;
 	m_currentAnimation = 0;
 	m_coordinateSystem = p_desc.coordinateSystem;
+	m_gradients = p_desc.gradients;
+
+	//Initialize scene obb
+	calculateOBB();
 }
 
 AglNode AglScene::getNode(int p_index)
@@ -91,7 +102,7 @@ void AglScene::appendTransform(int p_index, AglMatrix p_transform)
 	}
 }
 
-void AglScene::update(float p_dt)
+void AglScene::update(float p_dt, AglVector3 p_cameraPosition)
 {
 	for (unsigned int i = 0; i < m_dynamicNodes.size(); i++)
 	{
@@ -99,6 +110,8 @@ void AglScene::update(float p_dt)
 	}
 	if (m_animations.size() > 0)
 		m_animations[m_currentAnimation]->update(p_dt);
+	for (unsigned int i = 0; i < m_particleSystems.size(); i++)
+		m_particleSystems[i]->update(p_dt, p_cameraPosition);
 }
 AglMaterial* AglScene::getMaterial(int p_index)
 {
@@ -114,14 +127,26 @@ vector<AglGradient*> AglScene::getGradients()
 }
 AglGradient* AglScene::getGradient(int p_index)
 {
+	if (p_index >= m_gradients.size() || p_index < 0)
+		return NULL;
 	return m_gradients[p_index];
 }
-void AglScene::addGradient(AglGradient* p_gradient)
+AglParticleSystem* AglScene::getParticleSystem(int p_index)
 {
-	m_gradients.push_back(p_gradient);
+	return m_particleSystems[p_index];
 }
-string AglScene::getName(int p_index)
+string AglScene::getName(int p_index, bool p_removePath)
 {
+	if (p_removePath)
+	{
+		string s = m_names[p_index];
+		int ind = s.find_last_of('\\');
+		if (ind == -1)
+			ind = s.find_last_of('/');
+		if (ind != -1)
+			s = s.substr(ind+1, s.size() - ind);
+		return s;
+	}
 	return m_names[p_index];
 }
 vector<AglMesh*> AglScene::getMeshes()
@@ -145,6 +170,21 @@ vector<AglInteriorSphereGrid*> AglScene::getSphereGrids()
 	return m_sphereGrids;
 }
 
+vector<AglConnectionPoint> AglScene::getConnectionPoints()
+{
+	return m_connectionPoints;
+}
+
+AglConnectionPoint AglScene::getConnectionPoint(unsigned int p_index)
+{
+	return m_connectionPoints[p_index];
+}
+
+unsigned int AglScene::getConnectionPointCount()
+{
+	return m_connectionPoints.size();
+}
+
 int AglScene::addName(string p_name)
 {
 	if (p_name.compare("") == 0)
@@ -156,6 +196,15 @@ int AglScene::addName(string p_name)
 	}
 	m_names.push_back(p_name);
 	return m_names.size() - 1;
+}
+
+void AglScene::setName(int p_index, string p_name)
+{
+	m_names[p_index] = p_name;
+}
+void AglScene::addParticleSystem(AglParticleSystem* pParticleSystem)
+{
+	m_particleSystems.push_back(pParticleSystem);
 }
 void AglScene::addMesh(AglMesh* p_mesh)
 {
@@ -173,6 +222,9 @@ void AglScene::addMaterialMapping(AglMaterialMapping p_materialMapping)
 void AglScene::addNode(AglNode p_node)
 {
 	m_nodes.push_back(p_node);
+	AglDynamicNode n;
+	n.animated = false;
+	m_dynamicNodes.push_back(n);
 }
 void AglScene::addSkeleton(AglSkeleton* p_skeleton)
 {
@@ -202,6 +254,15 @@ void AglScene::addSphereGrid(AglInteriorSphereGrid* p_sphereGrid)
 {
 	m_sphereGrids.push_back(p_sphereGrid);
 }
+void AglScene::addConnectionPoint(AglConnectionPoint p_connectionPoint)
+{
+	m_connectionPoints.push_back(p_connectionPoint);
+}
+int AglScene::addGradient(AglGradient* p_gradient)
+{
+	m_gradients.push_back(p_gradient);
+	return m_gradients.size()-1;
+}
 AglSceneDesc AglScene::getSceneData()
 {
 	AglSceneDesc desc;
@@ -210,6 +271,7 @@ AglSceneDesc AglScene::getSceneData()
 	desc.materialMappings = this->m_materialMappings;
 	desc.materials = this->m_materials;
 	desc.meshes = this->m_meshes;
+	desc.particleSystems = this->m_particleSystems;
 	desc.names = this->m_names;
 	desc.nodeAnimations = this->m_nodeAnimations;
 	desc.nodes = this->m_nodes;
@@ -217,7 +279,10 @@ AglSceneDesc AglScene::getSceneData()
 	desc.skeletons = this->m_skeletons;
 	desc.bspTrees = this->m_bspTrees;
 	desc.sphereGrids = this->m_sphereGrids;
+	desc.connectionPoints = this->m_connectionPoints;
+	desc.particleSystems = this->m_particleSystems;
 	desc.coordinateSystem = this->m_coordinateSystem;
+	desc.gradients = this->m_gradients;
 	return desc;
 }
 
@@ -249,4 +314,123 @@ bool AglScene::isLeftHanded()
 bool AglScene::isRightHanded()
 {
 	return m_coordinateSystem.handedness == AglCoordinateSystem::RIGHT;
+}
+vector<AglParticleSystem*> AglScene::getParticleSystems()
+{
+	return m_particleSystems;
+}
+void AglScene::transform(AglMatrix p_transform)
+{
+	for (unsigned int i = 0; i < m_meshes.size(); i++)
+	{
+		m_meshes[i]->transform(p_transform);
+	}
+	for (unsigned int i = 0; i < m_nodes.size(); i++)
+	{
+		m_nodes[i].localTransform = p_transform * m_nodes[i].localTransform * p_transform.transpose();
+		m_nodes[i].inverseBindMatrix =  p_transform.transpose() * m_nodes[i].inverseBindMatrix * p_transform.transpose();
+	}
+	for (unsigned int i = 0; i < m_nodeAnimations.size(); i++)
+	{
+		AglKeyFrame* frames = m_nodeAnimations[i]->getKeyFrames();
+		for (unsigned int j = 0; j < m_nodeAnimations[i]->getHeader().keyFrameCount; j++)
+		{
+			frames[j].transform = p_transform * frames[j].transform * p_transform.transpose();
+		}
+	}
+	for (unsigned int i = 0; i < m_connectionPoints.size(); i++)
+	{
+		m_connectionPoints[i].transform = p_transform * m_connectionPoints[i].transform * p_transform.transpose();
+	}
+}
+void AglScene::RemoveMaterial(AglMaterial* p_material)
+{
+	if (m_materials[p_material->id] == p_material)
+	{
+		//Remove degenerate material mappings
+		for (unsigned int i = 0; i < m_materialMappings.size(); i++)
+		{
+			if (m_materialMappings[i].materialID == p_material->id)
+			{
+				m_materialMappings[i] = m_materialMappings.back();
+				m_materialMappings.pop_back();
+				i--;
+			}
+		}
+		//Remove material
+		int id = p_material->id;
+		m_materials.back()->id = id;
+		m_materials[m_materials.back()->id] = m_materials.back();
+		delete p_material;
+		m_materials.pop_back();
+
+		if (m_materials.size() > 0)
+		{
+			//Reassign moved material
+			for (unsigned int i = 0; i < m_materialMappings.size(); i++)
+			{
+				if (m_materialMappings[i].materialID == m_materials.size())
+				{
+					m_materialMappings[i].materialID = id;
+				}
+			}
+		}
+		else
+		{
+			m_materialMappings.clear();
+		}
+	}
+}
+void AglScene::RemoveParticleEffect(AglParticleSystem* p_particleSystem)
+{
+	for (unsigned int i = 0; i < m_particleSystems.size(); i++)
+	{
+		if (m_particleSystems[i] == p_particleSystem)
+		{
+			delete m_particleSystems[i];
+			m_particleSystems[i] = m_particleSystems.back();
+			m_particleSystems.pop_back();
+			break;
+		}
+	}
+}	
+AglOBB AglScene::getSceneOBB()
+{
+	return m_sceneOBB;
+}
+void AglScene::setTime(float p_time)
+{
+	for (unsigned int i = 0; i < m_dynamicNodes.size(); i++)
+	{
+		m_dynamicNodes[i].animated = false;
+	}
+	if (m_animations.size() > 0)
+		m_animations[0]->setTime(p_time);
+}
+void AglScene::calculateOBB()
+{
+	AglVector3 minP, maxP;
+	minP = AglVector3(FLT_MAX, FLT_MAX, FLT_MAX);
+	maxP = AglVector3(FLT_MIN, FLT_MIN, FLT_MIN);
+	for (unsigned int i = 0; i < m_meshes.size(); i++)
+	{
+		//AglJoint* j1 = m_skeletons[0]->getRoot();
+
+		//What is it?
+		//AglMatrix m_avoidJump = m_skeletons[0]->getInverseBindMatrix(j1->id) * m_skeletons[0]->getGlobalTransform(j1->id);
+
+		AglMatrix transform = m_meshes[i]->getHeader().transform;
+		//transform = m_avoidJump;
+		AglVertexSTBN* points = (AglVertexSTBN*)m_meshes[i]->getVertices();
+		for (unsigned int j = 0; j < m_meshes[i]->getHeader().vertexCount; j++)
+		{
+			AglVector3 p = points[j].position;
+			p.transform(transform);
+			minP = AglVector3(min(minP.x, p.x), min(minP.y, p.y), min(minP.z, p.z));
+			maxP = AglVector3(max(maxP.x, p.x), max(maxP.y, p.y), max(maxP.z, p.z));
+		}
+	}
+	AglVector3 pos = (maxP+minP)*0.5f;
+	AglVector3 size = maxP-minP;
+	m_sceneOBB = AglOBB(AglMatrix::createTranslationMatrix(pos), size);
 }

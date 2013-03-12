@@ -17,6 +17,7 @@ class NodeAnimation;
 struct Node;
 struct MeshConfigurableData;
 class SkeletonMesh;
+class ParticleSystem;
 
 
 ///Need to add support for various 
@@ -32,6 +33,7 @@ private:
 	static Scene* sInstance;
 
 	vector<Mesh*> mMeshes;
+	vector<ParticleSystem*> mParticleSystems;
 	vector<AglVector3> mSphereColors;
 	vector<AglVector3> mBoxColors;
 	vector<SkeletonMesh*> mSkeletonMeshes;
@@ -46,29 +48,29 @@ private:
 	AglQuaternion mQuaternionRotation;
 	AglVector3 mPosition;
 
-public:
-	static AglMatrix m_world;
-	static AglMatrix m_avoidJump;
+	bool mDrawPlanes;
+	Mesh* planeDown;
+	Mesh* planeRight;
+	Mesh* planeBack;
+
+	string mPath;
+
+	float conpointLength;
+
 private:
 	int mCurrentAnimation;
 
-	string mFolder;
-
 	ID3D11Device* mDevice;
 	ID3D11DeviceContext* mDeviceContext;
-
-	Mesh* mPlaneMesh;
 
 private:
 	Scene();
 	~Scene();
 
-	void CreateScenePlane(); 
 public:
 	static Scene* GetInstance();
 	static void Release();
-	void Init(vector<Mesh*> pMeshes, vector<SkeletonMesh*> pSkeletons, vector<SkeletonMapping*> pSkeletonMappings, AglScene* pAglScene, string pFolder,
-		ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
+	void Init(string pPath, ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext);
 	void Update(float pElapsedTime);
 	void Draw();
 	AglNode GetNode(int pIndex);
@@ -79,27 +81,68 @@ public:
 	AglMaterial* GetMaterial(int pIndex);
 	void SetCurrentAnimation(int pIndex);
 	Mesh* GetMesh(int pIndex);
+	ParticleSystem* GetParticleSystem(int pIndex)
+	{
+		return mParticleSystems[pIndex];
+	}
+	vector<ParticleSystem*> GetParticleSystems()
+	{
+		return mParticleSystems;
+	}
+	vector<AglConnectionPoint> getConnectionPoints()
+	{
+		return mAglScene->getConnectionPoints();
+	}
 	vector<Mesh*> GetMeshes() { return mMeshes; }
 	AglSkeleton* GetSkeleton(int pIndex);
 	AglNodeAnimation* GetNodeAnimation(int pIndex);
 	AglAnimationLayer* GetAnimationLayer(int pIndex);
+	AglGradient* GetGradient(int pIndex)
+	{
+		return mAglScene->getGradient(pIndex);
+	}
 
 	void AddMaterial(AglMaterial* pMaterial, bool pAddToMeshes, bool pSetAsCurrent);
-	void AddGradient(AglGradient* pGradient, bool pAddToMeshes, bool pSetAsCurrent);
+	int AddGradient(AglGradient* pGradient);
+	void AddParticleSystem(AglParticleSystem* pSystem);
+	int  GetIndex(AglParticleSystem* pSystem);
 	vector<AglGradient*> GetGradients();
 	string GetName(int pIndex);
 	int   AddName(string pName);
 
-	string GetFolder(){ return mFolder; }
 	void Save(string pPath);
 
 	AglQuaternion* GetQuaternionRotation(){ return &mQuaternionRotation; }
 	AglVector3* GetPosition(){ return &mPosition; }
-	AglMatrix GetWorld() { return m_world; }
 	AglVector3 GetCenter();
 
 	bool IsLeftHanded();
 	void SetCoordinateSystem(AglCoordinateSystem pSystem);
+
+	void Transform(AglMatrix p_transform);
+
+	AglScene* getAglScene(){ return mAglScene; }
+
+	void RemoveMaterial(AglMaterial* pMaterial);
+	void RemoveParticleSystem(AglParticleSystem* pParticleSystem);
+
+	void AddBspTree(AglLooseBspTree* p_tree)
+	{
+		mAglScene->addBspTree(p_tree);
+	}
+
+	bool* getDrawPlanes(){ return &mDrawPlanes; }
+
+	vector<string> FindFiles(string pPath);
+	void MaterialFromStrings(vector<string> pStrings);
+
+	float* GetConPointLengthPtr()
+	{
+		 return &conpointLength;
+	}
+	void RestartAllParticleSystems();
+
+	void createScenePlane();
 };
 
 #endif

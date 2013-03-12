@@ -10,6 +10,7 @@ PhysicsController2::PhysicsController2(ID3D11Device* pDevice, ID3D11DeviceContex
 	mDebugSphere = new DebugSphere(20, pDevice, pDeviceContext);
 	mTimeAccum = 0;
 	mController = new PhysicsController();
+	mController->InitStaticBodiesOctree(AglVector3(-100, -100, -100), AglVector3(100, 100, 100));
 }
 PhysicsController2::~PhysicsController2()
 {
@@ -25,7 +26,11 @@ int PhysicsController2::AddSphere(AglVector3 pPosition, float pRadius, bool pUse
 }
 int PhysicsController2::AddBox(AglVector3 pPosition, AglVector3 pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, CompoundBody* p_parent)
 {
-	return mController->AddBox(pPosition, pSize, pMass, pVelocity, pAngularVelocity, pStatic, p_parent);
+	return mController->AddBox(pPosition, pSize, pMass, pVelocity, pAngularVelocity, pStatic, p_parent, true, true);
+}
+int PhysicsController2::AddBox(AglOBB p_shape, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static, CompoundBody* pParent)
+{
+	return mController->AddBox(p_shape, p_mass, p_velocity, p_angularVelocity, p_static, pParent, true, true);
 }
 int PhysicsController2::AddConvexHull(AglVector3 pPosition, float pSize, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic)
 {
@@ -40,18 +45,21 @@ int PhysicsController2::AddCompoundBody(AglVector3 p_position)
 	return mController->AddCompoundBody(p_position);
 }
 
-int PhysicsController2::AddMeshBody(AglMatrix pCoordinateSystem, AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree,
+int PhysicsController2::AddMeshBody(AglVector3 pPosition, AglOBB pOBB, AglBoundingSphere pBoundingSphere, AglLooseBspTree* pBSPTree,
 								   AglInteriorSphereGrid* pSphereGrid)
 {
-	return mController->AddMeshBody(pCoordinateSystem, pPosition, pOBB, pBoundingSphere, pBSPTree, pSphereGrid);
+	return mController->AddMeshBody(pPosition, pOBB, pBoundingSphere, pBSPTree, pSphereGrid);
 }
 
 void PhysicsController2::Update(float pElapsedTime)
 {
 	mController->Update(pElapsedTime);
 }
-void PhysicsController2::DrawDebug()
+void PhysicsController2::DrawDebug(int pLevel)
 {
+	if (pLevel == 0)
+		return;
+
 	vector<RigidBody*> bodies = mController->getBodies();
 	for (unsigned int i = 0; i < bodies.size(); i++)
 	{
@@ -67,12 +75,13 @@ void PhysicsController2::DrawDebug()
 			AglMatrix size = AglMatrix(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8],
 								m[9], m[10], m[11], m[12], m[13], m[14], m[15]);
 
-			mDebugBox->draw((AglMatrix)(size * m2));
+			mDebugBox->draw((AglMatrix)(size * m2), pLevel < 2);
 			if (!bodies[i]->IsStatic())
 			{
 				float radius = b->GetBoundingSphere().radius;
 				m2 = AglMatrix(radius, 0, 0, 0, 0, radius, 0, 0, 0, 0, radius, 0, 0, 0, 0, 1) * m2;
-				//mDebugSphere->draw(m2, true);
+				if (pLevel >= 3)
+					mDebugSphere->draw(m2, true);
 			}
 		}
 		else if (bodies[i]->GetType() == SPHERE)
@@ -81,31 +90,34 @@ void PhysicsController2::DrawDebug()
 			AglMatrix m = s->GetWorld();
 			AglMatrix m2 = AglMatrix(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8],
 								m[9], m[10], m[11], m[12], m[13], m[14], m[15]);
-			mDebugSphere->draw((AglMatrix)(m2 * s->GetRadius()));
+			mDebugSphere->draw((AglMatrix)(m2 * s->GetRadius()), pLevel < 2);
 		}
 		else if (bodies[i]->GetType() == MESH)
 		{
-			RigidBodyMesh* m = (RigidBodyMesh*)bodies[i];
-			AglMatrix world = m->GetWorld();
-			AglBoundingSphere bs = m->GetBoundingSphere();
-			AglMatrix mat;
-			AglMatrix::componentsToMatrix(mat, AglVector3(bs.radius, bs.radius, bs.radius),
-											AglQuaternion::identity(), bs.position);
-			//mDebugSphere->draw(mat, true);
-			AglOBB obb = m->GetOBB();
+			if (pLevel >= 3)
+			{
+				RigidBodyMesh* m = (RigidBodyMesh*)bodies[i];
+				AglMatrix world = m->GetWorld();
+				AglBoundingSphere bs = m->GetBoundingSphere();
+				AglMatrix mat;
+				AglMatrix::componentsToMatrix(mat, AglVector3(bs.radius, bs.radius, bs.radius),
+					AglQuaternion::identity(), bs.position);
+				mDebugSphere->draw(mat, true);
+				AglOBB obb = m->GetOBB();
 
-			AglMatrix::componentsToMatrix(mat, obb.size,
-				AglQuaternion::identity(), AglVector3(0, 0, 0));
+				AglMatrix::componentsToMatrix(mat, obb.size,
+					AglQuaternion::identity(), AglVector3(0, 0, 0));
 
-			mat = mat * obb.world;
-			//mat *= world;
-			mat.SetTranslation(obb.world.GetTranslation());
-			//mDebugBox->draw(mat, true);
+				mat = mat * obb.world;
+				//mat *= world;
+				mat.SetTranslation(obb.world.GetTranslation());
+				mDebugBox->draw(mat, true);
+			}
 		}
 	}
 	for (unsigned int i = 0; i < mDebugHullData.size(); i++)
 	{
-		mDebugHullData[i]->Draw(mDebugSphere, mDebugBox);
+		mDebugHullData[i]->Draw(mDebugSphere, mDebugBox, pLevel);
 	}
 }
 void PhysicsController2::Clear()
@@ -114,6 +126,7 @@ void PhysicsController2::Clear()
 	for (unsigned int i = 0; i < mDebugHullData.size(); i++)
 		delete mDebugHullData[i];
 	mDebugHullData.clear();
+	mController->InitStaticBodiesOctree(AglVector3(-100, -100, -100), AglVector3(100, 100, 100));
 }
 float PhysicsController2::RaysVsObjects(vector<PhyRay> rays, RigidBody* p_ignore, AglBoundingSphere p_sphere)
 {
@@ -122,5 +135,5 @@ float PhysicsController2::RaysVsObjects(vector<PhyRay> rays, RigidBody* p_ignore
 
 void PhysicsController2::DetachBodyFromCompound(CompoundBody* p_compound, RigidBody* p_body)
 {
-	mController->DetachBodyFromCompound(p_compound, p_body);
+	//mController->DetachBodyFromCompound(p_compound, p_body);
 }

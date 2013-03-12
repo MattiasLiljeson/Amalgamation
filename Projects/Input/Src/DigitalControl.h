@@ -22,11 +22,11 @@ class InputManager;
 class DigitalControl : public Control
 {
 public:
-	DigitalControl( InputHelper::XBOX360_CONTROLLER_DIGITAL p_btn );
+	DigitalControl( InputHelper::Xbox360Digitals p_btn );
 	~DigitalControl();
 
 	virtual void update( InputManager* p_manager );
 
 private:
-	InputHelper::XBOX360_CONTROLLER_DIGITAL m_btn;
+	InputHelper::Xbox360Digitals m_btn;
 };

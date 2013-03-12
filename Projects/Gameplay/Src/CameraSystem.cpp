@@ -4,15 +4,17 @@
 #include "InputBackendSystem.h"
 #include "LookAtEntity.h"
 #include "Transform.h"
+#include <control.h>
+#include "ClientPacketHandlerSystem.h"
 
-CameraSystem::CameraSystem( GraphicsBackendSystem* p_gfxBackend, 
-						    InputBackendSystem* p_inputBackend ) : 
-		      EntitySystem( SystemType::CameraSystem, 2,
+CameraSystem::CameraSystem( GraphicsBackendSystem* p_gfxBackend ) : 
+			  EntitySystem( SystemType::CameraSystem, 2,
 							ComponentType::ComponentTypeIdx::CameraInfo,
 							ComponentType::ComponentTypeIdx::Transform)
 {
 	m_gfxBackend = p_gfxBackend;
-	m_inputBackend = p_inputBackend;
+	m_renderFromShadowCamera = false;
+	m_lowResDivider = 4;
 }
 
 
@@ -22,79 +24,115 @@ CameraSystem::~CameraSystem()
 
 void CameraSystem::initialize()
 {
-
+	AntTweakBarWrapper::getInstance()->addWriteVariable(
+		AntTweakBarWrapper::GRAPHICS,"Low Res Divider",TwType::TW_TYPE_INT32,&m_lowResDivider,
+		"group=Depth of Field min=1 max=32");
 }
 
 void CameraSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	float dt = m_world->getDelta();
-	for(unsigned int i=0; i<p_entities.size(); i++ )
-	{
+	if(p_entities.size() > 0){	
+		/*
+		auto inputSystem = static_cast<InputBackendSystem*>(
+			m_world->getSystem(SystemType::InputBackendSystem));
 
-		CameraInfo* camInfo = static_cast<CameraInfo*>(
-			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::CameraInfo ) );
-
-		Transform* transform = static_cast<Transform*>(
-			p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
-
-		// optional component for lookat
-		LookAtEntity* lookAt=NULL;
-		Component* t = p_entities[i]->getComponent( ComponentType::ComponentTypeIdx::LookAtEntity );
-		if (t!=NULL)
-			lookAt = static_cast<LookAtEntity*>(t);
-
-		// Retrieve initial info
-		AglVector3 position = transform->getTranslation();
-		AglQuaternion rotation = transform->getRotation();
-		AglVector3 lookTarget = position+transform->getMatrix().GetForward();
-		AglVector3 up = transform->getMatrix().GetUp();
-
-		// Prepare lookat values if used
-		if (lookAt)
-		{
-			// Extract look-at entity and its transform
-			Entity* targetEntity = m_world->getEntity(lookAt->getEntityId());
-			Transform* targetTransform = static_cast<Transform*>(
-				targetEntity->getComponent(ComponentType::ComponentTypeIdx::Transform));
-			lookTarget = targetTransform->getTranslation();
-			// Set up look-at vars for the view matrix
-			// Create offset vector from look-at component in the space of the target
-			AglVector3 offset = lookAt->getOffset();
-			offset.transformNormal(targetTransform->getMatrix());
-			// Transform camera up
-			up = targetTransform->getMatrix().GetUp();
-
-			// update transform
-			position = AglVector3::lerp(position,lookTarget+offset,
-										lookAt->getMoveSpd()*dt);
-			rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
-											lookAt->getRotationSpeed()*dt);
-			rotation.normalize();
+		if ((inputSystem->getControlByEnum(InputHelper::KeyboardKeys_M))->getDelta() > 0.5f){
+			m_renderFromShadowCamera = !m_renderFromShadowCamera;
 		}
-
-		// Construct view matrix
-		AglMatrix view = AglMatrix::createViewMatrix(position,
-													 lookTarget,
-													 up);
-
-		// update of position
-		transform->setTranslation( position );
-	    transform->setRotation( rotation );
-		
-
-		// Rendering preparations
-		AglMatrix viewProj = AglMatrix::identityMatrix();
-		viewProj = view * camInfo->m_projMat;
-		viewProj = AglMatrix::transpose( viewProj );
-		
-		RendererSceneInfo tempSceneInfo;
-		for( int i=0; i<16; i++ )
-		{
-			tempSceneInfo.viewProjectionMatrix[i] = viewProj[i];
+		*/
+		bool noValidCameraFound = true;
+		for(unsigned int i=0; i<p_entities.size(); i++ ){
+			if(noValidCameraFound)
+				noValidCameraFound = selectPlayerCamera(p_entities[i]);
 		}
-
-		// sets up certain "global" scene data
-		GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();
-		gfxWrapper->setSceneInfo(tempSceneInfo);
+		if(noValidCameraFound){
+			updateRenderSceneInfo(p_entities[0]);
+			m_playerCamera = p_entities[0];
+		}
 	}
+}
+
+void CameraSystem::updateRenderSceneInfo( Entity* p_entity )
+{
+	CameraInfo* camInfo = static_cast<CameraInfo*>(
+		p_entity->getComponent( ComponentType::ComponentTypeIdx::CameraInfo ) );
+
+	Transform* transform = static_cast<Transform*>(
+		p_entity->getComponent( ComponentType::ComponentTypeIdx::Transform ) );
+
+
+	// Retrieve initial info
+	AglVector3 position = transform->getTranslation();
+	AglQuaternion rotation = transform->getRotation();
+	AglVector3 lookTarget = position + transform->getMatrix().GetForward();
+	AglVector3 up = transform->getMatrix().GetUp();
+
+	up.normalize();
+
+	// Construct view matrix
+	AglMatrix view = AglMatrix::createViewMatrix(position,
+		lookTarget,
+		up);
+
+	// Rendering preparations
+	AglMatrix viewProj = AglMatrix::identityMatrix();
+	viewProj = view * camInfo->m_projMat;
+	AglMatrix viewProjInv = AglMatrix::inverse(viewProj);
+	viewProj = AglMatrix::transpose( viewProj );
+	viewProjInv = AglMatrix::transpose(viewProjInv);
+	
+	//AglVector3::normalize(lookTarget);
+	//AglVector3::normalize(up);
+	
+	InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::InputBackendSystem));
+	if (input->getDeltaByEnum(InputHelper::KeyboardKeys_NUMPAD_1))
+		viewProjInv = viewProjInv;
+	AglVector3 w = lookTarget-position;
+	w.normalize();
+	AglVector3 u = AglVector3::crossProduct(up, w);
+	u.normalize();
+	AglVector3 v = AglVector3::crossProduct(w, u);
+	v.normalize();
+
+	RendererSceneInfo sceneInfo;
+	sceneInfo.view		= view;
+	sceneInfo.viewProj	= viewProj;
+	sceneInfo.cameraPos = position;
+	sceneInfo.cameraForward = w;
+	sceneInfo.cameraUp = v;
+	sceneInfo.viewProjInv = viewProjInv;
+	sceneInfo.renderTargetDimensions = m_gfxBackend->getWindowSize();
+	sceneInfo.farPlane = camInfo->m_farPlane;
+	sceneInfo.nearPlane = camInfo->m_nearPlane;
+	sceneInfo.ambientColor = camInfo->m_ambientColor;
+	sceneInfo.fogColor = camInfo->m_fogColor;
+	sceneInfo.fogFarPlaneClosenessPercentage = camInfo->m_fogFarPlaneClosenessPercentage;
+	sceneInfo.fogNearPlaneClosenessPercentage = camInfo->m_fogNearPlaneClosenessPercentage;
+	sceneInfo.lowResDivider = m_lowResDivider;
+
+	// sets up certain "global" scene data
+	GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();
+	gfxWrapper->updateRenderSceneInfo(sceneInfo);
+}
+
+void CameraSystem::setRenderSceneInfoUsingPlayerCamera()
+{
+	updateRenderSceneInfo(m_playerCamera);
+}
+
+bool CameraSystem::selectPlayerCamera( Entity* p_camera )
+{
+	if(m_renderFromShadowCamera){
+		if(p_camera->getComponent(ComponentType::TAG_ShadowCamera) != NULL){
+			updateRenderSceneInfo(p_camera);
+			m_playerCamera = p_camera;
+			return false;
+		}
+	}
+	else if( p_camera->getComponent(ComponentType::TAG_MainCamera) != NULL){
+		updateRenderSceneInfo(p_camera);
+		m_playerCamera = p_camera;
+		return false;
+	}
+	return true;
 }

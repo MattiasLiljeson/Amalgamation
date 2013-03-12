@@ -35,6 +35,8 @@ struct AglMaterial
 	int normalTextureNameIndex;			///< Index to normal texture. -1 IF texture is absent
 	int glowTextureNameIndex;			///< Index to glow texture. -1 IF texture is absent
 	int displacementTextureNameIndex;	///< Index to displacement texture. -1 IF texture is absent
+	int gradientTextureNameIndex;		///< Index to gradient texture
+	int gradientDataIndex;				///< Index to the color data used by the gradient texture
 	float textureScale;					///< Scale of the textures. [0, +inf]
 
 	AglMaterial();

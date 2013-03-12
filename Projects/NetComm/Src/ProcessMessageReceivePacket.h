@@ -6,8 +6,6 @@
 class ProcessMessageReceivePacket: public ProcessMessage
 {
 public:
-	ProcessMessageReceivePacket();
-
 	ProcessMessageReceivePacket( ThreadSafeMessaging* p_sender, Packet p_packet );
 
 	~ProcessMessageReceivePacket();

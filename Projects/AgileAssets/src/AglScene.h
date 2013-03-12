@@ -23,6 +23,7 @@
 #include "AglSkeletonMapping.h"
 #include "AglLooseBspTree.h"
 #include "AglInteriorSphereGrid.h"
+#include "AglParticleSystem.h"
 #include <vector>
 
 using namespace std;
@@ -30,17 +31,20 @@ using namespace std;
 struct AglSceneDesc
 {
 	vector<AglMesh*>				meshes;
+	vector<AglParticleSystem*>		particleSystems;
 	vector<AglNode>					nodes;
 	vector<AglAnimationLayer*>		animationLayers;
 	vector<AglNodeAnimation*>		nodeAnimations;
 	vector<AglAnimation*>			animations;
 	vector<AglSkeleton*>			skeletons;
 	vector<AglMaterial*>			materials;
+	vector<AglGradient*>			gradients;
 	vector<string>					names;
 	vector<AglMaterialMapping>		materialMappings;
 	vector<AglSkeletonMapping*>		skeletonMappings;
 	vector<AglLooseBspTree*>		bspTrees;
 	vector<AglInteriorSphereGrid*>	sphereGrids;
+	vector<AglConnectionPoint>		connectionPoints;
 	string							textureDirectory;
 	AglCoordinateSystem				coordinateSystem;
 };
@@ -49,6 +53,7 @@ class AglScene
 {
 private:
 	vector<AglMesh*>				m_meshes; ///< List of meshes
+	vector<AglParticleSystem*>		m_particleSystems; ///< List of particle systems
 	vector<AglNode>					m_nodes; ///< List of nodes
 	vector<AglDynamicNode>			m_dynamicNodes; ///< List of animated nodes
 	vector<AglAnimationLayer*>		m_animationLayers; ///< List of animation layers
@@ -62,9 +67,13 @@ private:
 	vector<AglSkeletonMapping*>		m_skeletonMappings; ///< List of skeleton mappings
 	vector<AglLooseBspTree*>		m_bspTrees;			///< List of Bsp trees
 	vector<AglInteriorSphereGrid*>	m_sphereGrids;		///< List of sphere grids
+	vector<AglConnectionPoint>		m_connectionPoints;	///< List of connection points on various meshes
 	AglCoordinateSystem				m_coordinateSystem; ///< Coordinate system of the scene
 
 	unsigned int m_currentAnimation; ///< Currently played animation
+
+	AglOBB m_sceneOBB; ///< Box covering the entire scene
+
 public:
 	///
 	/// Default Constructor
@@ -136,7 +145,7 @@ public:
 	/// \param p_index The index
 	/// \return The name at position p_index
 	///
-	string					getName(int p_index);
+	string					getName(int p_index, bool p_removePath = false);
 
 	///
 	/// Gets a gradient at a certain index
@@ -144,6 +153,10 @@ public:
 	/// \return The gradient at position p_index
 	///
 	AglGradient*			getGradient(int p_index);
+
+	AglParticleSystem*		getParticleSystem(int p_index);
+
+	vector<AglParticleSystem*> getParticleSystems();
 
 	///
 	/// Gets all materials
@@ -187,6 +200,25 @@ public:
 	///-----------------------------------------------------------------------------------
 	vector<AglInteriorSphereGrid*> getSphereGrids();
 
+	///-----------------------------------------------------------------------------------
+	/// Get all the connection points
+	/// \return The connection points in the scene
+	///-----------------------------------------------------------------------------------
+	vector<AglConnectionPoint> getConnectionPoints();
+
+	///-----------------------------------------------------------------------------------
+	/// Get a connection point
+	/// \return The connection point
+	///-----------------------------------------------------------------------------------
+	AglConnectionPoint getConnectionPoint(unsigned int p_index);
+
+
+	///-----------------------------------------------------------------------------------
+	/// Get the amount of connection points
+	/// \return unsigned int The size
+	///-----------------------------------------------------------------------------------
+	unsigned int getConnectionPointCount();
+
 	///
 	/// Gets all scene data
 	/// \return The scene data
@@ -200,12 +232,6 @@ public:
 	unsigned int getSkeletonCount();
 
 	///
-	/// Adds a gradient to the scene
-	/// \param p_gradient The gradient
-	///
-	void addGradient(AglGradient* p_gradient);
-
-	///
 	/// Appends a transform to a dynamic node. SHOULD BE MOVED!
 	/// \param p_index Index to the dynamic node
 	/// \param p_transform The transform to append
@@ -216,7 +242,7 @@ public:
 	/// Updates the scene
 	/// \param p_dt Elapsed time.
 	///
-	void update(float p_dt);
+	void update(float p_dt, AglVector3 p_cameraPosition);
 
 	///
 	/// Adds a name to the scene.
@@ -225,11 +251,19 @@ public:
 	///
 	int	 addName(string pName);
 
+	void setName(int p_index, string p_name);
+
 	///
-	/// Adds a name to the scene.
-	/// \param p_name The name to add.
+	/// Adds a mesh to the scene.
+	/// \param p_mesh The mesh to add.
 	///
 	void addMesh(AglMesh* pMesh);
+
+	///
+	/// Adds a particle system to the scene.
+	/// \param p_particleSystem The system to add.
+	///
+	void addParticleSystem(AglParticleSystem* pParticleSystem);
 
 	///
 	/// Adds a material to the scene.
@@ -292,6 +326,18 @@ public:
 	void addSphereGrid(AglInteriorSphereGrid* p_sphereGrid);
 
 	///-----------------------------------------------------------------------------------
+	/// Adds a connection point to the scene
+	/// \param The connection point to add
+	///-----------------------------------------------------------------------------------
+	void addConnectionPoint(AglConnectionPoint p_connectionPoint);
+
+	///-----------------------------------------------------------------------------------
+	/// Adds a gradient data set to the scene
+	/// \param The gradient to add
+	///-----------------------------------------------------------------------------------
+	int addGradient(AglGradient* p_gradient);
+
+	///-----------------------------------------------------------------------------------
 	/// Gets a matrix corresponding to the axes in the coordinate system
 	/// \return Matrix representing the coordinate system
 	///-----------------------------------------------------------------------------------
@@ -314,6 +360,19 @@ public:
 	/// \return If the system is right-handed
 	///-----------------------------------------------------------------------------------
 	bool isRightHanded();
+
+	void transform(AglMatrix p_transform);
+
+	unsigned int getAnimationCount(){ return m_animations.size(); }
+
+	void RemoveMaterial(AglMaterial* p_material);
+	void RemoveParticleEffect(AglParticleSystem* p_particleSystem);
+
+	AglOBB getSceneOBB();
+
+	void setTime(float p_time);
+
+	void calculateOBB();
 };
 
 #endif

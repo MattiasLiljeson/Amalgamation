@@ -13,7 +13,6 @@ EntityManager::~EntityManager()
 {
 	for( unsigned int i=0; i<m_entities.size(); i++ )
 	{
-		// HACK: Not totally sure if this is where entities should be deleted.
 		delete m_entities[i];
 	}
 }
@@ -65,17 +64,35 @@ void EntityManager::disabled( Entity* p_entity )
 void EntityManager::deleted( Entity* p_entity )
 {
 	m_disabled[p_entity->getIndex()] = false;
-	m_availableIds.push(p_entity->getIndex());
+	//m_availableIds.push(p_entity->getIndex()); Done in postPerform to ensure everything
+	//is recycled without errors.
 	
-	// can we delete here? are there still references? 
+	// can we delete here? Alex says: NO!!!! are there still references? 
 	//delete m_entities[p_entity->getIndex()];
-	m_entities[p_entity->getIndex()] = NULL;
-	
-	delete p_entity;
+	// Deletion needs to be done in postPerform! Add the entity to that list instead.
+	// Setting the entity in the list to null also needs to be done in postPerform
+	//m_entities[p_entity->getIndex()] = NULL;
+	m_deleteOnPost.push_back(p_entity);
+
+	// NO!!!
+	//delete p_entity;
 
 	m_active--;
 	m_deleted++;
 }
+
+void EntityManager::postPerform()
+{
+	// Delete entities here!
+	for (unsigned int i = 0; i < m_deleteOnPost.size(); i++)
+	{
+		m_availableIds.push(m_deleteOnPost[i]->getIndex());
+		m_entities[m_deleteOnPost[i]->getIndex()] = NULL;
+		delete m_deleteOnPost[i];
+	}
+	m_deleteOnPost.clear();
+}
+
 
 bool EntityManager::isActive( int p_entityId ) const
 {
@@ -89,7 +106,9 @@ bool EntityManager::isEnabled( int p_entityId ) const
 
 Entity* EntityManager::getEntity( int p_entityId ) const
 {
-	return m_entities[p_entityId];
+	if(p_entityId < (int)m_entities.size())
+		return m_entities[p_entityId];
+	return NULL;
 }
 
 int EntityManager::getActiveEntityCount() const
@@ -111,3 +130,17 @@ int EntityManager::getTotalDeleted() const
 {
 	return m_deleted;
 }
+
+Entity* EntityManager::getFirstEntityByComponentType( ComponentType::ComponentTypeIdx p_componentType )
+{
+	for(unsigned int i=0; i<m_entities.size(); i++)
+	{
+		if(m_entities[i] && m_entities[i]->getComponent( p_componentType ) != NULL)
+		{
+			return m_entities[i];
+		}
+	}
+
+	return NULL;
+}
+

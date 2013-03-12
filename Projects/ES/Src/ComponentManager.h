@@ -22,7 +22,7 @@ public:
 
 	void initialize(){};
 	void deleted( Entity* p_entity );
-	vector<Component*>& getComponentsFor( Entity* p_entity, vector<Component*>& p_fillBag );
+	vector<ComponentType::ComponentTypeIdx> getComponentEnumList( Entity* p_entity );
 	void clean();
 	void addComponent( Entity* p_entity, ComponentType p_type, Component* p_component );
 
@@ -35,6 +35,7 @@ public:
 	void removeComponent( Entity* p_entity, ComponentType p_type );
 	void removeComponent( Entity* p_entity, ComponentType::ComponentTypeIdx p_typeIdx );
 
+	void postPerform();
 private:
 	vector<Component*> getComponentsByType( ComponentType p_type );
 	void removeComponentsOfEntity( Entity* p_entity );
@@ -42,5 +43,10 @@ private:
 private:
 	vector< vector<Component*> > m_componentsByType;
 	vector<Entity*> m_deleted;
+
+	vector<Component*> m_deleteOnPost;
+	vector< pair<int, int> > m_deleteComponentsByTypeOnPostPerform;
+	// m_deleteComponentsByTypeOnPostPerform.push_back(
+	//		&m_componentsByType[p_typeIdx][entityIndex] );
 };
 

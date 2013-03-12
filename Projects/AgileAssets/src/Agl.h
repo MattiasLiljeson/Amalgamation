@@ -49,6 +49,7 @@ struct AglTopHeader
 	int		nameArrayLength;		///< Length of name array
 	int		meshCount;				///< Number of meshes in the file
 	int		materialCount;			///< Number of materials in the file
+	int		gradientCount;			///< Number of gradients in the file
 	int		materialMappingCount;	///< Number of material mappings in the file
 	int		nodeCount;				///< Number of nodes in the file
 	int		skeletonCount;			///< Number of skeletons in the file
@@ -58,12 +59,22 @@ struct AglTopHeader
 	int		animationCount;			///< Number of animations in the file
 	int		looseBspCount;			///< Number of loose bsp trees in the file
 	int		SphereGridCount;		///< Number of sphere grids in the file
+	int		connectionPointCount;	///< Number of connection points in the file
+	int		particleSystemCount;	///< Number of particle systems in the file
 	
 	AglCoordinateSystem coordinateSystem; ///< Coordinate System of the scene
 };
 
 typedef int AglVertexFormat;
+typedef int AglParticleFormat;
 
 const float AGLVERSION = 0.1f;
+
+struct AglConnectionPoint
+{
+	AglMatrix transform; ///< Local Transform relative to the parent
+	int		  parentMesh; ///< Index to the mesh in the list of meshes
+	int		  nameID;	  ///< Index to the name in the global name array
+};
 
 #endif

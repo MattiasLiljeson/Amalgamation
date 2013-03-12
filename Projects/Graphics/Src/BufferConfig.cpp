@@ -4,6 +4,27 @@
 
 BufferConfig::BufferConfig(BUFFER_INIT_DESC& p_initDesc)
 {
+	usage = p_initDesc.Usage;
+	elementSize = p_initDesc.ElementSize;
+	elementCount = p_initDesc.NumElements;
+
+	switch (p_initDesc.Slot)
+	{
+	case PERFRAME:
+	case SLOT0:
+		slot = 0;
+		break;
+	case PEROBJECT:
+	case SLOT1:
+		slot = 1;
+		break;
+	case SHADOWBUFFER:
+		slot = SHADOWBUFFER;
+		break;
+	default:
+		break;
+	}
+
 	type = p_initDesc.Type;
 	switch(type)
 	{
@@ -36,10 +57,6 @@ BufferConfig::BufferConfig(BUFFER_INIT_DESC& p_initDesc)
 		throw D3DException("Unknown buffer type.",__FILE__,__FUNCTION__,__LINE__);
 		break;
 	};
-
-	usage = p_initDesc.Usage;
-	elementSize = p_initDesc.ElementSize;
-	elementCount = p_initDesc.NumElements;
 
 	m_bufferDesc.CPUAccessFlags = 0;
 	m_bufferDesc.Usage = D3D11_USAGE_DEFAULT;

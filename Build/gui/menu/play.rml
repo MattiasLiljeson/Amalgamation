@@ -1,0 +1,11 @@
+<rml>
+	<head>
+		<title>Play</title>
+		<link type="text/template" href="window.rml" />
+	</head>
+	<body id="play" template="window" onshow="modal">
+		<button onclick="open join">Join</button>
+		<button onclick="open host">Host</button>
+		<button onclick="goto previous">Back</button>
+	</body>
+</rml>

@@ -25,6 +25,7 @@ struct AglMeshHeader
 	int					indexCount;		///< Number of indices in the mesh
 	AglBoundingSphere	boundingSphere; ///< Bounding Sphere of the mesh
 	AglOBB				minimumOBB;		///< Bounding obb of the mesh
+	AglMatrix			transform;		///< Default Transform of the mesh. USE ONLY FOR STATIC MESHES
 
 };
 
@@ -123,6 +124,10 @@ public:
 	/// \param p_index The new index to the mesh name
 	///
 	void setNameIndex(int p_index);
+
+	void transform(AglMatrix p_transform);
+	void transformOld(AglMatrix p_transform);
+	void setTransform(AglMatrix p_transform);
 
 };
 

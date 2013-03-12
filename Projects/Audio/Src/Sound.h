@@ -18,8 +18,7 @@
 class Sound
 {
 public:
-	Sound(IXAudio2SourceVoice* p_sourceVoice, const XAUDIO2_BUFFER& p_buffer, 
-		float p_volume=1.0f);
+	Sound(IXAudio2SourceVoice* p_sourceVoice, XAUDIO2_BUFFER* p_buffer);
 	virtual ~Sound();
 
 	///-----------------------------------------------------------------------------------
@@ -51,13 +50,6 @@ public:
 	IXAudio2SourceVoice* getSourceVoice();
 
 	///-----------------------------------------------------------------------------------
-	/// Updates the current source sounds state to the member variable that can later 
-	/// be used t check the current status of the source.
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void updateSourceCurrentState();
-
-	///-----------------------------------------------------------------------------------
 	/// Updates the current sound's states allowing to see if the sound is playing or not.
 	/// \return void
 	///-----------------------------------------------------------------------------------
@@ -77,13 +69,15 @@ public:
 	float* getLeftChannelRef();
 	float* getRightChannelRef();
 
+
+	void setFrequency(float p_frequency);
 public:
-	float					m_left;
-	float					m_right;
 	//-END-
+	float m_left;
+	float m_right;
 protected:
-	XAUDIO2_BUFFER			m_buffer;
+	XAUDIO2_BUFFER*			m_buffer;
 	IXAudio2SourceVoice*	m_sourceVoice;
 	XAUDIO2_VOICE_STATE*	m_sourceState;
-	float					m_volume;
+	//float m_frequency;
 };

@@ -11,65 +11,472 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AddToParentSystem.h" />
+    <ClInclude Include="AnomalyAcceleratorModule.h" />
+    <ClInclude Include="AnomalyAcceleratorModuleControllerSystem.h" />
+    <ClInclude Include="AnomalyBomb.h" />
+    <ClInclude Include="AnomalyBombControllerSystem.h" />
+    <ClInclude Include="AntTweakBarEnablerSystem.h" />
+    <ClInclude Include="AnimationUpdatePacket.h" />
+    <ClInclude Include="AntTweakBarSystem.h" />
+    <ClInclude Include="BombActivationPacket.h" />
+    <ClInclude Include="ClientModuleCounterSystem.h" />
+    <ClInclude Include="ClientStateSystem.h" />
+    <ClInclude Include="DamageUpdaterSystem.h" />
+    <ClInclude Include="DamageVisualizerSystem.h" />
+    <ClInclude Include="ColorTone.h" />
+    <ClInclude Include="DestroyOnParticlesDeath.h" />
+    <ClInclude Include="DestroyOnParticlesDeathSystem.h" />
+    <ClInclude Include="DisconnectPacket.h" />
+    <ClInclude Include="EditSphereSystem.h" />
+    <ClInclude Include="EditSphereUpdatePacket.h" />
+    <ClInclude Include="EmpRocketLancherModuleSystem.h" />
+    <ClInclude Include="EmpRocketLauncherModule.h" />
+    <ClInclude Include="EmpModule.h" />
+    <ClInclude Include="EnvironmentSystem.h" />
+    <ClInclude Include="EnvironmentValues.h" />
+    <ClInclude Include="AxisRotate.h" />
+    <ClInclude Include="AxisRotationSystem.h" />
+    <ClInclude Include="GameSettingsInfo.h" />
+    <ClInclude Include="DamageComponent.h" />
+    <ClInclude Include="LobbySystem.h" />
+    <ClInclude Include="FlareGunModule.h" />
+    <ClInclude Include="HighlightEntityPacket.h" />
+    <ClInclude Include="InterpolationComponent2.h" />
+    <ClInclude Include="InterpolationSystem2.h" />
+    <ClInclude Include="AnomalyBombEffectPiece.h" />
+    <ClInclude Include="AnomalyBombEffectSystem.h" />
+    <ClInclude Include="ModuleHighlightSystem.h" />
+    <ClInclude Include="ModuleOnChamberStartPoint.h" />
+    <ClInclude Include="ModuleStatusVisualizationMode.h" />
+    <ClInclude Include="PlayerReadyPacket.h" />
+    <ClInclude Include="PortalCullingSystem.h" />
+    <ClInclude Include="RootBoundingSpherePacket.h" />
+    <ClInclude Include="SettingsSystem.h" />
+    <ClInclude Include="ShineSpawn.h" />
+    <ClInclude Include="ShipEngineSystem.h" />
+    <ClInclude Include="ShipHighlight.h" />
+    <ClInclude Include="ShipHiglightSystem.h" />
+    <ClInclude Include="SlotHighlightParticleMakerSystem.h" />
+    <ClInclude Include="SlotMarker.h" />
+    <ClInclude Include="SlotMarkerSystem.h" />
+    <ClInclude Include="SoundComponent.h" />
+    <ClInclude Include="SoundSystem.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SpriteSystem.h" />
+    <ClInclude Include="TempModuleSpawner.h" />
+    <ClInclude Include="MenuBackgroundSceneSystem.h" />
+    <ClInclude Include="ModuleStateChangePacket.h" />
     <ClInclude Include="AudioBackendSystem.h" />
-    <ClInclude Include="AudioController.h" />
     <ClInclude Include="AudioInfo.h" />
     <ClInclude Include="AudioListener.h" />
     <ClInclude Include="AudioListenerSystem.h" />
     <ClInclude Include="BodyInitData.h" />
+    <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="BoundingSphere.h" />
+    <ClInclude Include="CameraControlPacket.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="OrbitalMovement.h" />
+    <ClInclude Include="OrbitalMovementSystem.h" />
+    <ClInclude Include="ClientEntityCountSystem.h" />
+    <ClInclude Include="ClientMeasurementSystem.h" />
+    <ClInclude Include="ConnectionVisualizerSystem.h" />
+    <ClInclude Include="CullingSystem.h" />
+    <ClInclude Include="DebugMove.h" />
+    <ClInclude Include="DebugMovementSystem.h" />
+    <ClInclude Include="ClientConnectToServerSystem.h" />
+    <ClInclude Include="ClientInfo.h" />
+    <ClInclude Include="ClientPacketHandlerSystem.h" />
+    <ClInclude Include="ConnectionPointSet.h" />
+    <ClInclude Include="Connector1to2Module.h" />
+    <ClInclude Include="DisplayGameStats.h" />
+    <ClInclude Include="DisplayPlayerScoreSystem.h" />
+    <ClInclude Include="EntityCreationPacket.h" />
+    <ClInclude Include="EntityDeletionPacket.h" />
+    <ClInclude Include="EntityFactory.h" />
+    <ClInclude Include="EntityType.h" />
+    <ClInclude Include="EntityUpdatePacket.h" />
+    <ClInclude Include="EnumGameStates.h" />
+    <ClInclude Include="Extrapolate.h" />
+    <ClInclude Include="ExtrapolationSystem.h" />
+    <ClInclude Include="GameOptionsSystem.h" />
+    <ClInclude Include="GamepadRumbleSystem.h" />
+    <ClInclude Include="GameplayTags.h" />
+    <ClInclude Include="GameState.h" />
+    <ClInclude Include="GradientMapping.h" />
+    <ClInclude Include="GradientComponent.h" />
     <ClInclude Include="GraphicsBackendSystem.h" />
-    <ClInclude Include="libRocketBackendSystem.h" />
-    <ClInclude Include="NetworkCommunicatorSystem.h" />
+    <ClInclude Include="GraphicsRendererSystem.h" />
+    <ClInclude Include="InputActionsBackendSystem.h" />
+    <ClInclude Include="InterpolationComponent.h" />
+    <ClInclude Include="InterpolationSystem.h" />
+    <ClInclude Include="LevelInfoLoader.h" />
+    <ClInclude Include="LevelGenSystem.h" />
+    <ClInclude Include="HighlightSlotPacket.h" />
+    <ClInclude Include="HudSystem.h" />
+    <ClInclude Include="HudElement.h" />
+    <ClInclude Include="LevelHandlerSystem.h" />
+    <ClInclude Include="LevelInfo.h" />
+    <ClInclude Include="LevelPiece.h" />
+    <ClInclude Include="LevelPieceFileData.h" />
+    <ClInclude Include="LevelPieceRoot.h" />
+    <ClInclude Include="LibRocketBackendSystem.h" />
+    <ClInclude Include="LibRocketEventManagerSystem.h" />
+    <ClInclude Include="LibRocketInputHelper.h" />
+    <ClInclude Include="LightBlinker.h" />
+    <ClInclude Include="LightBlinkerSystem.h" />
+    <ClInclude Include="LightRenderSystem.h" />
+    <ClInclude Include="LightsComponent.h" />
+    <ClInclude Include="LoadMesh.h" />
+    <ClInclude Include="LoadMeshSystem.h" />
+    <ClInclude Include="LoadMeshSystemClient.h" />
+    <ClInclude Include="LoadMeshSystemServer.h" />
+    <ClInclude Include="LookAtSystem.h" />
+    <ClInclude Include="MenuItem.h" />
+    <ClInclude Include="MenuSystem.h" />
+    <ClInclude Include="BoundingVolumeInitData.h" />
+    <ClInclude Include="MeshOffsetTransform.h" />
+    <ClInclude Include="MineControllerSystem.h" />
+    <ClInclude Include="MineLayerModuleControllerSystem.h" />
+    <ClInclude Include="MineLayerModule.h" />
+    <ClInclude Include="MinigunModuleControllerSystem.h" />
+    <ClInclude Include="MinigunModule.h" />
+    <ClInclude Include="ModuleEvent.h" />
+    <ClInclude Include="ModuleHelper.h" />
+    <ClInclude Include="ModuleStatusEffectPacket.h" />
+    <ClInclude Include="ModuleStatusEffectSystem.h" />
+    <ClInclude Include="ModuleTriggerPacket.h" />
+    <ClInclude Include="MoveShipLightsSystem.h" />
+    <ClInclude Include="NetsyncDirectMapperSystem.h" />
+    <ClInclude Include="NetSyncedPlayerScoreTrackerSystem.h" />
+    <ClInclude Include="NewlyConnectedPlayerPacket.h" />
+    <ClInclude Include="ModuleVisualEffectServerBufferSystem.h" />
+    <ClInclude Include="OnHitScoreEffectPacket.h" />
+    <ClInclude Include="ParticleSystemCreationInfo.h" />
+    <ClInclude Include="ParticleSystemInstructionTranslatorSystem.h" />
+    <ClInclude Include="PlayerInfo.h" />
+    <ClInclude Include="PlayerSystem.h" />
+    <ClInclude Include="ScoreRuleHelper.h" />
+    <ClInclude Include="ScoreWorldVisualizerSystem.h" />
+    <ClInclude Include="SelectionMarker.h" />
+    <ClInclude Include="SelectionMarkerSystem.h" />
+    <ClInclude Include="SelectionMarkerUpdatePacket.h" />
+    <ClInclude Include="ServerDynamicPhysicalObjectsSystem.h" />
+    <ClInclude Include="ServerMeasurementSystem.h" />
+    <ClInclude Include="ServerStateSystem.h" />
+    <ClInclude Include="ShieldModuleActivation.h" />
+    <ClInclude Include="ShieldModuleActivationClient.h" />
+    <ClInclude Include="ShieldPlate.h" />
+    <ClInclude Include="ShieldPlaterSystem.h" />
+    <ClInclude Include="ShieldPlatingSystem.h" />
+    <ClInclude Include="ShipConnectionPointHighlights.h" />
+    <ClInclude Include="ShipModuleStatsSystem.h" />
+    <ClInclude Include="ShipParticleSystemUpdater.h" />
+    <ClInclude Include="SkeletalAnimation.h" />
+    <ClInclude Include="SkeletalAnimationSystem.h" />
+    <ClInclude Include="SlotParticleEffectPacket.h" />
+    <ClInclude Include="SpawnExplosionPacket.h" />
+    <ClInclude Include="SpawnPointSet.h" />
+    <ClInclude Include="SpawnPointSystem.h" />
+    <ClInclude Include="SpeedBoostModuleActivation.h" />
+    <ClInclude Include="ParticleSystemEmitter.h" />
+    <ClInclude Include="ParticleSystemEmitterSystem.h" />
+    <ClInclude Include="ParticleSystemServerComponent.h" />
+    <ClInclude Include="ParticleUpdatePacket.h" />
+    <ClInclude Include="PickComponent.h" />
+    <ClInclude Include="ClientPickingSystem.h" />
+    <ClInclude Include="Packetizer.h" />
+    <ClInclude Include="ParticleSystemsComponent.h" />
+    <ClInclude Include="ParticleRenderSystem.h" />
+    <ClInclude Include="PingPacket.h" />
+    <ClInclude Include="PlayerCameraController.h" />
+    <ClInclude Include="PlayerCameraControllerSystem.h" />
+    <ClInclude Include="PlayerStats.h" />
+    <ClInclude Include="PlayersWinLosePacket.h" />
+    <ClInclude Include="PongPacket.h" />
+    <ClInclude Include="PositionalSoundSystem.h" />
+    <ClInclude Include="RayPacket.h" />
+    <ClInclude Include="RemoveSoundEffectPacket.h" />
+    <ClInclude Include="RocketControllerSystem.h" />
+    <ClInclude Include="RocketLauncherModuleControllerSystem.h" />
+    <ClInclude Include="RocketLauncherModule.h" />
+    <ClInclude Include="GameStatsSystem.h" />
+    <ClInclude Include="ServerClientInfoSystem.h" />
+    <ClInclude Include="ServerDynamicObjectsSystem.h" />
+    <ClInclude Include="ServerPacketHandlerSystem.h" />
+    <ClInclude Include="ServerPickingSystem.h" />
+    <ClInclude Include="ServerScoreSystem.h" />
+    <ClInclude Include="ServerStaticObjectsSystem.h" />
+    <ClInclude Include="ServerUpdateSystem.h" />
+    <ClInclude Include="ServerWelcomeSystem.h" />
+    <ClInclude Include="ShadowSystem.h" />
+    <ClInclude Include="ShipEditController.h" />
+    <ClInclude Include="ShipEditControllerSystem.h" />
+    <ClInclude Include="ShipFlyController.h" />
+    <ClInclude Include="ShipFlyControllerSystem.h" />
+    <ClInclude Include="ShipInputProcessingSystem.h" />
+    <ClInclude Include="ShieldModule.h" />
+    <ClInclude Include="ShieldModuleControllerSystem.h" />
+    <ClInclude Include="ShipManagerSystem.h" />
+    <ClInclude Include="ShipModule.h" />
     <ClInclude Include="LookAtEntity.h" />
     <ClInclude Include="PhysicsBody.h" />
-    <ClInclude Include="NetworkInputHandlerSystem.h" />
-    <ClInclude Include="NetworkConnectToServerSystem.h" />
-    <ClInclude Include="NetworkType.h" />
     <ClInclude Include="PacketType.h" />
+    <ClInclude Include="PlayerComponent.h" />
     <ClInclude Include="ProcessingMessagesSystem.h" />
     <ClInclude Include="RenderInfo.h" />
-    <ClInclude Include="NetworkClientControllable.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputBackendSystem.h" />
-    <ClInclude Include="NetworkListenerSystem.h" />
     <ClInclude Include="NetworkSynced.h" />
     <ClInclude Include="PhysicsSystem.h" />
-    <ClInclude Include="QueueList.h" />
     <ClInclude Include="LibRocketRenderInterface.h" />
-    <ClInclude Include="RenderPrepSystem.h" />
-    <ClInclude Include="ShipController.h" />
-    <ClInclude Include="ShipControllerSystem.h" />
+    <ClInclude Include="MeshRenderSystem.h" />
     <ClInclude Include="LibRocketSystemInterface.h" />
+    <ClInclude Include="ShipModulesControllerSystem.h" />
+    <ClInclude Include="ShipModulesTrackerSystem.h" />
+    <ClInclude Include="SimpleEventPacket.h" />
+    <ClInclude Include="ShipSlotControllerSystem.h" />
+    <ClInclude Include="SpawnSoundEffectPacket.h" />
+    <ClInclude Include="SpeedBoosterModule.h" />
+    <ClInclude Include="SpeedBoostModuleControllerSystem.h" />
+    <ClInclude Include="SpeedBuffer.h" />
+    <ClInclude Include="SpeedBufferUpdaterSystem.h" />
+    <ClInclude Include="SpeedFovAdjustSystem.h" />
+    <ClInclude Include="StandardMine.h" />
+    <ClInclude Include="StandardRocket.h" />
+    <ClInclude Include="StaticProp.h" />
+    <ClInclude Include="TeslaCoilEffect.h" />
+    <ClInclude Include="TeslaCoilModule.h" />
+    <ClInclude Include="TeslaCoilModuleControllerSystem.h" />
+    <ClInclude Include="TeslaEffectPiece.h" />
+    <ClInclude Include="TeslaEffectSystem.h" />
+    <ClInclude Include="TeslaHitPacket.h" />
+    <ClInclude Include="ThrustComponent.h" />
+    <ClInclude Include="TeslaLightningSystem.h" />
+    <ClInclude Include="ThrustPacket.h" />
+    <ClInclude Include="TimerSystem.h" />
     <ClInclude Include="Transform.h" />
-    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="EntityParent.h" />
+    <ClInclude Include="TransformParentHandlerSystem.h" />
+    <ClInclude Include="UpdateClientStatsPacket.h" />
+    <ClInclude Include="Vibration.h" />
+    <ClInclude Include="WelcomePacket.h" />
+    <ClInclude Include="WinningConditionSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddToParentSystem.cpp" />
+    <ClCompile Include="AnomalyAcceleratorModule.cpp" />
+    <ClCompile Include="AnomalyAcceleratorModuleControllerSystem.cpp" />
+    <ClCompile Include="AnomalyBomb.cpp" />
+    <ClCompile Include="AnomalyBombControllerSystem.cpp" />
+    <ClCompile Include="AntTweakBarEnablerSystem.cpp" />
+    <ClCompile Include="AnimationUpdatePacket.cpp" />
+    <ClCompile Include="AntTweakBarSystem.cpp" />
     <ClCompile Include="AudioBackendSystem.cpp" />
-    <ClCompile Include="AudioController.cpp" />
     <ClCompile Include="AudioInfo.cpp" />
     <ClCompile Include="AudioListener.cpp" />
     <ClCompile Include="AudioListenerSystem.cpp" />
+    <ClCompile Include="AxisRotate.cpp" />
+    <ClCompile Include="AxisRotationSystem.cpp" />
+    <ClCompile Include="BodyInitData.cpp" />
+    <ClCompile Include="BombActivationPacket.cpp" />
+    <ClCompile Include="CameraControlPacket.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
+    <ClCompile Include="OrbitalMovementSystem.cpp" />
+    <ClCompile Include="ClientConnectToServerSystem.cpp" />
+    <ClCompile Include="ClientEntityCountSystem.cpp" />
+    <ClCompile Include="ClientInfo.cpp" />
+    <ClCompile Include="ClientMeasurementSystem.cpp" />
+    <ClCompile Include="ClientModuleCounterSystem.cpp" />
+    <ClCompile Include="ClientPacketHandlerSystem.cpp" />
+    <ClCompile Include="ClientStateSystem.cpp" />
+    <ClCompile Include="ColorTone.cpp" />
+    <ClCompile Include="ComponentAssemblageAllocator.cpp" />
+    <ClCompile Include="ConnectionPointSet.cpp" />
+    <ClCompile Include="ConnectionVisualizerSystem.cpp" />
+    <ClCompile Include="Connector1to2Module.cpp" />
+    <ClCompile Include="CullingSystem.cpp" />
+    <ClCompile Include="DamageUpdaterSystem.cpp" />
+    <ClCompile Include="DamageVisualizerSystem.cpp" />
+    <ClCompile Include="DestroyOnParticlesDeath.cpp" />
+    <ClCompile Include="DestroyOnParticlesDeathSystem.cpp" />
+    <ClCompile Include="DisconnectPacket.cpp" />
+    <ClCompile Include="DisplayGameStats.cpp" />
+    <ClCompile Include="DisplayPlayerScoreSystem.cpp" />
+    <ClCompile Include="EditSphereSystem.cpp" />
+    <ClCompile Include="EditSphereUpdatePacket.cpp" />
+    <ClCompile Include="EmpRocketLancherModuleSystem.cpp" />
+    <ClCompile Include="EmpRocketLauncherModule.cpp" />
+    <ClCompile Include="EmpModule.cpp" />
+    <ClCompile Include="EntityCreationPacket.cpp" />
+    <ClCompile Include="EntityDeletionPacket.cpp" />
+    <ClCompile Include="EntityFactory.cpp" />
+    <ClCompile Include="EntityUpdatePacket.cpp" />
+    <ClCompile Include="EnvironmentSystem.cpp" />
+    <ClCompile Include="EnvironmentValues.cpp" />
+    <ClCompile Include="ExtrapolationSystem.cpp" />
+    <ClCompile Include="FlareGunModule.cpp" />
+    <ClCompile Include="GameOptionsSystem.cpp" />
+    <ClCompile Include="GamepadRumbleSystem.cpp" />
+    <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="GradientComponent.cpp" />
     <ClCompile Include="GraphicsBackendSystem.cpp" />
+    <ClCompile Include="GraphicsRendererSystem.cpp" />
+    <ClCompile Include="HighlightEntityPacket.cpp" />
+    <ClCompile Include="AnomalyBombEffectSystem.cpp" />
+    <ClCompile Include="HighlightSlotPacket.cpp" />
+    <ClCompile Include="DamageComponent.cpp" />
+    <ClCompile Include="HudSystem.cpp" />
+    <ClCompile Include="HudElement.cpp" />
+    <ClCompile Include="InputActionsBackendSystem.cpp" />
     <ClCompile Include="InputBackendSystem.cpp" />
+    <ClCompile Include="InterpolationSystem.cpp" />
+    <ClCompile Include="InterpolationSystem2.cpp" />
+    <ClCompile Include="LevelInfoLoader.cpp" />
+    <ClCompile Include="LevelGenSystem.cpp" />
+    <ClCompile Include="LevelHandlerSystem.cpp" />
+    <ClCompile Include="LevelInfo.cpp" />
+    <ClCompile Include="LevelPiece.cpp" />
+    <ClCompile Include="LevelPieceRoot.cpp" />
     <ClCompile Include="LibRocketBackendSystem.cpp" />
-    <ClCompile Include="NetworkCommunicatorSystem.cpp" />
-    <ClCompile Include="NetworkInputHandlerSystem.cpp" />
-    <ClCompile Include="NetworkConnectToServerSystem.cpp" />
-    <ClCompile Include="NetworkListenerSystem.cpp" />
-    <ClCompile Include="NetworkUpdateSystem.cpp" />
+    <ClCompile Include="LibRocketEventManagerSystem.cpp" />
+    <ClCompile Include="LibRocketInputHelper.cpp" />
+    <ClCompile Include="LightBlinker.cpp" />
+    <ClCompile Include="LightBlinkerSystem.cpp" />
+    <ClCompile Include="LightRenderSystem.cpp" />
+    <ClCompile Include="LightsComponent.cpp" />
+    <ClCompile Include="LoadMesh.cpp" />
+    <ClCompile Include="LoadMeshSystem.cpp" />
+    <ClCompile Include="LoadMeshSystemClient.cpp" />
+    <ClCompile Include="LoadMeshSystemServer.cpp" />
+    <ClCompile Include="LobbySystem.cpp" />
+    <ClCompile Include="LookAtSystem.cpp" />
+    <ClCompile Include="ModuleHighlightSystem.cpp" />
+    <ClCompile Include="ModuleStatusVisualizationMode.cpp" />
+    <ClCompile Include="PlayerReadyPacket.cpp" />
+    <ClCompile Include="PortalCullingSystem.cpp" />
+    <ClCompile Include="RootBoundingSpherePacket.cpp" />
+    <ClCompile Include="SettingsSystem.cpp" />
+    <ClCompile Include="ShipEngineSystem.cpp" />
+    <ClCompile Include="ShipHighlightSystem.cpp" />
+    <ClCompile Include="SlotHighlightParticleMakerSystem.cpp" />
+    <ClCompile Include="SlotMarkerSystem.cpp" />
+    <ClCompile Include="SoundComponent.cpp" />
+    <ClCompile Include="SoundSystem.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="SpriteSystem.cpp" />
+    <ClCompile Include="TempModuleSpawner.cpp" />
+    <ClCompile Include="MenuBackgroundSceneSystem.cpp" />
+    <ClCompile Include="MenuItem.cpp" />
+    <ClCompile Include="MenuSystem.cpp" />
+    <ClCompile Include="MineControllerSystem.cpp" />
+    <ClCompile Include="MineLayerModuleControllerSystem.cpp" />
+    <ClCompile Include="MineLayerModule.cpp" />
+    <ClCompile Include="MinigunModule.cpp" />
+    <ClCompile Include="MinigunModuleControllerSystem.cpp" />
+    <ClCompile Include="ModuleHelper.cpp" />
+    <ClCompile Include="ModuleStateChangePacket.cpp" />
+    <ClCompile Include="ModuleStatusEffectPacket.cpp" />
+    <ClCompile Include="ModuleStatusEffectSystem.cpp" />
+    <ClCompile Include="ModuleTriggerPacket.cpp" />
+    <ClCompile Include="MoveShipLightsSystem.cpp" />
+    <ClCompile Include="NetsyncDirectMapperSystem.cpp" />
+    <ClCompile Include="NetSyncedPlayerScoreTrackerSystem.cpp" />
+    <ClCompile Include="NewlyConnectedPlayerPacket.cpp" />
+    <ClCompile Include="ModuleVisualEffectServerBufferSystem.cpp" />
+    <ClCompile Include="OnHitScoreEffectPacket.cpp" />
+    <ClCompile Include="ParticleSystemInstructionTranslatorSystem.cpp" />
+    <ClCompile Include="ParticleSystemsComponent.cpp" />
+    <ClCompile Include="ClientPickingSystem.cpp" />
+    <ClCompile Include="ParticleRenderSystem.cpp" />
+    <ClCompile Include="ParticleSystemEmitterSystem.cpp" />
+    <ClCompile Include="ParticleUpdatePacket.cpp" />
+    <ClCompile Include="PingPacket.cpp" />
+    <ClCompile Include="PlayerCameraControllerSystem.cpp" />
+    <ClCompile Include="PlayerInfo.cpp" />
+    <ClCompile Include="PlayersWinLosePacket.cpp" />
+    <ClCompile Include="PlayerSystem.cpp" />
+    <ClCompile Include="PongPacket.cpp" />
+    <ClCompile Include="PositionalSoundSystem.cpp" />
+    <ClCompile Include="RayPacket.cpp" />
+    <ClCompile Include="RockerLauncherModuleControllerSystem.cpp" />
+    <ClCompile Include="RocketControllerSystem.cpp" />
+    <ClCompile Include="RocketLauncherModule.cpp" />
+    <ClCompile Include="GameStatsSystem.cpp" />
+    <ClCompile Include="ScoreRuleHelper.cpp" />
+    <ClCompile Include="ScoreWorldVisualizerSystem.cpp" />
+    <ClCompile Include="SelectionMarkerSystem.cpp" />
+    <ClCompile Include="SelectionMarkerUpdatePacket.cpp" />
+    <ClCompile Include="ServerClientInfoSystem.cpp" />
+    <ClCompile Include="ServerDynamicObjectsSystem.cpp" />
+    <ClCompile Include="ServerDynamicPhysicalObjectsSystem.cpp" />
+    <ClCompile Include="ServerMeasurementSystem.cpp" />
+    <ClCompile Include="ServerPacketHandlerSystem.cpp" />
+    <ClCompile Include="ServerPickingSystem.cpp" />
+    <ClCompile Include="ServerScoreSystem.cpp" />
+    <ClCompile Include="ServerStateSystem.cpp" />
+    <ClCompile Include="ServerStaticObjectsSystem.cpp" />
+    <ClCompile Include="ServerUpdateSystem.cpp" />
+    <ClCompile Include="ServerWelcomeSystem.cpp" />
+    <ClCompile Include="ShadowSystem.cpp" />
+    <ClCompile Include="ShieldPlaterSystem.cpp" />
+    <ClCompile Include="ShieldPlatingSystem.cpp" />
+    <ClCompile Include="ShipConnectionPointHighlights.cpp" />
+    <ClCompile Include="ShipEditControllerSystem.cpp" />
+    <ClCompile Include="ShipFlyControllerSystem.cpp" />
+    <ClCompile Include="ShipInputProcessingSystem.cpp" />
+    <ClCompile Include="ShieldModule.cpp" />
+    <ClCompile Include="ShieldModuleControllerSystem.cpp" />
+    <ClCompile Include="ShipManagerSystem.cpp" />
+    <ClCompile Include="ShipModule.cpp" />
+    <ClCompile Include="PhysicsBody.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
+    <ClCompile Include="PlayerComponent.cpp" />
     <ClCompile Include="ProcessingMessagesSystem.cpp" />
     <ClCompile Include="RenderInfo.cpp" />
     <ClCompile Include="LibRocketRenderInterface.cpp" />
-    <ClCompile Include="RenderPrepSystem.cpp" />
-    <ClCompile Include="ShipControllerSystem.cpp" />
+    <ClCompile Include="MeshRenderSystem.cpp" />
     <ClCompile Include="LibRocketSystemInterface.cpp" />
+    <ClCompile Include="ShipModulesControllerSystem.cpp" />
+    <ClCompile Include="ShipModuleStatsSystem.cpp" />
+    <ClCompile Include="ShipModulesTrackerSystem.cpp" />
+    <ClCompile Include="ShipParticleSystemUpdater.cpp" />
+    <ClCompile Include="SimpleEventPacket.cpp" />
+    <ClCompile Include="DebugMovementSystem.cpp" />
+    <ClCompile Include="RemoveSoundEffectPacket.cpp" />
+    <ClCompile Include="ShipSlotControllerSystem.cpp" />
+    <ClCompile Include="SkeletalAnimation.cpp" />
+    <ClCompile Include="SkeletalAnimationSystem.cpp" />
+    <ClCompile Include="SlotParticleEffectPacket.cpp" />
+    <ClCompile Include="SpawnPointSystem.cpp" />
+    <ClCompile Include="SpawnExplosionPacket.cpp" />
+    <ClCompile Include="SpawnPointSet.cpp" />
+    <ClCompile Include="SpawnSoundEffectPacket.cpp" />
+    <ClCompile Include="SpeedBoostModuleControllerSystem.cpp" />
+    <ClCompile Include="SpeedBoosterModule.cpp" />
+    <ClCompile Include="SpeedBuffer.cpp" />
+    <ClCompile Include="SpeedBufferUpdaterSystem.cpp" />
+    <ClCompile Include="SpeedFovAdjustSystem.cpp" />
+    <ClCompile Include="StandardMine.cpp" />
+    <ClCompile Include="StandardRocket.cpp" />
+    <ClCompile Include="TeslaCoilEffect.cpp" />
+    <ClCompile Include="TeslaCoilModule.cpp" />
+    <ClCompile Include="TeslaCoilModuleControllerSystem.cpp" />
+    <ClCompile Include="TeslaEffectPiece.cpp" />
+    <ClCompile Include="TeslaEffectSystem.cpp" />
+    <ClCompile Include="TeslaHitPacket.cpp" />
+    <ClCompile Include="ThrustComponent.cpp" />
+    <ClCompile Include="TeslaLightningSystem.cpp" />
+    <ClCompile Include="ThrustPacket.cpp" />
+    <ClCompile Include="TimerSystem.cpp" />
     <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="Vector3.cpp" />
+    <ClCompile Include="TransformParentHandlerSystem.cpp" />
+    <ClCompile Include="UpdateClientStatsPacket.cpp" />
+    <ClCompile Include="Vibration.cpp" />
+    <ClCompile Include="WelcomePacket.cpp" />
+    <ClCompile Include="WinningConditionSystem.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{31187F8A-0A57-4E1E-AAFF-C2EFF38F6F5F}</ProjectGuid>
@@ -105,15 +512,15 @@
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/AgilePhysics/Src;$(SolutionDir)Projects/Audio/Src;$(SolutionDir)External/XAudio2/Include/;$(SolutionDir)External/libRocket/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/AgilePhysics/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)External/XAudio2/Lib;$(SolutionDir)External/libRocket/bin;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AgilePhysics/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Audio/Src;$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/XAudio2/Include/;$(SolutionDir)External/libRocket/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AgilePhysics/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib;$(SolutionDir)External/XAudio2/Lib;$(SolutionDir)External/libRocket/bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)Projects/AgilePhysics/Src;$(SolutionDir)Projects/Audio/Src;$(SolutionDir)External/XAudio2/Include/;$(SolutionDir)External/libRocket/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)Projects/AgilePhysics/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)External/XAudio2/Lib;$(SolutionDir)External/libRocket/bin;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AgilePhysics/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Audio/Src;$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/ES/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Input/Src;$(SolutionDir)Projects/NetComm/Src;$(SolutionDir)Projects/Util/Src;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)External/Ant/include;$(SolutionDir)External/FreeImage/include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/XAudio2/Include/;$(SolutionDir)External/libRocket/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AgilePhysics/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/ES/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Input/Lib;$(SolutionDir)Projects/NetComm/Lib;$(SolutionDir)Projects/Util/Lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)External/Ant/lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib;$(SolutionDir)External/XAudio2/Lib;$(SolutionDir)External/libRocket/bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -122,17 +529,29 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WIN32_WINDOWS;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <MultiProcessorCompilation>
+      </MultiProcessorCompilation>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableParallelCodeGeneration>
+      </EnableParallelCodeGeneration>
+      <MinimalRebuild>false</MinimalRebuild>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>AgilePhysics_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Audio_$(PlatformShortName)_$(Configuration).lib;RocketCore_d.lib;RocketDebugger_d.lib;RocketControls_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>RocketCore_d.lib;RocketDebugger_d.lib;RocketControls_d.lib;FreeImage.lib;%(AdditionalDependencies);AgileAssets_x86_$(Configuration).lib</AdditionalDependencies>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -143,6 +562,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_WIN32_WINDOWS;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -151,8 +571,11 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>AgilePhysics_x86_$(Configuration).lib;ES_x86_$(Configuration).lib;Graphics_x86_$(Configuration).lib;Input_x86_$(Configuration).lib;NetComm_x86_$(Configuration).lib;Audio_$(PlatformShortName)_$(Configuration).lib;RocketCore.lib;RocketDebugger.lib;RocketControls.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>RocketCore.lib;RocketDebugger.lib;RocketControls.lib;FreeImage.lib;%(AdditionalDependencies);AgileAssets_x86_$(Configuration).lib</AdditionalDependencies>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

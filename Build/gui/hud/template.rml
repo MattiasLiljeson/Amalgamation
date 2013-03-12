@@ -1,0 +1,13 @@
+<template name="window" content="content">
+<head>
+	<link type="text/css" href="rkt.rcss"/>
+	<link type="text/css" href="tutorial.rcss"/>
+</head>
+<body class="window">
+	<div id="title-bar">
+		<span id="title">Dummy Title</span>
+	</div>
+	<div id="content">
+	</div>
+</body>
+</template>

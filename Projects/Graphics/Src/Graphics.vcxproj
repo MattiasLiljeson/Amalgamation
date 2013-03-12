@@ -12,6 +12,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AntTweakBarWrapper.cpp" />
+    <ClCompile Include="DeferredAnimatedBaseShader.cpp" />
+    <ClCompile Include="DeferredTessAnimatedBaseShader.cpp" />
+    <ClCompile Include="DeferredTessBaseShader.cpp" />
+    <ClCompile Include="Event.cpp" />
+    <ClCompile Include="EventHandler.cpp" />
+    <ClCompile Include="EventInstancer.cpp" />
+    <ClCompile Include="GPUTimer.cpp" />
+    <ClCompile Include="LightMesh.cpp" />
+    <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="BufferConfig.cpp" />
     <ClCompile Include="BufferBase.cpp" />
@@ -20,15 +29,34 @@
     <ClCompile Include="DeferredRenderer.cpp" />
     <ClCompile Include="DeferredComposeShader.cpp" />
     <ClCompile Include="DeferredBaseShader.cpp" />
-    <ClCompile Include="RocketShader.cpp" />
+    <ClCompile Include="GUIShader.cpp" />
+    <ClCompile Include="ModelExtendedFactory.cpp" />
+    <ClCompile Include="ParticleRenderer.cpp" />
+    <ClCompile Include="ParticleShader.cpp" />
+    <ClCompile Include="RenderStateHelper.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
+    <ClCompile Include="ShadowMapRenderer.cpp" />
+    <ClCompile Include="ShadowShader.cpp" />
+    <ClCompile Include="TextureFactory.cpp" />
     <ClCompile Include="TextureParser.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AntTweakBarWrapper.h" />
+    <ClInclude Include="DeferredAnimatedBaseShader.h" />
+    <ClInclude Include="DeferredTessAnimatedBaseShader.h" />
+    <ClInclude Include="DeferredTessBaseShader.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventHandler.h" />
+    <ClInclude Include="EventInstancer.h" />
+    <ClInclude Include="EventManager.h" />
     <ClInclude Include="FreeImageException.h" />
+    <ClInclude Include="GPUTimer.h" />
+    <ClInclude Include="GPUTimerProfile.h" />
+    <ClInclude Include="LightMesh.h" />
+    <ClInclude Include="LightShader.h" />
+    <ClInclude Include="MaterialInfo.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="BufferConfig.h" />
@@ -41,18 +69,35 @@
     <ClInclude Include="DeferredRenderer.h" />
     <ClInclude Include="DeferredComposeShader.h" />
     <ClInclude Include="DIndex.h" />
+    <ClInclude Include="ModelExtendedFactory.h" />
+    <ClInclude Include="ParticleCBuffer.h" />
+    <ClInclude Include="ParticleRenderer.h" />
+    <ClInclude Include="ParticleShader.h" />
+    <ClInclude Include="ParticleSystemAndTexture.h" />
+    <ClInclude Include="PerShadowCBuffer.h" />
     <ClInclude Include="PNTTBVertex.h" />
     <ClInclude Include="PNTVertex.h" />
     <ClInclude Include="PTVertex.h" />
     <ClInclude Include="DeferredBaseShader.h" />
+    <ClInclude Include="PVertex.h" />
     <ClInclude Include="RendererSceneInfo.h" />
-    <ClInclude Include="RocketShader.h" />
+    <ClInclude Include="GUIShader.h" />
+    <ClInclude Include="RenderInterface.h" />
+    <ClInclude Include="RenderSceneInfoCBuffer.h" />
+    <ClInclude Include="RenderStateEnums.h" />
+    <ClInclude Include="RenderStateHelper.h" />
     <ClInclude Include="ShaderBase.h" />
     <ClInclude Include="ShaderStageConfig.h" />
     <ClInclude Include="ShaderFactory.h" />
-    <ClInclude Include="ShaderInitStruct.h" />
+    <ClInclude Include="ShaderVariableContainer.h" />
     <ClInclude Include="ShaderStageData.h" />
+    <ClInclude Include="ShadowCBuffer.h" />
+    <ClInclude Include="ShadowMapRenderer.h" />
+    <ClInclude Include="ShadowShader.h" />
+    <ClInclude Include="SkeletonMappingVertex.h" />
+    <ClInclude Include="SSAOCBuffer.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureFactory.h" />
     <ClInclude Include="TextureParser.h" />
     <ClInclude Include="WindowException.h" />
     <ClInclude Include="Window.h" />
@@ -89,18 +134,18 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetExt>.lib</TargetExt>
-    <LibraryPath>$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(SolutionDir)External/Ant/Lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(SolutionDir)External/Ant/Lib;$(SolutionDir)External/LibRocket/bin;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
     <SourcePath>$(SourcePath)</SourcePath>
     <ExcludePath>$(ExcludePath)</ExcludePath>
-    <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/Ant/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/LibRocket/include;$(SolutionDir)External/Ant/include;C:/Program Files (x86)/boost/boost_1_52;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.lib</TargetExt>
-    <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/Ant/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External\Visual Leak Detector\lib\Win32;$(SolutionDir)External/Ant/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Projects/Common/Src;$(SolutionDir)Projects/AgileUtility/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(SolutionDir)Projects/Util/Src;$(SolutionDir)External/FreeImage/Include;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)External/LibRocket/include;$(SolutionDir)External/Ant/include;C:/Program Files (x86)/boost/boost_1_52;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects/Common/Lib;$(SolutionDir)Projects/AgileUtility/Lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)External/FreeImage/Lib;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(SolutionDir)External/Ant/Lib;$(SolutionDir)External/LibRocket/bin;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)..\Lib\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
@@ -114,12 +159,25 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>FreeImage.lib;AgileUtility_x86_Debug.lib;Util_x86_Debug.lib;AssetsManagement_x86_Debug.lib;d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <Lib>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -130,6 +188,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -138,6 +197,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>FreeImage.lib;AgileUtility_x86_Release.lib;Util_x86_Release.lib;AssetsManagement_x86_Release.lib;d3d11.lib;d3dcompiler.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

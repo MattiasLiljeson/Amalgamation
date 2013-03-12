@@ -21,6 +21,7 @@ void AGLExporter::AddMesh(MeshData* pData)
 	h.indexCount = pData->IndicesCount;
 	h.vertexCount = pData->VertexCount;
 	h.vertexFormat = pData->VertexFormat;
+	h.transform = pData->Transform;
 
 	//Write a loose bsp tree for the mesh
 	vector<AglVector3> verts;
@@ -69,6 +70,7 @@ void AGLExporter::AddSkeleton(SkeletonData* pData)
 	AglSkeletonHeader h;
 	h.jointCount = pData->Joints.size();
 	h.nameID = mScene->addName(pData->Name);
+	h.baseTransform = AglMatrix::identityMatrix();
 
 	AglJoint* joints = new AglJoint[pData->Joints.size()];
 	for (unsigned int i = 0; i < pData->Joints.size(); i++)
@@ -77,7 +79,7 @@ void AGLExporter::AddSkeleton(SkeletonData* pData)
 		joints[i].nodeID = pData->Joints[i]->NodeID;
 		joints[i].parentIndex = pData->Joints[i]->Parent;
 	}
-	mSkeletons.push_back(new AglSkeleton(h, joints, NULL));
+	mSkeletons.push_back(new AglSkeleton(h, joints, mScene));
 	mScene->addSkeleton(mSkeletons.back());
 }
 void AGLExporter::AddMeshSkeletonMapping(AglSkeletonMapping* pData)
@@ -169,6 +171,11 @@ void AGLExporter::AddMaterialMapping(AglMaterialMapping* pData)
 	mMaterialMappings.push_back(m);
 	mScene->addMaterialMapping(m);
 }
+void AGLExporter::AddConnectionPoint(pair<AglConnectionPoint, string> pCP)
+{
+	pCP.first.nameID = mScene->addName(pCP.second);
+	mScene->addConnectionPoint(pCP.first);
+}
 
 void AGLExporter::Write()
 {
@@ -187,6 +194,27 @@ void AGLExporter::Write()
 		mMaterialMappings.push_back(m);
 		mScene->addMaterialMapping(m);
 	}
+
+	//Update mesh transforms if the mesh has a skeleton
+	/*for (unsigned int i = 0; i < mMeshSkeletonMappings.size(); i++)
+	{
+		int m = mMeshSkeletonMappings[i]->getHeader().meshID;
+		int s = mMeshSkeletonMappings[i]->getHeader().skeletonID;
+
+		if (true)//mMeshes[m]->getHeader().transform == AglMatrix::identityMatrix())
+		{
+			AglJoint* root = mSkeletons[s]->getRoot();
+			AglMatrix invBind = mSkeletons[s]->getInverseBindMatrix(root->id);
+			AglMatrix trans = mSkeletons[s]->getGlobalTransform(root->id);
+			mMeshes[m]->setTransform(invBind*trans);
+		}
+	}*/
+
+
+
+	//Flip the scene - TURNED OFF. MAY NOT WORK!
+	//AglMatrix transform(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+	//mScene->transform(transform);
 
 	AglWriter writer(mPath);
 	writer.write(mScene);

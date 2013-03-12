@@ -1,0 +1,9 @@
+<rml>
+	<head>
+		<title>Demo</title>
+		<link type="text/template" href="index.rml" />
+	</head>
+	<body template="window">
+		Will eat your brain.
+	</body>
+</rml>

@@ -1,72 +1,184 @@
 #include "ClientApplication.h"
-#include <boost/thread/thread.hpp>
+#include <windows.h>
 
-#ifdef _COMBINE_CLIENT_AND_SERVER
-	#include "ServerApplication.h"
-#endif
+#include "ServerApplication.h"
 
 #include <EntityWorld.h>
 #include <Input.h>
+#include <ComponentAssemblageAllocator.h>
 
 // Components
 #include <AudioInfo.h>
 #include <AudioListener.h>
 #include <BodyInitData.h>
+#include <OrbitalMovement.h>
+#include <ConnectionPointSet.h>
+#include <Connector1to2Module.h>
+#include <DebugMove.h>
+#include <EntityParent.h>
+#include <GameState.h>
+#include <GameplayTags.h>
+#include <HudElement.h>
+#include <InterpolationComponent.h>
+#include <LightsComponent.h>
+#include <LoadMesh.h>
+#include <MineLayerModule.h>
+#include <MinigunModule.h>
+#include <ParticleSystemsComponent.h>
 #include <PhysicsBody.h>
-#include <PhysicsSystem.h>
+#include <PlayerCameraController.h>
+#include <SoundComponent.h>
 #include <RenderInfo.h>
-#include <ShipController.h>
+#include <RocketLauncherModule.h>
+#include <ShieldModule.h>
+#include <ShipEditController.h>
+#include <ShipFlyController.h>
+#include <ShipModule.h>
+#include <SpeedBoosterModule.h>
 #include <Transform.h>
 
 // Systems
+#include <AnomalyBombEffectSystem.h>
+#include <AntTweakBarEnablerSystem.h>
+#include <AntTweakBarSystem.h>
 #include <AudioBackendSystem.h>
-#include <AudioController.h>
 #include <AudioListenerSystem.h>
+#include <AxisRotationSystem.h>
+#include <CameraInfo.h>
 #include <CameraSystem.h>
+#include <OrbitalMovementSystem.h>
+#include <ClientConnectToServerSystem.h>
+#include <ClientEntityCountSystem.h>
+#include <ClientMeasurementSystem.h>
+#include <ClientPacketHandlerSystem.h>
+#include <ClientPickingSystem.h>
+#include <ClientStateSystem.h>
+#include <ConnectionVisualizerSystem.h>
+#include <CullingSystem.h>
+#include <DamageUpdaterSystem.h>
+#include <DamageVisualizerSystem.h>
+#include <DebugMovementSystem.h>
+#include <DisplayPlayerScoreSystem.h>
+#include <EditSphereSystem.h>
+#include <EntityFactory.h>
+#include <EnvironmentSystem.h>
+#include <ExtrapolationSystem.h>
+#include <GameOptionsSystem.h>
+#include <GameStatsSystem.h>
+#include <GamepadRumbleSystem.h>
 #include <GraphicsBackendSystem.h>
+#include <GraphicsRendererSystem.h>
+#include <HudSystem.h>
+#include <InputActionsBackendSystem.h>
 #include <InputBackendSystem.h>
+#include <InterpolationSystem.h>
+#include <InterpolationSystem2.h>
+#include <LevelGenSystem.h>
+#include <LevelHandlerSystem.h>
+#include <LevelInfoLoader.h>
 #include <LibRocketBackendSystem.h>
-#include <NetworkCommunicatorSystem.h>
-#include <NetworkConnectToServerSystem.h>
+#include <LibRocketEventManagerSystem.h>
+#include <LightBlinkerSystem.h>
+#include <LightRenderSystem.h>
+#include <LoadMeshSystemClient.h>
+#include <LobbySystem.h>
+#include <LookAtEntity.h>
+#include <LookAtSystem.h>
+#include <MenuBackgroundSceneSystem.h>
+#include <MenuSystem.h>
+#include <MeshRenderSystem.h>
+#include <MineControllerSystem.h>
+#include <MineLayerModuleControllerSystem.h>
+#include <MinigunModuleControllerSystem.h>
+#include <MoveShipLightsSystem.h>
+#include <NetSyncedPlayerScoreTrackerSystem.h>
+#include <NetsyncDirectMapperSystem.h>
+#include <OutputLogger.h>
+#include <ParticleRenderSystem.h>
+#include <ParticleSystemInstructionTranslatorSystem.h>
 #include <PhysicsSystem.h>
+#include <PlayerCameraControllerSystem.h>
+#include <PositionalSoundSystem.h>
 #include <ProcessingMessagesSystem.h>
-#include <RenderPrepSystem.h>
-#include <ShipControllerSystem.h>
+#include <RocketLauncherModuleControllerSystem.h>
+#include <ScoreWorldVisualizerSystem.h>
+#include <SelectionMarkerSystem.h>
+#include <SettingsSystem.h>
+#include <ShadowSystem.h>
+#include <ShieldModuleControllerSystem.h>
+#include <ShieldPlaterSystem.h>
+#include <ShieldPlatingSystem.h>
+#include <ShipEditControllerSystem.h>
+#include <ShipFlyControllerSystem.h>
+#include <ShipInputProcessingSystem.h>
+#include <ShipModulesControllerSystem.h>
+#include <ShipParticleSystemUpdater.h>
+#include <SkeletalAnimationSystem.h>
+#include <SlotHighlightParticleMakerSystem.h>
+#include <SpeedBufferUpdaterSystem.h>
+#include <SpeedFovAdjustSystem.h>
+#include <SpriteSystem.h>
+#include <SlotMarkerSystem.h>
+#include <TeslaEffectSystem.h>
+#include <TeslaLightningSystem.h>
+#include <TimerSystem.h>
+#include <TransformParentHandlerSystem.h>
+#include <ShipHiglightSystem.h>
+#include <ModuleHighlightSystem.h>
+#include <PortalCullingSystem.h>
+#include <ClientModuleCounterSystem.h>
+#include <AddToParentSystem.h>
+
+// Helpers
+#include <ConnectionPointCollection.h>
+#include <vector>
+
+using namespace std;
 
 // MISC
+#include <time.h>
 #include <AntTweakBarWrapper.h>
+#include <LightInstanceData.h>
+#include <ShipSlotControllerSystem.h>
+#include <MeshOffsetTransform.h>
+#include <RandomUtil.h>
+#include <DestroyOnParticlesDeathSystem.h>
+#include <ModuleStatusEffectSystem.h>
+
+// unsorted includes. Sort these as soon as they're added!
+#include <PlayerSystem.h>
+#include <SoundSystem.h>
+#include <ShipEngineSystem.h>
+
+
+#define FORCE_VS_DBG_OUTPUT
 
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
-	try{
 		m_running = false;
-
 		m_hInstance = p_hInstance;
-
 		m_client = new TcpClient();
-
 		m_world = new EntityWorld();
 
-#ifdef _COMBINE_CLIENT_AND_SERVER
-		m_serverApp = new Srv::ServerApplication();
-#endif // !_COMBINE_CLIENT_AND_SERVER
+		m_serverApp = NULL;
 
+		// Systems first!
 		initSystems();
+
+		// Test entities later!
 		initEntities();
-	}
-	catch(exception& e)
-	{
-		DEBUGPRINT((e.what()));
-	}
 }
 
 ClientApplication::~ClientApplication()
 {
+	if(m_serverApp != NULL){
+		ProcessMessage* newMessage = new ProcessMessage(MessageType::TERMINATE,NULL);
+		m_serverApp->putMessage( newMessage );
+		m_serverApp->stop();
+		delete m_serverApp;
+	}
 
-#ifdef _COMBINE_CLIENT_AND_SERVER
-	delete m_serverApp;
-#endif // !_COMBINE_CLIENT_AND_SERVER
 	delete m_world;
 	delete m_client;
 }
@@ -88,7 +200,7 @@ void ClientApplication::run()
 	QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
 
 	MSG msg = {0};
-	while(WM_QUIT != msg.message)
+	while(m_running)
 	{
 		if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE) )
 		{
@@ -101,20 +213,30 @@ void ClientApplication::run()
 			dt = (currTimeStamp - m_prevTimeStamp) * secsPerCount;
 
 			m_prevTimeStamp = currTimeStamp;
-			
-			// DEBUGPRINT(( (toString(dt)+string("\n")).c_str() ));
 
 			m_world->setDelta((float)dt);
 			m_world->process();
+
+			if(m_world->shouldShutDown()) {
+				static_cast<SettingsSystem*>(
+					m_world->getSystem( SystemType::SettingsSystem ) )->writeSettingsFile(SETTINGSPATH);
+				m_running = false;
+			}
 			
-			#ifdef _COMBINE_CLIENT_AND_SERVER
-				m_serverApp->step( static_cast<float>(dt) );
-			#endif
-
-			boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+			if(m_world->isHostingServer() && m_serverApp == NULL){
+				m_serverApp = new Srv::ServerApplication();
+				m_serverApp->start();
+			}
+			else if (!m_world->isHostingServer() && m_serverApp != NULL){
+				ProcessMessage* newMessage = new ProcessMessage(MessageType::TERMINATE,NULL);
+				m_serverApp->putMessage( newMessage );
+				m_serverApp->stop();
+				delete m_serverApp;
+				m_serverApp = NULL;
+			}
 		}
-	}
 
+	}
 }
 
 void ClientApplication::initSystems()
@@ -124,323 +246,316 @@ void ClientApplication::initSystems()
 	// systems are added here is the order the systems will be processed
 	//----------------------------------------------------------------------------------
 
+	SettingsSystem* settingsSystem = new SettingsSystem();
+	settingsSystem->readSettingsFile(SETTINGSPATH);
+	GameSettingsInfo settings = settingsSystem->getSettings();
+	m_world->setSystem( settingsSystem );
 
 	/************************************************************************/
-	/* Physics																*/
+	/* TimerSystem used by other systems should be first.					*/
 	/************************************************************************/
-	PhysicsSystem* physics = new PhysicsSystem();
-	m_world->setSystem(SystemType::PhysicsSystem, physics, true);
-	
+	m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
+
+	/************************************************************************/
+	/* Game State system.													*/
+	/************************************************************************/
+	m_world->setSystem( new ClientStateSystem( GameStates::MENU ) );
+
+	/************************************************************************/
+	/* PlayerSystem allows for accessing connected players					*/
+	/************************************************************************/
+	m_world->setSystem( new PlayerSystem(), true);
+
 	/************************************************************************/
 	/* Graphics																*/
 	/************************************************************************/
-	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance );
-	m_world->setSystem( graphicsBackend, true );
+	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance,
+		settings );
 
-	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend );
-	m_world->setSystem( rocketBackend, true );
+	m_world->setSystem( graphicsBackend );
 
-	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, graphicsBackend );
-	m_world->setSystem( inputBackend, true);
+	/************************************************************************/
+	/* Entity creation														*/
+	/************************************************************************/
+	m_world->setSystem( new EntityFactory(m_client, NULL) );
 
-	// Controller system for the ship
-	ShipControllerSystem* shipController = new ShipControllerSystem(inputBackend, physics,
-		m_client );
-	m_world->setSystem( shipController, true);
+	/************************************************************************/
+	/* Level handling														*/
+	/************************************************************************/
+	m_world->setSystem( new LevelHandlerSystem() );
+	m_world->setSystem( new LevelInfoLoader() );
 
-	// Camera system updates camera based on input and sets its viewport info
-	// to the graphics backend for render
-	CameraSystem* camera = new CameraSystem( graphicsBackend, inputBackend );
-	m_world->setSystem( camera , true );
+	/************************************************************************/
+	/* Mesh loading															*/
+	/************************************************************************/
+	// Note! Must set *after* EntityFactory and GraphicsBackend, and *before* Physics
+	m_world->setSystem( new LoadMeshSystemClient(graphicsBackend) ); 
+	m_world->setSystem( new ParticleSystemInstructionTranslatorSystem( graphicsBackend ) );
+	/************************************************************************/
+	/* Physics																*/
+	/************************************************************************/
+	//PhysicsSystem* physics = new PhysicsSystem( NULL );
+	//m_world->setSystem( physics );
 
-	RenderPrepSystem* renderer = new RenderPrepSystem( graphicsBackend, rocketBackend );
-	m_world->setSystem( renderer , true );
+	/************************************************************************/
+	/* General controlling													*/
+	/************************************************************************/
+	m_world->setSystem( new LookAtSystem(NULL) );
+	m_world->setSystem( new SpeedBufferUpdaterSystem() );
+	m_world->setSystem( new DamageUpdaterSystem() );
+	
+	/************************************************************************/
+	/* Input																*/
+	/************************************************************************/
+	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, 
+		graphicsBackend );
+	m_world->setSystem( inputBackend );
+	m_world->setSystem( new InputActionsBackendSystem( SETTINGSPATH + "stdSettings.input" ) );
+
+	GamepadRumbleSystem* rumbleSys = new GamepadRumbleSystem( inputBackend );
+	rumbleSys->setRumbleEnabled( settings.rumble );
+	m_world->setSystem( rumbleSys );
+
+	/************************************************************************/
+	/* Culling																*/
+	/************************************************************************/
+	m_world->setSystem(new PortalCullingSystem());
+	m_world->setSystem(new CullingSystem() );
+
+	
+	/************************************************************************/
+	/* GUI																	*/
+	/************************************************************************/
+	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend,
+		inputBackend );
+	m_world->setSystem( rocketBackend );
+
+	m_world->setSystem( new LobbySystem() );
+	m_world->setSystem( new HudSystem( rocketBackend ) );
+	m_world->setSystem( new LibRocketEventManagerSystem(m_client) );
+	m_world->setSystem( new GameOptionsSystem() );
+	m_world->setSystem( new DamageVisualizerSystem( graphicsBackend ) );
+
+	// NOTE: MenuSystem looks up all systems that's also deriving from EventHandler, so
+	// that they can be properly be added to the LibRocketEventManager.
+	// The alternative would be that every event handler adds itself.
+	m_world->setSystem( new MenuSystem() );
+
+
+	/************************************************************************/
+	/* Effects																*/
+	/************************************************************************/
+	m_world->setSystem( new SlotHighlightParticleMakerSystem(), false );
+	m_world->setSystem( new ScoreWorldVisualizerSystem() );
+	m_world->setSystem( new ModuleStatusEffectSystem() );
+	m_world->setSystem( new ConnectionVisualizerSystem() );
+	m_world->setSystem( new ShipParticleSystemUpdater() );
+	m_world->setSystem( new EditSphereSystem() );
+	m_world->setSystem( new SelectionMarkerSystem());
+	m_world->setSystem( new ShipHighlightSystem());
+	m_world->setSystem( new ModuleHighlightSystem());
+
+	/************************************************************************/
+	/* Player    															*/
+	/************************************************************************/
+	// Input system for ships
+	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend);
+	m_world->setSystem( shipInputProc );
+	SlotInputControllerSystem* slotInput = new SlotInputControllerSystem(inputBackend, m_client);
+	m_world->setSystem( slotInput );
+
+	// Controller systems for the ship
+	m_world->setSystem( new ShipFlyControllerSystem(shipInputProc, NULL, m_client, slotInput ));
+	m_world->setSystem( new ShipEditControllerSystem(shipInputProc, NULL, slotInput) );
+
+	/************************************************************************/
+	/* Hierarchy															*/
+	/************************************************************************/
+	m_world->setSystem( new EntityParentHandlerSystem() );
+
+
+	/************************************************************************/
+	/* Camera																*/
+	/************************************************************************/
+	// Chamber fog and ambient
+	m_world->setSystem( new EnvironmentSystem() );
+
+	// Controller logic for camera
+	m_world->setSystem( new PlayerCameraControllerSystem( shipInputProc, m_client ) );
+	// Camera system sets its viewport info to the graphics backend for render
+	m_world->setSystem( new CameraSystem( graphicsBackend ) );
+
+	m_world->setSystem( new SpeedFovAdjustSystem() );
+
+	/************************************************************************/
+	/* Sprites																*/
+	/************************************************************************/
+	SpriteSystem* spriteSystem = new SpriteSystem();
+	m_world->setSystem(spriteSystem);
+
+	/************************************************************************/
+	/* Renderer																*/
+	/************************************************************************/
+	MeshRenderSystem* renderer = new MeshRenderSystem( graphicsBackend );
+	m_world->setSystem( renderer );
+
+	ParticleRenderSystem* particleRender = new ParticleRenderSystem( graphicsBackend );
+	m_world->setSystem( particleRender );
+
+	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
+	m_world->setSystem( lightRender );
+	
+	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
+	m_world->setSystem( antTweakBar, false );
+
+	ShadowSystem* shadowSystem = new ShadowSystem ();
+	m_world->setSystem( shadowSystem );
 
 	/************************************************************************/
 	/* Network																*/
 	/************************************************************************/
-	ProcessingMessagesSystem* msgProcSystem = new ProcessingMessagesSystem( m_client );
-	m_world->setSystem( msgProcSystem , true );
-
-	NetworkConnectToServerSystem* connect =
-		new NetworkConnectToServerSystem( m_client, inputBackend );
-	m_world->setSystem( connect, true );
-
-	NetworkCommunicatorSystem* communicatorSystem =
-		new NetworkCommunicatorSystem( m_client );
-	m_world->setSystem( communicatorSystem, false );
+	m_world->setSystem( new ProcessingMessagesSystem( m_client ) );
+	m_world->setSystem( new ClientConnectToServerSystem( m_client, false ) );
+	m_world->setSystem( new NetsyncDirectMapperSystem() );
+	m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem() );
+	m_world->setSystem( new ClientPacketHandlerSystem( m_client ) );
+	m_world->setSystem( new ExtrapolationSystem( m_client ) );
 
 	/************************************************************************/
-	/* Audio															*/
+	/* Interpolation  														*/
+	/************************************************************************/
+	// InterpolationSystem* interpolationSystem = new InterpolationSystem();
+	// m_world->setSystem( interpolationSystem, true);
+	InterpolationSystem2* inter = new InterpolationSystem2();
+	m_world->setSystem(inter, true);
+
+	/************************************************************************/
+	/* Audio																*/
 	/************************************************************************/
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
-	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
+	m_world->setSystem( audioBackend );
+	m_world->setSystem( new ShipEngineSystem() );
 
-	AudioController* audioController = new AudioController(audioBackend);
-	m_world->setSystem( SystemType::AudioControllerSystem, audioController, true);
+	//Must be last the last systems that handles any sound operations
+	//otherwise a one frame delay will be added. Robin T
+	m_world->setSystem( new AudioListenerSystem(audioBackend) );
+	m_world->setSystem( new PositionalSoundSystem() );
+	m_world->setSystem( new SoundSystem(audioBackend) );
 
-	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
-	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
-	
+	/************************************************************************/
+	/* Gameplay																*/
+	/************************************************************************/
+	m_world->setSystem( new DisplayPlayerScoreSystem(m_client) );
+	m_world->setSystem( new ClientPickingSystem(m_client) );
+	m_world->setSystem( new GameStatsSystem() );
+	m_world->setSystem( new LightBlinkerSystem() );
+	m_world->setSystem( new ShieldPlatingSystem() );
+	m_world->setSystem( new SlotMarkerSystem() );
+	m_world->setSystem( new AnomalyBombEffectSystem() );
+	m_world->setSystem( new ShieldPlaterSystem() );
+	m_world->setSystem( new TeslaEffectSystem() );
+	m_world->setSystem( new TeslaLightningSystem() );
+
+	/************************************************************************/
+	/* Animation															*/
+	/************************************************************************/
+	m_world->setSystem( new SkeletalAnimationSystem() );
+
+	/************************************************************************/
+	/* Graphics representer													*/
+	/************************************************************************/
+	m_world->setSystem( new GraphicsRendererSystem( graphicsBackend, shadowSystem,
+		renderer, rocketBackend, particleRender, antTweakBar, lightRender, settings ) );
+
+	/************************************************************************/
+	/* Destroyers															*/
+	/************************************************************************/
+	m_world->setSystem( new DestroyOnParticlesDeathSystem() );
+
+
+	m_world->setSystem(new AddToParentSystem());
+
+	/************************************************************************/
+	/* Debugging															*/
+	/************************************************************************/
+	m_world->setSystem( new DebugMovementSystem(), false );
+	m_world->setSystem( new MenuBackgroundSceneSystem() );
+	m_world->setSystem( new OrbitalMovementSystem() );
+	m_world->setSystem( new AxisRotationSystem() );
+	m_world->setSystem( new MoveShipLightsSystem() );
+	m_world->setSystem( new ClientMeasurementSystem() );
+	m_world->setSystem( new ClientEntityCountSystem() );
+	m_world->setSystem( new AntTweakBarEnablerSystem() );
+	m_world->setSystem( new OutputLogger("log_client.txt"));
+	m_world->setSystem( new ClientModuleCounterSystem() );
+
+
 	m_world->initialize();
+
+	// Run component assemblage allocator (not a system, so don't delete)
+	ComponentAssemblageAllocator* allocator = new ComponentAssemblageAllocator();
+	delete allocator; // NOTE: (Johan) Why u delete when u say "don't delete"?
 }
 
 void ClientApplication::initEntities()
 {
-	Entity* entity;
-	Component* component;
+	Entity* entity = NULL;
+	Component* component = NULL;
+
+	// Read from assemblage
+	AssemblageHelper::E_FileStatus status = AssemblageHelper::FileStatus_OK;
+	EntityFactory* factory = static_cast<EntityFactory*>
+		( m_world->getSystem( SystemType::EntityFactory ) );
+
+	status = factory->readAssemblageFile( "Assemblages/testSpotLight.asd" );
 
 	EntitySystem* tempSys = NULL;
 
-	// Load cube model used as graphic representation for all "graphical" entities.
 	tempSys = m_world->getSystem(SystemType::GraphicsBackendSystem);
 	GraphicsBackendSystem* graphicsBackend = static_cast<GraphicsBackendSystem*>(tempSys);
-	int cubeMeshId = graphicsBackend->createMesh( "P_cube" );
-	int shipMeshId = graphicsBackend->createMesh( "Ship.agl", &TESTMODELPATH );
-	int walkerMeshId = graphicsBackend->createMesh( "MeshWalker.agl", &TESTMODELPATH );
+
+	/************************************************************************/
+	/* Create the main camera used to render the scene						*/
+	/************************************************************************/
+	entity = m_world->createEntity();
+	entity->addComponent( new CameraInfo( m_world->getAspectRatio(),1.3f,1.0f,3000.0f ) );
+	entity->addComponent( new MainCamera_TAG() );
+	entity->addComponent( new AudioListener() );
+	entity->addComponent( new Transform( 0.0f, 0.0f, 0.0f ) );
+	m_world->addEntity(entity);
 
 
-	// Add a grid of cubes to test instancing.
-	for( int x=0; x<8; x++ )
-	{
-		for( int y=0; y<8; y++ )
-		{
-			for( int z=0; z<8; z++ )
-			{
-				entity = m_world->createEntity();
-				component = new RenderInfo( cubeMeshId );
-				entity->addComponent( ComponentType::RenderInfo, component );
-				component = new Transform( 2.0f+5.0f*-x, 1.0f+5.0f*-y, 1.0f+5.0f*-z );
-				entity->addComponent( ComponentType::Transform, component );
+	/************************************************************************/
+	/* Create shadow camera and spotlight.									*/
+	/************************************************************************/
+	float rotation = 0.78;
+	AglQuaternion quat;
+	for(int i = 0; i < 1; i++){
+		entity = factory->entityFromRecipe( "SpotLight" );
+		LightsComponent* lightComp = static_cast<LightsComponent*>(
+			entity->getComponent(ComponentType::LightsComponent));
+		int shadowIdx = -1;
+		vector<Light>* lights = lightComp->getLightsPtr();
 
-				m_world->addEntity(entity);
+		for (unsigned int i = 0; i < lights->size(); i++){
+			if(lights->at(i).instanceData.shadowIdx != -1){
+				shadowIdx = graphicsBackend->getGfxWrapper()->generateShadowMap();
+				lights->at(i).instanceData.shadowIdx = shadowIdx;
 			}
 		}
 
+		Transform* transform = static_cast<Transform*>(
+			entity->getComponent(ComponentType::Transform));
+
+		quat = AglQuaternion::constructFromAxisAndAngle(AglVector3::up(),rotation);
+		transform->setRotation(quat);
+
+		CameraInfo* cameraInfo = new CameraInfo(1);
+		cameraInfo->m_shadowMapIdx = shadowIdx;
+		entity->addComponent(ComponentType::CameraInfo, cameraInfo);
+		entity->addTag(ComponentType::TAG_ShadowCamera, new ShadowCamera_TAG());
+		m_world->addEntity( entity );
+
+		rotation -= 0.78;
 	}
-	
-
-	// NOTE: Test physics entities have been moved to the server since they need to be
-	// synced there. These are entities that are synced over the network, that should
-	// be able to collide with object such as the player ships.
-
-	////Test physics
-
-	////b1
-	//entity = m_world->createEntity();
-	//component = new RenderInfo( cubeMeshId );
-	//entity->addComponent( ComponentType::RenderInfo, component );
-	//component = new Transform(AglVector3(0, 0, 0), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
-	//entity->addComponent( ComponentType::Transform, component );
-	//component = new PhysicsBody();
-	//entity->addComponent(ComponentType::PhysicsBody, component);
-
-	//component = new BodyInitData(AglVector3(0, 0, 0), AglQuaternion::identity(),
-	//								AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, false);
-	//entity->addComponent(ComponentType::BodyInitData, component);
-
-	//m_world->addEntity(entity);
-
-	////b2
-	//entity = m_world->createEntity();
-	//component = new RenderInfo( cubeMeshId );
-	//entity->addComponent( ComponentType::RenderInfo, component );
-	//component = new Transform(AglVector3(15, 0.5f, 0.5f), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
-	//entity->addComponent( ComponentType::Transform, component );
-	//component = new PhysicsBody();
-	//entity->addComponent(ComponentType::PhysicsBody, component);
-	//
-	//component = new BodyInitData(AglVector3(15, 0.5f, 0.5f), AglQuaternion::identity(),
-	//	AglVector3(1, 1, 1), AglVector3(-1, 0, 0), AglVector3(0, 0, 0), 0, true);
-	//entity->addComponent(ComponentType::BodyInitData, component);
-
-	//m_world->addEntity(entity);
-
-	// walker
-	//entity = m_world->createEntity();
-	//component = new RenderInfo( walkerMeshId );
-	//entity->addComponent( ComponentType::RenderInfo, component );
-	//component = new Transform(AglVector3(10, 10, 10), AglQuaternion(0, 0, 0, 1), AglVector3(1, 1, 1));
-	//entity->addComponent( ComponentType::Transform, component );
-	//component = new PhysicsBody();
-	//entity->addComponent(ComponentType::PhysicsBody, component);
-
-	//component = new BodyInitData(AglVector3(10, 10, 10), AglQuaternion::identity(),
-	//	AglVector3(1, 1, 1), AglVector3(1, 0, 0), AglVector3(0, 0, 0), 0, false);
-	//entity->addComponent(ComponentType::BodyInitData, component);
-
-	//m_world->addEntity(entity);
-
-	// Create a "spaceship"
-	//entity = m_world->createEntity();
-	//component = new RenderInfo( shipMeshId );
-	//entity->addComponent( ComponentType::RenderInfo, component );
-	//component = new Transform( -5.0f, 0.0f, 0.0f );
-	//entity->addComponent( ComponentType::Transform, component );
-	//component = new ShipController(5.0f, 50.0f);
-	//entity->addComponent( ComponentType::ShipController, component );
-	//component = new PhysicsBody();
-	//entity->addComponent(ComponentType::PhysicsBody, component);
-
-	//component = new BodyInitData(AglVector3(-5.0f, 0.0f, 0.0f), AglQuaternion::identity(),
-	//	AglVector3(1, 1, 1), AglVector3(0, 0, 0), AglVector3(0, 0, 0), 0, false);
-	//entity->addComponent(ComponentType::BodyInitData, component);
-	//m_world->addEntity(entity);
-	//int shipId = entity->getIndex();
-
-//	// Create a "spaceship"
-//	entity = m_world->createEntity();
-//	component = new RenderInfo( cubeMeshId );
-//	entity->addComponent( ComponentType::RenderInfo, component );
-//	component = new Transform( -5.0f, 0.0f, 0.0f );
-//	entity->addComponent( ComponentType::Transform, component );
-//	component = new ShipController(0.3f,3.0f);
-//	entity->addComponent( ComponentType::ShipController, component );
-//	component = new PhysicsBody();
-//	entity->addComponent(ComponentType::PhysicsBody, component);
-//
-//	component = new BodyInitData(AglVector3(-5.0f, 0.0f, 0.0f), AglQuaternion::identity(),
-//		AglVector3(1, 1, 1), AglVector3(0, 0, 0), AglVector3(0, 0, 0), 0, false);
-//	entity->addComponent(ComponentType::BodyInitData, component);
-//	
-//	m_world->addEntity(entity);
-//	int shipId = entity->getIndex();
-//
-//
-//	// A camera from which the world is rendered.
-//	entity = m_world->createEntity();
-//	component = new CameraInfo( 800/(float)600 );
-//	entity->addComponent( ComponentType::CameraInfo, component );
-//	component = new Input();
-//	entity->addComponent( ComponentType::Input, component );
-//	component = new Transform( -5.0f, 0.0f, -5.0f );
-//	entity->addComponent( ComponentType::Transform, component );
-//	component = new LookAtEntity(shipId, AglVector3(0,3,-10));
-//	entity->addComponent( ComponentType::LookAtEntity, component );
-//	m_world->addEntity(entity);
-
-
-
-	// A camera from which the world is rendered.
-	//entity = m_world->createEntity();
-	//component = new CameraInfo( 800/(float)600 );
-	//entity->addComponent( ComponentType::CameraInfo, component );
-	//component = new Input();
-	//entity->addComponent( ComponentType::Input, component );
-	//component = new Transform( -5.0f, 0.0f, -5.0f );
-	//entity->addComponent( ComponentType::Transform, component );
-	//component = new LookAtEntity(shipId, AglVector3(0,3,-10),10.0f,10.0f);
-	//entity->addComponent( ComponentType::LookAtEntity, component );
-	//component = new AudioListener();
-	//entity->addComponent(ComponentType::AudioListener, component);
-	//m_world->addEntity(entity);
-
-	/************************************************************************/
-	/* Debug information only and there is no need for this to run the code */
-	/************************************************************************/
-	//AntTweakBarWrapper::getInstance()->addWriteVariable("Master_volume",
-	//	TwType::TW_TYPE_FLOAT, 
-	//	static_cast<AudioListener*>(component)->getMasterVolumeRef(),
-	//	"group=Sound min=0 max=10 step=0.001 precision=3");
-
-
-	//// Misplaced.
-	//AntTweakBarWrapper::getInstance()->addReadOnlyVariable( "NetId",
-	//	TwType::TW_TYPE_INT32,
-	//	m_client->getIdPointer(), "" );
-}
-
-void ClientApplication::initSounds()
-{
-
-	EntitySystem*	tempSys			= NULL;
-	Entity*			entity			= NULL;
-	Component*		component		= NULL;
-	int				soundIdx		= -1;
-	string			fullFilePath;
-	string			file;
-
-	tempSys = m_world->getSystem(SystemType::AudioBackendSystem);
-	AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(tempSys);
-
-
-	/************************************************************************/
-	/* Load positional sound												*/
-	/************************************************************************/
-	file = "Techno_1.wav";
-	BasicSoundCreationInfo basicSoundInfo = BasicSoundCreationInfo(file.c_str(),
-		TESTMUSICPATH.c_str(),true);
-	PositionalSoundCreationInfo positionalSoundInfo = PositionalSoundCreationInfo(
-		AglVector3( 3.0f, -10.0f, -30.0f ));
-	soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
-	entity = m_world->createEntity();
-	component = new Transform( 3.0f, -10.0f, -30.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	component = new AudioInfo(soundIdx,true);
-	entity->addComponent(ComponentType::AudioComponent, component);
-	m_world->addEntity(entity);
-	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
-
-	/************************************************************************/
-	/* Load positional sound												*/
-	/************************************************************************/
-	file = "MusicMono.wav";
-	basicSoundInfo = BasicSoundCreationInfo(file.c_str(), TESTMUSICPATH.c_str(),true);
-	positionalSoundInfo = PositionalSoundCreationInfo( AglVector3(3,3,3) );
-	soundIdx = audioBackend->createPositionalSound(&basicSoundInfo,&positionalSoundInfo);
-	entity = m_world->createEntity();
-	component = new Transform( 3.0f, 3.0f, 3.0f );
-	entity->addComponent( ComponentType::Transform, component );
-	component = new AudioInfo(soundIdx,true);
-	entity->addComponent(ComponentType::AudioComponent, component);
-	m_world->addEntity(entity);
-	audioBackend->changeAudioInstruction(soundIdx, SoundEnums::Instructions::PLAY);
-
-	/************************************************************************/
-	/* Load ambient sound													*/
-	/************************************************************************/
-	file = "Techno_1.wav";
-	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTMUSICPATH.c_str(), true);
-	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
-	entity = m_world->createEntity();
-	component = new AudioInfo(soundIdx,false);
-	entity->addComponent(ComponentType::AudioComponent,component);
-	m_world->addEntity(entity);
-	
-	/************************************************************************/
-	/* Load ambient sound													*/
-	/************************************************************************/
-	file = "Spaceship_Weapon_-_Fighter Blaster or Laser-Shot-Mid.wav";
-	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTSOUNDEFFECTPATH.c_str());
-	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
-	entity = m_world->createEntity();
-	component = new AudioInfo(soundIdx,false);
-	entity->addComponent(ComponentType::AudioComponent,component);
-	m_world->addEntity(entity);
-
-	/************************************************************************/
-	/* Load ambient sound													*/
-	/************************************************************************/
-	file = "Spaceship_Engine_Idle_-_Spacecraft_hovering.wav";
-	basicSoundInfo = BasicSoundCreationInfo(file.c_str(),TESTSOUNDEFFECTPATH.c_str(),true);
-	soundIdx = audioBackend->createAmbientSound( &basicSoundInfo );
-	entity = m_world->createEntity();
-	component = new AudioInfo(soundIdx,false);
-	entity->addComponent(ComponentType::AudioComponent, component);
-	m_world->addEntity(entity);
-	audioBackend->changeAudioInstruction(soundIdx,SoundEnums::Instructions::PLAY);
-}
-
-void ClientApplication::initSoundSystem()
-{
-	//Audio Systems
-	AudioBackendSystem* audioBackend = new AudioBackendSystem();
-	m_world->setSystem( SystemType::AudioBackendSystem, audioBackend, true);
-
-	AudioController* audioController = new AudioController(audioBackend);
-	m_world->setSystem( SystemType::AudioControllerSystem, audioController, true);
-
-	AudioListenerSystem* audioListener = new AudioListenerSystem(audioBackend);
-	m_world->setSystem( SystemType::AudioListenerSystem, audioListener, true);
-
 }

@@ -5,11 +5,15 @@
 EntitySystem::EntitySystem( SystemType::SystemTypeIdx p_type )
 {
 	m_type = SystemType::getTypeFor(p_type);
+	m_timeUsedPerSecond = 0.0;
+	m_lastExecutionTime = 0.0;
 }
 
 EntitySystem::EntitySystem( SystemType::SystemTypeIdx p_type, int p_numComponents, ... )
 {
 	m_type = SystemType::getTypeFor(p_type);
+	m_timeUsedPerSecond = 0.0;
+	m_lastExecutionTime = 0.0;
 
 	va_list componentTypes;
 	va_start( componentTypes, p_numComponents );
@@ -35,6 +39,36 @@ SystemType EntitySystem::getSystemType()
 SystemType::SystemTypeIdx EntitySystem::getSystemTypeIdx()
 {
 	return m_type.getIndex();
+}
+
+const double& EntitySystem::getTimeUsedPerSecond() const
+{
+	return m_timeUsedPerSecond;
+}
+
+void EntitySystem::setTimeUsedPerSecond(double p_timeUsed)
+{
+	m_timeUsedPerSecond = p_timeUsed;
+}
+
+const double& EntitySystem::getLastExecutionTime() const
+{
+	return m_lastExecutionTime;
+}
+
+void EntitySystem::setLastExecutionTime(double p_timeUsed)
+{
+	m_lastExecutionTime = p_timeUsed;
+}
+
+const double& EntitySystem::getAverageExecutionTime() const
+{
+	return m_averageExecutionTime;
+}
+
+void EntitySystem::setAverageExecutionTime(double p_average)
+{
+	m_averageExecutionTime = p_average;
 }
 
 EntitySystem::~EntitySystem()
@@ -155,36 +189,37 @@ void EntitySystem::initialize()
 
 void EntitySystem::check(Entity* p_entity) 
 {
-		if(m_componentBits.none())
-		{
-			// If this system isn't interested in any components there is no reason to
-			// let it continue as it will do nothing.
-			return;
-		}
+	if(m_componentBits.none())
+	{
+		// If this system isn't interested in any components there is no reason to
+		// let it continue as it will do nothing.
+		return;
+	}
 		
-		bool contains = p_entity->getSystemBits()[m_type.getIndex()];
-		bool interested = true; // possibly interested, let's try to prove it wrong.
+	bool contains = p_entity->getSystemBits()[m_type.getIndex()];
+	bool interested = true; // possibly interested, let's try to prove it wrong.
 		
-		bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits = p_entity->getComponentBits();
+	bitset<ComponentType::NUM_COMPONENT_TYPES> componentBits = 
+		p_entity->getComponentBits();
 
-		// Check if the entity possesses ALL of the components defined in the system component bits.
-		for ( int i = 0; i < ComponentType::NUM_COMPONENT_TYPES; i++ )
+	// Check if the entity possesses ALL of the components defined in the system component bits.
+	for ( int i = 0; i < ComponentType::NUM_COMPONENT_TYPES; i++ )
+	{
+		if ( m_componentBits[i] )
 		{
-			if ( m_componentBits[i] )
+			if ( !componentBits[i] )
 			{
-				if ( !componentBits[i] )
-				{
-					interested = false;
-					break;
-				}
+				interested = false;
+				break;
 			}
 		}
-
-		if ( interested && !contains )
-			insertToSystem( p_entity );
-		else if ( !interested && contains )
-			removeFromSystem( p_entity );
 	}
+
+	if ( interested && !contains )
+		insertToSystem( p_entity );
+	else if ( !interested && contains )
+		removeFromSystem( p_entity );
+}
 
 void EntitySystem::removeFromSystem( Entity* p_entity )
 {
@@ -195,7 +230,6 @@ void EntitySystem::removeFromSystem( Entity* p_entity )
 		p_entity->setSystemBit( m_type.getIndex(), false );
 		m_actives.erase( m_actives.begin() + idx );
 		removed( p_entity );
-		//delete p_entity;
 	}
 }
 void EntitySystem::insertToSystem(Entity* p_entity)
@@ -259,6 +293,14 @@ bool EntitySystem::getEnabled() const
 void EntitySystem::setEnabled( bool p_enabled )
 {
 	m_enabled = p_enabled;
+	if(p_enabled)
+	{
+		sysEnabled();
+	}
+	else
+	{
+		sysDisabled();
+	}
 }
 
 bitset<ComponentType::NUM_COMPONENT_TYPES> EntitySystem::getComponentBits()
@@ -271,7 +313,7 @@ int EntitySystem::findEntityInActive( Entity* p_entity )
 {
 	int idx = -1;
 
-	//HACK: break in for-loop
+	//NOTE: break in for-loop 
 	for( unsigned int i=0; i<m_actives.size(); i++ )
 	{
 		if( m_actives[i] == p_entity )
@@ -282,4 +324,9 @@ int EntitySystem::findEntityInActive( Entity* p_entity )
 	}
 
 	return idx;
+}
+
+const vector<Entity*>& EntitySystem::getActiveEntities() const
+{
+	return m_actives;
 }

@@ -1,7 +1,5 @@
 #pragma once
 
-//#include "Rocket/Core/Input.h"
-
 // =======================================================================================
 //                                      InputHelper
 // =======================================================================================
@@ -29,171 +27,222 @@ public:
 	/// is to make iteration, array-indexing etc easier for each input type. To 
 	/// distinguish between different input one can instead use the device type
 	/// enumeration defined below.
-	enum INPUT_DEVICE_TYPE
+	enum InputDeviceTypes
 	{ 
-		IT_MOUSE_MOVE,
-		IT_MOUSE_BTN,
-		IT_KEYBOARD,
-		IT_XINPUT_DIGITAL,
-		IT_XINPUT_ANALOG
+		InputDeviceTypes_NON_EXISTING = -1,
+		InputDeviceTypes_FIRST,
+
+		InputDeviceTypes_MOUSE_AXIS = InputDeviceTypes_FIRST,
+		InputDeviceTypes_MOUSE_BUTTON,
+		InputDeviceTypes_KEYBOARD,
+		InputDeviceTypes_XINPUT_DIGITAL,
+		InputDeviceTypes_XINPUT_ANALOG,
+
+		InputDeviceTypes_LAST = InputDeviceTypes_XINPUT_ANALOG,
+		InputDeviceTypes_CNT
 	};
 
 	///\brief A general state enumeration used with all digital (on/off) controls. 
-	enum KEY_STATE
+	enum KeyStates
 	{
-		NON_EXISTING_STATE = -1,
-		KEY_DOWN,
-		KEY_PRESSED,
-		KEY_UP,
-		KEY_RELEASED,
-		NUM_KEY_STATES
+		KeyStates_NON_EXISTING = -1,
+
+		KeyStates_KEY_DOWN,
+		KeyStates_KEY_PRESSED,
+		KeyStates_KEY_UP,
+		KeyStates_KEY_RELEASED,
+
+		KeyStates_CNT
 	};
 
 	///\brief Enumeration used to specify raw read data from digital controls. 
 	/// Two variables of this enum can be used to generate the above states.
-	enum KEY_RAW_STATE
+	enum RawKeyStates
 	{
-		NON_EXISTING_RAW_STATE = -1,
-		UP,
-		DOWN,
-		NUM_RAW_KEY_STATES
+		RawKeyStates_NON_EXISTING = -1,
+
+		RawKeyStates_UP,
+		RawKeyStates_DOWN,
+
+		RawKeyStates_CNT
 	};
 
 	///\Internal enum used in controls.
 	/// Used to make the controls range from 0.0 - 1.0 instead of -1.0 - 1.0
-	enum SUB_AXIS
+	enum SubAxes
 	{ 
-		NON_EXISTING_SUB_AXIS = -1,
-		AXIS_POSITIVE,
-		AXIS_NEGATIVE,
-		NUM_SUB_AXIS
+		SubAxes_NON_EXISTING = -1,
+
+		SubAxes_POSITIVE,
+		SubAxes_NEGATIVE,
+
+		SubAxes_CNT
 	};
 
 	///\brief All keyboard keys currently supported. 
 	/// More keys may be added in the future. 
 	/// If so, make sure to update the input fetchers mappings as they depend on this enum.
-	enum KEYBOARD_KEY
+	enum KeyboardKeys
 	{
-		NON_EXISTING_KEY = -1,
-		KEY_A,
-		KEY_B,
-		KEY_C,
-		KEY_D,
-		KEY_E,
-		KEY_F,
-		KEY_G,
-		KEY_H,
-		KEY_I,
-		KEY_J,
-		KEY_K,
-		KEY_L,
-		KEY_M,
-		KEY_N,
-		KEY_O,
-		KEY_P,
-		KEY_Q,
-		KEY_R,
-		KEY_S,
-		KEY_T,
-		KEY_U,
-		KEY_V,
-		KEY_W,
-		KEY_X,
-		KEY_Y,
-		KEY_Z,
-		KEY_SPACE,
-		KEY_LCTRL,
-		KEY_ESC,
-		KEY_F1,
-		KEY_F2,
-		KEY_F3,
-		KEY_F4,
-		NUM_KEYBOARD_KEYS
+		KeyboardKeys_NON_EXISTING = -1,
+
+		KeyboardKeys_A,
+		KeyboardKeys_B,
+		KeyboardKeys_C,
+		KeyboardKeys_D,
+		KeyboardKeys_E,
+		KeyboardKeys_F,
+		KeyboardKeys_G,
+		KeyboardKeys_H,
+		KeyboardKeys_I,
+		KeyboardKeys_J,
+		KeyboardKeys_K,
+		KeyboardKeys_L,
+		KeyboardKeys_M,
+		KeyboardKeys_N,
+		KeyboardKeys_O,
+		KeyboardKeys_P,
+		KeyboardKeys_Q,
+		KeyboardKeys_R,
+		KeyboardKeys_S,
+		KeyboardKeys_T,
+		KeyboardKeys_U,
+		KeyboardKeys_V,
+		KeyboardKeys_W,
+		KeyboardKeys_X,
+		KeyboardKeys_Y,
+		KeyboardKeys_Z,
+		KeyboardKeys_SPACE,
+		KeyboardKeys_LEFT_ALT,
+		KeyboardKeys_RIGHT_ALT,
+		KeyboardKeys_BACKSPACE,
+		KeyboardKeys_RETURN,
+		KeyboardKeys_LCTRL,
+		KeyboardKeys_PERIOD,
+		KeyboardKeys_ESC,
+		KeyboardKeys_F1,
+		KeyboardKeys_F2,
+		KeyboardKeys_F3,
+		KeyboardKeys_F4,
+		KeyboardKeys_0,
+		KeyboardKeys_1,
+		KeyboardKeys_2,
+		KeyboardKeys_3,
+		KeyboardKeys_4,
+		KeyboardKeys_5,
+		KeyboardKeys_6,
+		KeyboardKeys_7,
+		KeyboardKeys_8,
+		KeyboardKeys_9,
+		KeyboardKeys_NUMPAD_0,
+		KeyboardKeys_NUMPAD_1,
+		KeyboardKeys_NUMPAD_2,
+		KeyboardKeys_NUMPAD_3,
+		KeyboardKeys_NUMPAD_4,
+		KeyboardKeys_NUMPAD_5,
+		KeyboardKeys_NUMPAD_6,
+		KeyboardKeys_NUMPAD_7,
+		KeyboardKeys_NUMPAD_8,
+		KeyboardKeys_NUMPAD_9,
+
+		KeyboardKeys_CNT
 	};
 
 	///\brief All mouse buttons currently supported. 
 	/// More buttons may be added int he future.
 	/// If so, make sure to update the input fetchers mappings as they depend on this enum.
-	enum MOUSE_BTN
+	enum MouseButtons
 	{
-		NON_EXISTING_MOUSE_BTN = -1,
-		M_LBTN,
-		M_MBTN,
-		M_RBTN,
-		NUM_MOUSE_BTNS
+		// Raw, read from buffers / devices etc
+		MouseButtons_NON_EXISTING = -1,
+		MouseButtons_FIRST,
+
+		MouseButtons_0 = MouseButtons_FIRST,
+		MouseButtons_1,
+		MouseButtons_2,
+		// Friendlier names, below is true for DirectInput. Could be other order if read
+		// by other API
+		MouseButtons_LEFT = MouseButtons_0,
+		MouseButtons_RIGHT = MouseButtons_1,
+		MouseButtons_MIDDLE = MouseButtons_2,
+
+		MouseButtons_LAST = MouseButtons_MIDDLE,
+		MouseButtons_CNT
 	};
 
 	///\brief All mouse axises currently supported.
 	/// This will likely stay the same as a player seldom has a 4d mouse.
-	enum MOUSE_AXIS
+	enum MouseAxes
 	{
-		NON_EXISTING_AXIS = -1,
-		X_POSITIVE,
-		X_NEGATIVE,
-		Y_POSITIVE,
-		Y_NEGATIVE,
-		Z_POSITIVE, // Z = Scroll wheel
-		Z_NEGATIVE, // Z = Scroll wheel
-		NUM_MOUSE_AXIS
+		MouseAxes_NON_EXISTING = -1,
+		MouseAxes_FIRST,
+
+		MouseAxes_X_POSITIVE = MouseAxes_FIRST,
+		MouseAxes_X_NEGATIVE,
+		MouseAxes_Y_POSITIVE,
+		MouseAxes_Y_NEGATIVE,
+		MouseAxes_Z_POSITIVE, // Z = Scroll wheel
+		MouseAxes_Z_NEGATIVE, // Z = Scroll wheel
+
+		MouseAxes_LAST = MouseAxes_Z_NEGATIVE,
+		MouseAxes_CNT
 	};
 
 	///\brief The complete listing of all digital buttons on a std xbox360 controller.
 	/// There are not anymore physical buttons on this controller. This listing is 
 	/// therefore probably never* going to change.
 	/// * never say never....
-	enum XBOX360_CONTROLLER_DIGITAL
+	enum Xbox360Digitals
 	{
-		NON_EXISTING_DIGITAL = -1,
-		DPAD_UP,
-		DPAD_DOWN,
-		DPAD_LEFT,
-		DPAD_RIGHT,
-		BTN_START,
-		BTN_BACK,
-		THUMB_PRESS_L,
-		THUMB_PRESS_R,
-		SHOULDER_PRESS_L,
-		SHOULDER_PRESS_R,
-		BTN_A,
-		BTN_B,
-		BTN_X,
-		BTN_Y,
-		NUM_XBOX360_CONTROLLER_DIGITALS
+		Xbox360Digitals_NON_EXISTING = -1,
+		Xbox360Digitals_DPAD_UP,
+		Xbox360Digitals_DPAD_DOWN,
+		Xbox360Digitals_DPAD_LEFT,
+		Xbox360Digitals_DPAD_RIGHT,
+		Xbox360Digitals_BTN_START,
+		Xbox360Digitals_BTN_BACK,
+		Xbox360Digitals_THUMB_PRESS_L,
+		Xbox360Digitals_THUMB_PRESS_R,
+		Xbox360Digitals_SHOULDER_PRESS_L,
+		Xbox360Digitals_SHOULDER_PRESS_R,
+		Xbox360Digitals_BTN_A,
+		Xbox360Digitals_BTN_B,
+		Xbox360Digitals_BTN_X,
+		Xbox360Digitals_BTN_Y,
+		Xbox360Digitals_CNT
 	};
 
 	///\brief The complete listing of all analog axes on a std xbox360 controller.
 	/// There are not anymore physical sticks/triggers on this controller. This listing is 
 	/// therefore probably never* going to change.
 	/// * never say never....
-	enum XBOX360_CONTROLLER_ANALOG
+	enum Xbox360Analogs
 	{
-		NON_EXISTING_ANALOG = -1,
-		THUMB_LX_POSITIVE,
-		THUMB_LX_NEGATIVE,
-		THUMB_LY_POSITIVE,
-		THUMB_LY_NEGATIVE,
-		THUMB_RX_POSITIVE,
-		THUMB_RX_NEGATIVE,
-		THUMB_RY_POSITIVE,
-		THUMB_RY_NEGATIVE,
-		TRIGGER_L,
-		TRIGGER_R,
-		NUM_XBOX360_CONTROLLER_ANALOGS
+		Xbox360Analogs_NON_EXISTING = -1,
+		Xbox360Analogs_THUMB_LX_POSITIVE,
+		Xbox360Analogs_THUMB_LX_NEGATIVE,
+		Xbox360Analogs_THUMB_LY_POSITIVE,
+		Xbox360Analogs_THUMB_LY_NEGATIVE,
+		Xbox360Analogs_THUMB_RX_POSITIVE,
+		Xbox360Analogs_THUMB_RX_NEGATIVE,
+		Xbox360Analogs_THUMB_RY_POSITIVE,
+		Xbox360Analogs_THUMB_RY_NEGATIVE,
+		Xbox360Analogs_TRIGGER_L,
+		Xbox360Analogs_TRIGGER_R,
+		Xbox360Analogs_CNT
 	};
-
-
 
 public:
 	/// Overrides the default calcState() with a int instead of bool. This is only to
 	/// collect all performance warnings of bool to int conversions to a single place.
 	/// Gives performance warning, therefore commented away.
-	//static InputHelper::KEY_STATE calcState( const KEY_STATE p_oldState,
+	//static InputHelper::KeyStates calcState( const KeyStates p_oldState,
 	//	const int p_down );
 
 	/// Calculate new state using the old state en the current state of the button/key.
 	///\param p_oldState The state of the key/button key before calling this function.
 	///\param p_down If the key/button is being pressed right now
-	static InputHelper::KEY_STATE calcState( const KEY_STATE p_oldState,
+	static InputHelper::KeyStates calcState( const KeyStates p_oldState,
 		const bool p_down );
 
 	/// Calculate state using the latest events and the old state
@@ -202,22 +251,40 @@ public:
 	/// since the last call to this function has been caught.
 	///\param p_released If a event that tells us that the key/button has been released
 	/// since the last call to this function has been caught.
-	static InputHelper::KEY_STATE calcStateFromEvents( const KEY_STATE p_oldState,
+	static InputHelper::KeyStates calcStateFromEvents( const KeyStates p_oldState,
 		const bool p_pressed, const bool p_released );
 
 	/// Convert state to status/delta format.
 	///\param p_state State to convert from
 	///\return The corresponding statusDelta of the supplied state
-	static double statusDeltaFromState( const KEY_STATE p_state );
+	static double statusDeltaFromState( const KeyStates p_state );
 
 	/// Convert state to status/delta format.
 	///\param p_state State to convert from
 	///\return The corresponding status of the supplied state
-	static double statusFromState( const KEY_STATE p_state );
+	static double statusFromState( const KeyStates p_state );
 
-	//Rocket::Core::Input::KeyIdentifier libRocketFromKeys( int m_key );
+	//static Rocket::Core::Input::KeyIdentifier libRocketFromKeys( int m_key );
 	
+	/// Converts a keyboard key to a character.
+	///\param p_keyCode		KeyboardKeys-code to convert from
+	///\param p_upperCase	
+	///\return The corresponding character code
+	static char charFromKeyboardKey(KeyboardKeys p_keyCode, bool p_upperCase=false);
+
+	// Identifier for an unsupported character 
+	static const char NONPRINTABLE_CHAR = '\0';
+
+	/// Initializes private class members.
+	static void initialize();
 private:
+	// Character maps. These contain upper and lower case representations that match the
+	// KeyboardKeys. There will be duplicated values and excessive characters that doesn't
+	// have a graphical representation, as this is an implementation that favours
+	// performance over memory consumption.
+	static char upperCaseCharacterMap[KeyboardKeys_CNT];
+	static char lowerCaseCharacterMap[KeyboardKeys_CNT];
+
 	// libRocket map
-	//Rocket::Core::Input::KeyIdentifier libRocketFromKeysMap[NUM_KEYB_KEYS];
+	//static Rocket::Core::Input::KeyIdentifier libRocketFromKeysMap[KeyboardKeys_CNT];
 };

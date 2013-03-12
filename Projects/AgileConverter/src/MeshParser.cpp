@@ -103,14 +103,28 @@ void MeshParser::Parse()
 	m->VertexFormat = AGL_VERTEX_FORMAT_PNTTBN;
 	m->Indices = indices;
 	m->IndicesCount = count;
-	m->Name = mMesh->GetName();
+	m->Name = mNode->GetName();
 	m->Vertices = vertices;
 	m->VertexCount = verts.size();
 	m->ControlIndices = indexToControl;
 	m->Source = mMesh;
 	m->SourceNode = mNode;
 
+	FbxMatrix transform = m->SourceNode->EvaluateGlobalTransform();
+	for (int row = 0; row < 4; row++)
+		for (int column = 0; column < 4; column++)
+			m->Transform[row*4 + column] = (float)transform.Get(row, column);
+
 	mParent->AddMesh(m);
+
+	FbxNode* parent = m->SourceNode->GetParent();
+	while (parent)
+	{
+		const char* name = parent->GetName();
+		FbxMatrix transform2 = parent->EvaluateGlobalTransform();
+
+		parent = parent->GetParent();
+	}
 
 	//CREATE THE MESH WITHOUT USING A HASH TABLE TO REMOVE DUPLICATED VERTICES. COSTS MORE MEMORY
 	/*AglVector3 p, n;

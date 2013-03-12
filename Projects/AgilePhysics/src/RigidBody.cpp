@@ -3,8 +3,12 @@
 #include <iostream>
 #include "CompoundBody.h"
 
-void RigidBody::calcInvInertia()
+void RigidBody::ComputeInertia()
 {
+	//Can apply special solution for spheres? Spheres are uniform
+	if (!mCollisionEnabled && !mParent)
+		return;
+
     mInvInertiaWorld = AglMatrix(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
     AglMatrix orientation = mLocalTransform;
@@ -34,9 +38,12 @@ RigidBody::RigidBody()
 	mUserControlled = false;
 	mTempStatic = false;
 	mParent = NULL;
-	calcInvInertia();
+	mImpulseEnabled = true;
+	mCollisionEnabled = true;
+	mCollisionFlag = false;
+	ComputeInertia();
 }
-RigidBody::RigidBody(AglVector3 pPosition)
+RigidBody::RigidBody(AglVector3 pPosition, bool pImpulseEnabled)
 {
 	mLocalTransform = mPreviousLocalTransform = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, pPosition.x, pPosition.y, pPosition.z, 1);
 	mInertiaTensor = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
@@ -47,32 +54,12 @@ RigidBody::RigidBody(AglVector3 pPosition)
 	mUserControlled = false;
 	mTempStatic = false;
 	mParent = NULL;
-	calcInvInertia();
+	mImpulseEnabled = pImpulseEnabled;
+	mCollisionEnabled = true;
+	mCollisionFlag = false;
+	ComputeInertia();
 }
-RigidBody::RigidBody(AglMatrix pCoordinateSystem, AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, bool pUserControlled)
-{
-	AglMatrix mat = pCoordinateSystem * AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, pPosition.x, pPosition.y, pPosition.z, 1);
-	mLocalTransform = mPreviousLocalTransform = mat;
-	mInertiaTensor = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-	mVelocity = mPreviousVelocity = pVelocity;
-	mAngularVelocity = mPreviousAngularVelocity = pAngularVelocity;
-	mForce = AglVector3(0, 0, 0);
-    mStatic = pStatic;
-    mMass = pMass;
-	mInvMass = 1.0f / mMass;
-	mUserControlled = pUserControlled;
-	mTempStatic = false;
-	mParent = NULL;
-
-	/*if (pPosition.z == -40)
-	{
-		AglQuaternion quat = AglQuaternion::constructFromAxisAndAngle(AglVector3(0, 1, 0), 1.0f);
-		AglMatrix::componentsToMatrix(mLocalTransform, AglVector3(1, 1, 1), quat, pPosition);
-	}*/
-
-	calcInvInertia();
-}
-RigidBody::RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, bool pUserControlled)
+RigidBody::RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, bool pUserControlled, bool pImpulseEnabled)
 {
 	mLocalTransform = mPreviousLocalTransform = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, pPosition.x, pPosition.y, pPosition.z, 1);
 	mInertiaTensor = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
@@ -85,14 +72,28 @@ RigidBody::RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, Ag
 	mUserControlled = pUserControlled;
 	mTempStatic = false;
 	mParent = NULL;
-
-	/*if (pPosition.z == -40)
-	{
-		AglQuaternion quat = AglQuaternion::constructFromAxisAndAngle(AglVector3(0, 1, 0), 1.0f);
-		AglMatrix::componentsToMatrix(mLocalTransform, AglVector3(1, 1, 1), quat, pPosition);
-	}*/
-
-	calcInvInertia();
+	mImpulseEnabled = pImpulseEnabled;
+	mCollisionEnabled = true;
+	mCollisionFlag = false;
+	ComputeInertia();
+}
+RigidBody::RigidBody(AglMatrix pWorld, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic, bool pUserControlled, bool pImpulseEnabled)
+{
+	mLocalTransform = mPreviousLocalTransform = pWorld;
+	mInertiaTensor = AglMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+	mVelocity = mPreviousVelocity = pVelocity;
+	mAngularVelocity = mPreviousAngularVelocity = pAngularVelocity;
+	mForce = AglVector3(0, 0, 0);
+    mStatic = pStatic;
+    mMass = pMass;
+	mInvMass = 1.0f / mMass;
+	mUserControlled = pUserControlled;
+	mTempStatic = false;
+	mParent = NULL;
+	mImpulseEnabled = pImpulseEnabled;
+	mCollisionEnabled = true;
+	mCollisionFlag = false;
+	ComputeInertia();
 }
 RigidBody::~RigidBody()
 {
@@ -201,10 +202,6 @@ AglMatrix RigidBody::GetInvInertiaWorld() const
 
 	return mInvInertiaWorld;
 }
-bool RigidBody::IsStatic() const
-{
-	return mStatic || mTempStatic;
-}
 
 void RigidBody::AddImpulse(AglVector3 pImpulse)
 {
@@ -222,14 +219,14 @@ void RigidBody::AddImpulse(AglVector3 pImpulse)
 			mVelocity += pImpulse * GetInvMass();
 	}
 }
-void RigidBody::AddAngularImpulse(AglVector3 pAngularImpulse)
+void RigidBody::AddAngularImpulse(AglVector3 pAngularImpulse, bool p_propagate)
 {
 	if (_isnan((double)pAngularImpulse.x) || _isnan((double)pAngularImpulse.y) || _isnan((double)pAngularImpulse.z))
 	{
 		mLocalTransform.data[0] = 0;
 		return;
 	}
-	if (mParent)
+	if (mParent && p_propagate)
 		mParent->AddAngularImpulse(pAngularImpulse);
 	else
 	{
@@ -238,46 +235,6 @@ void RigidBody::AddAngularImpulse(AglVector3 pAngularImpulse)
 	}
 }
 
-
-void RigidBody::UpdateVelocity(float pElapsedTime)
-{
-	//Updates velocity and angular velocity only
-	if (!mStatic && !mTempStatic)
-	{
-		//mForce += AglVector3(0, -9.815f, 0);
-		mPreviousVelocity = mVelocity;
-		mPreviousAngularVelocity = mAngularVelocity;
-		mVelocity += mForce * pElapsedTime;
-		mForce = AglVector3(0, 0, 0);
-
-		//Damping
-		mVelocity *= (1 - 0.9f * pElapsedTime);
-		mAngularVelocity *= (1 - 0.9f * pElapsedTime);
-	}
-}
-void RigidBody::UpdatePosition(float pElapsedTime)
-{
-	//Updates mWorld only
-	if (!mStatic && !mTempStatic)
-	{
-		mPreviousLocalTransform = mLocalTransform;
-		mLocalTransform[12] += mVelocity.x * pElapsedTime;
-		mLocalTransform[13] += mVelocity.y * pElapsedTime;
-		mLocalTransform[14] += mVelocity.z * pElapsedTime;
-
-		float a = AglVector3::length(mAngularVelocity);
-		if (a > 0)
-		{
-			AglVector3 s, t;
-			AglQuaternion r;
-			AglMatrix::matrixToComponents(mLocalTransform, s, r, t);
-			AglQuaternion r2 = AglQuaternion::constructFromAngularVelocity(mAngularVelocity * pElapsedTime);
-			r = r2 * r;
-			AglMatrix::componentsToMatrix(mLocalTransform, AglVector3(1, 1, 1), r, t);
-		}
-		calcInvInertia();
-	}
-}
 AglBoundingSphere RigidBody::GetBoundingSphere() const
 {
 	AglBoundingSphere s;
@@ -311,10 +268,27 @@ void RigidBody::SetParent(CompoundBody* pParent)
 {
 	if (mParent && !pParent)
 	{
+		mLocalTransform = mPreviousLocalTransform = this->GetWorld();
+		mVelocity = mPreviousVelocity = this->GetVelocity();
+		mAngularVelocity = mPreviousAngularVelocity = this->GetAngularVelocity();
+
+	}
+	mParent = pParent;
+}
+void RigidBody::SetParent(CompoundBody* pParent, AglMatrix pLocalTransform)
+{
+	if (mParent && !pParent)
+	{
 		mLocalTransform = this->GetWorld();
 		mVelocity = this->GetVelocity();
 		mAngularVelocity = this->GetAngularVelocity();
 
+	}
+	else
+	{
+		mLocalTransform = mPreviousLocalTransform = pLocalTransform;
+		mVelocity = mPreviousVelocity = AglVector3(0, 0, 0);
+		mAngularVelocity = mPreviousAngularVelocity = AglVector3(0, 0, 0);
 	}
 	mParent = pParent;
 }

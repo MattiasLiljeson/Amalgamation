@@ -1,0 +1,12 @@
+<rml>
+	<head>
+		<title>ConnectionLost</title>
+		<link type="text/template" href="window.rml" />
+	</head>
+	<body class="Pop-up" template="window" onshow="">
+		<div>
+			Lost connection to the server!
+		</div>
+			<button onclick="goto main_menu; reset_connection">Back to main menu</button>
+	</body>
+</rml>

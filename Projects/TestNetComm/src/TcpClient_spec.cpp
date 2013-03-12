@@ -5,6 +5,9 @@ using namespace igloo;
 #include <TcpServer.h>
 
 #include <boost/thread/thread.hpp>
+#include "LargePacketStruct.h"
+
+static const int TEST_PACKET_TYPE = 100;
 
 Describe(a_tcp_client)
 {
@@ -72,7 +75,7 @@ Describe(a_tcp_client)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 
-		Packet packet_src;
+		Packet packet_src(TEST_PACKET_TYPE);
 		packet_src << (int)42;
 		server.broadcastPacket( packet_src );
 		
@@ -93,8 +96,8 @@ Describe(a_tcp_client)
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		server.processMessages();
 
-		server.broadcastPacket( Packet(  ) );
-		server.broadcastPacket( Packet(  ) );
+		server.broadcastPacket( Packet( TEST_PACKET_TYPE ) );
+		server.broadcastPacket( Packet( TEST_PACKET_TYPE ) );
 		
 		boost::this_thread::sleep(boost::posix_time::millisec(50));
 		client.processMessages();
@@ -119,7 +122,7 @@ Describe(a_tcp_client)
 		int	i_src[3] = { 42, 4, 2 };
 		int	i_dst[3];
 
-		Packet packets[3];
+		Packet packets[3] = {TEST_PACKET_TYPE, TEST_PACKET_TYPE, TEST_PACKET_TYPE};
 		for(int i=0; i<3; i++)
 			packets[i] << i_src[i];
 
@@ -149,4 +152,86 @@ Describe(a_tcp_client)
 		}
 	}
 
+	It(can_send_and_receive_packets_of_size_256_minus_header_size)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+		TcpClient client;
+		client.connectToServer( "127.0.0.1", "1337" );
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		Packet packet(TEST_PACKET_TYPE);
+		LargePacketStruct large;
+		packet.WriteData(&large, sizeof(LargePacketStruct));
+		Assert::That(packet.getDataSize(), Equals(Packet::HEADER_SIZE + sizeof(LargePacketStruct)));
+		client.sendPacket(packet);
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+		Packet packet_dst = server.popNewPacket();
+		Assert::That(packet_dst.getDataSize(), Equals(Packet::HEADER_SIZE + sizeof(LargePacketStruct)));
+
+	}
+
+	It(can_verify_that_all_server_broadcasts_are_received)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+		TcpClient client;
+		client.connectToServer( "127.0.0.1", "1337" );
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+
+		Packet packet(TEST_PACKET_TYPE);
+#ifdef STRESS_TEST
+		for(int i=0; i<50000; i++) {
+			server.broadcastPacket(packet);
+		}
+#else
+		for(int i=0; i<500; i++) {
+			server.broadcastPacket(packet);
+		}
+#endif
+
+#ifdef STRESS_TEST
+		boost::this_thread::sleep(boost::posix_time::millisec(2000));
+#else
+		boost::this_thread::sleep(boost::posix_time::millisec(100));
+#endif
+		client.processMessages();
+//		cout << client.getTotalNumberOfOverflowPackets() * (512 / packet.getDataSize()) << endl;
+		Assert::That(client.newPacketsCount(), Equals(500));
+	}
+
+	It(can_verify_that_the_total_packets_received_is_the_same_on_higher_level_as_it_is_on_lower_level)
+	{
+		TcpServer server;
+		server.startListening( 1337 );
+		TcpClient client;
+		client.connectToServer( "127.0.0.1", "1337" );
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		server.processMessages();
+
+		Packet packet(TEST_PACKET_TYPE);
+#ifdef STRESS_TEST
+		for(int i=0; i<50000; i++) {
+			server.broadcastPacket(packet);
+		}
+#else
+		for(int i=0; i<500; i++) {
+			server.broadcastPacket(packet);
+		}
+#endif
+
+#ifdef STRESS_TEST
+		boost::this_thread::sleep(boost::posix_time::millisec(2000));
+#else
+		boost::this_thread::sleep(boost::posix_time::millisec(100));
+#endif
+		client.processMessages();
+		client.askForCommProcessInfo();
+		boost::this_thread::sleep(boost::posix_time::millisec(50));
+		client.processMessages();
+		Assert::That(client.newPacketsCount(),
+			Equals(client.getTotalPacketsReceivedInCommProcess()));
+	}
 };

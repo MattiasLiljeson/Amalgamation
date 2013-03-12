@@ -56,7 +56,6 @@ class AglNodeAnimation
 private:
 	AglNodeAnimationHeader	m_header;		///< The header
 	AglKeyFrame*			m_keyFrames;		///< List of keyframes
-	unsigned int			m_lastEvaluated; ///< Last evaluated keyframe
 	AglScene*				m_scene;			///< Pointer to the scene context
 public:
 
@@ -91,6 +90,8 @@ public:
 	/// \param p_weight The weight this transform will be given in relation to the entire transform.
 	///
 	void appendTransform(float p_time, float p_weight);
+
+	AglMatrix evaluate(float p_time);
 
 	///
 	///Returns the minimum time of the animation sequence

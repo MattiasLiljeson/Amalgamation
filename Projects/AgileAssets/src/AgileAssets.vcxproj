@@ -60,14 +60,26 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>AgileUtility_x86_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
     </Lib>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -78,6 +90,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -86,8 +99,12 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>AgileUtility_x86_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -103,10 +120,13 @@
     <ClInclude Include="AglMesh.h" />
     <ClInclude Include="AglNode.h" />
     <ClInclude Include="AglNodeAnimation.h" />
+    <ClInclude Include="AglParticleSystem.h" />
+    <ClInclude Include="AglParticleSystemHeader.h" />
     <ClInclude Include="AglReader.h" />
     <ClInclude Include="AglScene.h" />
     <ClInclude Include="AglSkeleton.h" />
     <ClInclude Include="AglSkeletonMapping.h" />
+    <ClInclude Include="AglStandardParticle.h" />
     <ClInclude Include="AglWriter.h" />
   </ItemGroup>
   <ItemGroup>
@@ -119,6 +139,7 @@
     <ClCompile Include="AglMesh.cpp" />
     <ClCompile Include="AglNode.cpp" />
     <ClCompile Include="AglNodeAnimation.cpp" />
+    <ClCompile Include="AglParticleSystem.cpp" />
     <ClCompile Include="AglReader.cpp" />
     <ClCompile Include="AglScene.cpp" />
     <ClCompile Include="AglSkeleton.cpp" />

@@ -81,11 +81,17 @@ public:
 	/// \param p_dt The timestep
 	///
 	void				update(float p_dt);
+	void				setTime(float p_t);
 
 	///
 	/// Play the animation. Sets the m_isPlaying flag
 	///
 	void				play();
+
+	float getMinTime();
+	float getMaxTime();
+
+	AglMatrix evaluate(float p_time, unsigned int p_node);
 };
 
 #endif

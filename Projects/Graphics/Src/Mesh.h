@@ -4,9 +4,11 @@
 #include "PNTTBVertex.h"
 #include "DIndex.h"
 #include "Buffer.h"
+#include "MaterialInfo.h"
+#include "SkeletonMappingVertex.h"
 
 // =======================================================================================
-//                                      MEsh
+//                                      Mesh
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
@@ -20,7 +22,7 @@
 class Mesh
 {
 public:
-	Mesh( Buffer<PNTTBVertex>* p_vertexBuffer, Buffer<DIndex>* p_indexBuffer);
+	Mesh( Buffer<PNTTBVertex>* p_vertexBuffer, Buffer<SkeletonMappingVertex>* p_skeletonVertexBuffer, Buffer<DIndex>* p_indexBuffer);
 
 	///-----------------------------------------------------------------------------------
 	/// The Managers for the mesh will handle the deletion of each entities data.
@@ -35,16 +37,23 @@ public:
 	Buffer<PNTTBVertex>*	getVertexBuffer();
 
 	///-----------------------------------------------------------------------------------
+	/// Get a pointer to the skeleton vertex buffer.
+	/// \return Buffer<SkeletonMappingVertex>*
+	///-----------------------------------------------------------------------------------
+	Buffer<SkeletonMappingVertex>*	getSkeletonVertexBuffer();
+
+	///-----------------------------------------------------------------------------------
 	/// Get a pointer to the index buffer.
 	/// \return Buffer<DIndex>*
 	///-----------------------------------------------------------------------------------
 	Buffer<DIndex>*		getIndexBuffer();
 
 
-	unsigned int	getTextureId();					// Replace these with
-	void			setTextureId(unsigned int p_id);// material functionality later.
+	MaterialInfo	getMaterialInfo();					
+	void			setMaterial(const MaterialInfo& p_materialInfo);
 private:
 	Buffer<PNTTBVertex>* m_vertexBuffer;
+	Buffer<SkeletonMappingVertex>* m_skeletonVertexBuffer;
 	Buffer<DIndex>* m_indexBuffer;
-	unsigned int m_textureId; // replace for material id/material id list
+	MaterialInfo m_materialInfo;
 };

@@ -1,0 +1,12 @@
+<rml>
+	<head>
+		<title>Amalgamation</title>
+		<link type="text/template" href="window.rml" />
+	</head>
+	<body id="main_menu" template="window" onshow="modal">
+		<button class="Big" onclick="goto play">Play</button>
+		<button class="Big" onclick="goto options">Options</button>
+		<button class="Big" onclick="goto credits">Credits</button>
+		<button class="Big" onclick="exit">Quit</button>
+	</body>
+</rml>

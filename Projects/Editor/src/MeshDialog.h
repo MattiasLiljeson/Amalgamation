@@ -19,6 +19,9 @@ private:
 	static void TW_CALL CreateSphereGrid(void *clientData);
 	static void TW_CALL CreateBspTree(void *clientData);
 
+	static void TW_CALL meshTransformFix(void* clientData);
+	static void TW_CALL meshTransformFix2(void* clientData);
+
 public:
 	MeshDialog();
 	~MeshDialog();

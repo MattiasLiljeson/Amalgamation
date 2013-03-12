@@ -16,6 +16,10 @@ class RigidBody : public Body
 {
 private:
 		CompoundBody* mParent;
+		bool mImpulseEnabled;
+		bool mCollisionEnabled;
+
+		bool mCollisionFlag;
 
 protected:
 		AglBoundingSphere mBoundingSphere;
@@ -23,12 +27,12 @@ protected:
 protected:
 	virtual void CalculateInertiaTensor() = 0;
 	void SetInertiaTensor(AglMatrix pTensor);
-	void calcInvInertia();
+	void ComputeInertia();
 public:
 	RigidBody();
-	RigidBody(AglVector3 pPosition);
-	RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic = false, bool pUserControlled = false);
-	RigidBody(AglMatrix pCoordinateSystem, AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic = false, bool pUserControlled = false);
+	RigidBody(AglVector3 pPosition, bool pImpulseEnabled = false);
+	RigidBody(AglVector3 pPosition, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic = false, bool pUserControlled = false, bool pImpulseEnabled = false);
+	RigidBody(AglMatrix pWorld, float pMass, AglVector3 pVelocity, AglVector3 pAngularVelocity, bool pStatic = false, bool pUserControlled = false, bool pImpulseEnabled = false);
 	virtual ~RigidBody();
 	virtual RigidBodyType	GetType() = 0;
 
@@ -59,14 +63,11 @@ public:
 
 	AglMatrix					GetLocalInertia() const;
 	AglMatrix					GetInvInertiaWorld() const; //Wait with this for now. Simply return Matrix zero
-	bool					IsStatic() const; //NOT
 	void					SetTempStatic(bool pValue){ mTempStatic = pValue;} //NOT
 
 	void AddImpulse(AglVector3 pImpulse);
-	void AddAngularImpulse(AglVector3 pAngularImpulse);
+	void AddAngularImpulse(AglVector3 pAngularImpulse, bool p_propagate = true);
 
-	virtual void UpdateVelocity(float pElapsedTime); //NOT
-	virtual void UpdatePosition(float pElapsedTime); //NOT
 	void RevertVelocity(); //NOT
 	void RevertPosition(); //NOT
 	virtual AglBoundingSphere GetBoundingSphere() const; //NOT
@@ -75,7 +76,17 @@ public:
 	virtual AglVector3 GetLocalCenterOfMass() = 0;
 
 	void SetParent(CompoundBody* pParent);
+	void SetParent(CompoundBody* pParent, AglMatrix pLocalTransform);
 	CompoundBody* GetParent();
+
+	bool IsImpulseEnabled(){ return mImpulseEnabled; }
+	bool IsCollisionEnabled(){ return mCollisionEnabled; }
+
+	void SetCollisionEnabled(bool pEnabled){ mCollisionEnabled = pEnabled; }
+	void SetImpulseEnabled(bool pEnabled){ mImpulseEnabled = pEnabled;}
+
+	void SetCollisionFlag(bool pValue){ mCollisionFlag = pValue; }
+	bool IsCollisionFlagged(){ return mCollisionFlag; }
 };
 
 #endif

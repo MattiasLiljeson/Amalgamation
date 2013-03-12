@@ -16,6 +16,9 @@
     <Filter Include="AudioEngine\Structs">
       <UniqueIdentifier>{fab5f3e9-5373-445d-a1a2-73cc83300740}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AudioEngine\Callbacks">
+      <UniqueIdentifier>{acd1d05c-c6c9-4b94-bcc8-0a0fa6ea089d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XAudio2Exception.h">
@@ -45,13 +48,19 @@
     <ClInclude Include="SoundEnums.h">
       <Filter>AudioEngine\SoundFiles</Filter>
     </ClInclude>
-    <ClInclude Include="SoundOrientation.h">
-      <Filter>AudioEngine</Filter>
-    </ClInclude>
     <ClInclude Include="PositionalSoundCreationInfo.h">
       <Filter>AudioEngine\Structs</Filter>
     </ClInclude>
     <ClInclude Include="BasicSoundCreationInfo.h">
+      <Filter>AudioEngine\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundBufferAndHeader.h">
+      <Filter>AudioEngine\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundOrientation.h">
+      <Filter>AudioEngine\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioHeader.h">
       <Filter>AudioEngine\Structs</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,11 +1,20 @@
 #pragma once
 
+#include <AntTweakBarWrapper.h>
 #include <EntitySystem.h>
 #include <Windows.h>
 
 
-class Window;
+class AglParticleSystem;
 class GraphicsWrapper;
+class Window;
+struct AglMeshHeader;
+struct AglVector2;
+struct ConnectionPointCollection;
+struct InstanceData;
+struct ParticleSystemAndTexture;
+struct RendererSceneInfo;
+struct GameSettingsInfo;
 // =======================================================================================
 //                                      GraphicsBackendSystem
 // =======================================================================================
@@ -21,19 +30,26 @@ class GraphicsWrapper;
 class GraphicsBackendSystem : public EntitySystem
 {
 public:
-	GraphicsBackendSystem( HINSTANCE p_hInstance, int p_scrWidth = 800, 
-		int p_scrHeight = 600, bool p_windowed = true );
+	GraphicsBackendSystem( HINSTANCE p_hInstance, GameSettingsInfo& p_settings );
 	~GraphicsBackendSystem(void);
+
+	void changeResolution( int p_scrWidth, int p_scrHeight );
 
 	virtual void initialize();
 	void process();
 
-	unsigned int createMesh( const string& p_meshName,
-							 const string* p_path=NULL );
+	// vector<Entity*> buildEntitiesFromMeshFile( const string& p_meshName, const string* p_path=NULL);
+	// int				loadSingleMesh( const string& p_meshName, const string* p_path=NULL);
+
 	int getMeshId( const string& p_meshName );
 	GraphicsWrapper* getGfxWrapper();
 	HWND getWindowRef();
+	float getAspectRatio();
+	AglVector2 getWindowSize();
 
+	void renderParticleSystem( ParticleSystemAndTexture* p_system,
+		const InstanceData& p_worldTransform );
+	void applySettings(GameSettingsInfo& p_settings);
 private:
 	GraphicsWrapper* m_graphicsWrapper;
 
@@ -43,5 +59,21 @@ private:
 	int m_scrWidth;
 	int m_scrHeight;
 	bool m_windowed;
+	bool m_enableHdr;
+	bool m_enableEffects;
+	bool m_vsync;
+	bool m_tesselation;
+	bool m_wireframe;
+	/************************************************************************/
+	/* DEBUG FUNCTIONS ONLY! */
+	/************************************************************************/
+	static GraphicsBackendSystem* m_selfPointer;
+
+	int m_newWidth;
+	int m_newHeight;
+private:
+	static void TW_CALL toggleFullScreen(void* p_clientData);
+	static void TW_CALL toggleWireframe(void* p_clientData);
+	static void TW_CALL applyNewResolution(void* p_clientData);
 };
 

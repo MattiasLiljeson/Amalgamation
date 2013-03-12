@@ -20,38 +20,30 @@ AglJoint* AglSkeleton::getJoints()
 {
 	return m_joints;
 }
-AglJoint* AglSkeleton::getRoot()
+AglJoint AglSkeleton::getRoot()
 {
-	AglJoint* j = NULL;
+	AglJoint j;
 	int ind = -1;
 	for (int i = 0; i < m_header.jointCount; i++)
 	{
 		if (m_joints[i].parentIndex < 0)
 		{
-			j = &m_joints[i];
+			j = m_joints[i];
 			ind = i;
 			break;
 		}
 	}
-	int count = 0;
-	do 
-	{
-		int newInd = -1;
-		for (int i = 0; i < m_header.jointCount; i++)
-		{
-			if (m_joints[i].parentIndex == ind)
-			{
-				newInd = i;
-				count++;
-			}
-		}
-		if (count == 1)
-		{
-			ind = newInd;
-			j = &m_joints[ind];
-		}
-	} while (count > 0 && count < 2);
 	return j;
+}
+vector<AglJoint> AglSkeleton::getChildren(int p_parent)
+{
+	vector<AglJoint> children;
+	for (unsigned int i = 0; i < m_header.jointCount; i++)
+	{
+		if (m_joints[i].parentIndex == p_parent)
+			children.push_back(m_joints[i]);
+	}
+	return children;
 }
 
 AglMatrix AglSkeleton::getGlobalTransform(int p_joint)
@@ -66,8 +58,18 @@ AglMatrix AglSkeleton::getGlobalTransform(int p_joint)
 
 	if (j.parentIndex >= 0)
 		return transform * getGlobalTransform(j.parentIndex);
-	return transform;
+	return transform * m_header.baseTransform;
 }
+AglMatrix AglSkeleton::getGlobalTransform(int p_joint, float p_time)
+{
+	int k = 0;
+	k = 1 / k;
+	//INCORRECT!
+	//AglAnimation* anim = m_scene->getAnimation(0);
+	//return anim->evaluate(p_time, m_joints[p_joint].nodeID);
+	return AglMatrix::identityMatrix();
+}
+
 AglMatrix AglSkeleton::getInverseBindMatrix(int p_joint)
 {
 	AglJoint j = m_joints[p_joint];

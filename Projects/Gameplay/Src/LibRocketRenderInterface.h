@@ -1,16 +1,18 @@
 #pragma once
 
-#include <Rocket/Core.h>
-#include <vector>
 
 #include <AglMatrix.h>
 #include <Buffer.h>
-#include <BufferFactory.h>
-#include <DIndex.h>
 #include <GraphicsWrapper.h>
-#include <Mesh.h>
-#include <PTVertex.h>
-#include <Texture.h>
+#include <Rocket/Core.h>
+#include <vector>
+
+class BufferFactory;
+struct DIndex;
+struct InstanceData;
+class Mesh;
+struct PNTTBVertex;
+struct Texture;
 
 using namespace std;
 
@@ -68,19 +70,30 @@ public:
 	/// Returns the native vertical texel offset for the renderer.
 	float GetVerticalTexelOffset();
 
+	void updateOnWindowResize();
+
 private:
 	AglMatrix createWorldMatrix();
 	vector<InstanceData> instanceDataVectorFromMatrix( const AglMatrix& p_matrix );
 
+	// Used to make sure that all geometries are released.
+	vector<RocketCompiledGeometry*> m_compiledGeometries;
+
 private:
+	//DEBUG:
+	int numCompiledGeometries; 
+
+	// Std texture used when no texture is specified for the geometry
+	unsigned int m_stdTextureId;
+
 	typedef PNTTBVertex VertexType;	//change this per impl
 	BufferFactory* m_factory;
 	GraphicsWrapper* m_wrapper;
 	AglMatrix m_NDCFrom2dMatrix;
 
 	//States
-	ID3D11RasterizerState* rs_scissorsOn;
-	ID3D11RasterizerState* rs_scissorsOff;
+	// ID3D11RasterizerState* rs_scissorsOn; // state functionality abstracted and moved 
+	// ID3D11RasterizerState* rs_scissorsOff; // to graphicswrapper and renderer --Jarl
 
 	//vector<InstanceData> m_NDCFrom2dMatrixVector;
 };

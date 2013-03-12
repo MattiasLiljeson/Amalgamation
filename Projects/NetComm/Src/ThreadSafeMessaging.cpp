@@ -36,32 +36,20 @@ void ThreadSafeMessaging::putMessage( ProcessMessage* p_message )
 	}
 }
 
-ProcessMessage* ThreadSafeMessaging::popMessage()
+void ThreadSafeMessaging::putMessages( queue<ProcessMessage*> p_messages )
 {
-	ProcessMessage* message = NULL;
+	if( p_messages.size() > 0 )
+	{
+		m_guard->lock();
 
-	m_guard->lock();
+		while( p_messages.size() > 0 )
+		{
+			m_messageQueue.push( p_messages.front() );
+			p_messages.pop();
+		}
 
-	message = m_messageQueue.front();
-	m_messageQueue.pop();
-
-	m_guard->unlock();
-
-
-	return message;
-}
-
-unsigned int ThreadSafeMessaging::getMessageCount()
-{
-	unsigned int messageCount = 0;
-
-	m_guard->lock();
-
-	messageCount = m_messageQueue.size();
-
-	m_guard->unlock();
-
-	return messageCount;
+		m_guard->unlock();
+	}
 }
 
 queue< ProcessMessage* > ThreadSafeMessaging::checkoutMessageQueue()

@@ -1,8 +1,15 @@
 #include "EntityWorld.h"
-
+#include "OutputLogger.h"
 
 EntityWorld::EntityWorld()
 {
+	m_totalGameTime = 0;
+	m_delta = 0.01f;
+	m_shutdown = false;
+	m_hostServer = false;
+	
+	m_aspectRatio = 800.0f/600.0f;
+
 	m_componentManager = new ComponentManager();
 	setManager( Manager::ComponentManager, m_componentManager );
 		
@@ -42,6 +49,11 @@ ComponentManager* EntityWorld::getComponentManager()
 	return m_componentManager;
 }
 
+SystemManager* EntityWorld::getSystemManager()
+{
+	return m_systemManager;
+}
+
 Manager* EntityWorld::setManager( Manager::ManagerTypeIdx p_managerType, Manager* p_manager )
 {
 	int reqSize = p_managerType+1;  // index+1 = required size 
@@ -63,7 +75,7 @@ void EntityWorld::deleteManager( Manager* p_manager )
 {
 	// Find the correct manager-object in the vector and delete it from both the vector
 	// and the bag by using the other overloaded variant of this function;
-	// HACK: break in for-loop below
+	//NOTE: break in for-loop 
 	for( unsigned int i=0; i<m_managers.size(); i++ )
 	{
 		if(m_managers[i] == p_manager)
@@ -77,7 +89,7 @@ void EntityWorld::deleteManager( Manager* p_manager )
 void EntityWorld::deleteManager( Manager::ManagerTypeIdx p_managerType )
 {
 	// Find the correct manager-object in the bag and delete it;
-	// HACK: break in for-loop below
+	//NOTE: break in for-loop 
 	for( unsigned int i=0; i<m_managersBag.size(); i++ )
 	{
 		if( m_managersBag[i] == m_managers[p_managerType])
@@ -105,35 +117,84 @@ void EntityWorld::setDelta( float p_dt )
 	m_delta = p_dt;
 }
 
+float EntityWorld::getAspectRatio()
+{
+	return m_aspectRatio;
+}
+
+void EntityWorld::setAspectRatio(float p_aspectRatio)
+{
+	m_aspectRatio=p_aspectRatio;
+}
+
 void EntityWorld::addEntity( Entity* p_entity )
 {
-	m_added.push_back(p_entity);
+	if( p_entity != NULL )
+	{
+		// Add only to vector if not already in the m_added vector
+		//NOTE: early return in for-loop 
+		for( unsigned int i=0; i<m_added.size(); i++ )
+			if( m_added[i] == p_entity )
+				return;
+
+		m_added.push_back(p_entity);
+	}
 }
 
 void EntityWorld::changedEntity( Entity* p_entity )
 {
-	m_changed.push_back(p_entity);
+	if( p_entity != NULL )
+	{
+		// Add only to vector if not already in the m_changed vector
+		//NOTE: early return in for-loop 
+		for( unsigned int i=0; i<m_changed.size(); i++ )
+			if( m_changed[i] == p_entity )
+				return;
+
+		m_changed.push_back(p_entity);
+	}
 }
 
 void EntityWorld::deleteEntity( Entity* p_entity )
 {
-	// Add only to vector if not already in the m_deleted vector
-	// HACK: Early return in for-loop below!
-	for( unsigned int i=0; i<m_deleted.size(); i++ )
-		if( m_deleted[i] == p_entity )
-			return;
+	if( p_entity != NULL )
+	{
+		// Add only to vector if not already in the m_deleted vector
+		//NOTE: early return in for-loop 
+		for( unsigned int i=0; i<m_deleted.size(); i++ )
+			if( m_deleted[i] == p_entity )
+				return;
 
-	m_deleted.push_back(p_entity);
+		m_deleted.push_back(p_entity);
+	}
 }
 
 void EntityWorld::enable( Entity* p_entity )
 {
-	m_enable.push_back(p_entity);
+	if( p_entity != NULL )
+	{
+		// Add only to vector if not already in the m_enable vector
+		//NOTE: early return in for-loop 
+		for( unsigned int i=0; i<m_enable.size(); i++ )
+			if( m_enable[i] == p_entity )
+				return;
+
+		m_enable.push_back(p_entity);
+	}
 }
 
 void EntityWorld::disable( Entity* p_entity )
 {
-	m_disable.push_back(p_entity);
+	if( p_entity != NULL )
+	{
+		// Add only to vector if not already in the m_disable vector
+		//NOTE: early return in for-loop 
+		for( unsigned int i=0; i<m_deleted.size(); i++ )
+			if( m_disable[i] == p_entity )
+				return;
+
+		m_disable.push_back(p_entity);
+	}
 }
 
 Entity* EntityWorld::createEntity()
@@ -153,6 +214,12 @@ SystemManager* EntityWorld::getSystems()
 	return m_systemManager;
 }
 
+EntitySystem* EntityWorld::setSystem( EntitySystem* p_system,
+									 bool p_enabled )
+{
+	return setSystem( p_system->getSystemType(), p_system, p_enabled );
+}
+
 EntitySystem* EntityWorld::setSystem( SystemType p_type, EntitySystem* p_system,
 		bool p_enabled )
 {
@@ -165,12 +232,6 @@ EntitySystem* EntityWorld::setSystem( SystemType::SystemTypeIdx p_typeIdx, Entit
 	p_system->setWorld( this );
 	//m_systemsBag.push_back( p_system );
 	return m_systemManager->setSystem( p_typeIdx, p_system, p_enabled );
-}
-
-EntitySystem* EntityWorld::setSystem( EntitySystem* p_system,
-									 bool p_enabled )
-{
-	return setSystem( p_system->getSystemType(), p_system, p_enabled );
 }
 
 void EntityWorld::deleteSystem( SystemType p_type )
@@ -227,7 +288,7 @@ void EntityWorld::check( vector<Entity*>& p_entities, IPerformer* p_performer )
 		p_entities.clear();
 	}
 
-	// HACK: Performance killer. Result of direct port of Java impl.
+	// NOTE: This may be a performance issue. Result of direct port of Java impl.
 	delete p_performer;
 }
 
@@ -235,25 +296,63 @@ void EntityWorld::process()
 {
 	m_totalGameTime += m_delta;
 
+	prePerformManagers();
 	check( m_added,   new AddedPerformer );
 	check( m_changed, new ChangedPerformer );
 	check( m_disable, new DisabledPerformer );
 	check( m_enable,  new EnabledPerformer );
 	check( m_deleted, new DeletedPerformer );
+	postPerformManagers();
 
 	m_systemManager->updateSynchronous();
 }
 
-//void EntityWorld::deleteSystemFromBag(EntitySystem* system)
-//{
-//	//HACK: break in for-loop
-//	vector<EntitySystem*>::iterator it;
-//	for( it=m_systemsBag.begin(); it != m_systemsBag.end(); it++ )
-//	{
-//		if( *it == system )
-//		{
-//			m_systemsBag.erase(it);
-//			break;
-//		}
-//	}
-//}
+void EntityWorld::requestToShutDown()
+{
+	m_shutdown = true;
+}
+
+bool EntityWorld::shouldShutDown()
+{
+	return m_shutdown;
+}
+
+void EntityWorld::requestToHostServer()
+{
+	m_hostServer = true;
+}
+
+void EntityWorld::requestToQuitServer()
+{
+	m_hostServer = false;
+}
+
+
+bool EntityWorld::isHostingServer()
+{
+	return m_hostServer;
+}
+
+const double& EntityWorld::getTotalSystemsTime() const
+{
+	return m_systemManager->getTotalSystemExecutionTime();
+}
+
+void EntityWorld::prePerformManagers()
+{
+	for( unsigned int i=0; i<m_managersBag.size(); i++ )
+		m_managersBag[i]->prePerform();
+}
+
+void EntityWorld::postPerformManagers()
+{
+	for( unsigned int i=0; i<m_managersBag.size(); i++ )
+		m_managersBag[i]->postPerform();
+}
+
+OutputLogger* EntityWorld::getOutputLogger()
+{
+	return static_cast<OutputLogger*>(m_systemManager->getSystem(SystemType::LogToFileSystem));
+}
+
+

@@ -6,10 +6,9 @@ int main(int argc, char** argv)
 	Srv::ServerApplication* application;
 	application = new Srv::ServerApplication();
 
-	application->run();
+	application->body();
 
 	delete application;
 
 	return 0;
 }
-

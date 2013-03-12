@@ -3,17 +3,24 @@
 #include "Buffer.h"
 #include "BufferConfig.h"
 #include "CBuffers.h"
-#include "ShaderInitStruct.h"
+#include "ShaderVariableContainer.h"
 #include "ShaderStageConfig.h"
 #include "ShaderStageData.h"
 #include <D3DCompiler.h>
 #include <comdef.h>
 #include <d3d11.h>
+#include <vector>
 
 class BufferFactory;
 class DeferredBaseShader;
+class DeferredAnimatedBaseShader;
+class DeferredTessBaseShader;
+class DeferredTessAnimatedBaseShader;
 class DeferredComposeShader;
-class RocketShader;
+class LightShader;
+class GUIShader;
+class ParticleShader;
+class ShadowShader;
 
 // =======================================================================================
 //                                      ShaderFactory
@@ -32,29 +39,35 @@ public:
 	ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext,
 		D3D_FEATURE_LEVEL p_featureLevel);
 	virtual ~ShaderFactory();
+	
+	DeferredBaseShader* createDeferredBaseShader(const LPCWSTR& p_vertexPath, const LPCWSTR& p_pixelPath);
 
-	///-----------------------------------------------------------------------------------
-	/// This method returns the basic deferred base shader used to draw primitives to 
-	/// various render targets.
-	/// \param p_filePath
-	/// \return DeferredBaseShader*
-	///-----------------------------------------------------------------------------------
-	DeferredBaseShader* createDeferredBaseShader(const LPCWSTR& p_filePath);
+	DeferredAnimatedBaseShader* createDeferredAnimatedShader(const LPCWSTR& p_vertexPath, const LPCWSTR& p_pixelPath);
 
-	///-----------------------------------------------------------------------------------
-	/// This method returns the basic deferred base shader used to draw primitives to 
-	/// various render targets.
-	/// \param p_filePath
-	/// \return DeferredComposeShader*
-	///-----------------------------------------------------------------------------------
+	DeferredTessBaseShader* createDeferredTessBaseShader(const LPCWSTR& p_filePath);
+
+	DeferredTessBaseShader* createDeferredTesselationBaseShader(const LPCWSTR& p_vertexPath, 
+		const LPCWSTR& p_hullPath, const LPCWSTR& p_domainPath, const LPCWSTR& p_pixelPath);
+
+	DeferredTessAnimatedBaseShader* createDeferredTessAnimatedShader(const LPCWSTR& p_filePath);
+
+	DeferredTessAnimatedBaseShader* createDeferredTessAnimatedShader(const LPCWSTR& p_vertexPath,
+		const LPCWSTR& p_hullPath, const LPCWSTR& p_dominPath, const LPCWSTR& p_pixelPath);
+
 	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
 
+	LightShader* createLightShader(const LPCWSTR& p_filePath);
+
 	///-----------------------------------------------------------------------------------
-	/// This method returns the rocket shader used in conjuction with librocket.
+	/// This method returns the GUI shader used for menus and HUDs.
 	/// \param p_filePath
 	/// \return DeferredComposeShader*
 	///-----------------------------------------------------------------------------------
-	RocketShader* createRocketShader(const LPCWSTR& p_filePath);
+	GUIShader* createGUIShader(const LPCWSTR& p_filePath);
+
+	ParticleShader* createParticleShader(const LPCWSTR& p_filePath);
+
+	ShadowShader* createShadowShader(const LPCWSTR& p_filePath);
 private:
 
 	///-----------------------------------------------------------------------------------
@@ -80,13 +93,6 @@ private:
 		HSData* p_hs=NULL, DSData* p_ds=NULL);
 
 	///-----------------------------------------------------------------------------------
-	/// A helper function that creates a given sampler stage
-	/// \param p_samplerState
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void createSamplerState(ID3D11SamplerState** p_samplerState);
-
-	///-----------------------------------------------------------------------------------
 	/// A helper function that creates and configures the shader from the specified input
 	/// \param p_shaderInitData
 	/// \param p_inputLayout
@@ -98,10 +104,8 @@ private:
 	/// \param p_dsd
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void createShaderInitData(ShaderInitStruct* p_shaderInitData,
-		ID3D11InputLayout* p_inputLayout,
-		VSData* p_vsd, PSData* p_psd, 
-		ID3D11SamplerState* p_samplerState=NULL,
+	void createShaderInitData(ShaderVariableContainer* p_shaderInitData,
+		ID3D11InputLayout* p_inputLayout, VSData* p_vsd, PSData* p_psd=NULL,
 		GSData* p_gsd=NULL, HSData* p_hsd=NULL, DSData* p_dsd=NULL);
 
 	///-----------------------------------------------------------------------------------
@@ -137,6 +141,8 @@ private:
 	///-----------------------------------------------------------------------------------
 	void createPNTTBVertexInputLayout(VSData* p_vs, ID3D11InputLayout** p_inputLayout);
 
+	void createParticleInputLayout(VSData* p_vs, ID3D11InputLayout** p_inpuyLayout);
+
 	///-----------------------------------------------------------------------------------
 	/// Creates a inputlayout for Instanced PNTVertex
 	/// \param p_vs
@@ -144,6 +150,12 @@ private:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void createInstancedPNTTBVertexInputLayout(VSData* p_vs, 
+		ID3D11InputLayout** p_inputLayout);
+
+	void createInstancedAnimatedPNTTBVertexInputLayout( VSData* p_vs, 
+		ID3D11InputLayout** p_inputLayout );
+
+	void createInstancedLightInputLayout( VSData* p_vertexShader,
 		ID3D11InputLayout** p_inputLayout);
 
 private:

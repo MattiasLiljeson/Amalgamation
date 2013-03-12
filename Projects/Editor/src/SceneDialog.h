@@ -7,6 +7,8 @@
 #include "AGLLoader.h"
 #include "MeshDialog.h"
 #include "MaterialDialog.h"
+#include "ParticleSystemDialog.h"
+#include "MergeDialog.h"
 
 class SceneDialog
 {
@@ -18,6 +20,8 @@ private:
 	//Spawned Dialog
 	MeshDialog* m_meshDialog;
 	MaterialDialog* m_materialDialog;
+	ParticleSystemDialog* m_particleSystemDialog;
+	MergeDialog*			m_mergeDialog;
 private:
 	//Private Functions
 	SceneDialog();
@@ -25,18 +29,34 @@ private:
 private:
 	//Callbacks
 	static void TW_CALL OpenMeshDialog(void *clientData);
+	static void TW_CALL OpenParticleSystemDialog(void *clientData);
 	static void TW_CALL OpenMaterialDialog(void *clientData);
+	static void TW_CALL OpenMergeDialog(void *clientData);
 	static void TW_CALL LoadAGL(void *clientData);
 	static void TW_CALL SaveAGL(void *clientData);
 	static void TW_CALL AddMaterial(void *clientData);
+	void				AddMaterial(AglMaterial* pMaterial);
+	static void TW_CALL AddPE(void* clientData);
+	void				AddPE(AglParticleSystem* pParticleSystem, int p_index);
+
 	static void TW_CALL SetCOSystem(void *clientData);
+
+	static void TW_CALL RestartParticles(void *clientData);
 public:
 	//Static functions
 	static SceneDialog* GetInstance();
 	static void Release();
+
+	void ClonePE(AglParticleSystemHeader pHeader);
 public:
 	void SetCurrentMesh(int pIndex);
+	void SetCurrentParticleSystem(int pIndex);
 	void SetCurrentMaterial(int pIndex);
+
+	void RemoveMaterial(AglMaterial* pMaterial);
+	void RemoveParticleSystem(AglParticleSystem* pParticleSystem);
+
+	MaterialDialog* GetMaterialDialog(){ return m_materialDialog; }
 };
 
 #endif

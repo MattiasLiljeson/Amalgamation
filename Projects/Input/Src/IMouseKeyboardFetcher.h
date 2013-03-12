@@ -20,8 +20,11 @@ public:
 	virtual ~IMouseKeyboardFetcher();
 
 	virtual void update() = 0;
-	virtual InputHelper::KEY_STATE getKeyState( int p_key ) = 0;
-	virtual InputHelper::KEY_STATE getMouseBtnState( int p_key ) = 0;
+	virtual InputHelper::KeyStates getKeyState( int p_key ) = 0;
+	virtual InputHelper::KeyStates getMouseBtnState( int p_key ) = 0;
 	virtual int getMousePos( int p_axis ) = 0;
 	virtual int getMouseTravel( int p_axis ) = 0;
+	virtual void setMouseSensitivity( const float p_sensitivity ) = 0;
+	virtual const float getMouseSensitivity() const = 0;
+
 };

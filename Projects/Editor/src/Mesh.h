@@ -49,11 +49,13 @@ private:
 	//Temp
 	AglVector3 spos;
 
+	AglMaterial* overrideMaterial;
+
 public:
 	Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, Scene* pScene);
 	~Mesh();
 
-	void Init(AglMesh* pMesh, AglReader* pReader);
+	void Init(AglMesh* pMesh);
 	template <class T>
 	void Init(T* pVertices, int pVertexCount, unsigned int* pIndices, int pIndexCount);
 
@@ -64,7 +66,7 @@ public:
 	void DrawNormals(AglMatrix pWorld, float pScale);
 
 	void AddSkeletonMapping(SkeletonMapping* pSkeletonMapping);
-	void AddMaterial(int pMaterial, bool pSetAsCurrent);
+	void SetMaterial(int pMaterial);
 	void AddGradient(AglGradient* pGradient, bool pSetAsCurrent);
 
 	int					  GetIndexCount();
@@ -78,7 +80,7 @@ public:
 	void				  SetDrawNormals(float p_drawNormals){ m_normalLength = p_drawNormals; }
 	float				  GetDrawNormals(){ return m_normalLength; }
 
-	void				  SetBspTree(AglLooseBspTree* p_tree){ bsptree = p_tree;}
+	void				  SetBspTree(AglLooseBspTree* p_tree){ bsptree = p_tree; m_treeLevel = 0;}
 	void				  SetInteriorSpheres(AglInteriorSphereGrid* p_grid){ m_grid = p_grid;}	
 
 	void update(float p_elapsedTime);
@@ -92,6 +94,15 @@ public:
 	bool*				getDrawTree(){ return &m_drawTree; }
 	bool*				getDrawGrid(){ return &m_drawSphereGrid; }
 	unsigned int*		getTreeLevel(){ return &m_treeLevel; }
+	AglMatrix			getTransform(){ return mMesh->getHeader().transform; }
+	bool				hasSkeleton(){ return mSkeletonMappings.size() > 0;}
+	void				setOverrideMaterial(AglMaterial* p_mat){ overrideMaterial = p_mat;}
+	int					getCurrentMaterial(){ return mCurrentMaterial; }
+	AglSkeleton*		getPrimarySkeleton();
+	void				setTransform(AglMatrix p_transform)
+	{
+		mMesh->setTransform(p_transform);
+	}
 };
 
 template <typename T>

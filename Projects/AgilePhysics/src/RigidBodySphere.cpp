@@ -9,11 +9,21 @@ void RigidBodySphere::CalculateInertiaTensor()
 	if (mUserControlled)
 		SetInertiaTensor(AglMatrix(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
 }
-RigidBodySphere::RigidBodySphere(AglVector3 pPosition, float pRadius, bool userControlled): RigidBody(pPosition, ONE_KILOGRAM, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, false)
+RigidBodySphere::RigidBodySphere(AglVector3 pPosition, float pRadius, bool userControlled, bool pImpulseEnabled): RigidBody(pPosition, ONE_KILOGRAM, AglVector3(0, 0, 0), AglVector3(0, 0, 0), false, false, pImpulseEnabled)
 {
 	mRadius = pRadius;
 	mBoundingSphere.radius = pRadius;
 	CalculateInertiaTensor();
+}
+RigidBodySphere::RigidBodySphere(AglMatrix p_world, float p_radius, float p_mass, AglVector3 p_velocity, AglVector3 p_angularVelocity, bool p_static, 
+				CompoundBody* pParent, bool pImpulseEnabled) :
+				 RigidBody(p_world, p_mass, p_velocity, p_angularVelocity, p_static, false, pImpulseEnabled)
+{
+	
+	mRadius = p_radius;
+	mBoundingSphere.radius = p_radius;
+	CalculateInertiaTensor();
+	SetParent(pParent);
 }
 RigidBodySphere::~RigidBodySphere()
 {

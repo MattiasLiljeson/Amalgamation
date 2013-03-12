@@ -13,6 +13,8 @@
   <ItemGroup>
     <ClCompile Include="AnalogueControl.cpp" />
     <ClCompile Include="Control.cpp" />
+    <ClCompile Include="ControlSet.cpp" />
+    <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="DigitalControl.cpp" />
     <ClCompile Include="DirectInputFetcher.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -29,6 +31,8 @@
     <ClCompile Include="XInputFetcher.cpp" />
     <ClInclude Include="AnalogueControl.h" />
     <ClInclude Include="Control.h" />
+    <ClInclude Include="ControlSet.h" />
+    <ClInclude Include="Cursor.h" />
     <ClInclude Include="DigitalControl.h" />
     <ClInclude Include="DirectInputException.h" />
     <ClInclude Include="DirectInputFetcher.h">
@@ -96,6 +100,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -103,7 +111,14 @@
     </Link>
     <Lib>
       <AdditionalDependencies>dinput8.lib;dxguid.lib;</AdditionalDependencies>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
     </Lib>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -114,6 +129,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -124,6 +140,9 @@
     <Lib>
       <AdditionalDependencies>dinput8.lib;dxguid.lib;</AdditionalDependencies>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

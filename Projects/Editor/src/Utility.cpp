@@ -104,6 +104,32 @@ string openfilename(char *filter, HWND owner)
 	fileNameStr = fileName;
 	return fileNameStr;
 }
+string openFolder()
+{
+	BROWSEINFO   bi; 
+	ZeroMemory(&bi,   sizeof(bi)); 
+	TCHAR   szDisplayName[MAX_PATH]; 
+	szDisplayName[0]    =   ' ';  
+
+	bi.hwndOwner        =   NULL; 
+	bi.pidlRoot         =   NULL; 
+	bi.pszDisplayName   =   szDisplayName; 
+	bi.lpszTitle        =   "Please select a folder for storing received files :"; 
+	bi.ulFlags          =   BIF_RETURNONLYFSDIRS;
+	bi.lParam           =   NULL; 
+	bi.iImage           =   0;  
+
+	LPITEMIDLIST   pidl   =   SHBrowseForFolder(&bi);
+	TCHAR   szPathName[MAX_PATH]; 
+	/*if   (NULL   !=   pidl)
+	{
+		BOOL bRet = SHGetPathFromIDList(pidl,szPathName);
+		if(FALSE == bRet)
+			return;
+		AfxMessageBox(szPathName);
+	}*/
+	return "";
+}
 string savefilename(char *filter, HWND owner) 
 {
 	OPENFILENAMEA ofn;
@@ -130,6 +156,13 @@ void removePath(string& s)
 		ind = s.find_last_of('/');
 	if (ind != -1)
 		s = s.substr(ind+1, s.size() - ind);
+}
+string getPath(string s)
+{
+	int ind = s.find_last_of('\\');
+	if (ind == -1)
+		ind = s.find_last_of('/');
+	return s.substr(0, ind+1);
 }
 
 ShaderData::~ShaderData()

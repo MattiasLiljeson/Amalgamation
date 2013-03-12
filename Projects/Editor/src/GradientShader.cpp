@@ -61,7 +61,7 @@ ID3D11InputLayout* GradientShader::GetInputLayout()
 }
 void GradientShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pProjection, float pScale, AglGradient* pGradient)
 {
-	pWorld = AglMatrix::transpose(pWorld);
+	/*pWorld = AglMatrix::transpose(pWorld);
 	pView = AglMatrix::transpose(pView);
 	pProjection = AglMatrix::transpose(pProjection);
 
@@ -114,5 +114,5 @@ void GradientShader::SetBuffer(AglMatrix pWorld, AglMatrix pView, AglMatrix pPro
 		TextureData* td = TextureManager::GetInstance()->GetTexture(s);
 		if (td)
 			mDeviceContext->PSSetShaderResources(1, 1, &td->SRV);
-	}
+	}*/
 }

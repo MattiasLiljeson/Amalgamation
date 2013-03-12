@@ -7,12 +7,20 @@
 #include "PNTVertex.h"
 #include "PNTTBVertex.h"
 #include "DIndex.h"
+#include "RenderSceneInfoCBuffer.h"
+#include "ShadowCBuffer.h"
+#include "PerShadowCBuffer.h"
+#include "SSAOCBuffer.h"
 
 // #include "TextureBuffers.h"
 // #include "VertexBuffers.h"
 // etc?
 
+class LightMesh;
 class Mesh;
+
+struct LightInstanceData;
+struct ParticleCBuffer;
 
 // =======================================================================================
 //                                      BufferFactory
@@ -50,6 +58,10 @@ public:
 	Buffer<InstanceData>* createInstanceBuffer(InstanceData* p_instanceList,
 												 unsigned int p_numberOfElements);
 
+	// Duplicate of createInstanceBuffer() but for lights
+	Buffer<LightInstanceData>* createLightInstanceBuffer( LightInstanceData* p_instanceList,
+		unsigned int p_numberOfElements );
+
 	///-----------------------------------------------------------------------------------
 	/// Constructs a vertex buffer of a specified type T.
 	/// \param p_vertices
@@ -69,13 +81,31 @@ public:
 	Buffer<DIndex>* createIndexBuffer(DIndex* p_indices,
 									  unsigned int p_numberOfElements);
 
+	Buffer<ParticleCBuffer>* createParticleCBuffer();
+
+	Buffer<RenderSceneInfoCBuffer>*  createRenderSceneInfoCBuffer();
+
+	Buffer<ShadowCBuffer>* createShadowBuffer();
+
+	Buffer<PerShadowCBuffer>*	createPerShadowBuffer();
+
+	Buffer<SSAOBuffer>*		createSSAOBuffer();
+
 	///-----------------------------------------------------------------------------------
 	/// This function should create a box mesh only.
 	/// \return Box*
 	///-----------------------------------------------------------------------------------
 	Mesh* createBoxMesh();
 
+	LightMesh* createLightBoxMesh();
 
+	///-----------------------------------------------------------------------------------
+	/// This function should create a sphere mesh only.
+	/// \return Sphere*
+	///-----------------------------------------------------------------------------------
+	Mesh* createSphereMesh();
+
+	///
 	Mesh* createMeshFromPNTTBVerticesAndIndices( int p_numVertices, PNTTBVertex* p_vertices,
 		int p_numIndices, DIndex* p_indices  );
 
@@ -90,20 +120,24 @@ public:
 	/// \param p_numberOfIndices
 	/// \return Mesh*
 	///-----------------------------------------------------------------------------------
-	Mesh* createMeshFromRaw(void* p_vertexBlob, void* p_indexBlob,
-							unsigned int p_numberOfVertices,
-							unsigned int p_numberOfIndices);
+	Mesh* createMeshFromRaw( void* p_vertexBlob, void* p_skeletonVertexBlob, void* p_indexBlob, 
+		unsigned int p_numberOfVertices,
+		unsigned int p_numberOfSkeletonVertices,
+		unsigned int p_numberOfIndices);
 
 protected:
 private:
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_deviceContext;
+	UINT32 m_elementSize;
 };
 
 template<typename T>
 Buffer<T>* BufferFactory::createVertexBuffer( T* p_vertices, 
 											  unsigned int p_numberOfElements )
 {		
+	if (p_numberOfElements == 0)
+		return NULL;
 	Buffer<T>* vertexBuffer;
 
 	// Create description for buffer

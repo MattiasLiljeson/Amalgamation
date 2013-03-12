@@ -1,8 +1,8 @@
+#include <boost/asio/ip/tcp.hpp>
 #include "TcpClient.h"
 
 #include <exception>
 #include <iostream>
-#include <boost/asio/ip/tcp.hpp>
 
 #include "ProcessMessageConnectToServer.h"
 #include "ProcessMessageReceivePacket.h"
@@ -10,6 +10,12 @@
 #include "ProcessMessageTerminate.h"
 
 #include "TcpCommunicationProcess.h"
+#include "ProcessMessagePacketOverflow.h"
+#include "ProcessMessageCommProcessInfo.h"
+#include "ProcessMessageAskForCommProcessInfo.h"
+
+#define FORCE_VS_DBG_OUTPUT
+#include <DebugUtil.h>
 
 TcpClient::TcpClient()
 {
@@ -18,6 +24,19 @@ TcpClient::TcpClient()
 	m_communicationProcess = NULL;
 	m_connecterProcess = NULL;
 	m_id = -1;
+	m_numberOfSentPackets = 0;
+	m_totalPacketsPopped = 0;
+	m_totalDataSent = 0;
+	m_totalDataReceived = 0;
+	m_totalNumberOfOverflowPackets = 0;
+	m_serverTimeAhead = 0;
+	m_pingToServer = 0;
+	m_totalPacketsReceivedInCommProcess = 0;
+	m_totalPacketsSentInCommProcess = 0;
+
+	m_playerId = -1;
+	m_playerName = "Unknown";
+
 }
 
 TcpClient::~TcpClient()
@@ -113,10 +132,13 @@ void TcpClient::connectToServerAsync( string p_address, string p_port )
 
 void TcpClient::processMessages()
 {
-	while( getMessageCount() > 0 )
+	queue< ProcessMessage* > messages;
+	messages = checkoutMessageQueue();
+
+	while( messages.size() > 0 )
 	{
-		ProcessMessage* message;
-		message = this->popMessage();
+		ProcessMessage* message = messages.front();
+		messages.pop();
 
 		if( message->type == MessageType::RECEIVE_PACKET )
 		{
@@ -143,6 +165,25 @@ void TcpClient::processMessages()
 				m_connecterProcess = NULL;
 			}
 		}
+		else if( message->type == MessageType::PACKET_OVERFLOW )
+		{
+			ProcessMessagePacketOverflow* packetOverflowMessage = NULL;
+			packetOverflowMessage = static_cast<ProcessMessagePacketOverflow*>( message );
+			m_totalNumberOfOverflowPackets =
+				packetOverflowMessage->numberOfOverflowPackets;
+		}
+		else if( message->type == MessageType::COMM_PROCESS_INFO )
+		{
+			ProcessMessageCommProcessInfo* commInfoMessage =
+				static_cast<ProcessMessageCommProcessInfo*>( message );
+			m_totalPacketsReceivedInCommProcess = commInfoMessage->totalPacketsReceived;
+			m_totalPacketsSentInCommProcess = commInfoMessage->totalPacketsSent;
+		}
+
+		else if (message->type == MessageType::SOCKET_DISCONNECTED)
+		{
+			disconnect();
+		}
 
 		delete message;
 	}
@@ -156,7 +197,20 @@ void TcpClient::disconnect()
 		m_communicationProcess->stop();
 		delete m_communicationProcess;
 		m_communicationProcess = NULL;
+		m_numConnections -= 1;
 	}
+
+	if( m_connecterProcess )
+	{
+		m_connecterProcess->putMessage( new ProcessMessageTerminate() );
+		m_connecterProcess->stop();
+		delete m_connecterProcess;
+		m_connecterProcess = NULL;
+	}
+	m_ioService->stop();
+	delete m_ioService;
+	m_ioService = new boost::asio::io_service();
+	DEBUGPRINT(("Client disconnected from server!\n"));
 }
 
 bool TcpClient::hasActiveConnection()
@@ -164,10 +218,16 @@ bool TcpClient::hasActiveConnection()
 	return m_communicationProcess != NULL;
 }
 
-void TcpClient::sendPacket( Packet p_packet )
+void TcpClient::sendPacket( Packet& p_packet )
 {
 	if (m_communicationProcess)
-		m_communicationProcess->putMessage( new ProcessMessageSendPacket( this, p_packet ) );
+	{
+		m_numberOfSentPackets += 1;
+		m_totalDataSent += p_packet.getDataSize() + 1;
+
+		m_communicationProcess->putMessage(
+			new ProcessMessageSendPacket( this, p_packet ) );
+	}
 }
 
 bool TcpClient::hasNewPackets()
@@ -182,17 +242,21 @@ unsigned int TcpClient::newPacketsCount()
 
 Packet TcpClient::popNewPacket()
 {
-	Packet packet;
 	if ( !m_newPackets.empty() )
 	{	
-		packet = m_newPackets.front();
+		Packet packet = m_newPackets.front();
 		m_newPackets.pop();
+
+		m_totalPacketsPopped += 1;
+		m_totalDataReceived += packet.getDataSize() + 1;
+
+		return packet;
 	}
 	else
 	{
 		throw domain_error( "Trying to pop from an empty packet queue!" );
 	}
-	return packet;
+	return NULL;
 }
 
 int TcpClient::getId()
@@ -208,4 +272,106 @@ int* TcpClient::getIdPointer()
 void TcpClient::setId( int p_id )
 {
 	m_id = p_id;
+}
+
+
+string TcpClient::getPlayerName()
+{
+	return m_playerName;
+}
+
+void TcpClient::setPlayerName( const string& p_playerName )
+{
+	m_playerName = p_playerName;
+}
+unsigned int TcpClient::getNumberOfSentPackets()
+{
+	return m_numberOfSentPackets;
+}
+
+void TcpClient::resetNumberOfSentPackets()
+{
+	m_numberOfSentPackets = 0;
+}
+
+unsigned int TcpClient::getNumberOfReceivedPackets()
+{
+	return m_totalPacketsPopped;
+}
+
+unsigned int TcpClient::getTotalNumberOfOverflowPackets()
+{
+	return m_totalNumberOfOverflowPackets;
+}
+
+void TcpClient::resetNumberOfReceivedPackets()
+{
+	m_totalPacketsPopped = 0;
+}
+
+unsigned int TcpClient::getTotalDataSent()
+{
+	return m_totalDataSent;
+}
+
+unsigned int TcpClient::getTotalDataReceived()
+{
+	return m_totalDataReceived;
+}
+
+void TcpClient::resetTotalDataSent()
+{
+	m_totalDataSent = 0;
+}
+
+void TcpClient::resetTotalDataReceived()
+{
+	m_totalDataReceived = 0;
+}
+
+float TcpClient::getServerTimeAhead() const
+{
+	return m_serverTimeAhead;
+}
+
+void TcpClient::setServerTimeAhead( float p_timeAhead )
+{
+	m_serverTimeAhead = p_timeAhead;
+}
+
+float TcpClient::getPingToServer() const
+{
+	return m_pingToServer;
+}
+
+void TcpClient::setPingToServer( float p_ping )
+{
+	m_pingToServer = p_ping;
+}
+
+unsigned int TcpClient::getTotalPacketsReceivedInCommProcess()
+{
+	return m_totalPacketsReceivedInCommProcess;
+}
+
+unsigned int TcpClient::getTotalPacketsSentInCommProcess()
+{
+	return m_totalPacketsSentInCommProcess;
+}
+
+void TcpClient::askForCommProcessInfo()
+{
+	ProcessMessageAskForCommProcessInfo* askForCommInfo =
+		new ProcessMessageAskForCommProcessInfo( this );
+	m_communicationProcess->putMessage( askForCommInfo );
+}
+
+int TcpClient::getPlayerID()
+{
+	return m_playerId;
+}
+
+void TcpClient::setPlayerID( int p_playerId )
+{
+	m_playerId = p_playerId;
 }

@@ -1,3 +1,12 @@
+#pragma once
+
+#include <conio.h>
+#include <EntityWorld.h>
+#include <ProcessThread.h>
+
+class TcpServer;
+
+using namespace std;
 // =======================================================================================
 //                                      ServerApplication
 // =======================================================================================
@@ -11,35 +20,17 @@
 /// It also calls the EntityWorld's update (or rather "tick") method.
 /// Created on: 3-12-2012 
 ///---------------------------------------------------------------------------------------
-#pragma once
-
-#include <conio.h>
-
-#include <boost/thread/thread.hpp>
-
-#include <TcpServer.h>
-#include <EntityWorld.h>
-
-// Systems
-#include <PhysicsSystem.h>
-#include <ProcessingMessagesSystem.h>
-#include <NetworkListenerSystem.h>
-#include <NetworkInputHandlerSystem.h>
-#include <NetworkUpdateSystem.h>
-
-using namespace std;
 
 namespace Srv
 {
-	class ServerApplication
+	class ServerApplication : public ProcessThread
 	{
 	public:
 		ServerApplication();
 		virtual ~ServerApplication();
 
 		///-----------------------------------------------------------------------------------
-		/// The run() method starts the whole application. It runs all the
-		/// Let the program's entry point call run().
+		/// Simply calls the body function.
 		/// \return void
 		///-----------------------------------------------------------------------------------
 		void run();
@@ -49,6 +40,19 @@ namespace Srv
 		/// \return void
 		///-----------------------------------------------------------------------------------
 		void step( float p_dt );
+
+		///-----------------------------------------------------------------------------------
+		/// The body() method starts the whole application. Need for the server application to
+		/// be able to implement the ProcessThread.
+		/// \return void
+		///-----------------------------------------------------------------------------------
+		void body();
+
+		///-----------------------------------------------------------------------------------
+		/// Empty implemenation.
+		/// \return void
+		///-----------------------------------------------------------------------------------
+		void processMessages();
 
 	private:
 
@@ -63,6 +67,8 @@ namespace Srv
 		/// \returns void
 		///-----------------------------------------------------------------------------------
 		void initEntities();
+
+		void InitModulesTestByAnton();
 
 	private:
 		bool m_running;

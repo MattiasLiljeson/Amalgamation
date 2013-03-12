@@ -49,6 +49,12 @@ public:
 
 	SystemType getSystemType();
 	SystemType::SystemTypeIdx getSystemTypeIdx();
+	const double& getTimeUsedPerSecond() const;
+	void setTimeUsedPerSecond(double p_timeUsed);
+	const double& getLastExecutionTime() const;
+	void setLastExecutionTime(double p_timeUsed);
+	const double& getAverageExecutionTime() const;
+	void setAverageExecutionTime(double p_average);
 
 	/**
 	 * Called before processing of entities begins. 
@@ -71,7 +77,14 @@ public:
 	 * 
 	 * @param entities the entities this system contains.
 	 */
-	virtual void processEntities(const vector<Entity*>& p_entities );
+	virtual void processEntities( const vector<Entity*>& p_entities );
+
+	/**
+	 * 
+	 * 
+	 * @return a reference to the active entities that are stored in a vector.
+	 */
+	const vector<Entity*>& getActiveEntities() const;
 	
 	/**
 	 * 
@@ -117,13 +130,16 @@ public:
 	 * Called if the system has received a entity it is interested in, e.g. created or a component was added to it.
 	 * @param p_entity The entity that was added to this system.
 	 */
-	void inserted( Entity* p_entity ) {};
+	virtual void inserted( Entity* p_entity ) {};
 
 	/**
 	 * Called if a entity was removed from this system, e.g. deleted or had one of it's components removed.
 	 * @param p_entity The entity that was removed from this system.
 	 */
-	void removed( Entity* p_entity ) {};
+	virtual void removed( Entity* p_entity ) {};
+
+	virtual void sysEnabled() {};
+	virtual void sysDisabled() {};
 
 	void removeFromSystem( Entity* p_entity );
 	void insertToSystem( Entity* p_entity );
@@ -149,7 +165,6 @@ public:
 	///-----------------------------------------------------------------------------------
 	bitset<ComponentType::NUM_COMPONENT_TYPES> getComponentBits();
 
-
 protected:
 	int findEntityInActive( Entity* p_entity );
 	EntityWorld* m_world;
@@ -160,6 +175,9 @@ private:
 
 	//bitset<SystemType::NUM_SYSTEM_TYPES> m_systemBits;
 	SystemType m_type;
+	double m_timeUsedPerSecond;
+	double m_lastExecutionTime;
+	double m_averageExecutionTime;
 	bitset<ComponentType::NUM_COMPONENT_TYPES> m_componentBits;
 };
 

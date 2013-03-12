@@ -1,8 +1,13 @@
 #include "SystemManager.h"
+#include <PreciseTimer.h>
 
 SystemManager::SystemManager( EntityWorld* p_world )
 {
 	m_world = p_world;
+	m_executionTimer = new PreciseTimer();
+	m_secondTimer = 0.0;
+	m_tickCounter = 0;
+	m_totalSystemsExecutionTime = 0.0;
 }
 
 SystemManager::~SystemManager()
@@ -13,19 +18,12 @@ SystemManager::~SystemManager()
 		delete it->second;
 		it->second = NULL;
 	}
+	delete m_executionTimer;
 }
 
 EntitySystem* SystemManager::getSystem( SystemType::SystemTypeIdx p_systemIndex )
 {
 	return m_systems[p_systemIndex];
-}
-
-EntitySystem* SystemManager::setSystem( SystemType p_type, EntitySystem* p_system,
-									   bool p_enabled )
-{
-	p_system->setEnabled( p_enabled );
-	m_systems[(SystemType::SystemTypeIdx)p_type.getIndex()] = p_system;
-	return p_system;
 }
 
 EntitySystem* SystemManager::setSystem( SystemType::SystemTypeIdx p_typeIdx,
@@ -39,11 +37,32 @@ EntitySystem* SystemManager::setSystem( SystemType::SystemTypeIdx p_typeIdx,
 			it = m_systemList.erase(it);
 	}
 	m_systemList.push_back( p_system );
-	
+	m_systemsExecutionTimeMeasurements.push_back(0.0);	
 	p_system->setEnabled( p_enabled );
 	m_systems[p_typeIdx] = p_system;
 
 	return p_system;
+}
+
+const vector<EntitySystem*>& SystemManager::getSystemList() const
+{
+	return m_systemList;
+}
+
+vector<SystemType::SystemTypeIdx> SystemManager::getSystemEnumList( Entity* p_entity )
+{
+	bitset<SystemType::NUM_SYSTEM_TYPES> systemBits =
+		p_entity->getSystemBits();
+	vector<SystemType::SystemTypeIdx> systemList;
+
+	for(unsigned int i=0; i<systemBits.size(); i++ )
+	{
+		if( systemBits[i] == true)
+		{
+			systemList.push_back((SystemType::SystemTypeIdx)i);
+		}
+	}
+	return systemList;
 }
 
 void SystemManager::deleteSystem( SystemType p_type )
@@ -77,7 +96,7 @@ void SystemManager::deleteSystem( EntitySystem* p_system)
 			m_systemList.erase(it);
 	}
 
-	//HACK: break in for-loop 
+	//NOTE: break in for-loop 
 	map<SystemType::SystemTypeIdx, EntitySystem*>::iterator it;
 	for( it=m_systems.begin(); it != m_systems.end(); it++ )
 	{
@@ -108,13 +127,45 @@ void SystemManager::updateSynchronous()
 	//map<SystemType::SystemTypeIdx, EntitySystem*>::iterator it;
 	//for( it=m_systems.begin(); it != m_systems.end(); it++ )
 	//	it->second->process();
-
+	m_secondTimer += static_cast<double>(m_world->getDelta());
+	m_tickCounter += 1;
+	bool reset = m_secondTimer > 1.0;
+	double executionTimeSum = 0.0;
 	for( unsigned int i=0; i<m_systemList.size(); i++ )
 	{
 		EntitySystem* system = m_systemList[i];
 		if( system->getEnabled() )
+		{
+			m_executionTimer->start();
 			system->process();
+
+			double elapsedTime = m_executionTimer->stop();
+			m_systemsExecutionTimeMeasurements[i] += elapsedTime;
+			m_systemList[i]->setLastExecutionTime(elapsedTime);
+			executionTimeSum += elapsedTime;
+			if(reset)
+			{
+				m_systemList[i]->setAverageExecutionTime(
+					m_systemsExecutionTimeMeasurements[i] / (double)m_tickCounter
+					* 1000.0);
+				m_systemList[i]->setTimeUsedPerSecond(
+					m_systemsExecutionTimeMeasurements[i]);
+				m_systemsExecutionTimeMeasurements[i] = 0;
+			}
+		}
+		else
+		{
+			m_systemList[i]->setAverageExecutionTime(0.0);
+			m_systemList[i]->setTimeUsedPerSecond(0.0);
+			m_systemList[i]->setLastExecutionTime(0.0);
+		}
 	}
+	if(reset)
+	{
+		m_secondTimer = 0.0;
+		m_tickCounter = 0;
+	}
+	m_totalSystemsExecutionTime = executionTimeSum;
 }
 
 void SystemManager::notifySystems( IPerformer* p_performer, Entity* p_entity )
@@ -123,4 +174,9 @@ void SystemManager::notifySystems( IPerformer* p_performer, Entity* p_entity )
 	{
 		p_performer->perform(m_systemList[i], p_entity);
 	}
+}
+
+const double& SystemManager::getTotalSystemExecutionTime() const
+{
+	return m_totalSystemsExecutionTime;
 }

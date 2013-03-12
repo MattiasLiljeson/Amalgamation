@@ -49,7 +49,8 @@ void CameraController::Update(float pElapsedTime)
 					rot.transformVector(dir);
 				}
 				dir.normalize();
-				Camera::GetInstance()->Init(target + dir*length, target, Camera::GetInstance()->LocalYAxis(), 800, 600);
+
+				Camera::GetInstance()->Init(target + dir*length, target, Camera::GetInstance()->LocalYAxis(), 1280, 720);
 			}
 			mPivot = Camera::GetInstance()->GetTarget();
 		}
@@ -81,7 +82,7 @@ void CameraController::Update(float pElapsedTime)
 	if(GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
 		AglVector3 c = Scene::GetInstance()->GetCenter();
-		Camera::GetInstance()->Init(c - AglVector3(0, 0.0f, 2.25f), c, AglVector3(0, 1, 0), 800, 600);
+		Camera::GetInstance()->Init(c - AglVector3(0, 0.0f, 2.25f), c, AglVector3(0, 1, 0), 1280, 720);
 		mPivot = c;
 	}
 

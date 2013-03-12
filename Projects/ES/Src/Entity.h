@@ -5,6 +5,9 @@
 #include "SystemType.h"
 #include "ComponentManager.h"
 
+#include "Tag.h" // Added by Jarl 2013-01-09, temporary management of tags
+#include <string>
+
 class ComponentType;
 class EntityWorld;
 class SystemType;
@@ -41,6 +44,9 @@ public:
 	 */
 	EntityWorld* getWorld();
 
+	vector<ComponentType::ComponentTypeIdx> getComponentEnums();
+	vector<SystemType::SystemTypeIdx> getSystemEnums();
+
 	bitset<ComponentType::NUM_COMPONENT_TYPES> getComponentBits();
 	void setComponentBits( bitset<ComponentType::NUM_COMPONENT_TYPES> p_componentBits );
 	void setComponentBit( int p_idx, bool p_value );
@@ -56,9 +62,32 @@ public:
 	 *
 	 * @param The new component you wish to add.
 	 */
+	void addComponent( Component* p_component );
 	void addComponent( ComponentType::ComponentTypeIdx p_typeIdx, Component* p_component );
 	void addComponent( ComponentType p_type, Component* p_component );
 
+	///-----------------------------------------------------------------------------------
+	/// Temporary hadnling of tags. Tags are right now basically just a component
+	/// However this special interfacing add function was implemented to clarify that there
+	/// should be a difference later on. (Added by Jarl, 2013-01-09)
+	/// \param p_typeIdx
+	/// \param p_tag
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void addTag( ComponentType::ComponentTypeIdx p_typeIdx, Tag* p_tag );
+
+
+	///-----------------------------------------------------------------------------------
+	/// Shorthand function for removing components for the entity
+	/// \param p_typeIdx
+	/// \param p_component
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void removeComponent( ComponentType::ComponentTypeIdx p_typeIdx );
+	void removeComponent( ComponentType p_type );
+
+	void applyComponentChanges();
+	
 
 	///\brief Shorthand function for fetching a components component from the worlds 
 	/// component manager
@@ -75,6 +104,9 @@ public:
 	bool isEnabled();
 	void setEnabled( bool p_enabled );
 
+	void setName( string p_name ) { m_name = p_name; }
+	const string& getName() const;
+
 private:
 	// Universal Unique ID. This id is unique in the network and will never be reused. 
 	int m_UUID; ///<NOT IMPLEMENTED!
@@ -82,6 +114,9 @@ private:
 	// This id  is used as an index for the components internally. If an entity is deleted
 	// from the world its id will be reused for future created entities.
 	int m_index;
+
+	/// Used for debug purposes
+	string m_name; 
 
 	EntityWorld* m_world;
 

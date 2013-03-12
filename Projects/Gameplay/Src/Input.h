@@ -16,7 +16,11 @@
 class Input : public Component
 {
 public:
-	Input(){ m_bBtnPressed = false;}
+	Input()
+		: Component( ComponentType::Input )
+	{
+		m_bBtnPressed = false;
+	}
 	virtual ~Input(){};
 
 	bool m_bBtnPressed;
