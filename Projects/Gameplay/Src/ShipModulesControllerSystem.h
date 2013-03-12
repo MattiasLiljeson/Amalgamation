@@ -36,15 +36,15 @@ public:
 	void addActivateEvent(int p_index);
 	void addDeactivateEvent(int p_index);
 	void setEditMode(bool p_editMode);
-	vector<Entity*> getModulesBySlot(int p_slot);
+	vector<Entity*> getModulesBySlot(Entity* p_shipEntity, int p_slotId);
+	void getConnectedChildren(Entity* p_root, vector<Entity*>* p_list);
 
 private:
 	void checkDrop_ApplyScoreAndDamage(Entity* p_parent);
 	void drop(Entity* p_parent, unsigned int p_slot);
 	void changeHighlight(Entity* p_entity, int p_new, int p_status);
 	void setActivation(Entity* p_entity, bool p_value);
-	void setActivationChildren(Entity* p_entity, bool p_value,
-		vector<int>* p_activatedChildren);
+	void setActivationChildren(Entity* p_entity, bool p_value);
 	// float calculateScore(Entity* p_entity);
 
 	// effect visualization for client

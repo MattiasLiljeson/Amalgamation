@@ -1059,7 +1059,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 					}
 					else
 					{
-						netModule->addComponent(new GlowAnimation(AglVector4(0, 0.5f, 0, 1.0f), true, 0.5f));
+						netModule->addComponent(new GlowAnimation(AglVector4(0.1f, 0.3f, 0.1f, 1.0f), true, 0.75f));
 						netModule->applyComponentChanges();
 					}
 				}

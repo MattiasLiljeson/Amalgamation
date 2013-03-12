@@ -24,11 +24,11 @@ void GlowAnimationSystem::processEntities( const vector<Entity*>& p_entities )
 		float lifetimeFactor = glowAnimation->lifetime / glowAnimation->getMaxLifetime();
 		float r, g, b, a;
 		// RGB goes to (1, 1, 1).
-		r = glowAnimation->getStartColor().x + (1.0f - glowAnimation->getStartColor().x) * (1.0f - lifetimeFactor);
-		g = glowAnimation->getStartColor().y + (1.0f - glowAnimation->getStartColor().y) * (1.0f - lifetimeFactor);
-		b = glowAnimation->getStartColor().z + (1.0f - glowAnimation->getStartColor().z) * (1.0f - lifetimeFactor);
+		r = glowAnimation->getStartColor().x * lifetimeFactor;
+		g = glowAnimation->getStartColor().y * lifetimeFactor;
+		b = glowAnimation->getStartColor().z * lifetimeFactor;
 		// Glow goes to (0).
 		a = glowAnimation->getStartColor().w * lifetimeFactor;
-		glowAnimation->color = AglVector4(r, g, b, a);
+		glowAnimation->color = AglVector4(-r, g, b, a); // "-r" means additive.
 	}
 }
