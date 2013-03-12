@@ -259,6 +259,7 @@
     <ClInclude Include="EntityParent.h" />
     <ClInclude Include="TransformParentHandlerSystem.h" />
     <ClInclude Include="UpdateClientStatsPacket.h" />
+    <ClInclude Include="SoundPacket.h" />
     <ClInclude Include="Vibration.h" />
     <ClInclude Include="WelcomePacket.h" />
     <ClInclude Include="WinningConditionSystem.h" />
@@ -362,6 +363,7 @@
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp" />
     <ClCompile Include="SlotMarkerSystem.cpp" />
     <ClCompile Include="SoundComponent.cpp" />
+    <ClCompile Include="SoundPacket.cpp" />
     <ClCompile Include="SoundSystem.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteSystem.cpp" />

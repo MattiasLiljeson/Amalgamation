@@ -475,22 +475,22 @@ Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
-	//AglParticleSystemHeader header;
-	//header.particleSize = AglVector2(2, 2);
-	//header.spawnFrequency = 10;
-	//header.spawnSpeed = 5.0f;
-	//header.spread = 0.0f;
-	//header.fadeOutStart = 2.0f;
-	//header.fadeInStop = 0.0f;
-	//header.particleAge = 2;
-	//header.maxOpacity = 1.0f;
-	//header.color = AglVector4(0, 1, 0, 1.0f);
-	//header.alignmentType = AglParticleSystemHeader::OBSERVER;
+	SoundComponent* soundComponent = new SoundComponent();
+	entity->addComponent(soundComponent);
 
-	//ParticleEmitters* psComp = new ParticleEmitters();
-	//psComp->addParticleSystem( header );
-	//entity->addComponent( psComp );
-	//int particleSysIdx = psComp->addParticleSystem( ParticleSystemData( header, updateData, "minigun" ) );
+	Component* component = NULL;
+
+	string name = "minigunFire";
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::AMBIENT, name);
+	explodeSound->file = "machinegunsoundsnap.wav";//"Spaceship_Weapon_-_Fighter Blaster or Laser-Shot-Mid.wav";
+	explodeSound->path = TESTSOUNDEFFECTPATH;
+	explodeSound->maxFrequencyOffeset = 2.0f;
+	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::TIMERBASED;
+	explodeSound->timerInterval = 0.1f;
+	explodeSound->sourceChannels = 1;
+	explodeSound->queuedPlayingState = AudioHeader::STOP;
+	explodeSound->volume = 0.5f;
+	soundComponent->addAudioHeader(explodeSound);
 	
 	m_world->addEntity( entity );
 	return entity;
@@ -667,15 +667,25 @@ Entity* EntityFactory::createRocketClient(EntityCreationPacket p_packet)
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
-	// RM-RT 2013-03-04
-	/*
-	entity->addComponent( ComponentType::SoundComponent, new SoundComponent(
-		TESTSOUNDEFFECTPATH, "Missile_Flight.wav" ));
-	*/
+
+	SoundComponent* soundComponent = new SoundComponent();
+	entity->addComponent(soundComponent);
+
+	string name = "rocketfire";
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::AMBIENT, name);
+	explodeSound->file = "firerocket2soundsnap.wav";
+	explodeSound->path = TESTSOUNDEFFECTPATH;
+	explodeSound->maxFrequencyOffeset = 2.0f;
+	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
+	explodeSound->sourceChannels = 1;
+	explodeSound->queuedPlayingState = AudioHeader::PLAY;
+	explodeSound->volume = 0.5f;
+	soundComponent->addAudioHeader(explodeSound);
+
+	
+
 	m_world->addEntity(entity);
-	//static_cast<AudioBackendSystem*>(m_world->getSystem(SystemType::AudioBackendSystem))->
-	//	playPositionalSoundEffect(TESTSOUNDEFFECTPATH, "Missile_Start.wav",
-	//	p_packet.translation);
+
 	return entity;
 }
 Entity* EntityFactory::createRocketServer(EntityCreationPacket p_packet)

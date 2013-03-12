@@ -525,6 +525,17 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 	}
 }
 
+void ClientPacketHandlerSystem::handleEntitySounds(const SoundPacket& p_data)
+{
+	NetsyncDirectMapperSystem* directMapper = static_cast<NetsyncDirectMapperSystem*>
+		( m_world->getSystem( SystemType::NetsyncDirectMapperSystem ) );
+
+	Entity* entity = directMapper->getEntity( p_data.target );
+
+	SoundComponent* sound = static_cast<SoundComponent*>(entity->getComponent(ComponentType::SoundComponent));
+	sound->getSoundHeaderByIndex((AudioHeader::SoundType)p_data.soundType, p_data.targetSlot)->queuedPlayingState = (AudioHeader::PlayState)p_data.queuedPlayingState;
+}
+
 void ClientPacketHandlerSystem::handleParticleSystemCreation( const ParticleSystemCreationInfo& p_creationInfo )
 {
 	NetsyncDirectMapperSystem* directMapper = static_cast<NetsyncDirectMapperSystem*>
@@ -587,6 +598,12 @@ void ClientPacketHandlerSystem::handleIngameState()
 			ParticleSystemCreationInfo info;
 			packet.ReadData( &info, sizeof(ParticleSystemCreationInfo) );
 			handleParticleSystemCreation( info );
+		}
+		else if (packetType == (char)PacketType::SoundPacket)
+		{
+			SoundPacket spacket;
+			spacket.unpack(packet);
+			handleEntitySounds(spacket);
 		}
 
 		else if (packetType == (char)PacketType::ParticleUpdate)
