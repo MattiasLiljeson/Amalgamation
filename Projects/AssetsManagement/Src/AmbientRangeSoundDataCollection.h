@@ -8,38 +8,29 @@
 using namespace std;
 
 
-struct LightCreationData
+struct AmbientRangeSoundCreationData
 {
-	enum Type
-	{
-		POINT,
-		DIR,
-		SPOT
-	};
-	Type type;
 	AglMatrix transform;
-	AglVector3 diffuse;
-	AglVector3 specular;
-	AglVector3 ambient;
-	float gloss;
-	float range, power;
-	AglVector3 attenuation;
+	string filename;
+	float minRange,maxRange;
+	float volume;
+	int channels;
 };
 
 
 // =======================================================================================
-//                                LightDataCollection
+//                            AmbientRangeSoundDataCollection
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Collection of light creation data
+/// \brief	Collection of sound creation data
 ///        
-/// # LightPointCollection
+/// # AmbientRangeSoundDataCollection
 /// Detailed description.....
 /// Created on: 4-2-2013 
 ///---------------------------------------------------------------------------------------
-struct LightDataCollection
+struct AmbientRangeSoundDataCollection
 {
 public:
-	vector<LightCreationData> m_collection;
+	vector<AmbientRangeSoundCreationData> m_collection;
 };

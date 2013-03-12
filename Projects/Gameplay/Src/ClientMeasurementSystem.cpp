@@ -75,6 +75,11 @@ void ClientMeasurementSystem::initialize()
 		"group='Culling'" );
 
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT, "Max Rendered Particle Systems",
+		TwType::TW_TYPE_INT32, psSystem->getMaxDrawnPSCount(),
+		"group='Culling'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::MEASUREMENT, "Rendered Chambers",
 		TwType::TW_TYPE_INT32, cull2->getRenderedChambers(),
 		"group='Culling'" );
@@ -82,6 +87,16 @@ void ClientMeasurementSystem::initialize()
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 		AntTweakBarWrapper::MEASUREMENT, "Culled Chambers",
 		TwType::TW_TYPE_INT32, cull2->getCulledChambers(),
+		"group='Culling'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT, "Collides with gate",
+		TwType::TW_TYPE_BOOLCPP, cull2->getCollidesWithGate(),
+		"group='Culling'" );
+
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
+		AntTweakBarWrapper::MEASUREMENT, "Collides with chamber",
+		TwType::TW_TYPE_BOOLCPP, cull2->getCollidesWithChamber(),
 		"group='Culling'" );
 
 	//ES time

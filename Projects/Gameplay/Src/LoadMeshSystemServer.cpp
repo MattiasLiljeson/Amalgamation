@@ -122,3 +122,13 @@ void LoadMeshSystemServer::setUpAnimation(Entity* p_entity, ModelResource* p_mod
 {
 	//Do nothing. No animation on server
 }
+
+void LoadMeshSystemServer::setUpLights( Entity* p_entity, ModelResource* p_modelResource )
+{
+	//Do nothing. No light on server
+}
+
+void LoadMeshSystemServer::setUpAmbientRangeSound( Entity* p_entity, ModelResource* p_modelResource )
+{
+	//Do nothing. No sound on server
+}

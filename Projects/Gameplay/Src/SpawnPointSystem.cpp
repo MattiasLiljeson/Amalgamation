@@ -5,6 +5,7 @@
 #include "EntityFactory.h"
 #include "LevelHandlerSystem.h"
 #include "LevelPieceRoot.h"
+#include "LevelGenSystem.h"
 #include "Transform.h"
 #include "TimerSystem.h"
 #include <OutputLogger.h>
@@ -28,6 +29,9 @@ void SpawnPointSystem::initialize()
 {
 	m_levelHandler = static_cast<LevelHandlerSystem*>(
 		m_world->getSystem(SystemType::LevelHandlerSystem));
+
+	m_levelGen = static_cast<LevelGenSystem*>(
+		m_world->getSystem(SystemType::LevelGenSystem));
 
 	m_timerSystem = static_cast<TimerSystem*>(
 		m_world->getSystem(SystemType::TimerSystem));
@@ -228,7 +232,7 @@ void SpawnPointSystem::setSpawnPointState(
 
 bool SpawnPointSystem::isSpawnPointsReady() const
 {
-	return m_levelHandler->hasLevel();
+	return m_levelGen->getGeneratedPiecesCount() == getActiveEntities().size();
 }
 
 const AglMatrix& SpawnPointSystem::invalidSpawnPoint()

@@ -6,6 +6,7 @@
 #include <EntitySystem.h>
 #include "ClientInfo.h"
 #include <string>
+#include <Globals.h>
 
 class TcpServer;
 class PhysicsSystem;
@@ -46,6 +47,9 @@ private:
 	void handleSentAllPackets();
 	void handleResult();
 
+	void handleClientDisconnect();
+	void handlePlayerDisconnect(int p_player);
+
 	float stackBooster(Entity* p_parent);
 private:
 	ServerStateSystem* m_stateSystem;
@@ -55,6 +59,8 @@ private:
 	int m_finishedLoadingPlayers;
 	int m_readyLoadingPlayers;
 	int m_resultsPlayers; //Stupid name for a stupid variable
+	int m_readyLobbyPlayers;
+	bool m_lobbyPlayerReadyStates[MAXPLAYERS];
 
 	const static int roundTime = 1500;
 };

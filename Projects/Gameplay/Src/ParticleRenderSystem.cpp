@@ -27,6 +27,7 @@ ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend 
 {
 	m_gfxBackend = p_gfxBackend;
 	drawnPS = 0;
+	maxDrawnPS = 0;
 }
 
 
@@ -106,6 +107,8 @@ void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 		particlesComp->updateParticleSystems( m_world->getDelta(), cameraPos);
 
 	}
+	if (drawnPS > maxDrawnPS)
+		maxDrawnPS = drawnPS;
 }
 
 void ParticleRenderSystem::render()
@@ -183,6 +186,9 @@ void ParticleRenderSystem::clearRenderQues()
 }
 bool ParticleRenderSystem::shouldRender(ParticleSystemAndTexture* p_ps)
 {
+	if (p_ps->particleSystem.getHeader().color.w <= 0.01f)
+		return false;
+
 	if (p_ps->particleSystem.getParticleSpace() == AglParticleSystemHeader::AglSpace_GLOBAL)
 	{
 		AglVector3 minP = p_ps->particleSystem.getMin();

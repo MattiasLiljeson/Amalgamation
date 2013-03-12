@@ -9,6 +9,7 @@ using namespace std;
 class EntityFactory;
 class LevelHandlerSystem;
 class TimerSystem;
+class LevelGenSystem;
 
 enum SpawnPointState
 {
@@ -93,6 +94,7 @@ private:
 	vector<int> freeSlots;
 
 	LevelHandlerSystem* m_levelHandler;
+	LevelGenSystem*		m_levelGen;
 	TimerSystem*		m_timerSystem;
 
 	static const AglMatrix s_invalidSpawnPoint;

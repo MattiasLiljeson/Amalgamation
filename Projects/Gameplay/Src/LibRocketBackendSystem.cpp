@@ -366,6 +366,11 @@ void LibRocketBackendSystem::hideCursor()
 	m_rocketContext->ShowMouseCursor(false);
 }
 
+bool LibRocketBackendSystem::isDocumentVisible( int p_docId ) const
+{
+	return m_documents[p_docId]->IsVisible();
+}
+
 
 
 

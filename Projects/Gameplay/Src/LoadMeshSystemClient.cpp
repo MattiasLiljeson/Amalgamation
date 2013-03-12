@@ -12,10 +12,12 @@
 #include "PhysicsBody.h"
 #include "RenderInfo.h"
 #include "SkeletalAnimation.h"
+#include "LightsComponent.h"
 #include "Transform.h"
 #include <AglSkeletonMapping.h>
 #include <GraphicsWrapper.h>
 #include <ModelResource.h>
+#include "SoundComponent.h"
 
 LoadMeshSystemClient::LoadMeshSystemClient( GraphicsBackendSystem* p_gfxBackend ) : 
 	LoadMeshSystem()
@@ -131,5 +133,74 @@ void LoadMeshSystemClient::setUpAnimation(Entity* p_entity, ModelResource* p_mod
 				anim->m_offset = p_modelResource->meshHeader.transform;
 			}
 		}
+	}
+}
+
+
+void LoadMeshSystemClient::setUpLights( Entity* p_entity, ModelResource* p_modelResource )
+{
+	vector<LightCreationData>* lights= &(p_modelResource->lightCollection.m_collection);
+	if (!lights->empty())
+	{
+		LightsComponent* component = new LightsComponent();
+		for (unsigned int i=0;i<lights->size();i++)
+		{
+			// This'll be fun		
+			LightCreationData* source = &(*lights)[i];
+			Light light;
+			TransformComponents transformHelper;
+			transformHelper.scale = AglVector3(source->range,source->range,source->range);
+			transformHelper.rotation = source->transform.GetRotation();
+			transformHelper.translation = source->transform.GetTranslation();
+			light.offsetMat = transformHelper.toMatrix();
+			AglVector3 forward = source->transform.GetForward();
+			light.instanceData.lightDir[0] = forward.x;
+			light.instanceData.lightDir[1] = forward.y;
+			light.instanceData.lightDir[2] = forward.z;
+			light.instanceData.color[0] = source->diffuse.x;
+			light.instanceData.color[1] = source->diffuse.y;
+			light.instanceData.color[2] = source->diffuse.z;
+			//light.instanceData.specular[3] = source->gloss;
+			if (source->type==LightCreationData::POINT)
+				light.instanceData.type = LightTypes::E_LightTypes_POINT;
+			else if (source->type==LightCreationData::SPOT)
+				light.instanceData.type = LightTypes::E_LightTypes_SPOT;
+			else
+				light.instanceData.type = LightTypes::E_LightTypes_DIRECTIONAL;
+			light.instanceData.range = source->range;
+			light.instanceData.attenuation[0] = source->attenuation.x;
+			light.instanceData.attenuation[1] = source->attenuation.y;
+			light.instanceData.attenuation[2] = source->attenuation.z;
+			light.instanceData.lightEnergy = source->power;
+			component->addLight(light);
+		}
+		p_entity->addComponent( ComponentType::LightsComponent, component );
+	}
+}
+
+
+
+void LoadMeshSystemClient::setUpAmbientRangeSound( Entity* p_entity, ModelResource* p_modelResource )
+{
+	if (!p_modelResource->ambientRangeSoundCollection.m_collection.empty())
+	{
+		SoundComponent* component = new SoundComponent();
+		for (unsigned int i = 0; i < p_modelResource->ambientRangeSoundCollection.m_collection.size(); i++)
+		{
+			AmbientRangeSoundCreationData* ardat = &p_modelResource->ambientRangeSoundCollection.m_collection[i];
+			AudioHeader* ar = new AudioHeader(AudioHeader::AMBIENTRANGE,ardat->filename);
+			ar->file = ardat->filename+".wav";
+			ar->path = SOUNDEFFECTPATH;
+			ar->playInterval = AudioHeader::FOREVER;
+			ar->playingState = AudioHeader::PLAY;
+			ar->queuedPlayingState = AudioHeader::PLAY;
+			ar->sourceChannels = ardat->channels;
+			ar->pos = ardat->transform.GetTranslation();
+			ar->volume = ardat->volume;
+			ar->minRange = ardat->minRange;
+			ar->maxRange = ardat->maxRange;
+			component->addAudioHeader(ar);
+		}
+		p_entity->addComponent( ComponentType::SoundComponent, component );
 	}
 }
