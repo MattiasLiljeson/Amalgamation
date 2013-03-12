@@ -23,6 +23,7 @@
 #include "ColorTone.h"
 #include "ShipHighlight.h"
 #include "ShineSpawn.h"
+#include "GlowAnimation.h"
 
 MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,
@@ -179,6 +180,13 @@ void MeshRenderSystem::fillInstanceData(InstanceData* p_data, Entity* p_entity,
 	auto colorTone = static_cast<ColorTone*>(p_entity->getComponent(ComponentType::ColorTone));
 	if (colorTone && colorTone->toneEnabled)
 		p_data->setColorTone(colorTone->color);
+
+	auto glowAnimation = static_cast<GlowAnimation*>(p_entity->getComponent(
+		ComponentType::GlowAnimation));
+	if(glowAnimation && glowAnimation->enabled)
+	{
+		p_data->setColorTone(glowAnimation->color);
+	}
 
 	//neg-x creates additive blending
 	//neg-y replaces color entirely

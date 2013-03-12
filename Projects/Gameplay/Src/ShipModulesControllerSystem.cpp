@@ -20,6 +20,7 @@
 #include <DamageAccumulator.h>
 #include <DebugUtil.h>
 #include <ToString.h>
+#include "ModulesHighlightPacket.h"
 
 ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
 														 ModuleVisualEffectServerBufferSystem* p_effectBuffer)
@@ -337,6 +338,7 @@ void ShipModulesControllerSystem::changeHighlight(Entity* p_entity, int p_new,
 	ShipConnectionPointHighlights* highlights = static_cast<ShipConnectionPointHighlights*>(
 		p_entity->getComponent(ComponentType::ShipConnectionPointHighlights) );
 
+
 	if (p_new!=-1)
 	{
 		for (unsigned int i=0;i<ShipConnectionPointHighlights::slots;i++)
@@ -359,11 +361,35 @@ void ShipModulesControllerSystem::changeHighlight(Entity* p_entity, int p_new,
 					//
 					highlights->slotStatus[i]=false;
 					// ---------------------------------
+
+					
 				}
 			}
 			else
 			{
 				highlights->slotStatus[i]=true;
+				vector<Entity*> highlights = getModulesBySlot(p_entity, i);
+				// Move to highlight instead of activation. ->
+				if(!highlights.empty())
+				{
+					ModulesHighlightPacket data;
+					if(highlights.size() > (unsigned int)data.NUM_MODULES_HIGHLIGHTED_MAX)
+					{
+						data.numberOfHighlights = (unsigned char)data.NUM_MODULES_HIGHLIGHTED_MAX;
+					}
+					else
+					{
+						data.numberOfHighlights = (unsigned char)highlights.size();
+					}
+
+					for(unsigned int i=0;
+						i<data.NUM_MODULES_HIGHLIGHTED_MAX && i<highlights.size(); i++)
+					{
+						data.modulesHighighted[i] = highlights[i]->getIndex();
+					}
+					m_server->broadcastPacket(data.pack());
+				}
+				// <-
 			}
 		}	
 	}
@@ -386,9 +412,57 @@ void ShipModulesControllerSystem::changeHighlight(Entity* p_entity, int p_new,
 			highlights->slotStatus[i]=false;
 		}
 	}
-
-
 }
+
+vector<Entity*> ShipModulesControllerSystem::getModulesBySlot(Entity* p_shipEntity, int p_slotId)
+{
+	ConnectionPointSet* connectionPoints = static_cast<ConnectionPointSet*>(
+		p_shipEntity->getComponent(ComponentType::ConnectionPointSet));
+	vector<Entity*> branchEntities;
+	if(connectionPoints && p_slotId < connectionPoints->m_connectionPoints.size() &&
+		connectionPoints->m_connectionPoints[p_slotId].cpConnectedEntity >= 0)
+	{
+		Entity* firstEntityOnSlot = m_world->getEntity(
+			connectionPoints->m_connectionPoints[p_slotId].cpConnectedEntity);
+		if(firstEntityOnSlot)
+		{
+			branchEntities.push_back(firstEntityOnSlot);
+			getConnectedChildren(firstEntityOnSlot, &branchEntities);
+		}
+	}
+	return branchEntities;
+}
+
+void ShipModulesControllerSystem::getConnectedChildren(Entity* p_root,
+	vector<Entity*>* p_list)
+{
+	ConnectionPointSet* connectionPoints = static_cast<ConnectionPointSet*>(
+		p_root->getComponent(ComponentType::ConnectionPointSet));
+	ShipModule* module = static_cast<ShipModule*>(
+		p_root->getComponent(ComponentType::ShipModule));
+	if(connectionPoints)
+	{
+		for(unsigned int i=0; i<connectionPoints->m_connectionPoints.size(); i++)
+		{
+			if(connectionPoints->m_connectionPoints[i].cpConnectedEntity != -1)
+			{
+				Entity* connected = m_world->getEntity(
+					connectionPoints->m_connectionPoints[i].cpConnectedEntity);
+				if(connected)
+				{
+					ShipModule* connectedModule = static_cast<ShipModule*>(connected->
+						getComponent(ComponentType::ShipModule));
+					if(connectedModule && (!module || module->m_parentEntity != connected->getIndex()))
+					{
+						p_list->push_back(connected);
+						getConnectedChildren(connected, p_list);
+					}
+				}
+			}
+		}
+	}
+}
+
 void ShipModulesControllerSystem::setActivation(Entity* p_entity, bool p_value)
 {
 	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
@@ -420,6 +494,7 @@ void ShipModulesControllerSystem::setActivation(Entity* p_entity, bool p_value)
 		}
 	}
 }
+
 void ShipModulesControllerSystem::setActivationChildren(Entity* p_entity, bool p_value)
 {
 	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
@@ -535,8 +610,3 @@ void ShipModulesControllerSystem::updateModuleValueEffect( int p_moduleNetworkOw
 		p_moduleNetworkOwner);
 	m_effectbuffer->enqueueEffect(fxPacket);
 }
-
-
-
-
-

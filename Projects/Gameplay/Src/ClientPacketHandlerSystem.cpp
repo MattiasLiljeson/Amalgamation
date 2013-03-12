@@ -72,6 +72,7 @@
 
 // Misc
 #include <DamageAccumulator.h>
+#include <Cursor.h>
 
 // Sort the following into their respective category. These have probably been auto-added.
 #include "AnomalyBomb.h"
@@ -109,6 +110,11 @@
 #include "PlayerSystem.h"
 #include "ClientConnectToServerSystem.h"
 #include "MenuSystem.h"
+#include <OutputLogger.h>
+#include "PlayerReadyPacket.h"
+#include "libRocketBackendSystem.h"
+#include "ModulesHighlightPacket.h"
+#include "GlowAnimation.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -148,6 +154,8 @@ void ClientPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 	m_gameState = static_cast<ClientStateSystem*>(
 		m_world->getSystem(SystemType::ClientStateSystem));
+
+	handleServerDisconnect();
 
 	switch (m_gameState->getCurrentState())
 	{
@@ -755,6 +763,13 @@ void ClientPacketHandlerSystem::handleIngameState()
 			// Convert from seconds to milliseconds.
 			m_currentPing = (totalElapsedTime - pongPacket.timeStamp)*1000.0f;
 		}
+		else if (packetType == (char)PacketType::ClientDisconnect)
+		{
+			DisconnectPacket dcPacket;
+			dcPacket.unpack(packet);
+
+			handlePlayerDisconnect(dcPacket);
+		}
 		else if(packetType == (char)PacketType::UpdateClientStats)
 		{
 			UpdateClientStatsPacket updateClientPacket;
@@ -1060,6 +1075,31 @@ void ClientPacketHandlerSystem::handleIngameState()
 				hitPacket.identitiesHit, hitPacket.numberOfHits,
 				hitPacket.identitiesHitFloating, hitPacket.numberOfHitsFloating);
 		}
+		else if(packetType == (char)PacketType::ModulesHighlightPacket)
+		{
+			ModulesHighlightPacket data;
+			data.unpack(packet);
+			for(unsigned char i=0; i<data.numberOfHighlights; i++)
+			{
+				Entity* netModule = static_cast<NetsyncDirectMapperSystem*>(
+					m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+					data.modulesHighighted[i]);
+				if(netModule)
+				{
+					GlowAnimation* glow = static_cast<GlowAnimation*>(
+						netModule->getComponent(ComponentType::GlowAnimation));
+					if(glow)
+					{
+						glow->resetAnimation();
+					}
+					else
+					{
+						netModule->addComponent(new GlowAnimation(AglVector4(0.1f, 0.3f, 0.1f, 1.0f), true, 0.75f));
+						netModule->applyComponentChanges();
+					}
+				}
+			}
+		}
 		else
 		{
 			DEBUGWARNING(( "Unhandled packet type!" ));
@@ -1096,98 +1136,91 @@ void ClientPacketHandlerSystem::handleMenu()
 
 void ClientPacketHandlerSystem::handleLobby()
 {
-	if (m_tcpClient->hasActiveConnection())
+	while (m_tcpClient->hasNewPackets())
 	{
-		while (m_tcpClient->hasNewPackets())
+
+		Packet packet = m_tcpClient->popNewPacket();
+		//updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
+		char packetType;
+		packetType = packet.getPacketType();
+
+		if(packetType == (char)PacketType::NewlyConnectedPlayerPacket)
 		{
+			NewlyConnectedPlayerPacket newlyConnected;
+			newlyConnected.unpack(packet);
 
-			Packet packet = m_tcpClient->popNewPacket();
-			//updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
-			char packetType;
-			packetType = packet.getPacketType();
-
-			if(packetType == (char)PacketType::NewlyConnectedPlayerPacket)
-			{
-				NewlyConnectedPlayerPacket newlyConnected;
-				newlyConnected.unpack(packet);
-
-				//Add entities here and utilize the player component 
-				Entity* newPlayer = m_world->createEntity();
-				PlayerComponent* newPlayerComp = new PlayerComponent();
-				newPlayerComp->m_networkID = newlyConnected.networkID;
-				newPlayerComp->m_playerID = newlyConnected.playerID;
-				newPlayerComp->m_ping = newlyConnected.ping;
-				newPlayerComp->m_playerName = newlyConnected.playerName;
-				newPlayerComp->setAbsoluteScore(newlyConnected.score);
-				newPlayer->addComponent(newPlayerComp);
-				m_world->addEntity(newPlayer);
+			//Add entities here and utilize the player component 
+			Entity* newPlayer = m_world->createEntity();
+			PlayerComponent* newPlayerComp = new PlayerComponent();
+			newPlayerComp->m_networkID = newlyConnected.networkID;
+			newPlayerComp->m_playerID = newlyConnected.playerID;
+			newPlayerComp->m_ping = newlyConnected.ping;
+			newPlayerComp->m_playerName = newlyConnected.playerName;
+			newPlayerComp->setAbsoluteScore(newlyConnected.score);
+			newPlayer->addComponent(newPlayerComp);
+			m_world->addEntity(newPlayer);
 			
-				static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
-					addNewPlayer(newlyConnected);
-			}
-			else if (packetType == (char)PacketType::ClientDisconnect)
-			{
-				DisconnectPacket dcPacket;
-				dcPacket.unpack(packet);
+			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
+				addNewPlayer(newlyConnected);
+		}
+		else if (packetType == (char)PacketType::ClientDisconnect)
+		{
+			DisconnectPacket dcPacket;
+			dcPacket.unpack(packet);
 
-				// If this is the same player as the current client player, 
-				// then the following should be done:
-				// * Remove all players from the client!
-				// * Clear lobby data!
-				// * Enable the 'connect to server' system!
-				// * Queue state to menu!
-				// This is done in 'reset from disconnect'!
-				// Additionally 
-				// * Disconnect from server immediately!
-				if (dcPacket.clientNetworkIdentity == m_tcpClient->getId())
+			// Reset all ready states.
+			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))
+				->setAllPlayersReady(false);
+
+			// Reset ready button
+			auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+				m_world->getSystem(SystemType::LibRocketBackendSystem));
+			int lobbyDocIdx = rocketBackend->getDocumentByName("lobby");
+			rocketBackend->updateElement(lobbyDocIdx, "player_ready", "Ready");
+
+			handlePlayerDisconnect(dcPacket);
+		}
+		else if (packetType == (char)PacketType::PlayerReadyPacket)
+		{
+			PlayerReadyPacket readyPacket;
+			readyPacket.unpack(packet);
+			
+			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))
+				->setPlayerReady(readyPacket.playerId, readyPacket.ready);
+			
+			// If local player, then set unready/ready button
+			if (readyPacket.playerId == m_tcpClient->getPlayerID())
+			{
+				auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+					m_world->getSystem(SystemType::LibRocketBackendSystem));
+
+				int lobbyDocIdx = rocketBackend->getDocumentByName("lobby");
+				if (readyPacket.ready)
 				{
-					resetFromDisconnect();
-					m_tcpClient->disconnect();
+					rocketBackend->updateElement(lobbyDocIdx, "player_ready", "Unready");
 				}
-				// Else, the client player should:
-				// * Remove player from lobby.
-				// * Remove player from player system.
 				else
 				{
-					static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
-						removePlayer(dcPacket);
-					static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
-						deletePlayerEntity(dcPacket.playerID);
-				}
-
-				// If this player is the host (id = 0) then request to shut down the server.
-				if (dcPacket.playerID == 0)
-				{
-					static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
-						setEnabled(true);
-					m_world->requestToQuitServer();
-				}
+					rocketBackend->updateElement(lobbyDocIdx, "player_ready", "Ready");
+				} 
 			}
-
-			else if(packetType == (char)PacketType::ChangeStatePacket){
-				ChangeStatePacket changeState;
-				changeState.unpack(packet);
-
-				if(changeState.m_serverState == ServerStates::LOADING){
-					m_gameState->setQueuedState(GameStates::LOADING);
-				}
-			}
-			else if(packetType == (char)PacketType::EntityCreation){
-				DEBUGWARNING(( "Server sent packets too fast and too furious!" ));
-			}
-			else
-			{
-				printPacketTypeNotHandled("Lobby", (int)packetType);
-			}
-
 		}
-	}
-	// Else, the server abruptly disconnected. Reset!
-	else
-	{
-		static_cast<MenuSystem*>(m_world->getSystem(SystemType::MenuSystem))
-			->displayDisconnectPopup();
-		//resetFromDisconnect();
+		else if(packetType == (char)PacketType::ChangeStatePacket){
+			ChangeStatePacket changeState;
+			changeState.unpack(packet);
+
+			if(changeState.m_serverState == ServerStates::LOADING){
+				m_gameState->setQueuedState(GameStates::LOADING);
+			}
+		}
+		else if(packetType == (char)PacketType::EntityCreation){
+			DEBUGWARNING(( "Server sent packets too fast and too furious!\n" ));
+		}
+		else
+		{
+			printPacketTypeNotHandled("Lobby", (int)packetType);
+		}
+
 	}
 }
 
@@ -1216,6 +1249,13 @@ void ClientPacketHandlerSystem::handleLoading()
 			if(changeState.m_serverState == ServerStates::SENTALLPACKETS){
 				m_gameState->setQueuedState(GameStates::FINISHEDLOADING);
 			}
+		}
+		else if (packetType == (char)PacketType::ClientDisconnect)
+		{
+			DisconnectPacket dcPacket;
+			dcPacket.unpack(packet);
+
+			handlePlayerDisconnect(dcPacket);
 		}
 		else
 		{
@@ -1351,6 +1391,13 @@ void ClientPacketHandlerSystem::handleFinishedLoading()
 				hudSystem->setHUDData(HudSystem::SERVERNAME,"TheOnServ");
 			}
 		}
+		else if (packetType == (char)PacketType::ClientDisconnect)
+		{
+			DisconnectPacket dcPacket;
+			dcPacket.unpack(packet);
+
+			handlePlayerDisconnect(dcPacket);
+		}
 		else
 		{
 			//printPacketTypeNotHandled("Finished Loading", (int)packetType);
@@ -1427,4 +1474,54 @@ void ClientPacketHandlerSystem::resetFromDisconnect()
 	static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
 		setEnabled(true);
 	m_gameState->setQueuedState(GameStates::MENU);
+}
+
+void ClientPacketHandlerSystem::handleServerDisconnect()
+{
+	if (!m_tcpClient->hasActiveConnection() && m_gameState->getCurrentState() != GameStates::MENU)
+	{
+		static_cast<MenuSystem*>(m_world->getSystem(SystemType::MenuSystem))
+			->displayDisconnectPopup();
+		
+		auto inputBackend = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::InputBackendSystem));
+		if (!inputBackend->getCursor()->isVisible())
+			inputBackend->getCursor()->show();
+	}
+}
+
+void ClientPacketHandlerSystem::handlePlayerDisconnect( const DisconnectPacket& p_dcPacket )
+{
+	// If this is the same player as the current client player, 
+	// then the following should be done:
+	// * Remove all players from the client!
+	// * Clear lobby data!
+	// * Enable the 'connect to server' system!
+	// * Queue state to menu!
+	// This is done in 'reset from disconnect'!
+	// Additionally 
+	// * Disconnect from server immediately!
+	if (p_dcPacket.clientNetworkIdentity == m_tcpClient->getId())
+	{
+		resetFromDisconnect();
+		m_tcpClient->disconnect();
+	}
+	// Else, the client player should:
+	// * Remove player from lobby.
+	// * Remove player from player system.
+	else
+	{
+		static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
+			removePlayer(p_dcPacket);
+		static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
+			deletePlayerEntity(p_dcPacket.playerID);
+		m_world->getOutputLogger()->write(("Player " + toString(p_dcPacket.playerID) + " has left the game.\n").c_str());
+	}
+
+	// If this player is the host (id = 0) then request to shut down the server.
+	if (p_dcPacket.playerID == 0)
+	{
+		//static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
+		//	setEnabled(true);
+		m_world->requestToQuitServer();
+	}
 }

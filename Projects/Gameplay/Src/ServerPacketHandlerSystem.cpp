@@ -58,6 +58,7 @@
 #include "LevelPieceRoot.h"
 #include "RootBoundingSpherePacket.h"
 #include "DisconnectPacket.h"
+#include "PlayerReadyPacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -69,6 +70,7 @@ ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	m_finishedLoadingPlayers = 0;
 	m_readyLoadingPlayers = 0;
 	m_resultsPlayers = 0;
+	memset(&m_lobbyPlayerReadyStates, 0, sizeof(m_lobbyPlayerReadyStates));
 }
 
 ServerPacketHandlerSystem::~ServerPacketHandlerSystem()
@@ -89,6 +91,8 @@ void ServerPacketHandlerSystem::processEntities( const vector<Entity*>& p_entiti
 
 	m_stateSystem = static_cast<ServerStateSystem*>(
 		m_world->getSystem(SystemType::ServerStateSystem));
+
+	handleClientDisconnect();
 
 	switch (m_stateSystem->getCurrentState())
 	{
@@ -347,7 +351,7 @@ void ServerPacketHandlerSystem::handleIngame()
 			rayPacket.unpack( packet );
 			picking->setRay(packet.getSenderId(), rayPacket.o, rayPacket.d);
 		}
-		else if (packetType == (char)PacketType::ModuleHighlightPacket)
+		else if (packetType == (char)PacketType::HighlightSlotPacket)
 		{
 			// =========================================
 			// MODULEHIGHLIGHTPACKET
@@ -474,7 +478,39 @@ void ServerPacketHandlerSystem::handleLobby()
 
 			// Broadcast the dc packet back to all clients, including the one who sent it.
 			m_server->broadcastPacket(packet);
+			// Force all players to be set unready.
+			memset(&m_lobbyPlayerReadyStates, 0, sizeof(m_lobbyPlayerReadyStates));
+
+			m_world->getOutputLogger()->write(("Server detected a disconnect packet for player: " + toString(dcPacket.playerID) + "\n").c_str());
 		}
+		else if(packetType == (char)PacketType::PlayerReadyPacket){
+			// Broadcast the ready packet back to all clients, including the one who sent it.
+			m_server->broadcastPacket(packet);
+
+			PlayerReadyPacket readyPacket;
+			readyPacket.unpack(packet);
+
+			m_lobbyPlayerReadyStates[readyPacket.playerId] = readyPacket.ready;
+			// Check so that all players are ready!
+			m_readyLobbyPlayers = 0;
+			for (int i = 0; i < MAXPLAYERS; i++)
+			{
+				if (m_lobbyPlayerReadyStates[i])
+					m_readyLobbyPlayers++;
+			}
+
+			m_world->getOutputLogger()->write( ("Players ready: " + toString(m_readyLobbyPlayers) + "\n").c_str() );
+			PlayerSystem* playerSystem = static_cast<PlayerSystem*>
+				(m_world->getSystem(SystemType::PlayerSystem));
+			if (m_readyLobbyPlayers >= playerSystem->getActiveEntities().size())
+			{
+				ChangeStatePacket newState;
+				newState.m_serverState = ServerStates::LOADING;
+				m_stateSystem->setQueuedState(ServerStates::LOADING);
+				m_server->broadcastPacket(newState.pack());
+			}
+		}
+
 		else
 		{
 			printPacketTypeNotHandled("Lobby", (int)packetType);
@@ -524,7 +560,7 @@ void ServerPacketHandlerSystem::handleLoading()
 			levelGen->generateLevel(m_readyLoadingPlayers);
 		}
 		
-		if (levelHandler->hasLevel())
+		if (levelHandler->hasLevel() && spawnPointSys->isSpawnPointsReady())
 		{
 			/************************************************************************/
 			/* Send the already networkSynced objects located on the server to the	*/
@@ -822,4 +858,36 @@ float ServerPacketHandlerSystem::stackBooster(Entity* p_parent)
 	if (speedBooster)
 		boostPower += 3;
 	return boostPower;
+}
+
+void ServerPacketHandlerSystem::handleClientDisconnect()
+{
+	while (m_server->hasNewDisconnections())
+	{
+		int clientId = m_server->popNewDisconnection();
+
+		auto playerSys = static_cast<PlayerSystem*>(
+			m_world->getSystem(SystemType::PlayerSystem));
+
+		int playerId = playerSys->findPlayerId(clientId);
+		if (playerId >= 0)
+		{
+			playerSys->deletePlayerEntity(playerId);
+
+			DisconnectPacket dcPacket;
+			dcPacket.playerID = playerId;
+			dcPacket.clientNetworkIdentity = clientId;
+
+			m_server->broadcastPacket(dcPacket.pack());
+		
+
+			memset(&m_lobbyPlayerReadyStates, 0, sizeof(m_lobbyPlayerReadyStates));
+
+			m_world->getOutputLogger()->write(("Server detected a disconnecting player: " + toString(dcPacket.playerID) + "\n").c_str());
+			// Here needs to do more, for instance, removing entities!
+		}
+		else {
+			m_world->getOutputLogger()->write("Server detected a disconnecting player but the player has already been handled. Ignored request.\n");
+		}
+	}
 }

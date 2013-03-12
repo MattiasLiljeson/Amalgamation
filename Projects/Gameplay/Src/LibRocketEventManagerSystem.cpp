@@ -47,6 +47,8 @@
 #include "SoundComponent.h"
 #include "DisconnectPacket.h"
 #include "ClientPacketHandlerSystem.h"
+#include "PlayerReadyPacket.h"
+#include "LobbySystem.h"
 
 LibRocketEventManagerSystem::LibRocketEventManagerSystem(TcpClient* p_client)
 	: EntitySystem(SystemType::LibRocketEventManagerSystem, 1, ComponentType::GameState)
@@ -228,9 +230,22 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 		}
 		else if(values[0] == "start_game")
 		{
-			ChangeStatePacket letsRollPacket;
-			letsRollPacket.m_gameState = GameStates::INITGAME;
-			m_client->sendPacket(letsRollPacket.pack());
+			//ChangeStatePacket letsRollPacket;
+			//letsRollPacket.m_gameState = GameStates::INITGAME;
+			//m_client->sendPacket(letsRollPacket.pack());
+
+			// Check previous ready state of the player, to ensure ready/unready
+			// is set properly.
+			auto lobbySys = static_cast<LobbySystem*>(
+				m_world->getSystem(SystemType::LobbySystem));
+
+			PlayerReadyPacket playerReady;
+			playerReady.playerId = m_client->getPlayerID();
+			// toggle ready/unready
+			playerReady.ready = ! lobbySys->isPlayerReady(playerReady.playerId);
+			
+			playerReady.pack();
+			m_client->sendPacket(playerReady.pack());
 		}
 		else if(values[0] == "host_server"){
 			m_world->requestToHostServer();

@@ -47,14 +47,16 @@ DeferredRenderer::DeferredRenderer(
 	initSSAO();
 	initFullScreenQuad();
 
-	buildBlendStates();
+	RenderStateHelper::fillBlendStateList( m_device, m_blendStates );
 	m_currentBlendStateType = BlendState::DEFAULT;
 	m_blendMask = 0xffffffff;
 	for (int i=0;i<4;i++) m_blendFactors[i]=1;
 
-	buildRasterizerStates();
+	RenderStateHelper::fillRasterizerStateList( m_device, m_rasterizerStates );
 	m_currentRasterizerStateType = RasterizerState::DEFAULT;
 
+	RenderStateHelper::fillSamplerStateList( m_device, m_samplerStates );
+	setSamplerStates();
 }
 
 DeferredRenderer::~DeferredRenderer()
@@ -73,8 +75,8 @@ DeferredRenderer::~DeferredRenderer()
 	delete m_bufferFactory;
 	delete m_baseShader;
 	delete m_lightShader;
-	delete m_ssaoShader;
-	delete m_dofGenerationShader;
+	delete m_effectShader;
+	delete m_lowResGenerationShader;
 	delete m_composeShader;
 	delete m_fullscreenQuad;
 	delete m_animatedBaseShader;
@@ -124,19 +126,19 @@ void DeferredRenderer::setDofRenderTargets()
 
 }
 
-void DeferredRenderer::generateSsao()
+void DeferredRenderer::generateEffects()
 {
-	m_ssaoShader->setSSAOBufferData(m_ssaoData);
-	m_ssaoShader->apply();
+	m_effectShader->setSSAOBufferData(m_ssaoData);
+	m_effectShader->apply();
 	m_fullscreenQuad->apply();
 
 	m_deviceContext->Draw(6,0);
 }
 
-void DeferredRenderer::generateDof()
+void DeferredRenderer::generateLowRes()
 {
-	m_dofGenerationShader->setSSAOBufferData(m_ssaoData);
-	m_dofGenerationShader->apply();
+	m_lowResGenerationShader->setSSAOBufferData(m_ssaoData);
+	m_lowResGenerationShader->apply();
 	m_fullscreenQuad->apply();
 
 	m_deviceContext->Draw(6,0);
@@ -286,14 +288,20 @@ BlendState::Mode DeferredRenderer::getCurrentBlendStateType()
 
 void DeferredRenderer::setRasterizerStateSettings( RasterizerState::Mode p_state )
 {
-	unsigned int idx = static_cast<unsigned int>(p_state);
-	m_deviceContext->RSSetState( m_rasterizerStates[idx] );
+	m_deviceContext->RSSetState( m_rasterizerStates[p_state] );
 	m_currentRasterizerStateType = p_state;
 }
 
 RasterizerState::Mode DeferredRenderer::getCurrentRasterizerStateType()
 {
 	return m_currentRasterizerStateType;
+}
+
+void DeferredRenderer::setSamplerStates()
+{
+	m_samplerStates[SamplerState::SamplerState_DEFAULT] =
+		m_samplerStates[SamplerState::SamplerState_ANISOTROPIC_WRAP];
+	m_deviceContext->PSSetSamplers( 0, SamplerState::SamplerState_CNT, m_samplerStates );
 }
 
 DeferredBaseShader* DeferredRenderer::getDeferredBaseShader()
@@ -438,17 +446,6 @@ void DeferredRenderer::initDofBuffers()
 	//m_dofBuffers[RenderTargets_DEPTH] = NULL;
 }
 
-
-void DeferredRenderer::buildBlendStates()
-{
-	RenderStateHelper::fillBlendStateList(m_device,m_blendStates);
-}
-
-void DeferredRenderer::buildRasterizerStates()
-{
-	RenderStateHelper::fillRasterizerStateList(m_device,m_rasterizerStates);
-}
-
 void DeferredRenderer::initShaders()
 {
 	m_baseShader = m_shaderFactory->createDeferredBaseShader(
@@ -458,11 +455,11 @@ void DeferredRenderer::initShaders()
 		L"Shaders/Game/deferredBaseTessleationVS.hlsl", L"Shaders/Game/deferredBaseTessleationHS.hlsl",
 		L"Shaders/Game/deferredBaseTessleationDS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");
 
-	m_ssaoShader = m_shaderFactory->createDeferredComposeShader(
-		L"Shaders/Game/ssaoGenerate.hlsl");
+	m_effectShader = m_shaderFactory->createDeferredComposeShader(
+		L"Shaders/Game/effect.hlsl");
 
-	m_dofGenerationShader = m_shaderFactory->createDeferredComposeShader(
-		L"Shaders/Game/dofGeneration.hlsl");
+	m_lowResGenerationShader = m_shaderFactory->createDeferredComposeShader(
+		L"Shaders/Game/lowResGeneration.hlsl");
 
 	m_animatedBaseShader = m_shaderFactory->createDeferredAnimatedShader(
 		L"Shaders/Game/deferredBaseAnimatedVS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");

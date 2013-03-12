@@ -855,6 +855,17 @@
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
     <ClInclude Include="SoundPacket.h">
+    </ClInclude>
+    <ClInclude Include="GlowAnimation.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="GlowAnimationSystem.h">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClInclude>
+    <ClInclude Include="ModulesHighlightPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerReadyPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1473,6 +1484,17 @@
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
     <ClCompile Include="SoundPacket.cpp">
+    </ClCompile>
+    <ClCompile Include="GlowAnimation.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="GlowAnimationSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClCompile>
+    <ClCompile Include="ModulesHighlightPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerReadyPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>

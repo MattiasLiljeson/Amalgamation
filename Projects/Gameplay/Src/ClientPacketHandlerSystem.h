@@ -17,6 +17,7 @@ using namespace std;
 class TcpClient;
 class EntityCreationPacket;
 class EntityDeletionPacket;
+class DisconnectPacket;
 class GameStateSystem;
 class ClientStateSystem;
 
@@ -73,12 +74,19 @@ private:
 	
 	void printPacketTypeNotHandled(string p_stateName, int p_packetType);
 
+	// Disconnect-handling
+	void handleServerDisconnect();
+	void handlePlayerDisconnect(const DisconnectPacket& p_dcPacket);
+
+	// State-handling
 	void handleIngameState();
 	void handleMenu();
 	void handleLobby();
 	void handleLoading();
 	void handleFinishedLoading();
 	void handleResults();
+	//
+
 	void handleHitIndicationPacket( Packet& p_packet );
 
 private:

@@ -9,6 +9,7 @@
 #include <D3DCompiler.h>
 #include <comdef.h>
 #include <d3d11.h>
+#include <vector>
 
 class BufferFactory;
 class DeferredBaseShader;
@@ -92,15 +93,6 @@ private:
 		HSData* p_hs=NULL, DSData* p_ds=NULL);
 
 	///-----------------------------------------------------------------------------------
-	/// A helper function that creates a given sampler stage
-	/// \param p_samplerState
-	/// \return void
-	///-----------------------------------------------------------------------------------
-	void createSamplerState(ID3D11SamplerState** p_samplerState);
-
-	void createShadowSamplerState(ID3D11SamplerState** p_samplerState);
-
-	///-----------------------------------------------------------------------------------
 	/// A helper function that creates and configures the shader from the specified input
 	/// \param p_shaderInitData
 	/// \param p_inputLayout
@@ -113,9 +105,7 @@ private:
 	/// \return void
 	///-----------------------------------------------------------------------------------
 	void createShaderInitData(ShaderVariableContainer* p_shaderInitData,
-		ID3D11InputLayout* p_inputLayout,
-		VSData* p_vsd, PSData* p_psd=NULL, 
-		ID3D11SamplerState* p_samplerState=NULL,
+		ID3D11InputLayout* p_inputLayout, VSData* p_vsd, PSData* p_psd=NULL,
 		GSData* p_gsd=NULL, HSData* p_hsd=NULL, DSData* p_dsd=NULL);
 
 	///-----------------------------------------------------------------------------------

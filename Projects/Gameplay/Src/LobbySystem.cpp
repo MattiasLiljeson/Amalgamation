@@ -79,7 +79,16 @@ void LobbySystem::initialize()
 
 void LobbySystem::updateRow( int p_row, const LobbyStats& p_stats )
 {
+	m_players[p_row].playerName = p_stats.playerName;
+	m_players[p_row].ping		= p_stats.ping;
+	m_players[p_row].ready		= p_stats.ready;
+	NotifyRowChange(m_tableName, p_row, 1);
+}
 
+void LobbySystem::setPlayerReady( int p_playerId, bool p_ready )
+{
+	m_players[p_playerId].ready	= p_ready;
+	NotifyRowChange(m_tableName, p_playerId, 1);
 }
 
 void LobbySystem::addNewPlayer( const NewlyConnectedPlayerPacket& p_packet )
@@ -102,6 +111,20 @@ void LobbySystem::resetAllPlayers()
 	for(int i = 0; i < MAXPLAYERS; i++)
 	{
 		resetPlayer(i);
+	}
+	NotifyRowChange(m_tableName,0,MAXPLAYERS);
+}
+
+bool LobbySystem::isPlayerReady( int p_playerId ) const
+{
+	return m_players[p_playerId].ready;
+}
+
+void LobbySystem::setAllPlayersReady( bool p_ready )
+{
+	for(int i = 0; i < MAXPLAYERS; i++)
+	{
+		m_players[i].ready = p_ready;
 	}
 	NotifyRowChange(m_tableName,0,MAXPLAYERS);
 }

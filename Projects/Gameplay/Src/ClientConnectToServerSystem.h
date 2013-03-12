@@ -32,10 +32,13 @@ public:
 	virtual void initialize();
 
 	void connectToNetworkAddress();
-	//void connectToNetworkAddress(const std::string& p_serverAddress, const std::string& p_serverPort);
 
-	void setAddressAndConnect(const std::string& p_address, const std::string& p_port);
-	void setConnectionAddress(const std::string& p_address, const std::string& p_port);
+	bool setAddressAndConnect(const std::string& p_address, const std::string& p_port);
+	bool setConnectionAddress(const std::string& p_address, const std::string& p_port);
+private:
+	bool validateNetworkAddress(const std::string& p_address, const std::string& p_port);
+	bool validateIPFormat(const std::string& p_address);
+	bool validatePortFormat(const std::string& p_port);
 private:
 	TcpClient* m_tcpClient;
 

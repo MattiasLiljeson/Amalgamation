@@ -1,4 +1,6 @@
 #include "../Game/perFrameCBuffer.hlsl"
+#include "../Game/common.hlsl"
+
 
 cbuffer cbPerObject: register(b1)
 {
@@ -16,7 +18,6 @@ cbuffer cbPerObject: register(b1)
 };
 
 Texture2D Texture : register(t0);
-sampler defaultSampler : register(s0);
 
 struct Particle
 {
@@ -156,7 +157,7 @@ float4 PS(GS_OUT pIn) : SV_TARGET
 		return float4( 0.0f ,0.0f, 0.0f, 0.0f );
 	}
 	PixelOut pix_out;
-	pix_out.diffuse = Texture.Sample(defaultSampler, pIn.texC);
+	pix_out.diffuse = Texture.Sample(g_samplerAnisotropicWrap, pIn.texC);
 	pix_out.diffuse *= pIn.color;
 	return pix_out.diffuse;
 }

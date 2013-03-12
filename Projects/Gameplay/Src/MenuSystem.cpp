@@ -7,6 +7,7 @@
 #include <ToString.h>
 #include "MenuItem.h"
 #include "ClientStateSystem.h"
+#include "LobbySystem.h"
 
 MenuSystem::MenuSystem()
 	: EntitySystem( SystemType::MenuSystem)
@@ -40,7 +41,7 @@ void MenuSystem::initialize()
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"host");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"options");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"credits");
-	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"lobby");
+	m_lobbyDocIdx = rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"lobby");
 	m_disconnectPopupIdx = rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"connection_lost");
 	m_loadingWindowIdx = rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"loading");
 
@@ -63,6 +64,13 @@ void MenuSystem::process()
 		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
 			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
 
+		static_cast<LobbySystem*>(
+			m_world->getSystem(SystemType::LobbySystem))->resetAllPlayers();
+		
+		auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+			m_world->getSystem(SystemType::LibRocketBackendSystem));
+		rocketBackend->updateElement(m_lobbyDocIdx, "player_ready", "Ready");
+
 		rocketEventManager->clearDocumentStack();
 		rocketEventManager->loadWindow("lobby");
 	}
@@ -70,7 +78,6 @@ void MenuSystem::process()
 	else if(gameState->getStateDelta(GameStates::MENU) == EnumGameDelta::ENTEREDTHISFRAME){
 		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
 			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
-
 
 		rocketEventManager->clearDocumentStack();
 		rocketEventManager->loadWindow("main_menu");
@@ -91,9 +98,12 @@ void MenuSystem::displayDisconnectPopup()
 	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
 		m_world->getSystem(SystemType::LibRocketBackendSystem));
 
-	auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
-		m_world->getSystem(SystemType::LibRocketEventManagerSystem));
+	// Must check that it isn't visible first!
+	if (!rocketBackend->isDocumentVisible(m_disconnectPopupIdx))
+	{
+		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
+			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
 
-	rocketEventManager->loadWindow("connection_lost", Rocket::Core::ElementDocument::FOCUS);
-	//rocketBackend->showDocument(m_disconnectPopupIdx, Rocket::Core::ElementDocument::FOCUS);
+		rocketEventManager->loadWindow("connection_lost", Rocket::Core::ElementDocument::FOCUS);
+	}
 }

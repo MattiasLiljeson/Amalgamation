@@ -71,9 +71,9 @@ public:
 	// Buffers as RTs
 	void setBasePassRenderTargets();
 	void setLightRenderTargets();
-	void generateSsao();
+	void generateEffects();
 	void setDofRenderTargets();
-	void generateDof();
+	void generateLowRes();
 	void renderComposeStage();
 
 	void setViewPortSize( float p_width, float p_height );
@@ -104,6 +104,9 @@ public:
 	// Rasterizer states
 	void setRasterizerStateSettings(RasterizerState::Mode p_state);
 	RasterizerState::Mode getCurrentRasterizerStateType();
+
+	// Sampler states
+	void setSamplerStates();
 
 	// Shader getters
 	DeferredBaseShader* getDeferredBaseShader();
@@ -159,8 +162,8 @@ private:
 	DeferredTessAnimatedBaseShader*	m_tessAnimatedBaseShader;
 
 	LightShader*			m_lightShader;
-	DeferredComposeShader*	m_ssaoShader;
-	DeferredComposeShader*	m_dofGenerationShader;
+	DeferredComposeShader*	m_effectShader;
+	DeferredComposeShader*	m_lowResGenerationShader;
 	DeferredComposeShader*	m_composeShader;
 
 	Buffer<PTVertex>* m_fullscreenQuad;
@@ -174,6 +177,9 @@ private:
 	// rasterizer states
 	vector<ID3D11RasterizerState*> m_rasterizerStates;
 	RasterizerState::Mode m_currentRasterizerStateType;
+
+	// Sampler States
+	ID3D11SamplerState* m_samplerStates[SamplerState::SamplerState_CNT];
 
 	SSAOBuffer	m_ssaoData;
 

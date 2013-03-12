@@ -1,31 +1,29 @@
 #pragma once
 
-#include <EntitySystem.h>
+#include "Packetizer.h"
 
 // =======================================================================================
-//                                      MenuSystem
+//                                      PlayerReadyPacket
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	Brief
 ///        
-/// # MenuSystem
+/// # PlayerReadyPacket
 /// Detailed description.....
-/// Created on: 4-2-2013 
+/// Created on: 11-3-2013 
 ///---------------------------------------------------------------------------------------
 
-class MenuSystem : public EntitySystem
+class PlayerReadyPacket : public Packetizer
 {
 public:
-	MenuSystem();
-	~MenuSystem();
-	void initialize();
-	void process( );
-	void endLoadingState();
-	void displayDisconnectPopup();
-private:
-	int m_loadingWindowIdx;
-	int m_disconnectPopupIdx;
-	int m_lobbyDocIdx;
-};
+	PlayerReadyPacket();
+	~PlayerReadyPacket();
 
+	Packet pack();
+	void unpack( Packet& p_packet );
+
+public:
+	int		playerId;
+	bool	ready;
+};

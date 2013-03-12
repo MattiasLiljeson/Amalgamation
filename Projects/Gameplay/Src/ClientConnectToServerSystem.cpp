@@ -1,10 +1,14 @@
 #include "ClientConnectToServerSystem.h"
+
+#include <boost/asio/ip/v6_only.hpp>
+#include <boost/asio/ip/address.hpp>
 #include "Control.h"
 #include <TcpClient.h>
 #include "InputBackendSystem.h"
 #include "LevelHandlerSystem.h"
 #include "GameState.h"
 #include "ClientStateSystem.h"
+#include <DebugUtil.h>
 
 ClientConnectToServerSystem::ClientConnectToServerSystem(TcpClient* p_tcpClient,
 														 bool p_connectDirectly/* =false */)
@@ -37,31 +41,8 @@ void ClientConnectToServerSystem::process()
 		m_isLookingForConnection = false;
 		//m_world->getSystem(SystemType::ClientPacketHandlerSystem)->setEnabled(true);
 		setEnabled(false);
-
-		// Clears and hides all currently visible documents.
-		//eventManagerSys->clearDocumentStack();
-		
-		//auto levelHandler = static_cast<LevelHandlerSystem*>(
-		//	m_world->getSystem(SystemType::LevelHandlerSystem));
-		//levelHandler->destroyLevel();
 	}
 
-/*	InputBackendSystem* inputBackend = static_cast<InputBackendSystem*>
-		(m_world->getSystem(SystemType::InputBackendSystem));
-	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
-		getSystem(SystemType::ClientStateSystem));*/
-//	if( stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::ENTEREDTHISFRAME){
-//		connectToNetworkAddress();
-		// Disable the menu background scene.
-		//m_world->getSystem(SystemType::MenuBackgroundSceneSystem)->setEnabled(false);
-//	}
-
-//	if(inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys_F4) > 0 ){
-//		connectToNetworkAddress();
-//		state->setStatesDelta(GameStates::INGAME, EnumGameDelta::ENTEREDTHISFRAME);
-//		// Disable the menu background scene.
-//		m_world->getSystem(SystemType::MenuBackgroundSceneSystem)->setEnabled(false);
-//	}
 }
 
 void ClientConnectToServerSystem::connectToNetworkAddress()
@@ -70,16 +51,60 @@ void ClientConnectToServerSystem::connectToNetworkAddress()
 	m_isLookingForConnection = true;
 }
 
-void ClientConnectToServerSystem::setAddressAndConnect( const std::string& p_address, 
+bool ClientConnectToServerSystem::setAddressAndConnect( const std::string& p_address, 
 													   const std::string& p_port )
 {
-	setConnectionAddress(p_address,p_port);
-	connectToNetworkAddress();
+	if(setConnectionAddress(p_address,p_port)){
+		connectToNetworkAddress();
+		return true;
+	}
+	return false;
 }
 
-void ClientConnectToServerSystem::setConnectionAddress( const std::string& p_address, 
+bool ClientConnectToServerSystem::setConnectionAddress( const std::string& p_address, 
 													   const std::string& p_port )
 {
-	m_serverAddress = p_address;
-	m_serverPort = p_port;
+	if(validateNetworkAddress(p_address, p_port)){
+		m_serverAddress = p_address;
+		m_serverPort = p_port;
+		return true;
+	}
+	return false;
+}
+
+bool ClientConnectToServerSystem::validateNetworkAddress( const std::string& p_address, 
+														 const std::string& p_port )
+{
+	if(validateIPFormat(p_address) && validatePortFormat(p_port)){
+		return true;
+	}
+
+	return false;
+}
+
+bool ClientConnectToServerSystem::validateIPFormat(const std::string& p_address)
+{
+	boost::asio::ip::address ipAddress;
+	try{
+		ipAddress = boost::asio::ip::address::from_string(p_address);
+	}
+	catch(const std::exception& e){
+		DEBUGPRINT(("Invalid IP adress submited"));
+		return false;
+	}
+	return true;
+}
+
+bool ClientConnectToServerSystem::validatePortFormat( const std::string& p_port )
+{
+	istringstream buffer(p_port);
+	int portValue;
+	buffer >> portValue;
+
+	if(portValue < 1024 || portValue > 65535){
+		DEBUGPRINT(("Invalid Port range"));
+		return false;
+	}
+
+	return true;
 }

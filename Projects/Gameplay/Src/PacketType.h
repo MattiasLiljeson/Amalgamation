@@ -21,6 +21,8 @@ public:
 		Ping,
 		Pong,
 		ChangeStatePacket, 
+		PlayerReadyPacket,
+		PlayerInfo,
 
 		// Server -> Client:
 		EntityCreation,
@@ -41,6 +43,7 @@ public:
 		BombActivationPacket,
 		TeslaHitPacket,
 		HitIndicatorPacket,
+		ModulesHighlightPacket,
 
 		// Client -> Server:
 		/************************************************************************/
@@ -49,7 +52,7 @@ public:
 		/************************************************************************/
 		ThrustPacket,
 		RayPacket,
-		ModuleHighlightPacket,
+		HighlightSlotPacket,
 		SimpleEvent,
 		ParticleUpdate,
 		ParticleSystemCreationInfo,
@@ -59,7 +62,6 @@ public:
 		SpawnExplosionPacket,
 		EditSphereUpdatePacket,
 		SelectionMarkerUpdatePacket,
-		PlayerInfo,
 		HighlightEntityPacket,
 		RootBoundingSpherePacket,
 		SoundPacket,

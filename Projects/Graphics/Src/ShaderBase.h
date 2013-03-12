@@ -24,7 +24,7 @@ public:
 	virtual void apply()=0;
 	void applyStages();
 	void unApplyStages();
-	void applyCustomSamplerState(ID3D11SamplerState* p_sampler, UINT p_index);
+
 protected:
 	// D3D
 	ID3D11Device*			m_device;
@@ -39,7 +39,4 @@ protected:
 
 	// Input layout
 	ID3D11InputLayout* m_inputLayout;
-
-	// Sampler state
-	ID3D11SamplerState* m_samplerState;
 };

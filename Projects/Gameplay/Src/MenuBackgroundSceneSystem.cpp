@@ -12,6 +12,8 @@
 #include "MeshOffsetTransform.h"
 #include "SoundComponent.h"
 #include <Globals.h>
+#include "ColorTone.h"
+#include "GlowAnimation.h"
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	: EntitySystem(SystemType::MenuBackgroundSceneSystem)
@@ -101,7 +103,7 @@ void MenuBackgroundSceneSystem::process()
 
 		if(orbit && axisRotate && transform)
 		{
-			AglQuaternion rotation = AglQuaternion::constructFromAxisAndAngle(AglVector3(0, 0, 1.0f), 0.5f * m_world->getDelta());
+			AglQuaternion rotation = AglQuaternion::constructFromAxisAndAngle(AglVector3(0, 0, 1.0f), 0.25f * m_world->getDelta());
 			axisRotate->originRotation *= rotation;
 			AglVector3 newAxis = orbit->axis;
 			rotation.transformVector(newAxis);
@@ -134,7 +136,7 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	AxisRotate* axisRotate = new AxisRotate(axis, toVector, rotation, 0.0f);
 	m_ship->addComponent(axisRotate);
 
-	initOrbitingShip(AglVector3(20.0f, 0.0f, 80.0f), AglVector3(0, 1.0f, 0), 50.0f, 5.0f);
+	initOrbitingShip(AglVector3(20.0f, 0.0f, 80.0f), AglVector3(0, 1.0f, 0), 50.0f, 1.0f);
 
 	// RM-RT 2013-03-04
 	/*
@@ -275,5 +277,6 @@ void MenuBackgroundSceneSystem::initOrbitingShip( AglVector3 p_center, AglVector
 		p_axis, position - p_center, -fabs(p_speed)));
 	m_orbitingShip->addComponent(new AxisRotate(p_axis, AglVector3(0, 0, 1.0f), rotation,
 		-fabs(p_speed)));
+	m_orbitingShip->addComponent(new GlowAnimation(AglVector4(0.0f, 1.0f, 0.0f, 1.0f), true, 2.0f));
 	m_world->addEntity(m_orbitingShip);
 }

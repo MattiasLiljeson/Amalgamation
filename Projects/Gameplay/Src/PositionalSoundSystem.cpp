@@ -13,6 +13,7 @@
 #include <PositionalSoundCreationInfo.h>
 #include <AudioHeader.h>
 #include "AudioListenerSystem.h"
+#include <ValueClamp.h>
 
 PositionalSoundSystem::PositionalSoundSystem()
 	: EntitySystem( SystemType::PositionalSoundSystem, 2,
@@ -56,13 +57,16 @@ void PositionalSoundSystem::processSoundComponent(Entity* p_entity,
 	for (unsigned int i = 0; i < ambientRange->size(); i++){
 		
 		AudioHeader* header = ambientRange->at(i);
-		header->pos = trans->getTranslation();
+		AglVector3 posw = header->pos;
+		posw.transform(trans->getMatrix()); // fix: local to world space (Jarl 11-03-2013)
 
-		AglVector3 distanceVec = listener->listenerPos - header->pos;
+		AglVector3 distanceVec = listener->listenerPos - posw;
 		float length = AglVector3::length(distanceVec);
 		
-		float newVolume;
+		float newVolume=0.0f;
 		//Check if sound is within the inner circle
+		/*
+		This seems to be incorrect:
 		if(header->minRange > 0 && length < header->minRange)
 			newVolume = 1.0f;
 		else{
@@ -72,6 +76,13 @@ void PositionalSoundSystem::processSoundComponent(Entity* p_entity,
 				newVolume = 0;
 			}
 		}
+		not correct falloff from min- to max-range. 
+		Test with the difference between length=minRange-0.01f and length=minrange
+		(Jarl 11-03-2013) Replacing it with this:*/
+		float min = header->minRange;
+		float max = header->maxRange;
+		newVolume = (1.0f-((clamp(length, min, max+min)-min)/max))*header->volume;
+
 
 		m_audioBackendSystem->getSoundWrapper()->getSound(header->soundIndex)->
 			getSourceVoice()->SetVolume(newVolume);
@@ -82,11 +93,12 @@ void PositionalSoundSystem::processSoundComponent(Entity* p_entity,
 
 	for (unsigned int i = 0; i < positionalSound->size(); i++){
 		AudioHeader* header = positionalSound->at(i);
-		header->pos = trans->getTranslation();
+		AglVector3 posw = header->pos;
+		posw.transform(trans->getMatrix());  // fix: local to world space (Jarl 11-03-2013)
 
 		PositionalSound* sound = static_cast<PositionalSound*>
 			(m_audioBackendSystem->getSoundWrapper()->getSound(header->soundIndex));
-		sound->setPosition(header->pos);
+		sound->setPosition(posw);
 		sound->setRange(header->maxRange);
 		m_audioBackendSystem->updateOutputMatrix(header->soundIndex);
 	}

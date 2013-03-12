@@ -1,31 +1,19 @@
 #pragma once
-
 #include <EntitySystem.h>
-
 // =======================================================================================
-//                                      MenuSystem
+// GlowAnimationSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief Animates the glow of entities having a GlowAnimation component.
 ///        
-/// # MenuSystem
-/// Detailed description.....
-/// Created on: 4-2-2013 
+/// # GlowAnimationSystem
+/// Detailed description...
+/// Created on: 11-3-2013 
 ///---------------------------------------------------------------------------------------
-
-class MenuSystem : public EntitySystem
+class GlowAnimationSystem: public EntitySystem
 {
 public:
-	MenuSystem();
-	~MenuSystem();
-	void initialize();
-	void process( );
-	void endLoadingState();
-	void displayDisconnectPopup();
-private:
-	int m_loadingWindowIdx;
-	int m_disconnectPopupIdx;
-	int m_lobbyDocIdx;
+	GlowAnimationSystem();
+	void processEntities( const vector<Entity*>& p_entities ) final;
 };
-

@@ -7,6 +7,6 @@
 		<div>
 			Lost connection to the server!
 		</div>
-			<button onclick="reset_connection">Back to main menu</button>
+			<button onclick="goto main_menu; reset_connection">Back to main menu</button>
 	</body>
 </rml>

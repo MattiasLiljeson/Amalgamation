@@ -63,8 +63,9 @@ private:
 	virtual void setUpRenderInfo(Entity* p_entity, ModelResource* p_modelResource);
 	virtual void setUpConnectionPoints(Entity* p_entity, ModelResource* p_modelResource);
 	virtual void setUpSpawnPoints(Entity* p_entity, ModelResource* p_modelResource);
-	virtual void setUpLights(Entity* p_entity, ModelResource* p_modelResource);
+	virtual void setUpLights(Entity* p_entity, ModelResource* p_modelResource)=0;
 	virtual void setUpParticles(Entity* p_entity, ModelResource* p_modelResource) = 0;
+	virtual void setUpAmbientRangeSound(Entity* p_entity, ModelResource* p_modelResource) = 0;
 
 	virtual void setUpRootCollision(Entity* p_entity, ModelResource* p_modelResource);
 	virtual void setUpChildCollision(Entity* p_entity, ModelResource* p_modelResource, 

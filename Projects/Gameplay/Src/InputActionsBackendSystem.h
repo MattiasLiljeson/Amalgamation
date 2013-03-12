@@ -57,7 +57,7 @@ public:
 		Actions_MENU_RIGHT,
 		Actions_MENU_LEFT,
 		Actions_MENU_ACTIVATE_ROTATION,
-
+		Actions_GAME_QUIT,
 		Actions_CNT//End Actions enum
 	};
 

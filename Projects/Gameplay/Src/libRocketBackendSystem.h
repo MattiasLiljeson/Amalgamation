@@ -41,6 +41,7 @@ public:
 
 	void showDocument(int p_docId, int p_focusFlags = Rocket::Core::ElementDocument::FOCUS);
 	void hideDocument(int p_docId);
+	bool isDocumentVisible(int p_docId) const;
 	void focusDocument(int p_docId);
 
 	void showCursor();

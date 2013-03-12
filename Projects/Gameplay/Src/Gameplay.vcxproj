@@ -39,6 +39,8 @@
     <ClInclude Include="AxisRotationSystem.h" />
     <ClInclude Include="GameSettingsInfo.h" />
     <ClInclude Include="DamageComponent.h" />
+    <ClInclude Include="GlowAnimation.h" />
+    <ClInclude Include="GlowAnimationSystem.h" />
     <ClInclude Include="LobbySystem.h" />
     <ClInclude Include="FlareGunModule.h" />
     <ClInclude Include="HighlightEntityPacket.h" />
@@ -46,9 +48,11 @@
     <ClInclude Include="InterpolationSystem2.h" />
     <ClInclude Include="AnomalyBombEffectPiece.h" />
     <ClInclude Include="AnomalyBombEffectSystem.h" />
+    <ClInclude Include="ModulesHighlightPacket.h" />
     <ClInclude Include="ModuleHighlightSystem.h" />
     <ClInclude Include="ModuleOnChamberStartPoint.h" />
     <ClInclude Include="ModuleStatusVisualizationMode.h" />
+    <ClInclude Include="PlayerReadyPacket.h" />
     <ClInclude Include="PortalCullingSystem.h" />
     <ClInclude Include="RootBoundingSpherePacket.h" />
     <ClInclude Include="SettingsSystem.h" />
@@ -284,6 +288,9 @@
     <ClCompile Include="CameraControlPacket.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
+    <ClCompile Include="GlowAnimation.cpp" />
+    <ClCompile Include="GlowAnimationSystem.cpp" />
+    <ClCompile Include="ModulesHighlightPacket.cpp" />
     <ClCompile Include="OrbitalMovementSystem.cpp" />
     <ClCompile Include="ClientConnectToServerSystem.cpp" />
     <ClCompile Include="ClientEntityCountSystem.cpp" />
@@ -355,6 +362,7 @@
     <ClCompile Include="LookAtSystem.cpp" />
     <ClCompile Include="ModuleHighlightSystem.cpp" />
     <ClCompile Include="ModuleStatusVisualizationMode.cpp" />
+    <ClCompile Include="PlayerReadyPacket.cpp" />
     <ClCompile Include="PortalCullingSystem.cpp" />
     <ClCompile Include="RootBoundingSpherePacket.cpp" />
     <ClCompile Include="SettingsSystem.cpp" />
