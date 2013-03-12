@@ -860,6 +860,9 @@
     <ClInclude Include="GlowAnimationSystem.h">
       <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
     </ClInclude>
+    <ClInclude Include="ModulesHighlightPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1480,6 +1483,9 @@
     </ClCompile>
     <ClCompile Include="GlowAnimationSystem.cpp">
       <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClCompile>
+    <ClCompile Include="ModulesHighlightPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

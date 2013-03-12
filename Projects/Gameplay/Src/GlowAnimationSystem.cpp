@@ -16,10 +16,10 @@ void GlowAnimationSystem::processEntities( const vector<Entity*>& p_entities )
 		glowAnimation->lifetime -= m_world->getDelta();
 		if(glowAnimation->lifetime <= 0)
 		{
-			//glowAnimation->enabled = false;
+			glowAnimation->enabled = false;
 			
 			// NOTE: Remove below code line:
-			glowAnimation->lifetime = glowAnimation->getMaxLifetime();
+			//glowAnimation->lifetime = glowAnimation->getMaxLifetime();
 		}
 		float lifetimeFactor = glowAnimation->lifetime / glowAnimation->getMaxLifetime();
 		float r, g, b, a;

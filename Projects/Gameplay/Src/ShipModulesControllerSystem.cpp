@@ -20,6 +20,7 @@
 #include <DamageAccumulator.h>
 #include <DebugUtil.h>
 #include <ToString.h>
+#include "ModulesHighlightPacket.h"
 
 ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
 														 ModuleVisualEffectServerBufferSystem* p_effectBuffer)
@@ -372,6 +373,7 @@ void ShipModulesControllerSystem::setActivation(Entity* p_entity, bool p_value)
 	ShipConnectionPointHighlights* highlights = static_cast<ShipConnectionPointHighlights*>(
 		p_entity->getComponent(ComponentType::ShipConnectionPointHighlights) );
 
+	vector<int> activatedModules;
 	for (unsigned int i=0;i<ShipConnectionPointHighlights::slots;i++)
 	{
 		if (highlights->slotStatus[i])
@@ -390,12 +392,49 @@ void ShipModulesControllerSystem::setActivation(Entity* p_entity, bool p_value)
 					currModule->deactivate();
 				}
 				//currModule->m_active = p_value;
-				setActivationChildren(currEn, p_value);
+				activatedModules.push_back(currEn->getIndex()); // Yo
+				setActivationChildren(currEn, p_value, &activatedModules);
 			}
 		}
 	}
+
+	// Move to highlight instead of activation. ->
+	if(!activatedModules.empty())
+	{
+		ModulesHighlightPacket data;
+		if(activatedModules.size() > (unsigned int)data.NUM_MODULES_HIGHLIGHTED_MAX)
+		{
+			data.numberOfHighlights = (unsigned char)data.NUM_MODULES_HIGHLIGHTED_MAX;
+		}
+		else
+		{
+			data.numberOfHighlights = (unsigned char)activatedModules.size();
+		}
+
+		for(unsigned int i=0;
+			i<data.NUM_MODULES_HIGHLIGHTED_MAX && i<activatedModules.size(); i++)
+		{
+			data.modulesHighighted[i] = activatedModules[i];
+		}
+		m_server->broadcastPacket(data.pack());
+	}
+	// <-
 }
-void ShipModulesControllerSystem::setActivationChildren(Entity* p_entity, bool p_value)
+
+vector<Entity*> ShipModulesControllerSystem::getModulesBySlot( int p_slot )
+{
+	vector<Entity*> modules;
+	
+//	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
+//		p_entity->getComponent(ComponentType::ConnectionPointSet) );
+//	ShipConnectionPointHighlights* highlights = static_cast<ShipConnectionPointHighlights*>(
+//		p_entity->getComponent(ComponentType::ShipConnectionPointHighlights) );
+//
+	return modules;
+}
+
+void ShipModulesControllerSystem::setActivationChildren(Entity* p_entity, bool p_value,
+	vector<int>* p_activatedModules)
 {
 	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
 		p_entity->getComponent(ComponentType::ConnectionPointSet) );
@@ -422,7 +461,8 @@ void ShipModulesControllerSystem::setActivationChildren(Entity* p_entity, bool p
 					{
 						currModule->deactivate();
 					}
-					setActivationChildren(currEn, p_value);
+					p_activatedModules->push_back(currEn->getIndex()); // Yo.
+					setActivationChildren(currEn, p_value, p_activatedModules);
 				}
 			}
 		}
@@ -510,8 +550,3 @@ void ShipModulesControllerSystem::updateModuleValueEffect( int p_moduleNetworkOw
 		p_moduleNetworkOwner);
 	m_effectbuffer->enqueueEffect(fxPacket);
 }
-
-
-
-
-

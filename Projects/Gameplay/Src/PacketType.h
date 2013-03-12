@@ -41,6 +41,7 @@ public:
 		BombActivationPacket,
 		TeslaHitPacket,
 		HitIndicatorPacket,
+		ModulesHighlightPacket,
 
 		// Client -> Server:
 		/************************************************************************/

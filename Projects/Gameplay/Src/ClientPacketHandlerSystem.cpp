@@ -109,6 +109,8 @@
 #include "PlayerSystem.h"
 #include "ClientConnectToServerSystem.h"
 #include "MenuSystem.h"
+#include "ModulesHighlightPacket.h"
+#include "GlowAnimation.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -1037,6 +1039,31 @@ void ClientPacketHandlerSystem::handleIngameState()
 				SystemType::TeslaEffectSystem))->animateHits(hitPacket.identitySource,
 				hitPacket.identitiesHit, hitPacket.numberOfHits,
 				hitPacket.identitiesHitFloating, hitPacket.numberOfHitsFloating);
+		}
+		else if(packetType == (char)PacketType::ModulesHighlightPacket)
+		{
+			ModulesHighlightPacket data;
+			data.unpack(packet);
+			for(unsigned char i=0; i<data.numberOfHighlights; i++)
+			{
+				Entity* netModule = static_cast<NetsyncDirectMapperSystem*>(
+					m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+					data.modulesHighighted[i]);
+				if(netModule)
+				{
+					GlowAnimation* glow = static_cast<GlowAnimation*>(
+						netModule->getComponent(ComponentType::GlowAnimation));
+					if(glow)
+					{
+						glow->resetAnimation();
+					}
+					else
+					{
+						netModule->addComponent(new GlowAnimation(AglVector4(0, 0.5f, 0, 1.0f), true, 0.5f));
+						netModule->applyComponentChanges();
+					}
+				}
+			}
 		}
 		else
 		{
