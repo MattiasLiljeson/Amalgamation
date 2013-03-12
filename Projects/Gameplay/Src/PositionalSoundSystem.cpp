@@ -95,6 +95,7 @@ void PositionalSoundSystem::processSoundComponent(Entity* p_entity,
 		AudioHeader* header = positionalSound->at(i);
 		AglVector3 posw = header->pos;
 		posw.transform(trans->getMatrix());  // fix: local to world space (Jarl 11-03-2013)
+		header->pos = posw;
 
 		PositionalSound* sound = static_cast<PositionalSound*>
 			(m_audioBackendSystem->getSoundWrapper()->getSound(header->soundIndex));

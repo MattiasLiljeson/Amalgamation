@@ -424,6 +424,18 @@ Entity* EntityFactory::createMineLayerClient(EntityCreationPacket p_packet)
 	// Add network dependent components
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
+
+	SoundComponent* soundComp = new SoundComponent();
+	entity->addComponent(soundComp);
+
+	AudioHeader* pewpewHeader= new AudioHeader(AudioHeader::POSITIONALSOUND,"MineBlip");
+	pewpewHeader->file = "Mine_Blip_v2.wav";
+	pewpewHeader->path = TESTSOUNDEFFECTPATH;
+	pewpewHeader->maxRange = 100;
+	pewpewHeader->playInterval = AudioHeader::FOREVER;
+	pewpewHeader->queuedPlayingState = AudioHeader::PLAY;
+
+	soundComp->addAudioHeader(pewpewHeader);
 		
 	// entity->addComponent(ComponentType::InterpolationComponent, new InterpolationComponent());
 
