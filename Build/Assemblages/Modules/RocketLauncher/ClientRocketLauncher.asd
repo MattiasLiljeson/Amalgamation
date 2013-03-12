@@ -18,4 +18,4 @@ d i m_startFrame 0
 d i m_endFrame 0
 d s m_name Fire
 d i m_startFrame 10
-d i m_endFrame 40
+d i m_endFrame 24
