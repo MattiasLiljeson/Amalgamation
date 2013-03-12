@@ -31,9 +31,6 @@
     <ClCompile Include="MouseBtnControl.cpp">
       <Filter>InputControls</Filter>
     </ClCompile>
-    <ClCompile Include="InputHelper.cpp">
-      <Filter>InputFetchers</Filter>
-    </ClCompile>
     <ClCompile Include="IMouseKeyboardFetcher.cpp">
       <Filter>InputFetchers</Filter>
     </ClCompile>
@@ -43,7 +40,10 @@
     <ClCompile Include="Cursor.cpp">
       <Filter>InputManager</Filter>
     </ClCompile>
-    <ClCompile Include="ControlSet.cpp" />
+    <ClCompile Include="ControlSet.cpp">
+      <Filter>InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="InputHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnalogueControl.h">
@@ -76,9 +76,6 @@
     <ClInclude Include="MouseBtnControl.h">
       <Filter>InputControls</Filter>
     </ClInclude>
-    <ClInclude Include="InputHelper.h">
-      <Filter>InputFetchers</Filter>
-    </ClInclude>
     <ClInclude Include="IMouseKeyboardFetcher.h">
       <Filter>InputFetchers</Filter>
     </ClInclude>
@@ -91,7 +88,10 @@
     <ClInclude Include="Cursor.h">
       <Filter>InputManager</Filter>
     </ClInclude>
-    <ClInclude Include="ControlSet.h" />
+    <ClInclude Include="ControlSet.h">
+      <Filter>InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="InputHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="InputFetchers">

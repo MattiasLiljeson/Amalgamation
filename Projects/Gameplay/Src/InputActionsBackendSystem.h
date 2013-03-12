@@ -25,6 +25,8 @@ public:
 		Actions_ACTIVATE_SLOT_2,
 		Actions_ACTIVATE_SLOT_3,
 		Actions_ACTIVATE_SLOT_4,
+		Actions_ACTIVATE_PREV_SLOT,
+		Actions_ACTIVATE_NEXT_SLOT,
 		Actions_ACTIVATE_MODULE,
 		Actions_ROTATE_MODULE_LEFT,
 		Actions_ROTATE_MODULE_RIGHT,
@@ -57,7 +59,9 @@ public:
 		Actions_MENU_RIGHT,
 		Actions_MENU_LEFT,
 		Actions_MENU_ACTIVATE_ROTATION,
+		Actions_SHOW_SCORE,
 		Actions_GAME_QUIT,
+
 		Actions_CNT//End Actions enum
 	};
 
@@ -72,8 +76,11 @@ public:
 private:
 	void readControlFromString(string p_key, Control** p_control);
 	void initCursor();
+	void initControlMap();
+
 private:
 	vector<Control*> m_inputControls[Actions_CNT];
+	map<string, int> m_actionMap;
 	string m_inputIniFile;
 	InputBackendSystem* m_inputBackend;
 

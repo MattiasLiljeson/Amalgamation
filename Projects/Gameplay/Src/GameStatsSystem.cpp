@@ -104,13 +104,13 @@ void GameStatsSystem::process()
 
 	if(gameState->getCurrentState() == GameStates::INGAME ){
 
-		auto inputSystem = static_cast<InputBackendSystem*>(
-			m_world->getSystem(SystemType::InputBackendSystem));
+		InputActionsBackendSystem* inputSystem = static_cast<InputActionsBackendSystem*>(
+			m_world->getSystem(SystemType::InputActionsBackendSystem));
 	
-		auto rocketBackend = static_cast<LibRocketBackendSystem*>
+		LibRocketBackendSystem* rocketBackend = static_cast<LibRocketBackendSystem*>
 			(m_world->getSystem(SystemType::LibRocketBackendSystem));
 
-		if ((inputSystem->getControlByEnum(InputHelper::KeyboardKeys_T))->getStatus() > 0.5f)
+		if( inputSystem->getStatusByAction(InputActionsBackendSystem::Actions_SHOW_SCORE) > 0.5f)
 		{
 			if (!m_infoPanelVisible)
 			{
