@@ -21,6 +21,7 @@
 #include "SpawnPointSet.h"
 #include "MeshOffsetTransform.h"
 #include "AnimationUpdatePacket.h"
+#include "SoundPacket.h"
 
 MinigunModuleControllerSystem::MinigunModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MinigunModule)
@@ -252,6 +253,14 @@ void MinigunModuleControllerSystem::startAnimation(Entity* p_gun)
 											p_gun->getComponent(ComponentType::ParticleSystemServerComponent));
 	ps->getParticleSystemFromIdx(0)->updateData.spawnFrequency = ps->getParticleSystemFromIdx(0)->originalSettings.spawnFrequency;
 	ps->getParticleSystemFromIdx(1)->updateData.spawnFrequency = ps->getParticleSystemFromIdx(1)->originalSettings.spawnFrequency;
+
+	//Start playing the minigun fire sound
+	SoundPacket sp;
+	sp.target = p_gun->getIndex();
+	sp.soundType = AudioHeader::AMBIENT;
+	sp.targetSlot = 0;
+	sp.queuedPlayingState = AudioHeader::PLAY;
+	m_server->broadcastPacket( sp.pack() );
 }
 void MinigunModuleControllerSystem::stopAnimation(Entity* p_gun)
 {
@@ -260,6 +269,14 @@ void MinigunModuleControllerSystem::stopAnimation(Entity* p_gun)
 	packet.shouldPlay = true;
 	packet.take = "Default";
 	m_server->broadcastPacket( packet.pack() );
+
+	//Stop playing the minigun fire sound
+	SoundPacket sp;
+	sp.target = p_gun->getIndex();
+	sp.soundType = AudioHeader::AMBIENT;
+	sp.targetSlot = 0;
+	sp.queuedPlayingState = AudioHeader::STOP;
+	m_server->broadcastPacket( sp.pack() );
 }
 void MinigunModuleControllerSystem::updateRay(Entity* p_entity, AglVector3& p_rayPos, AglVector3& p_rayDir)
 {

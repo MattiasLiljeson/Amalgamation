@@ -351,7 +351,7 @@ void ServerPacketHandlerSystem::handleIngame()
 			rayPacket.unpack( packet );
 			picking->setRay(packet.getSenderId(), rayPacket.o, rayPacket.d);
 		}
-		else if (packetType == (char)PacketType::ModuleHighlightPacket)
+		else if (packetType == (char)PacketType::HighlightSlotPacket)
 		{
 			// =========================================
 			// MODULEHIGHLIGHTPACKET

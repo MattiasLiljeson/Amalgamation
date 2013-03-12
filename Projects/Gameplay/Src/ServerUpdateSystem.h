@@ -3,6 +3,7 @@
 #include <EntitySystem.h>
 #include "Transform.h"
 #include "AglParticleSystemHeader.h"
+#include "ParticleSystemServerComponent.h"
 class TcpServer;
 
 // =======================================================================================
@@ -43,5 +44,5 @@ private:
 		AglParticleSystemHeader particleHeader;
 		float timestamp;
 	};
-	map<AglParticleSystemHeader*, ParticleRecord> m_previousParticles;
+	map<ParticleSystemServerComponent*, ParticleRecord> m_previousParticles;
 };

@@ -89,7 +89,7 @@ bool ClientConnectToServerSystem::validateIPFormat(const std::string& p_address)
 		ipAddress = boost::asio::ip::address::from_string(p_address);
 	}
 	catch(const std::exception& e){
-		DEBUGPRINT(("Invalid IP adress submited"));
+		DEBUGPRINT(("Invalid IP address submitted\n"));
 		return false;
 	}
 	return true;
@@ -99,10 +99,16 @@ bool ClientConnectToServerSystem::validatePortFormat( const std::string& p_port 
 {
 	istringstream buffer(p_port);
 	int portValue;
-	buffer >> portValue;
+	try{
+		buffer >> portValue;
+	}
+	catch(exception& e){
+		DEBUGPRINT(("Invalid Port address submitted\n"));
+		return false;
+	}
 
 	if(portValue < 1024 || portValue > 65535){
-		DEBUGPRINT(("Invalid Port range"));
+		DEBUGPRINT(("Invalid Port range\n"));
 		return false;
 	}
 

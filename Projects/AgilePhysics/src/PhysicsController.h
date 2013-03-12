@@ -41,6 +41,7 @@ private:
 	vector<ConvexHullShape*>	mConvexHullShapes; ///< Hull Shapes
 
 	vector<UintPair> mCollisions;
+	vector<int> mStaticCollisions;
 
 	vector<LineCollisionData> mLineSegmentCollisions; ///< Index to line segment first then body
 
@@ -157,6 +158,7 @@ public:
 	void ApplyExternalImpulse(AglVector3 p_position, float p_radius, float p_magnitude);
 
 	bool IsColliding(unsigned int p_b1, unsigned int p_b2);
+	bool CollidesWithStaticEnvironment(unsigned int p_b);
 	vector<unsigned int> CollidesWith(unsigned int p_b);
 	vector<pair<unsigned int, float>> GetObjectsWithinSphere(AglVector3 p_position, float p_radius);
 

@@ -299,6 +299,8 @@ RasterizerState::Mode DeferredRenderer::getCurrentRasterizerStateType()
 
 void DeferredRenderer::setSamplerStates()
 {
+	m_samplerStates[SamplerState::SamplerState_DEFAULT] =
+		m_samplerStates[SamplerState::SamplerState_ANISOTROPIC_WRAP];
 	m_deviceContext->PSSetSamplers( 0, SamplerState::SamplerState_CNT, m_samplerStates );
 }
 

@@ -128,6 +128,7 @@
 #include <PortalCullingSystem.h>
 #include <ClientModuleCounterSystem.h>
 #include <AddToParentSystem.h>
+#include <GlowAnimationSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -455,6 +456,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ShieldPlaterSystem() );
 	m_world->setSystem( new TeslaEffectSystem() );
 	m_world->setSystem( new TeslaLightningSystem() );
+	m_world->setSystem( new GlowAnimationSystem() );
 
 	/************************************************************************/
 	/* Animation															*/

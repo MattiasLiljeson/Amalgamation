@@ -113,6 +113,8 @@
 #include <OutputLogger.h>
 #include "PlayerReadyPacket.h"
 #include "libRocketBackendSystem.h"
+#include "ModulesHighlightPacket.h"
+#include "GlowAnimation.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -508,7 +510,12 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 					particleSys->setSpawnPoint(		pos, p_data.forceParticleMove);
 					particleSys->setSpawnDirection(	p_data.direction);
 					particleSys->setSpawnSpeed(		p_data.speed);
-					particleSys->setSpawnFrequency(	p_data.spawnFrequency);
+					if (p_data.spawnFrequency != -1)
+						particleSys->setSpawnFrequency(	p_data.spawnFrequency);
+					else
+					{
+						particleSys->restart();
+					}
 					particleSys->setColor(p_data.color);
 				}
 			}
@@ -524,6 +531,17 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 			int breakHere = 1;
 		}
 	}
+}
+
+void ClientPacketHandlerSystem::handleEntitySounds(const SoundPacket& p_data)
+{
+	NetsyncDirectMapperSystem* directMapper = static_cast<NetsyncDirectMapperSystem*>
+		( m_world->getSystem( SystemType::NetsyncDirectMapperSystem ) );
+
+	Entity* entity = directMapper->getEntity( p_data.target );
+
+	SoundComponent* sound = static_cast<SoundComponent*>(entity->getComponent(ComponentType::SoundComponent));
+	sound->getSoundHeaderByIndex((AudioHeader::SoundType)p_data.soundType, p_data.targetSlot)->queuedPlayingState = (AudioHeader::PlayState)p_data.queuedPlayingState;
 }
 
 void ClientPacketHandlerSystem::handleParticleSystemCreation( const ParticleSystemCreationInfo& p_creationInfo )
@@ -588,6 +606,12 @@ void ClientPacketHandlerSystem::handleIngameState()
 			ParticleSystemCreationInfo info;
 			packet.ReadData( &info, sizeof(ParticleSystemCreationInfo) );
 			handleParticleSystemCreation( info );
+		}
+		else if (packetType == (char)PacketType::SoundPacket)
+		{
+			SoundPacket spacket;
+			spacket.unpack(packet);
+			handleEntitySounds(spacket);
 		}
 
 		else if (packetType == (char)PacketType::ParticleUpdate)
@@ -1050,6 +1074,31 @@ void ClientPacketHandlerSystem::handleIngameState()
 				SystemType::TeslaEffectSystem))->animateHits(hitPacket.identitySource,
 				hitPacket.identitiesHit, hitPacket.numberOfHits,
 				hitPacket.identitiesHitFloating, hitPacket.numberOfHitsFloating);
+		}
+		else if(packetType == (char)PacketType::ModulesHighlightPacket)
+		{
+			ModulesHighlightPacket data;
+			data.unpack(packet);
+			for(unsigned char i=0; i<data.numberOfHighlights; i++)
+			{
+				Entity* netModule = static_cast<NetsyncDirectMapperSystem*>(
+					m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+					data.modulesHighighted[i]);
+				if(netModule)
+				{
+					GlowAnimation* glow = static_cast<GlowAnimation*>(
+						netModule->getComponent(ComponentType::GlowAnimation));
+					if(glow)
+					{
+						glow->resetAnimation();
+					}
+					else
+					{
+						netModule->addComponent(new GlowAnimation(AglVector4(0.1f, 0.3f, 0.1f, 1.0f), true, 0.75f));
+						netModule->applyComponentChanges();
+					}
+				}
+			}
 		}
 		else
 		{
