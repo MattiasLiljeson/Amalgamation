@@ -103,10 +103,10 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 								AglParticleSystemHeader* updateData =
 									&psServerComp->particleSystems[psIdx].updateData;
 								bool hasChanged = true;
-								if(m_previousParticles.count(updateData) > 0)
+								if(m_previousParticles.count(psServerComp) > 0)
 								{
 									AglParticleSystemHeader& previousHeader =
-										m_previousParticles[updateData].particleHeader;
+										m_previousParticles[psServerComp].particleHeader;
 									if(previousHeader.spawnPoint == updateData->spawnPoint &&
 										previousHeader.spawnDirection == updateData->spawnDirection &&
 										fabs(previousHeader.spawnSpeed - updateData->spawnSpeed) < 0.0001f &&
@@ -118,11 +118,11 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 								}
 
 								if(hasChanged || m_world->getElapsedTime() >
-									m_previousParticles[updateData].timestamp + 1.0f)
+									m_previousParticles[psServerComp].timestamp + 1.0f)
 								{
-									m_previousParticles[updateData].particleHeader =
+									m_previousParticles[psServerComp].particleHeader =
 										*updateData;
-									m_previousParticles[updateData].timestamp =
+									m_previousParticles[psServerComp].timestamp =
 										m_world->getElapsedTime();
 									ParticleUpdatePacket updatePacket;
 									updatePacket.networkIdentity	= netSync->getNetworkIdentity();
