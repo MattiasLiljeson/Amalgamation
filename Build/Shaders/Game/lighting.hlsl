@@ -2,19 +2,7 @@
 #include "lightLib.hlsl"
 #include "shadowing.hlsl"
 #include "utility.hlsl"
-
-//Texture2D gDiffuseMap 	: register(t0);
-Texture2D gNormalMap 	: register(t1);
-//Texture2D gSpecular 	: register(t2);
-Texture2D gDepth 		: register(t10);
-
-Texture2D gShadow1 		: register(t4);
-Texture2D gShadow2 		: register(t5);
-Texture2D gShadow3		: register(t6);
-Texture2D gShadow4		: register(t7);
-
-SamplerState pointSampler : register(s0);
-SamplerState shadowSampler : register(s1);
+#include "common.hlsl"
 
 //Total of 168 bytes
 struct VertexIn
@@ -69,7 +57,7 @@ PixelOut PS( VertexOut p_input ) : SV_TARGET
 	uint3 index;
 	index.xy = p_input.position.xy;
 	index.z = 0;
-	float depth = gDepth.Load( index ).x; 
+	float depth = g_depth.Load( index ).x; 
 
 	float2 ndcPos = getNdcPos( p_input.position.xy, gRenderTargetSize );
 	float3 worldPos = getWorldPos( ndcPos, depth, gViewProjInverse );
@@ -84,7 +72,7 @@ PixelOut PS( VertexOut p_input ) : SV_TARGET
 		return pout;
 	}
 
-	float4 normalColor	= gNormalMap.Load( index );	
+	float4 normalColor	= g_normal.Load( index );	
 	float3 normalVec = convertSampledNormal( normalColor.xyz );
 
 	LightOut light;
@@ -97,13 +85,13 @@ PixelOut PS( VertexOut p_input ) : SV_TARGET
 		light = spotLight( p_input.light, gCameraPos.xyz, normalVec, worldPos );
 	}
 
-	float shadowCoeff = 1.0f;
-	int shadowIndex = p_input.light.shadowIdx;
-	if( shadowIndex != -1 )
-	{
-		float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[shadowIndex]);
-		shadowCoeff = doShadowing(gShadow1, shadowSampler, shadowWorldPos);
-	}
+	//float shadowCoeff = 1.0f;
+	//int shadowIndex = p_input.light.shadowIdx;
+	//if( shadowIndex != -1 )
+	//{
+	//	float4 shadowWorldPos = mul( float4(worldPos,1.0f), shadowViewProj[shadowIndex]);
+	//	shadowCoeff = doShadowing(gShadow1, shadowSampler, shadowWorldPos);
+	//}
 	//lightCol *= shadowCoeff;
 	
 	PixelOut pixelOut;

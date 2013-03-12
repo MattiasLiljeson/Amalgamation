@@ -1,11 +1,4 @@
-Texture2D g_diffuse				: register(t0);
-Texture2D g_normal				: register(t1);
-Texture2D g_specular			: register(t2);
-Texture2D g_diffLight 			: register(t3);
-Texture2D g_specLight			: register(t4);
-//Texture2D g_depth				: register(t10);
-
-SamplerState g_samplerPointWrap	: register(s0);
+#include "common.hlsl"
 
 struct VertexIn
 {
@@ -39,11 +32,12 @@ PixelOut PS(VertexOut input)
 {
 	PixelOut pout;
 	
-	pout.diffuse 		= g_diffuse.Sample( g_samplerPointWrap, input.texCoord );
-	pout.normal 		= g_normal.Sample( g_samplerPointWrap, input.texCoord );
-	pout.specular 		= g_specular.Sample( g_samplerPointWrap, input.texCoord );
-	pout.lightDiffus 	= g_diffLight.Sample( g_samplerPointWrap, input.texCoord );
-	pout.lightSpecula 	= g_specLight.Sample( g_samplerPointWrap, input.texCoord );
+	SamplerState samplerState = g_samplerAnisotropicClamp;
+	pout.diffuse 		= g_diffuse.Sample( samplerState, input.texCoord );
+	pout.normal 		= g_normal.Sample( samplerState, input.texCoord );
+	pout.specular 		= g_specular.Sample( samplerState, input.texCoord );
+	pout.lightDiffus 	= g_diffLight.Sample( samplerState, input.texCoord );
+	pout.lightSpecula 	= g_specLight.Sample( samplerState, input.texCoord );
 
 	return pout;
 }

@@ -47,14 +47,16 @@ DeferredRenderer::DeferredRenderer(
 	initSSAO();
 	initFullScreenQuad();
 
-	buildBlendStates();
+	RenderStateHelper::fillBlendStateList( m_device, m_blendStates );
 	m_currentBlendStateType = BlendState::DEFAULT;
 	m_blendMask = 0xffffffff;
 	for (int i=0;i<4;i++) m_blendFactors[i]=1;
 
-	buildRasterizerStates();
+	RenderStateHelper::fillRasterizerStateList( m_device, m_rasterizerStates );
 	m_currentRasterizerStateType = RasterizerState::DEFAULT;
 
+	RenderStateHelper::fillSamplerStateList( m_device, m_samplerStates );
+	setSamplerStates();
 }
 
 DeferredRenderer::~DeferredRenderer()
@@ -286,14 +288,18 @@ BlendState::Mode DeferredRenderer::getCurrentBlendStateType()
 
 void DeferredRenderer::setRasterizerStateSettings( RasterizerState::Mode p_state )
 {
-	unsigned int idx = static_cast<unsigned int>(p_state);
-	m_deviceContext->RSSetState( m_rasterizerStates[idx] );
+	m_deviceContext->RSSetState( m_rasterizerStates[p_state] );
 	m_currentRasterizerStateType = p_state;
 }
 
 RasterizerState::Mode DeferredRenderer::getCurrentRasterizerStateType()
 {
 	return m_currentRasterizerStateType;
+}
+
+void DeferredRenderer::setSamplerStates()
+{
+	m_deviceContext->PSSetSamplers( 0, SamplerState::SamplerState_CNT, m_samplerStates );
 }
 
 DeferredBaseShader* DeferredRenderer::getDeferredBaseShader()
@@ -436,17 +442,6 @@ void DeferredRenderer::initDofBuffers()
 
 	//m_dofBuffers[RenderTargets_DEPTH] = m_gBuffers[RenderTargets_DEPTH];
 	//m_dofBuffers[RenderTargets_DEPTH] = NULL;
-}
-
-
-void DeferredRenderer::buildBlendStates()
-{
-	RenderStateHelper::fillBlendStateList(m_device,m_blendStates);
-}
-
-void DeferredRenderer::buildRasterizerStates()
-{
-	RenderStateHelper::fillRasterizerStateList(m_device,m_rasterizerStates);
 }
 
 void DeferredRenderer::initShaders()

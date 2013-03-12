@@ -105,6 +105,9 @@ public:
 	void setRasterizerStateSettings(RasterizerState::Mode p_state);
 	RasterizerState::Mode getCurrentRasterizerStateType();
 
+	// Sampler states
+	void setSamplerStates();
+
 	// Shader getters
 	DeferredBaseShader* getDeferredBaseShader();
 	DeferredAnimatedBaseShader* getDeferredAnimatedBaseShader();
@@ -174,6 +177,9 @@ private:
 	// rasterizer states
 	vector<ID3D11RasterizerState*> m_rasterizerStates;
 	RasterizerState::Mode m_currentRasterizerStateType;
+
+	// Sampler States
+	ID3D11SamplerState* m_samplerStates[SamplerState::SamplerState_CNT];
 
 	SSAOBuffer	m_ssaoData;
 

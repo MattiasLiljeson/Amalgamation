@@ -1,13 +1,7 @@
 #include "perFrameCBuffer.hlsl"
 #include "utility.hlsl"
 #include "lightLib.hlsl"
-
-Texture2D gNormalMap 		: register(t1);
-Texture2D gDepth 			: register(t10);
-//Texture2D gRandomNormals	: register(t4);
-
-SamplerState pointSampler : register(s0);
-SamplerState shadowSampler : register(s1);
+#include "common.hlsl"
 
 cbuffer SSAO : register(b1)
 {
@@ -63,13 +57,13 @@ float2 getRandomVector( float2 uv )
 
 float doAmbientOcclusion( float2 texCoordOrig, float2 uvOffset, float3 position, float3 normal)
 {
-	float depthValue = gDepth.Sample(pointSampler, texCoordOrig + uvOffset).r;
-	float3 diff = getPosition( texCoordOrig + uvOffset, depthValue) - position;
+	float depthValue = g_depth.Sample( g_samplerPointWrap, texCoordOrig + uvOffset ).r;
+	float3 diff = getPosition( texCoordOrig + uvOffset, depthValue ) - position;
 	
 	float3 v = normalize(diff);
 	float d = length(diff)*scale;
 	
-	float ao = (max( 0.0, (dot(normal,v)-bias) * (1.0f/(1.0f+d)))*intensity)-epsilon;
+	float ao = ( max( 0.0, (dot(normal, v)-bias) * (1.0f/(1.0f+d)))*intensity ) - epsilon;
 	return clamp(ao,0.0f,0.5f);
 }
 
@@ -106,13 +100,13 @@ PixelOut PS(VertexOut input)
 	index.xy = input.position.xy;
 	index.z = 0;
 
-	//float depth = gDepth.Sample(shadowSampler, input.texCoord).r;
-	float depth = gDepth.Load( index ).r;
+	//float depth = g_depth.Sample(shadowSampler, input.texCoord).r;
+	float depth = g_depth.Load( index ).r;
 	//float3 position = getPosition(input.texCoord);
 	float3 position = getPosition(input.texCoord, depth);
 	float pixelDepthW = length(position-gCameraPos.xyz);
 
-	float3 normal 	= convertSampledNormal(gNormalMap.Load( index ).rgb);
+	float3 normal 	= convertSampledNormal(g_normal.Load( index ).rgb);
 	float2 rand 	= getRandomVector( position.xy );
 
 	float ao = 0.0f;

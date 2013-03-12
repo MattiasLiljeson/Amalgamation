@@ -1,17 +1,6 @@
 #include "perFrameCBuffer.hlsl"
 #include "utility.hlsl"
-
-static const float g_LIGHT_MULT = 10;
-
-Texture2D g_diffuse				: register(t0);
-Texture2D g_normal				: register(t1);
-Texture2D g_specular			: register(t2);
-Texture2D g_diffLight 			: register(t3);
-Texture2D g_specLight			: register(t4);
-
-Texture2D g_depth				: register(t10);
-
-SamplerState g_samplerPointWrap : register(s0);
+#include "common.hlsl"
 
 struct VertexIn
 {

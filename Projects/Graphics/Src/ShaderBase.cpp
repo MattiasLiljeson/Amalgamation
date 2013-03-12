@@ -12,13 +12,11 @@ ShaderBase::ShaderBase( ShaderVariableContainer p_initData )
 	m_pixelShader		= p_initData.pixelShader;
 
 	m_inputLayout		= p_initData.inputLayout;
-	m_samplerState		= p_initData.samplerState;
 }
 
 ShaderBase::~ShaderBase()
 {
 	SAFE_RELEASE(m_inputLayout);
-	SAFE_RELEASE(m_samplerState);
 
 	delete m_vertexShader;
 	delete m_geometryShader;
@@ -42,9 +40,6 @@ void ShaderBase::applyStages()
 	}
 
 	if( m_domainShader ) {
-		if( m_samplerState ) {
-			m_deviceContext->DSSetSamplers( 0, 1, &m_samplerState );
-		}
 		m_deviceContext->DSSetShader( m_domainShader->data, 0, 0 );
 	} else {
 		m_deviceContext->DSSetShader( NULL, 0, 0 );
@@ -60,10 +55,6 @@ void ShaderBase::applyStages()
 		m_deviceContext->PSSetShader( m_pixelShader->data, 0, 0 );
 	} else {
 		m_deviceContext->PSSetShader( NULL, 0, 0 );
-	}
-
-	if( m_samplerState ) {
-		m_deviceContext->PSSetSamplers( 0, 1, &m_samplerState );
 	}
 
 	if( m_inputLayout ) {
@@ -83,15 +74,8 @@ void ShaderBase::unApplyStages()
 	if( m_pixelShader )
 		m_deviceContext->PSSetShader( NULL, 0, 0 );
 
-	if( m_samplerState )
-		m_deviceContext->PSSetSamplers( 0, 0, NULL );
 	if( m_inputLayout )
 		m_deviceContext->IASetInputLayout( NULL );
-}
-
-void ShaderBase::applyCustomSamplerState( ID3D11SamplerState* p_sampler, UINT p_index )
-{
-	m_deviceContext->PSSetSamplers( p_index, 1, &p_sampler );
 }
 
 

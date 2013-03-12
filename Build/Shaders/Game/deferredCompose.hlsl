@@ -1,49 +1,6 @@
 #include "perFrameCBuffer.hlsl"
 #include "utility.hlsl"
-
-static const float g_LIGHT_MULT = 10;
-
-static const float blurFilter3[3][3] = {{0.01f,0.08f,0.01f},
-									   {0.08f,0.64f,0.01f},
-									   {0.01f,0.08f,0.01f}};
-
-static const float blurFilter5[5][5] = {{0.01f,0.02f,0.04f,0.02f,0.01f},
-										{0.02f,0.04f,0.08f,0.04f,0.02f},
-										{0.04f,0.08f,0.16f,0.08f,0.04f},
-										{0.02f,0.04f,0.08f,0.04f,0.02f},
-										{0.01f,0.02f,0.04f,0.02f,0.01f}};
-
-#define NUM_TAPS 12
-static const float2 poisson[NUM_TAPS] = {
-	{-.326,-.406},
-	{-.840,-.074},
-	{-.696, .457},
-	{-.203, .621},
-	{ .962,-.195},
-	{ .473,-.480},
-	{ .519, .767},
-	{ .185,-.893},
-	{ .507, .064},
-	{ .896, .412},
-	{-.322,-.933},
-	{-.792,-.598}
-};
-
-Texture2D g_diffuse				: register(t0);
-Texture2D g_normal				: register(t1);
-Texture2D g_specular			: register(t2);
-Texture2D g_diffLight 			: register(t3);
-Texture2D g_specLight			: register(t4);
-
-Texture2D g_diffuseLowRes		: register(t5);
-Texture2D g_normalLowRes		: register(t6);
-Texture2D g_specularLowRes		: register(t7);
-Texture2D g_specLightLowRes 	: register(t8);
-Texture2D g_diffLightLowRes		: register(t9);
-
-Texture2D g_depth				: register(t10);
-
-SamplerState g_samplerPointWrap : register(s0);
+#include "common.hlsl"
 
 struct VertexIn
 {
@@ -56,7 +13,7 @@ struct VertexOut
 	float2 texCoord	: TEXCOORD;
 };
 
-float3 getPosition(float2 p_uv,float p_depth) 
+float3 getPosition( float2 p_uv,float p_depth ) 
 {
 	return getWorldPosFromTexCoord( p_uv, p_depth, gViewProjInverse);
 }
@@ -72,34 +29,35 @@ float4 PoissonDOF( float2 texCoord, uint3 index )
 	float discRadius, discRadiusLow, centerCoc;
 
 	// Convert depth of pixel to blur radius(radius of the poisson disc)
-	centerCoc = g_specLight.Load(index).a;
-	discRadius = abs(centerCoc * maxCoCDiameter);
+	centerCoc = g_specLight.Load( index ).a;
+	discRadius = abs( centerCoc * maxCoCDiameter );
 	discRadiusLow = discRadius*radiusScale;
 
 	// Step size
-	float2 gDX_Tex = float2(1/gRenderTargetSize.x, 1/gRenderTargetSize.y);
+	float2 gDX_Tex = float2( 1/gRenderTargetSize.x, 1/gRenderTargetSize.y );
 	float2 gDX_TexDOF = gDX_Tex/g_lowResDivider;
-	for (int i=0; i < NUM_TAPS; i++)
+	for( int i=0; i<NUM_TAPS; i++ )
 	{
+		SamplerState samplerState = g_samplerPointClamp;
 		// Get the tex-coords for high- and low-res tap
 		float2 coordLow = texCoord + (gDX_TexDOF * poisson[i] * discRadiusLow);
 		float2 coordHigh = texCoord + (gDX_Tex * poisson[i] * discRadius);
 			
-		float4 diffBuffLow  	= g_diffuseLowRes.Sample( g_samplerPointWrap, coordLow );
-		float4 diffLightLow  	= g_specLightLowRes.Sample( g_samplerPointWrap, coordLow );
+		float4 diffBuffLow  	= g_diffuseLowRes.Sample( samplerState, coordLow );
+		float4 diffLightLow  	= g_specLightLowRes.Sample( samplerState, coordLow );
 		float4 diffLow = diffBuffLow * diffLightLow * g_LIGHT_MULT;
 
-		float4 specBuffLow  	= g_specularLowRes.Sample( g_samplerPointWrap, coordLow );
-		float4 specLightLow  	= g_diffLightLowRes.Sample( g_samplerPointWrap, coordLow );
+		float4 specBuffLow  	= g_specularLowRes.Sample( samplerState, coordLow );
+		float4 specLightLow  	= g_diffLightLowRes.Sample( samplerState, coordLow );
 		float4 specLow = specBuffLow * specLightLow * g_LIGHT_MULT;
 		float4 finalLow 		= diffLow + specLow;
 
-		float4 diffBuffHigh  	= g_diffuse.Sample( g_samplerPointWrap, coordHigh );
-		float4 diffLightHigh	= g_diffLight.Sample( g_samplerPointWrap, coordHigh );
+		float4 diffBuffHigh  	= g_diffuse.Sample( samplerState, coordHigh );
+		float4 diffLightHigh	= g_diffLight.Sample( samplerState, coordHigh );
 		float4 diffHigh = diffBuffHigh * diffLightHigh * g_LIGHT_MULT;
 
-		float4 specBuffHigh  	= g_specular.Sample( g_samplerPointWrap, coordHigh );
-		float4 specLightHigh  	= g_specLight.Sample( g_samplerPointWrap, coordHigh );
+		float4 specBuffHigh  	= g_specular.Sample( samplerState, coordHigh );
+		float4 specLightHigh  	= g_specLight.Sample( samplerState, coordHigh );
 		float4 specHigh = specBuffHigh * specLightHigh * g_LIGHT_MULT;
 		float4 finalHigh = diffHigh + specHigh;
 
@@ -117,7 +75,7 @@ float4 PoissonDOF( float2 texCoord, uint3 index )
 	return outColor/outColor.a;
 }
 
-VertexOut VS(VertexIn p_input)
+VertexOut VS( VertexIn p_input )
 {
 	VertexOut vout;
 	vout.position = float4(p_input.position,1.0f);
@@ -126,7 +84,7 @@ VertexOut VS(VertexIn p_input)
 	return vout;
 }
 
-float4 PS(VertexOut input) : SV_TARGET
+float4 PS( VertexOut input ) : SV_TARGET
 {
 	uint3 index;
 	index.xy = input.position.xy;

@@ -25,6 +25,4 @@ struct ShaderVariableContainer
 	PSData* pixelShader; 
 
 	ID3D11InputLayout* inputLayout;
-
-	ID3D11SamplerState* samplerState;
 };

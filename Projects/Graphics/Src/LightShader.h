@@ -18,7 +18,6 @@ class LightShader : public ShaderBase
 {
 public:
 	LightShader( ShaderVariableContainer p_initData );
-	LightShader( ShaderVariableContainer p_initData, ID3D11SamplerState* p_shadowSampler);
 	virtual ~LightShader();
 
 	void apply();

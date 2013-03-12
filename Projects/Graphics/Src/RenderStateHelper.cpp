@@ -1,4 +1,5 @@
 #include "RenderStateHelper.h"
+#include "D3DException.h"
 
 
 void RenderStateHelper::fillBlendStateList(ID3D11Device* p_device,
@@ -414,5 +415,44 @@ void RenderStateHelper::fillRasterizerStateList(ID3D11Device* p_device,
 			}
 		}
 		p_rasterizerStateList.push_back(rasterizerstate);
+	}
+}
+
+void RenderStateHelper::fillSamplerStateList( ID3D11Device* p_device, ID3D11SamplerState* (&p_samplerStateList)[SamplerState::SamplerState_CNT] )
+{
+	createSamplerState( p_device, &p_samplerStateList[SamplerState::SamplerState_POINT_WRAP],
+		D3D11_FILTER_MIN_MAG_MIP_POINT,		D3D11_TEXTURE_ADDRESS_WRAP );
+	createSamplerState( p_device, &p_samplerStateList[SamplerState::SamplerState_LINEAR_WRAP],
+		D3D11_FILTER_MIN_MAG_MIP_LINEAR,	D3D11_TEXTURE_ADDRESS_WRAP );
+	createSamplerState( p_device, &p_samplerStateList[SamplerState::SamplerState_ANISOTROPIC_WRAP],
+		D3D11_FILTER_ANISOTROPIC,			D3D11_TEXTURE_ADDRESS_WRAP );
+	createSamplerState( p_device, &p_samplerStateList[SamplerState::SamplerState_POINT_CLAMP],
+		D3D11_FILTER_MIN_MAG_MIP_POINT,		D3D11_TEXTURE_ADDRESS_CLAMP );
+	createSamplerState( p_device, &p_samplerStateList[SamplerState::SamplerState_LINEAR_CLAMP],
+		D3D11_FILTER_MIN_MAG_MIP_LINEAR,	D3D11_TEXTURE_ADDRESS_CLAMP );
+	createSamplerState( p_device, &p_samplerStateList[SamplerState::SamplerState_ANISOTROPIC_CLAMP],
+		D3D11_FILTER_ANISOTROPIC,			D3D11_TEXTURE_ADDRESS_CLAMP );
+}
+
+void RenderStateHelper::createSamplerState( ID3D11Device* p_device, ID3D11SamplerState** p_samplerState,
+									   D3D11_FILTER p_filter, D3D11_TEXTURE_ADDRESS_MODE p_texture )
+{
+	HRESULT hr = S_OK;
+
+	D3D11_SAMPLER_DESC samplerDesc;
+	ZeroMemory(&samplerDesc,sizeof(samplerDesc));
+	samplerDesc.Filter = p_filter;
+	samplerDesc.AddressU = p_texture;
+	samplerDesc.AddressV = p_texture;
+	samplerDesc.AddressW = p_texture;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 16;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	hr = p_device->CreateSamplerState( &samplerDesc, p_samplerState );
+	if( FAILED(hr) ) {
+		throw D3DException( hr, __FILE__, __FUNCTION__, __LINE__ );
 	}
 }

@@ -34,8 +34,8 @@ GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphics
 
 	m_profiles.push_back(GPUTimerProfile("MESH"));
 	m_profiles.push_back(GPUTimerProfile("LIGH"));
-	m_profiles.push_back(GPUTimerProfile("SSAO"));
-	m_profiles.push_back(GPUTimerProfile("DOF"));
+	m_profiles.push_back(GPUTimerProfile("EFFECTS"));
+	m_profiles.push_back(GPUTimerProfile("LO-RES"));
 	m_profiles.push_back(GPUTimerProfile("COMP"));
 	m_profiles.push_back(GPUTimerProfile("PART"));
 	m_profiles.push_back(GPUTimerProfile("GUI"));

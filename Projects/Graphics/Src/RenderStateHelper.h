@@ -26,9 +26,16 @@ struct BlendState;
 class RenderStateHelper
 {
 public:
-	static void fillBlendStateList(ID3D11Device* p_device, 
-		vector<ID3D11BlendState*>& p_blendStateList);
+	static void fillBlendStateList( ID3D11Device* p_device, 
+		vector<ID3D11BlendState*>& p_blendStateList );
 
-	static void fillRasterizerStateList(ID3D11Device* p_device, 
-		vector<ID3D11RasterizerState*>& p_rasterizerStateList);
+	static void fillRasterizerStateList( ID3D11Device* p_device, 
+		vector<ID3D11RasterizerState*>& p_rasterizerStateList );
+
+	static void fillSamplerStateList( ID3D11Device* p_device, 
+		ID3D11SamplerState* (&p_samplerStateList)[SamplerState::SamplerState_CNT] );
+
+private:
+	static void createSamplerState( ID3D11Device* p_device, ID3D11SamplerState** p_samplerState,
+		D3D11_FILTER p_filter, D3D11_TEXTURE_ADDRESS_MODE p_texture );
 };

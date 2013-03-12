@@ -13,7 +13,7 @@ struct RasterizerState
 {
 	enum Mode
 	{
-		DEFAULT=0,
+		DEFAULT = 0,
 		FILLED_CW,				// Filled, backface-cull, clockwise
 		FILLED_CCW,				// Filled, backface-cull, counter-clockwise
 		FILLED_CW_FRONTCULL,	// Filled, frontface-cull, counter-clockwise
@@ -34,7 +34,7 @@ struct BlendState
 {
 	enum Mode
 	{
-		DEFAULT=0,
+		DEFAULT = 0,
 		NORMAL,
 		ALPHA,
 		MULTIPLY,
@@ -44,6 +44,22 @@ struct BlendState
 		SSAO,
 		OVERWRITE,
 		NUMBER_OF_MODES
+	};
+};
+
+struct SamplerState
+{
+	enum SamplerStateMode
+	{
+		SamplerState_NON_EXISTING = -1,
+		SamplerState_POINT_WRAP,
+		SamplerState_LINEAR_WRAP,
+		SamplerState_ANISOTROPIC_WRAP,
+		SamplerState_POINT_CLAMP,
+		SamplerState_LINEAR_CLAMP,
+		SamplerState_ANISOTROPIC_CLAMP,
+		SamplerState_CNT
+
 	};
 };
 
