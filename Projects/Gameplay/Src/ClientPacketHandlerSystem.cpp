@@ -502,7 +502,12 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 					particleSys->setSpawnPoint(		pos, p_data.forceParticleMove);
 					particleSys->setSpawnDirection(	p_data.direction);
 					particleSys->setSpawnSpeed(		p_data.speed);
-					particleSys->setSpawnFrequency(	p_data.spawnFrequency);
+					if (p_data.spawnFrequency != -1)
+						particleSys->setSpawnFrequency(	p_data.spawnFrequency);
+					else
+					{
+						particleSys->restart();
+					}
 					particleSys->setColor(p_data.color);
 				}
 			}

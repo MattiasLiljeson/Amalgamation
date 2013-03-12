@@ -117,8 +117,8 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 									}
 								}
 
-								if(hasChanged || m_world->getElapsedTime() >
-									m_previousParticles[updateData].timestamp + 1.0f)
+								if(true)//hasChanged || m_world->getElapsedTime() >
+									//m_previousParticles[updateData].timestamp + 1.0f)
 								{
 									m_previousParticles[updateData].particleHeader =
 										*updateData;
@@ -132,6 +132,9 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 									updatePacket.speed				= updateData->spawnSpeed;
 									updatePacket.spawnFrequency		= updateData->spawnFrequency;
 									updatePacket.color				= updateData->color;
+
+									if (updatePacket.spawnFrequency == -1)
+										updateData->spawnFrequency = psServerComp->particleSystems[psIdx].originalSettings.spawnFrequency;
 
 									updatePacket.forceParticleMove = false;
 									if (updateData->particleSpace == (char)AglParticleSystemHeader::AglSpace_SCREEN)

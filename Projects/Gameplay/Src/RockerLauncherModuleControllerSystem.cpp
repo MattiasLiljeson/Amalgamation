@@ -122,16 +122,29 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 
 					if (ship || true)
 					{
-						//Show the crosshair
 						ParticleSystemServerComponent* ps = static_cast<ParticleSystemServerComponent*>(
 							p_entity->getComponent(ComponentType::ParticleSystemServerComponent));
 
+						//Show the laser sight
+						ps->getParticleSystemFromIdx(2)->updateData.color = ps->getParticleSystemFromIdx(2)->originalSettings.color;
+
+						//Show the crosshair
 						if (gun->cooldown > 0)
 							ps->getParticleSystemFromIdx(0)->updateData.color = AglVector4(1, 1, 1, max(0, gun->cooldown-1.5f)*2.0f);
 						else
 						{
 							ps->getParticleSystemFromIdx(0)->updateData.color = AglVector4(1, 1, 1, 1);
 						}
+
+						//Show some trailing smoke
+						if (gun->cooldown > 1.8f)
+							ps->getParticleSystemFromIdx(3)->updateData.spawnFrequency = ps->getParticleSystemFromIdx(3)->originalSettings.spawnFrequency;
+						else
+						{
+							ps->getParticleSystemFromIdx(3)->updateData.spawnFrequency = 0;
+						}
+
+
 						if (gun->lockCoolDown == 0)
 						{
 							//Show the lockon
@@ -167,6 +180,9 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 					//Hide the lockon
 					ps->getParticleSystemFromIdx(1)->updateData.color = AglVector4(0, 0, 0, 0);
 					ps->getParticleSystemFromIdx(1)->updateData.spawnPoint = trans->getTranslation();
+
+					//Hide the lasersight
+					ps->getParticleSystemFromIdx(2)->updateData.color = AglVector4(0, 0, 0, 0);
 				}
 			}
 		}
@@ -174,12 +190,19 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 	else
 	{
 		//Hide the crosshair
+		//Hide the lockon
+		//Hide the laser sight
+		//Hide the smoke
 		ParticleSystemServerComponent* ps = static_cast<ParticleSystemServerComponent*>(
 			p_entity->getComponent(ComponentType::ParticleSystemServerComponent));
 		ps->getParticleSystemFromIdx(0)->updateData.color = AglVector4(0, 0, 0, 0);
-		ps->getParticleSystemFromIdx(0)->updateData.spawnPoint = trans->getTranslation();
-		//Hide the lockon
 		ps->getParticleSystemFromIdx(1)->updateData.color = AglVector4(0, 0, 0, 0);
+		ps->getParticleSystemFromIdx(2)->updateData.color = AglVector4(0, 0, 0, 0);
+
+		//Hide the smoke
+		ps->getParticleSystemFromIdx(3)->updateData.spawnFrequency = 0;
+
+		ps->getParticleSystemFromIdx(0)->updateData.spawnPoint = trans->getTranslation();
 		ps->getParticleSystemFromIdx(1)->updateData.spawnPoint = trans->getTranslation();
 	}
 }
@@ -265,6 +288,11 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity,ShipModu
 	data.scale			= t->getScale();
 	data.meshInfo		= 1;
 	m_server->broadcastPacket(data.pack());
+
+	//Explode particle effect
+	ParticleSystemServerComponent* ps = static_cast<ParticleSystemServerComponent*>(
+		p_entity->getComponent(ComponentType::ParticleSystemServerComponent));
+	ps->getParticleSystemFromIdx(4)->updateData.spawnFrequency = -1;
 
 //	// Also send a positional sound effect.
 //	SpawnSoundEffectPacket soundEffectPacket;
