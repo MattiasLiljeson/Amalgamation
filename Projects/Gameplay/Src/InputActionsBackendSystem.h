@@ -49,6 +49,8 @@ public:
 		Actions_CURSOR_RIGHT,
 		Actions_CURSOR_UP,
 		Actions_CURSOR_DOWN,
+		Actions_CURSOR_PRIMARY,
+		Actions_CURSOR_SECONDARY,
 		Actions_ROLL_LEFT,
 		Actions_ROLL_RIGHT,
 		Actions_THRUST_FORWARD,

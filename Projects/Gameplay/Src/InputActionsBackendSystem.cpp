@@ -103,16 +103,16 @@ void InputActionsBackendSystem::initCursor()
 		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_RIGHT, 0 ),
 		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_UP, 0 ),
 		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_DOWN, 0 ),
-		m_inputBackend->getControlByEnum( InputHelper::MouseButtons_LEFT ),
-		m_inputBackend->getControlByEnum( InputHelper::MouseButtons_RIGHT ) );
+		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_PRIMARY, 0 ),
+		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_SECONDARY, 0 ) );
 	cursor->addControlSet(
 		1000.0, 1000.0, true,
 		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_LEFT, 1 ),
 		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_RIGHT, 1 ),
 		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_UP, 1 ),
 		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_DOWN, 1 ),
-		m_inputBackend->getControlByEnum( InputHelper::Xbox360Digitals_BTN_A ),
-		m_inputBackend->getControlByEnum( InputHelper::Xbox360Digitals_BTN_B ) );
+		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_PRIMARY, 1 ),
+		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_SECONDARY, 1 ) );
 
 }
 
@@ -146,6 +146,8 @@ void InputActionsBackendSystem::initControlMap()
 	m_actionMap["Actions_CURSOR_RIGHT"]					= Actions_CURSOR_RIGHT;
 	m_actionMap["Actions_CURSOR_UP"]					= Actions_CURSOR_UP;
 	m_actionMap["Actions_CURSOR_DOWN"]					= Actions_CURSOR_DOWN;
+	m_actionMap["Actions_CURSOR_PRIMARY"]				= Actions_CURSOR_PRIMARY;
+	m_actionMap["Actions_CURSOR_SECONDARY"]				= Actions_CURSOR_SECONDARY;
 	m_actionMap["Actions_ROLL_LEFT"]					= Actions_ROLL_LEFT;
 	m_actionMap["Actions_ROLL_RIGHT"]					= Actions_ROLL_RIGHT;
 	m_actionMap["Actions_THRUST_FORWARD"]				= Actions_THRUST_FORWARD;
