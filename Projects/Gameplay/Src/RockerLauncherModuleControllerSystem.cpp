@@ -98,7 +98,7 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		ParticleSystemServerComponent* ps = static_cast<ParticleSystemServerComponent*>(
 			p_entity->getComponent(ComponentType::ParticleSystemServerComponent));
 		ps->getParticleSystemFromIdx(0)->unicastTo = clientID;
-		ps->getParticleSystemFromIdx(0)->unicastTo = clientID;
+		ps->getParticleSystemFromIdx(1)->unicastTo = clientID;
 
 
 		//Check if the module is highlighted
