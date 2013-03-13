@@ -1,22 +1,22 @@
 #include "DeferredComposeShader.h"
 
-DeferredComposeShader::DeferredComposeShader(Buffer<SSAOBuffer>* p_ssaoBuffer, 
+DeferredComposeShader::DeferredComposeShader(Buffer<ComposeCBuffer>* p_composeBuffer, 
 											 ShaderVariableContainer p_initData)
 											: ShaderBase(p_initData)
 {
-	m_ssaoBuffer = p_ssaoBuffer;
+	m_composeBuffer = p_composeBuffer;
 }
 
 DeferredComposeShader::~DeferredComposeShader(){
-	delete m_ssaoBuffer;
+	delete m_composeBuffer;
 }
 
 void DeferredComposeShader::apply(){
 	applyStages();
-	m_ssaoBuffer->apply();
+	m_composeBuffer->apply();
 }
 
-void DeferredComposeShader::setSSAOBufferData( const SSAOBuffer& p_newSSAOBuffer ){
-	m_ssaoBuffer->accessBuffer.setData(p_newSSAOBuffer);
-	m_ssaoBuffer->update();
+void DeferredComposeShader::setComposeBuffer( const ComposeCBuffer& p_newComposeBuffer ){
+	m_composeBuffer->accessBuffer.setData(p_newComposeBuffer);
+	m_composeBuffer->update();
 }

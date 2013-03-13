@@ -167,6 +167,7 @@ public:
 	void mapDofBuffers();
 	void unmapDofBuffers();
 	void unmapVariousStagesAfterCompose();
+	void isInEditMode(bool p_isInEditMode);
 	unsigned int generateShadowMap();
 	GPUTimer* getGPUTimer();
 	int getEmptyTexture();

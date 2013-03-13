@@ -10,6 +10,7 @@
 #include "DeferredAnimatedBaseShader.h"
 #include "DeferredTessBaseShader.h"
 #include "DeferredTessAnimatedBaseShader.h"
+#include "DeferredPostProcessing.h"
 
 ShaderFactory::ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
 							 D3D_FEATURE_LEVEL p_featureLevel)
@@ -243,7 +244,7 @@ DeferredComposeShader* ShaderFactory::createDeferredComposeShader( const LPCWSTR
 	createPTVertexInputLayout(vertexData,&inputLayout);
 	createShaderInitData(&shaderVariables,inputLayout,vertexData,pixelData,NULL);
 
-	return new DeferredComposeShader(m_bufferFactory->createSSAOBuffer(), shaderVariables);
+	return new DeferredComposeShader(m_bufferFactory->createComposeBuffer(), shaderVariables);
 }
 
 GUIShader* ShaderFactory::createGUIShader( const LPCWSTR& p_filePath )
@@ -305,6 +306,28 @@ ShadowShader* ShaderFactory::createShadowShader( const LPCWSTR& p_filePath ){
 	createShaderInitData(&shaderInitData, inputLayout, vertexData, NULL );
 
 	return new ShadowShader(shaderInitData, m_bufferFactory->createShadowBuffer());
+}
+
+DeferredPostProcessing* ShaderFactory::createDeferredPostProcessingShader( 
+	const LPCWSTR& p_filePath )
+{
+	DeferredPostProcessing*	newShader = NULL;
+	ID3D11SamplerState*		samplerState = NULL;
+	ID3D11InputLayout*		inputLayout = NULL;
+	ShaderVariableContainer shaderVariables;
+
+	VSData* vertexData	= new VSData();
+	PSData* pixelData	= new PSData();
+
+	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS",m_shaderModelVersion);
+	pixelData->stageConfig = new ShaderStageConfig(p_filePath,"PS", m_shaderModelVersion);
+
+	createAllShaderStages(vertexData, pixelData);
+	createPTVertexInputLayout(vertexData,&inputLayout);
+	createShaderInitData(&shaderVariables,inputLayout,vertexData,pixelData,NULL);
+
+	return new DeferredPostProcessing(m_bufferFactory->createPostProcessingBuffer(), 
+		shaderVariables);
 }
 
 void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile, 
