@@ -26,6 +26,7 @@ public:
 	float activationTime;
 
 	float maxRange;
+	float minRange;
 	float impulse;
 
 public:

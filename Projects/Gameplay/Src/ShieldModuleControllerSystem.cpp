@@ -180,7 +180,8 @@ void ShieldModuleControllerSystem::pushEntitiesBack(Entity* p_shield,
 			AglVector3 dir = targetTransform->getTranslation() -
 				shieldTransform->getTranslation();
 			float lengthSquared = dir.lengthSquared();
-			if(lengthSquared < shieldModule->maxRange * shieldModule->maxRange)
+			if(lengthSquared < shieldModule->maxRange * shieldModule->maxRange &&
+				lengthSquared > shieldModule->minRange * shieldModule->minRange)
 			{
 				dir.normalize();
 				AglVector3 shieldDir = getShieldDir(p_shield);
@@ -189,8 +190,12 @@ void ShieldModuleControllerSystem::pushEntitiesBack(Entity* p_shield,
 					float dt = m_world->getDelta();
 					PhysicsBody* targetBody = static_cast<PhysicsBody*>(p_targets[i]->
 						getComponent(ComponentType::PhysicsBody));
+					float length = sqrtf(lengthSquared);
+					float rangeFactor = 1.0f - (length - shieldModule->minRange) /
+						(shieldModule->maxRange - shieldModule->minRange);
 					m_physSystem->getController()->ApplyExternalImpulse(targetBody->m_id,
-						dir * shieldModule->impulse * dt, AglVector3::zero());
+						dir * shieldModule->impulse * rangeFactor * dt,
+						AglVector3::zero());
 				}
 			}
 		}
@@ -203,23 +208,27 @@ bool ShieldModuleControllerSystem::canTarget( Entity* p_shield, Entity* p_target
 		ComponentType::ShipModule));
 	Entity* shieldOwner = NULL;
 	ModuleHelper::FindParentShip(m_world, &shieldOwner, module);
-	ShipModule* targetModule = static_cast<ShipModule*>(p_target->getComponent(
-		ComponentType::ShipModule));
-	if(targetModule)
+	
+	if(p_shield == p_target &&
+		shieldOwner == p_target)
 	{
-		Entity* targetOwner = NULL;
-		ModuleHelper::FindParentShip(m_world, &targetOwner, targetModule);
-		if(!targetOwner ||
-			targetOwner && targetOwner->getIndex() != shieldOwner->getIndex())
+		return false;
+	}
+	else
+	{
+		ShipModule* targetModule = static_cast<ShipModule*>(p_target->getComponent(
+			ComponentType::ShipModule));
+		if(targetModule)
 		{
-			if(p_shield != p_target &&
-				shieldOwner != p_target)
+			Entity* targetOwner = NULL;
+			ModuleHelper::FindParentShip(m_world, &targetOwner, targetModule);
+			if(targetOwner && targetOwner->getIndex() == shieldOwner->getIndex())
 			{
-				return true;
+				return false;
 			}
 		}
 	}
-	return false;
+	return true;
 }
 
 AglVector3 ShieldModuleControllerSystem::getShieldDir( Entity* p_shield ) const

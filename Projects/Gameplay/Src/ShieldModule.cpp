@@ -6,6 +6,7 @@ ShieldModule::ShieldModule()
 	: Component( ComponentType::ShieldModule )
 {
 	maxRange = 100.0f;
+	minRange = 5.0f;
 	cooldown = 0.0f;
 	cooldownTime = 1.0f;
 	activationTime = 0.5f;
@@ -28,6 +29,9 @@ void ShieldModule::init( vector<ComponentData> p_initData )
 		}
 		else if(p_initData[i].dataName == "maxRange") {
 			p_initData[i] >> maxRange;
+		}
+		else if(p_initData[i].dataName == "minRange") {
+			p_initData[i] >> minRange;
 		}
 	}
 }
