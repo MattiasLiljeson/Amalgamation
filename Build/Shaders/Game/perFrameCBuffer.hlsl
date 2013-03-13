@@ -12,7 +12,7 @@ cbuffer perFrame: register(b0)
 	float2		gRenderTargetSize;			//8 bytes	
 	float		gFarPlane;					//4 bytes	
 	float		gNearPlane;					//4 bytes	
-	int 		g_lowResDivider;
+	//int 		g_lowResDivider;
 };
 
 cbuffer shadowBuffer: register(b2)
