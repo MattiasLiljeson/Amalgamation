@@ -137,6 +137,11 @@ void SettingsSystem::setSettings( GameSettingsInfo p_settings )
 	m_settings = p_settings;
 }
 
+GameSettingsInfo* SettingsSystem::getSettingsRef()
+{
+	return &m_settings;
+}
+
 SettingsSystem::FileStatus SettingsSystem::checkFileReadOperation( istream* p_fileStream )
 {
 	FileStatus status = FileStatus_OK;

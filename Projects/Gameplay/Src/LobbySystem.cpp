@@ -29,17 +29,14 @@ void LobbySystem::GetRow( Rocket::Core::StringList& row, const Rocket::Core::Str
 		{
 			if (columns[col_index] == "playerName")
 			{
-				//row.push_back(Rocket::Core::String("playerName"));
 				row.push_back(m_players[row_index].playerName.c_str());
 			}
 			else if (columns[col_index] == "ping")
 			{
-				//row.push_back(Rocket::Core::String("score"));
 				row.push_back(toString(m_players[row_index].ping).c_str());
 			}
 			else if (columns[col_index] == "ready")
 			{
-				//row.push_back(Rocket::Core::String("ping"));;
 				if(m_players[row_index].ready){
 					row.push_back("Yes");
 				}
