@@ -58,6 +58,9 @@
 #include "ShineSpawn.h"
 #include "ThrustComponent.h"
 
+#include <ToString.h>
+#include <OutputLogger.h>
+
 #define FORCE_VS_DBG_OUTPUT
 
 
@@ -158,8 +161,12 @@ Entity* EntityFactory::entityFromRecipe( const string& p_entityName )
 	map<string, Recipe*>::iterator it = m_entityRecipes.find( p_entityName );
 	if( it != m_entityRecipes.end())
 	{
+		//m_world->getOutputLogger()->write( ("entityFromRecipy found " + p_entityName + "\n").c_str() );
+
 		meal = m_world->createEntity();
 		it->second->cook( meal );
+		//m_world->getOutputLogger()->write( ("entityFromRecipy cooked " + p_entityName + "\n").c_str() );
+
 		meal->setName( p_entityName );
 	}
 

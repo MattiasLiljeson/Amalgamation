@@ -1,5 +1,7 @@
 #include "SystemManager.h"
 #include <PreciseTimer.h>
+#include <ToString.h>
+#include "OutputLogger.h"
 
 SystemManager::SystemManager( EntityWorld* p_world )
 {
@@ -118,7 +120,13 @@ void SystemManager::initializeAll()
 
 	for( unsigned int i=0; i<m_systemList.size(); i++ )
 	{
+		//m_world->getOutputLogger()->write( ("SystemManager begun initializing system of type " 
+		//	+ toString((int)(m_systemList[i]->getSystemTypeIdx())) + "\n" ).c_str() );
+
 		m_systemList[i]->initialize();
+
+		//m_world->getOutputLogger()->write( ("SystemManager finished initializing system of type " 
+		//	+ toString((int)(m_systemList[i]->getSystemTypeIdx())) + "\n" ).c_str() );
 	}
 }
 
