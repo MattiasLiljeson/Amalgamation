@@ -128,7 +128,7 @@ PixelOut PS(VertexOut input)
 		ao += doAmbientOcclusion(input.texCoord, coord2, position, normal);
 	}
 	
-	ao = 1.0f - ao;;
+	ao = 1.0f - ao;
 
 	// Calc Circle of Cunfusion for Dof
 	float coc = computeCoc(pixelDepthW) * cocFactor;
