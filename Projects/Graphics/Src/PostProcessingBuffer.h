@@ -23,10 +23,6 @@ struct PostProcessingBuffer
 	float stopFar;
 	float startNear;
 	float startFar;
-	//float epsilon;
-	//float cocFactor; //SHOULD NOT BE HERE
-	//float empty[2];
-
 
 	void setData(const PostProcessingBuffer& p_data){
 		scale			= p_data.scale;
@@ -35,5 +31,7 @@ struct PostProcessingBuffer
 		sampleRadius	= p_data.sampleRadius;
 		stopNear		= p_data.stopNear;
 		stopFar			= p_data.stopFar;
+		startNear		= p_data.startNear;
+		startFar		= p_data.startFar;
 	}
 };

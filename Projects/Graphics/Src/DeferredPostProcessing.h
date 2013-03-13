@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ShaderBase.h"
+#include "PostProcessingBuffer.h"
+#include "Buffer.h"
 
 // =======================================================================================
 //                                      DeferredPostProcessing
@@ -17,11 +19,11 @@
 class DeferredPostProcessing : public ShaderBase
 {
 public:
-	DeferredPostProcessing();
+	DeferredPostProcessing( Buffer<PostProcessingBuffer>* p_postProcessingBuffer,
+		ShaderVariableContainer p_initData);
 	virtual ~DeferredPostProcessing();
 	void apply();
-	void setPostProcessingBuffer();
-protected:
+	void setPostProcessingBuffer( const PostProcessingBuffer& p_newPosData );
 private:
-
+	Buffer<PostProcessingBuffer>* m_postProcessingBuffer;
 };

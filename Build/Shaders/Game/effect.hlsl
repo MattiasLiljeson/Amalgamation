@@ -3,15 +3,19 @@
 #include "lightLib.hlsl"
 #include "common.hlsl"
 
-cbuffer SSAO : register(b1)
+cbuffer PostProcessing : register(b1)
 {
 	float scale;
 	float bias;
 	float intensity;
 	float sampleRadius;
-	float epsilon;
-	float cocFactor;
+	
+	float stopNear;
+	float stopFar;
+	float startNear;
+	float startFar;
 	const static float randSize = 64;
+	const static float cocFactor = 1.0f;
 }
 
 struct VertexIn
@@ -63,13 +67,13 @@ float doAmbientOcclusion( float2 texCoordOrig, float2 uvOffset, float3 position,
 	float3 v = normalize(diff);
 	float d = length(diff)*scale;
 	
-	float ao = ( max( 0.0, (dot(normal, v)-bias) * (1.0f/(1.0f+d)))*intensity ) - epsilon;
+	float ao = ( max( 0.0, (dot(normal, v)-bias) * (1.0f/(1.0f+d)))*intensity );
 	return clamp(ao,0.0f,0.5f);
 }
 
 float computeCoc(float depth)
 {
-	float startNear = 10.0f, stopNear = 20.0f, startFar = 50.0f, stopFar = 1000.0f, coc =0.0f;
+	float coc =0.0f;
 
 	if( depth > startFar ) {
 		float posInRange = (depth-startFar);
