@@ -149,7 +149,13 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 									updatePacket.forceParticleMove = false;
 									if (updateData->particleSpace == (char)AglParticleSystemHeader::AglSpace_SCREEN)
 										updatePacket.forceParticleMove = true;
-									m_server->broadcastPacket( updatePacket.pack() );
+
+									if (psServerComp->particleSystems[psIdx].unicastTo >= 0)
+									{
+										m_server->unicastPacket(updatePacket.pack(), psServerComp->particleSystems[psIdx].unicastTo);
+									}
+									else
+										m_server->broadcastPacket( updatePacket.pack() );
 								}
 							}
 						}

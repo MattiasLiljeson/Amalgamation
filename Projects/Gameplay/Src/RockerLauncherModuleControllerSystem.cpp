@@ -91,6 +91,16 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 	Entity* child = p_entity;
 	if (module->m_parentEntity >= 0)
 	{
+		//Ensure the particle systems showing sight and lockon are unicast
+		Entity* ship;
+		int clientID = ModuleHelper::FindParentShipClientId(m_world, module, &ship);
+
+		ParticleSystemServerComponent* ps = static_cast<ParticleSystemServerComponent*>(
+			p_entity->getComponent(ComponentType::ParticleSystemServerComponent));
+		ps->getParticleSystemFromIdx(0)->unicastTo = clientID;
+		ps->getParticleSystemFromIdx(0)->unicastTo = clientID;
+
+
 		//Check if the module is highlighted
 		Entity* parent = NULL;
 		while (true)
