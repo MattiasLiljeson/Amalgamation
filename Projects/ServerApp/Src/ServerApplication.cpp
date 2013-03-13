@@ -64,10 +64,10 @@
 
 namespace Srv
 {
-	ServerApplication::ServerApplication()
+	ServerApplication::ServerApplication(int p_activePort/* =1337 */)
 	{
 		m_running = false;
-
+		m_activePort = p_activePort;
 		m_server = new TcpServer();
 
 		m_world = new EntityWorld();
@@ -247,7 +247,7 @@ namespace Srv
 		/************************************************************************/
 		/* Network																*/
 		/************************************************************************/
-		m_world->setSystem(new ServerWelcomeSystem( m_server ), true);
+		m_world->setSystem(new ServerWelcomeSystem( m_server, m_activePort ), true);
 		m_world->setSystem(new ServerPacketHandlerSystem( m_server ), true);
 		m_world->setSystem(new ServerUpdateSystem( m_server ), true);
 		m_world->setSystem(new ServerScoreSystem( m_server ), true);

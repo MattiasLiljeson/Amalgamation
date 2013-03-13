@@ -224,7 +224,10 @@ void ClientApplication::run()
 			}
 			
 			if(m_world->isHostingServer() && m_serverApp == NULL){
-				m_serverApp = new Srv::ServerApplication();
+				auto clientConnectToServerSystem =  static_cast<ClientConnectToServerSystem*>
+					(m_world->getSystem(SystemType::ClientConnectoToServerSystem));
+
+				m_serverApp = new Srv::ServerApplication(clientConnectToServerSystem->getServerPortByInt());
 				m_serverApp->start();
 			}
 			else if (!m_world->isHostingServer() && m_serverApp != NULL){
