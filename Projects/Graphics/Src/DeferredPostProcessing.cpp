@@ -19,7 +19,8 @@ void DeferredPostProcessing::apply()
 	m_postProcessingBuffer->apply();
 }
 
-void DeferredPostProcessing::setPostProcessingBuffer( const PostProcessingBuffer& p_newPosData )
+void DeferredPostProcessing::setPostProcessingBuffer( 
+	const PostProcessingBuffer& p_newPosData )
 {
 	m_postProcessingBuffer->accessBuffer.setData(p_newPosData);
 	m_postProcessingBuffer->update();

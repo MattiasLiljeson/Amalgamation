@@ -150,7 +150,6 @@ void GraphicsRendererSystem::renderTheScene()
 	m_wrapper->getGPUTimer()->Stop(m_profiles[LIGHT].profile);
 
 	if( m_enableEffects ) {
-		//SSAO
 		m_wrapper->getGPUTimer()->Start(m_profiles[EFFECTS].profile);
 		beginEffects();
 		m_wrapper->generateEffects();

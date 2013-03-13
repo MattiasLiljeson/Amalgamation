@@ -91,9 +91,9 @@ float4 PS( VertexOut input ) : SV_TARGET
 	index.xy = input.position.xy;
 	index.z = 0;
 	
-	float4 temp = g_diffuseLowRes.Load(index);
-	temp.w = 1.0f;
-	return temp;
+	//float4 temp = g_diffuseLowRes.Load(index);
+	//temp.w = 1.0f;
+	//return temp;
 	
 	float depth = g_depth.Load( index ).r;
 

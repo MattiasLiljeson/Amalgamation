@@ -138,7 +138,9 @@ void DeferredRenderer::generateEffects()
 }
 
 void DeferredRenderer::generateLowRes()
-{
+{	
+	m_lowResGenerationShader->setComposeBuffer(m_composeData);
+	m_lowResGenerationShader->apply();
 	m_fullscreenQuad->apply();
 
 	m_deviceContext->Draw(6,0);
