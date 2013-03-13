@@ -310,7 +310,7 @@ void ClientApplication::initSystems()
 	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, 
 		graphicsBackend );
 	m_world->setSystem( inputBackend );
-	m_world->setSystem( new InputActionsBackendSystem( SETTINGSPATH + "stdSettings.input" ) );
+	m_world->setSystem( new InputActionsBackendSystem( SETTINGSPATH + "settings.input" ) );
 
 	GamepadRumbleSystem* rumbleSys = new GamepadRumbleSystem( inputBackend );
 	rumbleSys->setRumbleEnabled( settings.rumble );

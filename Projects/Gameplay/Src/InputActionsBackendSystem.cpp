@@ -157,5 +157,5 @@ void InputActionsBackendSystem::initControlMap()
 	m_actionMap["Actions_MENU_LEFT"]					= Actions_MENU_LEFT;
 	m_actionMap["Actions_MENU_ACTIVATE_ROTATION"]		= Actions_MENU_ACTIVATE_ROTATION;
 	m_actionMap["Actions_SHOW_SCORE"]					= Actions_SHOW_SCORE;
-	m_actionMap["Actions_GAME_QUIT"]					= Actions_GAME_QUIT;
+	m_actionMap["Actions_GAME_QUIT"]					= Actions_GAME_BACK;
 }

@@ -179,27 +179,31 @@ void InputBackendSystem::initialize()
 	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
 		InputHelper::KeyboardKeys_BACKSPACE,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_BACKSPACE),
-		"KEY_BACKSPACE" );
+		"KeyboardKeys_BACKSPACE" );
 	// return
 	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
 		InputHelper::KeyboardKeys_RETURN,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_RETURN),
-		"KEY_RETURN" );
+		"KeyboardKeys_RETURN" );
 	// esc
 	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, 
 		InputHelper::KeyboardKeys_ESC,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_ESC),
-		"KEY_ESCAPE" );
+		"KeyboardKeys_ESCAPE" );
 	// f4
 	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, 
 		InputHelper::KeyboardKeys_F4,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_F4),
-		"KEY_F4" );
+		"KeyboardKeys_F4" );
 	// period
 	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
 		InputHelper::KeyboardKeys_PERIOD,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_PERIOD),
-		"KEY_PERIOD" );
+		"KeyboardKeys_PERIOD" );
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
+		InputHelper::KeyboardKeys_TAB,
+		factory.createKeyboardKey(InputHelper::KeyboardKeys_TAB),
+		"KeyboardKeys_TAB" );
 
 	// Intitiate cursor
 	// Moved Control set initialization for cursor to InputActionBackend's initialize().

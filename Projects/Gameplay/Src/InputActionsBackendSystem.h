@@ -60,7 +60,7 @@ public:
 		Actions_MENU_LEFT,
 		Actions_MENU_ACTIVATE_ROTATION,
 		Actions_SHOW_SCORE,
-		Actions_GAME_QUIT,
+		Actions_GAME_BACK,
 
 		Actions_CNT//End Actions enum
 	};
