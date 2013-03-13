@@ -479,12 +479,18 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 
 		if( particleComp != NULL )
 		{
+
 			int idx = static_cast<unsigned int>(p_data.particleSystemIdx);
 			if( -1 < idx && idx < particleComp->getParticleSystemsPtr()->size() )
 			{
 				AglParticleSystem* particleSys = particleComp->getParticleSystemPtr(idx);
 				if (particleSys)
 				{
+					if (entity->getName() == "ClientMinigun")
+					{
+						int k = 0;
+					}
+
 					AglVector3 pos = p_data.position;
 					if (particleSys->getParticleSpace() == AglParticleSystemHeader::AglSpace_SCREEN)
 					{

@@ -407,6 +407,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	{
 		m_world->addEntity(entity);
 	}
+
 	return entity;
 }
 Entity* EntityFactory::createShipEntityServer(EntityCreationPacket p_packet)
