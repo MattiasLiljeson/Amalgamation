@@ -17,6 +17,7 @@
 #include "ServerDynamicPhysicalObjectsSystem.h"
 #include <PhysicsController.h>
 #include "ModuleHelper.h"
+#include "MeshOffsetTransform.h"
 
 ShieldModuleControllerSystem::ShieldModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::ShieldModuleControllerSystem, 5,
@@ -52,9 +53,14 @@ void ShieldModuleControllerSystem::processEntities(const vector<Entity*>& p_enti
 			ShieldModule* shield = static_cast<ShieldModule*>(
 				p_entities[i]->getComponent(ComponentType::ShieldModule));
 			shield->cooldown -= m_world->getDelta();
+			shield->activation -= m_world->getDelta();
 			if(shield->cooldown <= 0.0f && module->getActive())
 			{
 				shield->cooldown = shield->cooldownTime;
+				shield->activation = shield->activationTime;
+			}
+			if(shield->activation > 0.0f && module->getActive())
+			{
 				pushEntitiesBack(p_entities[i], m_dynamicSystem->getActiveEntities());
 			}
 		}
@@ -161,24 +167,31 @@ void ShieldModuleControllerSystem::processEntities(const vector<Entity*>& p_enti
 void ShieldModuleControllerSystem::pushEntitiesBack(Entity* p_shield,
 	const vector<Entity*>& p_targets )
 {
-	Transform* sourceTransform = static_cast<Transform*>(p_shield->getComponent(
+	Transform* shieldTransform = static_cast<Transform*>(p_shield->getComponent(
 		ComponentType::Transform));
+	ShieldModule* shieldModule = static_cast<ShieldModule*>(
+		p_shield->getComponent(ComponentType::ShieldModule));
 	for(unsigned int i=0; i<p_targets.size(); i++)
 	{
 		if(canTarget(p_shield, p_targets[i]))
 		{
-			Transform* targetTransform = static_cast<Transform*>(p_targets[i]->getComponent(
-				ComponentType::Transform));
+			Transform* targetTransform = static_cast<Transform*>(
+				p_targets[i]->getComponent(ComponentType::Transform));
 			AglVector3 dir = targetTransform->getTranslation() -
-				sourceTransform->getTranslation();
+				shieldTransform->getTranslation();
 			float lengthSquared = dir.lengthSquared();
-			if(lengthSquared < 1000.0f * 1000.0f)
+			if(lengthSquared < shieldModule->maxRange * shieldModule->maxRange)
 			{
 				dir.normalize();
-				PhysicsBody* targetBody = static_cast<PhysicsBody*>(p_targets[i]->
-					getComponent(ComponentType::PhysicsBody));
-				m_physSystem->getController()->ApplyExternalImpulse(targetBody->m_id,
-					dir * 1000.0f / lengthSquared, AglVector3::zero());
+				AglVector3 shieldDir = getShieldDir(p_shield);
+				if(AglVector3::dotProduct(dir, shieldDir) > 0.0f)
+				{
+					float dt = m_world->getDelta();
+					PhysicsBody* targetBody = static_cast<PhysicsBody*>(p_targets[i]->
+						getComponent(ComponentType::PhysicsBody));
+					m_physSystem->getController()->ApplyExternalImpulse(targetBody->m_id,
+						dir * shieldModule->impulse * dt, AglVector3::zero());
+				}
 			}
 		}
 	}
@@ -207,6 +220,18 @@ bool ShieldModuleControllerSystem::canTarget( Entity* p_shield, Entity* p_target
 		}
 	}
 	return false;
+}
+
+AglVector3 ShieldModuleControllerSystem::getShieldDir( Entity* p_shield ) const
+{
+	AglVector3 dir = AglVector3::forward();
+	Transform* transform = static_cast<Transform*>(
+		p_shield->getComponent(ComponentType::Transform));
+	MeshOffsetTransform* offset = static_cast<MeshOffsetTransform*>(
+		p_shield->getComponent(ComponentType::MeshOffsetTransform));
+	dir.transform(offset->offset.inverse());
+	transform->getRotation().transformVector(dir);
+	return dir;
 }
 
 void ShieldModuleControllerSystem::inserted( Entity* p_entity )
