@@ -2,14 +2,13 @@
 #include <EntitySystem.h>
 #include <string>
 #include <GPUTimerProfile.h>
+#include "GameSettingsInfo.h"
 
 class RenderInterface;
 class GraphicsBackendSystem;
 class GraphicsWrapper;
-class ShadowSystem;
 
 struct AglMatrix;
-struct GameSettingsInfo;
 
 // =======================================================================================
 //                                      GraphicsRendererSystem
@@ -28,10 +27,9 @@ class GraphicsRendererSystem : public EntitySystem
 {
 public:
 	GraphicsRendererSystem(GraphicsBackendSystem* p_graphicsBackend,
-		ShadowSystem* p_shadowSystem, RenderInterface* p_mesh, 
-		RenderInterface* p_libRocket, RenderInterface* p_particle,
-		RenderInterface* p_antTweakBar, RenderInterface* p_light,
-		GameSettingsInfo& p_settings);
+		RenderInterface* p_mesh, RenderInterface* p_libRocket, 
+		RenderInterface* p_particle, RenderInterface* p_antTweakBar, 
+		RenderInterface* p_light, GameSettingsInfo& p_settings);
 	virtual ~GraphicsRendererSystem();
 
 	virtual void initialize();
@@ -76,7 +74,6 @@ private:
 private:
 	GraphicsWrapper* m_wrapper;
 	GraphicsBackendSystem* m_backend;
-	ShadowSystem*	 m_shadowSystem;
 	RenderInterface* m_meshRenderer;
 	RenderInterface* m_libRocketRenderSystem;
 	RenderInterface* m_particleRenderSystem;

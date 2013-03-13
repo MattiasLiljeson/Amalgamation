@@ -735,9 +735,6 @@
     </ClInclude>
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStatusEffectPacket.h" />
-    <ClInclude Include="SpriteSystem.h">
-      <Filter>Systems\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="Sprite.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
@@ -1378,9 +1375,6 @@
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
     <ClCompile Include="ModuleStatusEffectPacket.cpp" />
-    <ClCompile Include="SpriteSystem.cpp">
-      <Filter>Systems\GFX</Filter>
-    </ClCompile>
     <ClCompile Include="Sprite.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>

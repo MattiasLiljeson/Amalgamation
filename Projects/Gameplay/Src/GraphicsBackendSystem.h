@@ -3,7 +3,7 @@
 #include <AntTweakBarWrapper.h>
 #include <EntitySystem.h>
 #include <Windows.h>
-
+#include "GameSettingsInfo.h"
 
 class AglParticleSystem;
 class GraphicsWrapper;
@@ -14,7 +14,6 @@ struct ConnectionPointCollection;
 struct InstanceData;
 struct ParticleSystemAndTexture;
 struct RendererSceneInfo;
-struct GameSettingsInfo;
 // =======================================================================================
 //                                      GraphicsBackendSystem
 // =======================================================================================

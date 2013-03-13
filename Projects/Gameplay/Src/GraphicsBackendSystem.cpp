@@ -10,7 +10,6 @@
 #include <AglMesh.h>
 #include <RendererSceneInfo.h>
 #include "Transform.h"
-#include "GameSettingsInfo.h"
 #include "ShipHiglightSystem.h"
 
 GraphicsBackendSystem* GraphicsBackendSystem::m_selfPointer = NULL;

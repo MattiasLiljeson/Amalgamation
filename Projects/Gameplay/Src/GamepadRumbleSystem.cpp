@@ -7,11 +7,12 @@
 #include "ValueClamp.h"
 #include <AntTweakBarWrapper.h>
 
-GamepadRumbleSystem::GamepadRumbleSystem(InputBackendSystem* p_input)
+GamepadRumbleSystem::GamepadRumbleSystem(InputBackendSystem* p_input, 
+										 const GameSettingsInfo& p_settings)
 	: EntitySystem( SystemType::GamepadRumbleSystem, 1, ComponentType::Vibration)
 {
 	m_input = p_input;
-	m_enabled = false;
+	m_enabled = p_settings.rumble;
 }
 
 GamepadRumbleSystem::~GamepadRumbleSystem()
