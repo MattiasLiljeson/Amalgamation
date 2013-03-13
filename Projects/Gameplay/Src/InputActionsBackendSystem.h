@@ -32,6 +32,7 @@ public:
 		Actions_ROTATE_MODULE_RIGHT,
 		Actions_ROTATE90_MODULE_LEFT,
 		Actions_ROTATE90_MODULE_RIGHT,
+		Actions_TOGGLE_DESIRED_SLOT,
 		Actions_STRAFE_LEFT,
 		Actions_STRAFE_RIGHT,
 		Actions_STRAFE_UP,

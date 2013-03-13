@@ -396,6 +396,8 @@ void ServerPacketHandlerSystem::handleIngame()
 				pickSystem->setEnabled(packet.getSenderId(), false);
 			else if (sep.type == SimpleEventType::RELEASE_PICK)
 				pickSystem->setReleased(packet.getSenderId());
+			else if (sep.type == SimpleEventType::TOGGLE_PREFERRED_SLOT)
+				pickSystem->togglePreferredSlot(packet.getSenderId());
 		}
 	}
 }

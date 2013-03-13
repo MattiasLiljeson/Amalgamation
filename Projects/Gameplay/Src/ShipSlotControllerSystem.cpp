@@ -49,6 +49,10 @@ void SlotInputControllerSystem::handleSlotSelection(bool p_editMode)
 		{
 			sendSlot90Sub();
 		}
+		else if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_TOGGLE_DESIRED_SLOT) > 0)
+		{
+			sendPreferredSlotToggle();
+		}
 	}
 	else
 	{
@@ -206,6 +210,13 @@ void SlotInputControllerSystem::sendSlot90Add()
 {
 	SimpleEventPacket packet;
 	packet.type = SimpleEventType::ROTATE_90_ADD;
+
+	m_client->sendPacket( packet.pack() );
+}
+void SlotInputControllerSystem::sendPreferredSlotToggle()
+{
+	SimpleEventPacket packet;
+	packet.type = SimpleEventType::TOGGLE_PREFERRED_SLOT;
 
 	m_client->sendPacket( packet.pack() );
 }

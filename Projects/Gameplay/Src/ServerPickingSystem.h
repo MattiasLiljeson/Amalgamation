@@ -40,6 +40,9 @@ public:
 	void addRotationEvent(int direction, int client);
 	void add90RotationEvent(int direction, int client);
 
+	//Toggle preferred slot event
+	void togglePreferredSlot(int client);
+
 private:
 	vector<PickComponent> m_pickComponents;
 	TcpServer* m_server;

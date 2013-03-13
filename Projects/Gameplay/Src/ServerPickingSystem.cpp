@@ -553,7 +553,6 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 			if (conPoints->m_connectionPoints[i].cpConnectedEntity < 0)
 			{
 				available.push_back(i);
-				break;
 			}
 		}
 
@@ -905,6 +904,17 @@ void ServerPickingSystem::addRotationEvent(int direction, int client)
 		}
 	}
 }
+void ServerPickingSystem::togglePreferredSlot(int client)
+{
+	for (unsigned int i = 0; i < m_pickComponents.size(); i++)
+	{
+		if (client == m_pickComponents[i].m_clientIndex)
+		{
+			m_pickComponents[i].m_desiredSlot++;
+			break;
+		}
+	}
+}
 void ServerPickingSystem::add90RotationEvent(int direction, int client)
 {
 	for (unsigned int i = 0; i < m_pickComponents.size(); i++)
@@ -1027,7 +1037,6 @@ void ServerPickingSystem::updateSelectionMarker(PickComponent& p_ray)
 			if (conPoints->m_connectionPoints[i].cpConnectedEntity < 0)
 			{
 				available.push_back(i);
-				break;
 			}
 		}
 
