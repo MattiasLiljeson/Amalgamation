@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include <AntTweakBarWrapper.h>
 #include "SpeedBuffer.h"
+#include "ThrustComponent.h"
 
 const float SpeedFovAdjustSystem::PI = 3.1415926536f;
 
@@ -37,6 +38,18 @@ void SpeedFovAdjustSystem::processEntities( const vector<Entity*>& p_entities )
 		if( ship != NULL )
 		{
 
+			CameraInfo* cam = static_cast<CameraInfo*>(
+				p_entities[0]->getComponent( ComponentType::CameraInfo ) );
+
+			ThrustComponent* thrust = static_cast<ThrustComponent*>
+				(ship->getComponent(ComponentType::ThrustComponent));
+
+			float factor = thrust->m_thrustPower / (float)thrust->POWERCAP + 1.0f;
+
+			cam->m_fieldOfViewAsRadians = 0.785398163f * factor;
+			cam->createPerspectiveMatrix();
+
+			/*
 			SpeedBuffer* shipSpeedBuffer = static_cast<SpeedBuffer*>(
 				ship->getComponent( ComponentType::SpeedBuffer ) );
 
@@ -49,6 +62,7 @@ void SpeedFovAdjustSystem::processEntities( const vector<Entity*>& p_entities )
 				cam->m_fieldOfViewAsRadians = fovasRadians;
 				cam->createPerspectiveMatrix();
 			}
+			*/
 		}
 	}
 }
