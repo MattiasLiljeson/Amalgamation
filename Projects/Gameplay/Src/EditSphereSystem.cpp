@@ -26,7 +26,7 @@ void EditSphereSystem::initialize()
 	/************************************************************************/
 	/* Attach a particle system for visualizing edit mode					*/
 	/************************************************************************/
-	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
+	/*ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
 
 	//Flares spreading
 	AglParticleSystem flares;
@@ -56,7 +56,7 @@ void EditSphereSystem::initialize()
 	m_editSphere = m_world->createEntity();
 	m_editSphere->addComponent( ComponentType::Transform, new Transform());
 	m_editSphere->addComponent( ComponentType::ParticleSystemsComponent, particleEmitter);
-	m_world->addEntity(m_editSphere);
+	m_world->addEntity(m_editSphere);*/
 
 }
 
@@ -64,7 +64,7 @@ void EditSphereSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	if (p_entities.size()>0)
 	{
-		float dt = m_world->getDelta();
+		/*float dt = m_world->getDelta();
 
 		Transform* shipTransform = static_cast<Transform*>(p_entities[0]->getComponent(ComponentType::Transform));
 
@@ -80,12 +80,12 @@ void EditSphereSystem::processEntities( const vector<Entity*>& p_entities )
 		else
 		{
 			particleEmitter->getParticleSystemPtr(0)->setSpawnFrequency(0);
-		}
+		}*/
 	}
 }
 void EditSphereSystem::setSphere(AglVector3 p_position, float p_radius)
 {
-	ParticleSystemsComponent* particleEmitter = static_cast<ParticleSystemsComponent*>(m_editSphere->getComponent(ComponentType::ParticleSystemsComponent));
+	/*ParticleSystemsComponent* particleEmitter = static_cast<ParticleSystemsComponent*>(m_editSphere->getComponent(ComponentType::ParticleSystemsComponent));
 	particleEmitter->getParticleSystemPtr(0)->setSpawnOffset(p_radius);
-	particleEmitter->getParticleSystemPtr(0)->setSpawnPoint(p_position);
+	particleEmitter->getParticleSystemPtr(0)->setSpawnPoint(p_position);*/
 }
