@@ -862,6 +862,9 @@
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
     <ClInclude Include="ModuleSpawner.h" />
+    <ClInclude Include="ShieldActivationPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1485,5 +1488,8 @@
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
     <ClCompile Include="ModuleSpawner.cpp" />
+    <ClCompile Include="ShieldActivationPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

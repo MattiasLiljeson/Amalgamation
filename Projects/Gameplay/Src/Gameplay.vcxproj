@@ -56,6 +56,7 @@
     <ClInclude Include="PortalCullingSystem.h" />
     <ClInclude Include="RootBoundingSpherePacket.h" />
     <ClInclude Include="SettingsSystem.h" />
+    <ClInclude Include="ShieldActivationPacket.h" />
     <ClInclude Include="ShineSpawn.h" />
     <ClInclude Include="ShipEngineSystem.h" />
     <ClInclude Include="ShipHighlight.h" />
@@ -363,6 +364,7 @@
     <ClCompile Include="PortalCullingSystem.cpp" />
     <ClCompile Include="RootBoundingSpherePacket.cpp" />
     <ClCompile Include="SettingsSystem.cpp" />
+    <ClCompile Include="ShieldActivationPacket.cpp" />
     <ClCompile Include="ShipEngineSystem.cpp" />
     <ClCompile Include="ShipHighlightSystem.cpp" />
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp" />

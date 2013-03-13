@@ -811,7 +811,7 @@ void EntityFactory::createBackgroundScene()
 
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 {
-	Entity* shieldEntity = entityFromRecipeOrFile( "Shield",
+	Entity* shieldEntity = entityFromRecipeOrFile( "ClientShield",
 		"Assemblages/Modules/Shield/ClientShield.asd");
 	shieldEntity->setName("shieldModuleClient");
 	// set transform from packet directly
@@ -820,19 +820,11 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 	transform->setTranslation(p_packet.translation);
 	transform->setRotation(p_packet.rotation);	
 	transform->setScale(p_packet.scale);	
+	
 	// Add network dependent components
 	shieldEntity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
-	auto shipModule = static_cast<ShipModule*>(
-		shieldEntity->getComponent(ComponentType::ShipModule));
-	shieldEntity->addComponent(new ShieldModule());
 	m_world->addEntity(shieldEntity);
-
-
-	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	return shieldEntity;
 }

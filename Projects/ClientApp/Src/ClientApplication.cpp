@@ -295,7 +295,6 @@ void ClientApplication::initSystems()
 	m_world->setSystem( slotInput );
 	m_world->setSystem( new ShipFlyControllerSystem(shipInputProc, NULL, m_client, slotInput ));
 	m_world->setSystem( new ShipEditControllerSystem(shipInputProc, NULL, slotInput) );
-	m_world->setSystem( new EntityParentHandlerSystem() );
 	m_world->setSystem( new PlayerCameraControllerSystem( shipInputProc, m_client ) );
 
 	//---NETWORKHANDLING SYSTEMS
@@ -352,6 +351,7 @@ void ClientApplication::initSystems()
 	// InterpolationSystem* interpolationSystem = new InterpolationSystem();
 	// m_world->setSystem( interpolationSystem, true);
 	InterpolationSystem2* inter = new InterpolationSystem2();
+	m_world->setSystem( new EntityParentHandlerSystem() );
 	m_world->setSystem(inter, true);
 
 	//---AUDIO SYSTEMS

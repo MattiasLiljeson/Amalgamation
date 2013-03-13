@@ -44,6 +44,7 @@ public:
 		TeslaHitPacket,
 		HitIndicatorPacket,
 		ModulesHighlightPacket,
+		ShieldActivationPacket,
 
 		// Client -> Server:
 		/************************************************************************/
