@@ -233,6 +233,7 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 
 	if (gun->lockOnPlaying && (gun->lockCoolDown > 0 || !highlighted))
 	{
+		gun->lockCoolDown = 2.0f;
 		gun->lockOnPlaying = false;
 		SoundPacket sp;
 		sp.target = p_entity->getIndex();
