@@ -588,8 +588,5 @@ void DeferredRenderer::initPostProcessingPass()
 	m_postProcessingData.intensity		= 1.0f;
 	m_postProcessingData.sampleRadius	= 0.02f;
 
-	m_postProcessingData.startNear	= 10.0f;
-	m_postProcessingData.stopNear	= 20.0f;
-	m_postProcessingData.startFar	= 50.0f;
-	m_postProcessingData.stopFar	= 1000.0f; 
+	toggleEditMode(false);
 }
