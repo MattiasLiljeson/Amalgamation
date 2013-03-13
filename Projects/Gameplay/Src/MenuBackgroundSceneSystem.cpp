@@ -37,7 +37,8 @@ void MenuBackgroundSceneSystem::process()
 	*/
 	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
 		getSystem(SystemType::ClientStateSystem));
-	if(stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::EXITTHISFRAME)
+	if(stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::EXITTHISFRAME
+		&& stateSystem->getStateDelta(GameStates::LOADING) == EnumGameDelta::ENTEREDTHISFRAME)
 	{
 		this->setEnabled(false);
 	}
