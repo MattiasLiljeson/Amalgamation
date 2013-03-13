@@ -1,5 +1,6 @@
 #pragma once
 #include <EntitySystem.h>
+#include "GameSettingsInfo.h"
 
 class XInputFetcher;
 class InputBackendSystem;
@@ -20,7 +21,7 @@ class NetworkSynced;
 class GamepadRumbleSystem : public EntitySystem
 {
 public:
-	GamepadRumbleSystem(InputBackendSystem* p_input);
+	GamepadRumbleSystem(InputBackendSystem* p_input, const GameSettingsInfo& p_settings);
 	~GamepadRumbleSystem();
 
 	void initialize();

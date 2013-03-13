@@ -47,7 +47,7 @@ void HudSystem::process()
 
 		m_screenSize = gfx->getWindowSize();
 
-		float screenRatio = 1280 / m_screenSize.x;
+		float screenRatio = gfx->getAspectRatio();
 
 		/*float wingRatio = 228.0f / 527.0f;
 		AglVector2 wingsize = AglVector2(1.0f, 1.0f*gfx->getAspectRatio() * wingRatio) * screenRatio;
@@ -63,7 +63,9 @@ void HudSystem::process()
 		m_timerMonitor = createSprite(AglVector3(0.0f, 1.0f-timerSize.y, 0.0f), "timer_HUD.png", timerSize);*/
 
 
-		m_constructionMode = createConstructionSprite(AglVector3(0.0f, -1.0f-constSize.y + 0.5f, 0.0f), "construction_mode_label.png", constSize);
+		m_constructionMode = createConstructionSprite(
+			AglVector3(0.0f, -1.0f-constSize.y + 0.5f, 0.0f), 
+			"construction_mode_label.png", constSize);
 	}
 	else if (stateSystem->getCurrentState() == GameStates::INGAME)
 	{
@@ -91,8 +93,9 @@ void HudSystem::process()
 			
 			reinitSprite(m_constructionMode, AglVector3(0.0f, -1.0f-constSize.y + 0.5f, 0.0f), constSize);
 		}
-
+		
 		EntityManager* entitymanager = m_world->getEntityManager();
+		
 		Entity* ship = entitymanager->getFirstEntityByComponentType(ComponentType::TAG_MyShip);
 		ShipEditMode_TAG* editMode = static_cast<ShipEditMode_TAG*>(ship->getComponent(ComponentType::TAG_ShipEditMode));
 		if (editMode)
@@ -103,10 +106,15 @@ void HudSystem::process()
 		}
 		else
 		{
+			
 			ParticleSystemsComponent* ps = static_cast<ParticleSystemsComponent*>(
 				m_constructionMode->getComponent(ComponentType::ParticleSystemsComponent));
-			ps->getParticleSystemPtr(0)->getHeaderPtr()->color = AglVector4(0, 0, 0, 0);
+			AglParticleSystem* partSystem = ps->getParticleSystemPtr(0);
+			if(partSystem){
+				partSystem->getHeaderPtr()->color = AglVector4(0, 0, 0, 0);
+			}
 		}
+		
 
 	}
 	else if(stateSystem->getStateDelta(GameStates::RESULTS) == EnumGameDelta::ENTEREDTHISFRAME){
@@ -171,7 +179,8 @@ Entity* HudSystem::createSprite(AglVector3 p_position, string p_texture, AglVect
 	m_world->addEntity(sprite);
 	return sprite;
 }
-Entity* HudSystem::createConstructionSprite(AglVector3 p_position, string p_texture, AglVector2 p_size)
+Entity* HudSystem::createConstructionSprite(AglVector3 p_position, string p_texture, 
+											AglVector2 p_size)
 {
 	Entity* sprite = m_world->createEntity();
 

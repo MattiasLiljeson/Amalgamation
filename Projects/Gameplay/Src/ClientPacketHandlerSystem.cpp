@@ -115,6 +115,7 @@
 #include "libRocketBackendSystem.h"
 #include "ModulesHighlightPacket.h"
 #include "GlowAnimation.h"
+#include "SettingsSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -1126,6 +1127,16 @@ void ClientPacketHandlerSystem::handleMenu()
 			playerInfoPacket.playerID = m_tcpClient->getPlayerID();
 			m_tcpClient->sendPacket(playerInfoPacket.pack());
 			m_gameState->setQueuedState(GameStates::LOBBY);
+
+			auto connectionSystem = static_cast<ClientConnectToServerSystem*>
+				(m_world->getSystem(SystemType::ClientConnectoToServerSystem));
+
+			auto gameSettings = static_cast<SettingsSystem*>
+				(m_world->getSystem(SystemType::SettingsSystem));
+
+			gameSettings->getSettingsRef()->playerName = m_tcpClient->getPlayerName();
+			gameSettings->getSettingsRef()->ip = connectionSystem->getServerAddress();
+			gameSettings->getSettingsRef()->port = connectionSystem->getServerPort();
 		}	
 		else
 		{
