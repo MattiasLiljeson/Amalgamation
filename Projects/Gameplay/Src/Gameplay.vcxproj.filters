@@ -488,9 +488,6 @@
     <ClInclude Include="LibRocketInputHelper.h">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClInclude>
-    <ClInclude Include="GameOptionsSystem.h">
-      <Filter>Systems\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="LibRocketEventManagerSystem.h">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClInclude>
@@ -854,6 +851,17 @@
     <ClInclude Include="DisconnectPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="SoundPacket.h">
+    </ClInclude>
+    <ClInclude Include="GlowAnimation.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="GlowAnimationSystem.h">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClInclude>
+    <ClInclude Include="ModulesHighlightPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
     <ClInclude Include="PlayerReadyPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
@@ -1164,9 +1172,6 @@
     <ClCompile Include="LibRocketInputHelper.cpp">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClCompile>
-    <ClCompile Include="GameOptionsSystem.cpp">
-      <Filter>Systems\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="LibRocketEventManagerSystem.cpp">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClCompile>
@@ -1470,6 +1475,17 @@
       <Filter>Systems\Debugging</Filter>
     </ClCompile>
     <ClCompile Include="DisconnectPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundPacket.cpp">
+    </ClCompile>
+    <ClCompile Include="GlowAnimation.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="GlowAnimationSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClCompile>
+    <ClCompile Include="ModulesHighlightPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
     <ClCompile Include="PlayerReadyPacket.cpp">

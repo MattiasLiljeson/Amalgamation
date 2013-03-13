@@ -7,16 +7,16 @@
 		<form onsubmit="host_server; play_confirm;">
 			<div>
 				Server Name:
-				<Input name="server_name" type="text" size="15"
-				maxlength="10" value="Untitled Server" />
+				<Input id="4" name="server_name" type="text" size="15"
+				maxlength="10" value="Open" />
 				<br/>
 				Server Port:
-				<Input name="server_port" type="text" size="5"
-				maxlength="5" value="1337" />
+				<Input id="5" name="server_port" type="text" size="5"
+				maxlength="5" value="" />
 				<br/>
 				Player Name:
-				<Input name="player_name" type="text" size="15"
-				maxlength="10" value="Max" />
+				<Input id="6" name="player_name" type="text" size="15"
+				maxlength="10" value="" />
 			</div>
 			<input type="submit" value="accept">Create</input>
 			<button onclick="goto previous">Cancel</button>

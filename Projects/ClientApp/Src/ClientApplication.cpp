@@ -63,7 +63,6 @@
 #include <EntityFactory.h>
 #include <EnvironmentSystem.h>
 #include <ExtrapolationSystem.h>
-#include <GameOptionsSystem.h>
 #include <GameStatsSystem.h>
 #include <GamepadRumbleSystem.h>
 #include <GraphicsBackendSystem.h>
@@ -128,6 +127,7 @@
 #include <PortalCullingSystem.h>
 #include <ClientModuleCounterSystem.h>
 #include <AddToParentSystem.h>
+#include <GlowAnimationSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -333,7 +333,6 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new LobbySystem() );
 	m_world->setSystem( new HudSystem( rocketBackend ) );
 	m_world->setSystem( new LibRocketEventManagerSystem(m_client) );
-	m_world->setSystem( new GameOptionsSystem() );
 	m_world->setSystem( new DamageVisualizerSystem( graphicsBackend ) );
 
 	// NOTE: MenuSystem looks up all systems that's also deriving from EventHandler, so
@@ -455,6 +454,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ShieldPlaterSystem() );
 	m_world->setSystem( new TeslaEffectSystem() );
 	m_world->setSystem( new TeslaLightningSystem() );
+	m_world->setSystem( new GlowAnimationSystem() );
 
 	/************************************************************************/
 	/* Animation															*/

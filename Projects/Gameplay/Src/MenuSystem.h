@@ -23,9 +23,13 @@ public:
 	void process( );
 	void endLoadingState();
 	void displayDisconnectPopup();
+	void setJoin();
+	void setHost();
 private:
 	int m_loadingWindowIdx;
 	int m_disconnectPopupIdx;
 	int m_lobbyDocIdx;
+	int m_joinIdx;
+	int m_hostIdx;
 };
 

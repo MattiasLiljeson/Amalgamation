@@ -59,7 +59,7 @@ public:
 	/// Releases all event handlers registered with the manager.
 	void shutdown();
 
-	void processEntities(const vector<Entity*>& p_entities);
+	void process();
 
 	void registerEventHandler(EventHandler* p_handler);
 

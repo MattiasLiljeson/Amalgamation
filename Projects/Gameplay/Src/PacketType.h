@@ -43,6 +43,7 @@ public:
 		BombActivationPacket,
 		TeslaHitPacket,
 		HitIndicatorPacket,
+		ModulesHighlightPacket,
 
 		// Client -> Server:
 		/************************************************************************/
@@ -51,7 +52,7 @@ public:
 		/************************************************************************/
 		ThrustPacket,
 		RayPacket,
-		ModuleHighlightPacket,
+		HighlightSlotPacket,
 		SimpleEvent,
 		ParticleUpdate,
 		ParticleSystemCreationInfo,
@@ -63,6 +64,7 @@ public:
 		SelectionMarkerUpdatePacket,
 		HighlightEntityPacket,
 		RootBoundingSpherePacket,
+		SoundPacket,
 	};
 
 };

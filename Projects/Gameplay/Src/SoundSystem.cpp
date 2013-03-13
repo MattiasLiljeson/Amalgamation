@@ -74,19 +74,8 @@ void SoundSystem::updateSoundStatus( const SoundComponent* p_soundComponent )
 					getSourceVoice()->SetVolume(header->volume);
 			}
 
-			//Update timer based sounds
-			if(header->playInterval == AudioHeader::TIMERBASED){
-				header->timeSinceLastPlayed += m_world->getDelta();
-
-				if(header->timeSinceLastPlayed >= header->timerInterval){
-					m_audioBackend->changeAudioInstruction(header->soundIndex, 
-					AudioHeader::PlayState::RESTART);
-					header->timeSinceLastPlayed = 0;
-				}
-			}
-
 			//Update the sounds' playing status 
-			else if( header->playingState != header->queuedPlayingState ){
+			if( header->playingState != header->queuedPlayingState ){
 				header->playingState = header->queuedPlayingState;
 				m_audioBackend->changeAudioInstruction(header->soundIndex, 
 					header->playingState);
@@ -94,6 +83,20 @@ void SoundSystem::updateSoundStatus( const SoundComponent* p_soundComponent )
 				if (header->playInterval == AudioHeader::ONCE){
 					header->playingState = AudioHeader::STOP;
 					header->queuedPlayingState = AudioHeader::STOP;
+				}
+			}
+
+			//Update timer based sounds
+			if(header->playInterval == AudioHeader::TIMERBASED){
+
+				if (header->playingState == AudioHeader::PLAY){
+					header->timeSinceLastPlayed += m_world->getDelta();
+
+					if(header->timeSinceLastPlayed >= header->timerInterval){
+						m_audioBackend->changeAudioInstruction(header->soundIndex, 
+							AudioHeader::PlayState::RESTART);
+						header->timeSinceLastPlayed = 0;
+					}
 				}
 			}
 		}

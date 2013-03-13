@@ -10,6 +10,7 @@
 #include "ParticleSystemCreationInfo.h"
 #include "ParticleUpdatePacket.h"
 #include "RootBoundingSpherePacket.h"
+#include "SoundPacket.h"
 
 using namespace std;
 
@@ -68,6 +69,9 @@ private:
 
 	void handleParticleSystemCreation( const ParticleSystemCreationInfo& p_creationInfo );
 	void handleParticleSystemUpdate( const ParticleUpdatePacket& p_data );
+	
+	void handleEntitySounds(const SoundPacket& p_data); 
+	
 	void printPacketTypeNotHandled(string p_stateName, int p_packetType);
 
 	// Disconnect-handling

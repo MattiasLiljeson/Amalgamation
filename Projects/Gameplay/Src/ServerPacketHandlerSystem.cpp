@@ -351,7 +351,7 @@ void ServerPacketHandlerSystem::handleIngame()
 			rayPacket.unpack( packet );
 			picking->setRay(packet.getSenderId(), rayPacket.o, rayPacket.d);
 		}
-		else if (packetType == (char)PacketType::ModuleHighlightPacket)
+		else if (packetType == (char)PacketType::HighlightSlotPacket)
 		{
 			// =========================================
 			// MODULEHIGHLIGHTPACKET
@@ -464,8 +464,12 @@ void ServerPacketHandlerSystem::handleLobby()
 
 				// Send all the existing players to the new client.
 				m_server->unicastPacket(alreadyConnectedPlayers.pack(), newComp->m_networkID);
+				
 				//m_server->broadcastPacket(alreadyConnectedPlayers.pack());
-			}			
+			}
+
+			// Force all players to be set unready.
+			memset(&m_lobbyPlayerReadyStates, 0, sizeof(m_lobbyPlayerReadyStates));
 		}
 		else if(packetType == (char)PacketType::ClientDisconnect){
 			DisconnectPacket dcPacket;

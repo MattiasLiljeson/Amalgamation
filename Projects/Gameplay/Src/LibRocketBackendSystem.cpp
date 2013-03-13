@@ -220,6 +220,17 @@ void LibRocketBackendSystem::updateElement(int p_docId, string p_element, string
 		element->SetInnerRML( p_value.c_str() );
 }
 
+void LibRocketBackendSystem::changeValue( int p_docId, string p_element, string p_value )
+{
+	Rocket::Core::Element* element;
+	Rocket::Controls::ElementFormControl* formControl;
+	element = m_documents[p_docId]->GetElementById( p_element.c_str() );
+	if(element){
+		formControl = static_cast<Rocket::Controls::ElementFormControl*>(element);
+		formControl->SetValue(p_value.c_str());
+	}
+
+}
 
 void LibRocketBackendSystem::showDocument( int p_docId, 
 								int p_focusFlags/*= Rocket::Core::ElementDocument::FOCUS*/)
@@ -370,6 +381,9 @@ bool LibRocketBackendSystem::isDocumentVisible( int p_docId ) const
 {
 	return m_documents[p_docId]->IsVisible();
 }
+
+
+
 
 
 
