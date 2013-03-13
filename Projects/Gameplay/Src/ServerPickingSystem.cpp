@@ -561,7 +561,9 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		if (available.size() == 0)
 			return;
 
-		int sel = available[0];
+		if (p_ray.m_desiredSlot >= available.size())
+			p_ray.m_desiredSlot = 0;
+		int sel = available[p_ray.m_desiredSlot];
 
 		//Target
 		Entity* target = m_world->getEntity(p_ray.m_targetEntity);
@@ -1033,7 +1035,9 @@ void ServerPickingSystem::updateSelectionMarker(PickComponent& p_ray)
 		if (available.size() == 0)
 			return;
 
-		int sel = available[0];
+		if (p_ray.m_desiredSlot >= available.size())
+			p_ray.m_desiredSlot = 0;
+		int sel = available[p_ray.m_desiredSlot];
 
 		//Target
 		Entity* target = m_world->getEntity(p_ray.m_targetEntity);
