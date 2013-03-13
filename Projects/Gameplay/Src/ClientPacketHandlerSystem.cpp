@@ -588,7 +588,8 @@ void ClientPacketHandlerSystem::handleIngameState()
 {
 	while (m_tcpClient->hasNewPackets())
 	{
-		Packet packet = m_tcpClient->popNewPacket();
+		//Packet packet = m_tcpClient->popNewPacket();
+		Packet& packet = m_tcpClient->getFrontPacket();
 
 		updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
 
@@ -1111,6 +1112,9 @@ void ClientPacketHandlerSystem::handleIngameState()
 		{
 			DEBUGWARNING(( "Unhandled packet type!" ));
 		}
+
+		// Pop packet!
+		m_tcpClient->popFrontPacket();
 	}
 }
 

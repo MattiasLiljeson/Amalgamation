@@ -56,7 +56,10 @@ public:
 
 	bool hasNewPackets();
 	unsigned int newPacketsCount();
-	Packet popNewPacket();
+	Packet popNewPacket(); // Deprecated and obsolete.
+
+	Packet& getFrontPacket();
+	void popFrontPacket();
 
 	void processMessages();
 

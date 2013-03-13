@@ -108,7 +108,6 @@ void CameraSystem::updateRenderSceneInfo( Entity* p_entity )
 	sceneInfo.fogColor = camInfo->m_fogColor;
 	sceneInfo.fogFarPlaneClosenessPercentage = camInfo->m_fogFarPlaneClosenessPercentage;
 	sceneInfo.fogNearPlaneClosenessPercentage = camInfo->m_fogNearPlaneClosenessPercentage;
-	sceneInfo.lowResDivider = m_lowResDivider;
 
 	// sets up certain "global" scene data
 	GraphicsWrapper* gfxWrapper = m_gfxBackend->getGfxWrapper();

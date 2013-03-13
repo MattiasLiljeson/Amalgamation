@@ -150,6 +150,19 @@ Packet TcpServer::popNewPacket()
 	return NULL;
 }
 
+Packet& TcpServer::getFrontPacket()
+{
+	return m_newPackets.front();
+}
+
+void TcpServer::popFrontPacket()
+{
+	if (!m_newPackets.empty())
+	{
+		m_newPackets.pop();
+	}
+}
+
 void TcpServer::processMessages()
 {
 	queue< ProcessMessage* > messages;
@@ -328,4 +341,3 @@ const unsigned int& TcpServer::totalSentInCommProcess(
 {
 	return m_totalSentInCommProcesses[p_processIdentity];
 }
-

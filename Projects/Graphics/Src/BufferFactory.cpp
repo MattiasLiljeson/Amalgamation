@@ -186,9 +186,9 @@ Buffer<PerShadowCBuffer>* BufferFactory::createPerShadowBuffer()
 }
 
 
-Buffer<SSAOBuffer>* BufferFactory::createSSAOBuffer()
+Buffer<PostProcessingBuffer>* BufferFactory::createPostProcessingBuffer()
 {
-	SSAOBuffer data;
+	PostProcessingBuffer data;
 
 	BufferConfig::BUFFER_INIT_DESC bufferDesc;
 	bufferDesc.ElementSize = m_elementSize;
@@ -197,8 +197,25 @@ Buffer<SSAOBuffer>* BufferFactory::createSSAOBuffer()
 	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_PS;
 	bufferDesc.Slot = BufferConfig::PEROBJECT;
 
-	return new Buffer<SSAOBuffer>( m_device, m_deviceContext, &data, bufferDesc);
+	return new Buffer<PostProcessingBuffer>( m_device, m_deviceContext, &data, bufferDesc);
 }
+
+
+Buffer<ComposeCBuffer>* BufferFactory::createComposeBuffer()
+{
+	ComposeCBuffer data;
+
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = m_elementSize;
+	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
+	bufferDesc.NumElements = sizeof(data)/m_elementSize;
+	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_PS;
+	bufferDesc.Slot = BufferConfig::PEROBJECT;
+
+	return new Buffer<ComposeCBuffer>( m_device, m_deviceContext, &data, bufferDesc);
+}
+
+
 
 Mesh* BufferFactory::createBoxMesh()
 {
