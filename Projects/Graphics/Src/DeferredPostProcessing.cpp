@@ -10,7 +10,7 @@ DeferredPostProcessing::DeferredPostProcessing(
 
 DeferredPostProcessing::~DeferredPostProcessing()
 {
-
+	delete m_postProcessingBuffer;
 }
 
 void DeferredPostProcessing::apply()

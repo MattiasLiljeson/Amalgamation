@@ -119,6 +119,8 @@ public:
 	// Debug
 	void hookUpAntTweakBar();
 
+	void toggleEditMode(bool p_isInEditMode);
+
 private:
 	void initDepthStencil();
 	void initGeometryBuffers();
@@ -127,8 +129,8 @@ private:
 	void buildBlendStates();
 	void buildRasterizerStates();
 	void initShaders();
+	void initPostProcessingPass();
 	void initFullScreenQuad();
-	void initPostProcessing();
 	void initCompose();
 
 	void unmapAllBuffers();

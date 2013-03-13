@@ -45,7 +45,7 @@ DeferredRenderer::DeferredRenderer(
 	initRendertargetsAndDepthStencil( m_width, m_height );
 
 	initShaders();
-	initPostProcessing();
+	initPostProcessingPass();
 	initCompose();
 	initFullScreenQuad();
 
@@ -493,20 +493,6 @@ void DeferredRenderer::initFullScreenQuad()
 {
 	m_fullscreenQuad = m_bufferFactory->createFullScreenQuadBuffer();
 }
-
-void DeferredRenderer::initPostProcessing()
-{
-	m_postProcessingData.scale			= 4.0f;
-	m_postProcessingData.bias			= 0.242f;
-	m_postProcessingData.intensity		= 1.0f;
-	m_postProcessingData.sampleRadius	= 0.02f;
-
-	m_postProcessingData.startNear	= 10.0f;
-	m_postProcessingData.stopNear	= 20.0f;
-	m_postProcessingData.startFar	= 50.0f;
-	m_postProcessingData.stopFar	= 1000.0f;
-}
-
 void DeferredRenderer::initCompose()
 {
 	m_composeData.circleOfConfusion = 1.0f;
@@ -577,4 +563,33 @@ void DeferredRenderer::createSrvAndRtv( ID3D11ShaderResourceView** out_srv,
 	checkHr( hr, __FILE__, __FUNCTION__, __LINE__ );
 
 	bufferTexture->Release();
+}
+
+void DeferredRenderer::toggleEditMode(bool p_isInEditMode)
+{
+	if(p_isInEditMode){
+		m_postProcessingData.startNear	= 10.0f;
+		m_postProcessingData.stopNear	= 20.0f;
+		m_postProcessingData.startFar	= 40.0f;
+		m_postProcessingData.stopFar	= 80.0f; 
+	}
+	else{
+		m_postProcessingData.startNear	= 10.0f;
+		m_postProcessingData.stopNear	= 20.0f;
+		m_postProcessingData.startFar	= 50.0f;
+		m_postProcessingData.stopFar	= 1000.0f;
+	}
+}
+
+void DeferredRenderer::initPostProcessingPass()
+{
+	m_postProcessingData.scale			= 4.0f;
+	m_postProcessingData.bias			= 0.242f;
+	m_postProcessingData.intensity		= 1.0f;
+	m_postProcessingData.sampleRadius	= 0.02f;
+
+	m_postProcessingData.startNear	= 10.0f;
+	m_postProcessingData.stopNear	= 20.0f;
+	m_postProcessingData.startFar	= 50.0f;
+	m_postProcessingData.stopFar	= 1000.0f; 
 }

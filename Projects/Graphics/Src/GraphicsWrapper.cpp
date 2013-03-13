@@ -929,3 +929,8 @@ MaterialInfo GraphicsWrapper::getMaterialInfoFromMeshID( unsigned int p_index )
 {
 	return m_meshManager->getResource(p_index)->getMaterialInfo();
 }
+
+void GraphicsWrapper::isInEditMode(bool p_isInEditMode)
+{
+	m_deferredRenderer->toggleEditMode(p_isInEditMode);
+}

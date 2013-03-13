@@ -234,6 +234,15 @@ void GraphicsRendererSystem::endLightPass(){
 
 void GraphicsRendererSystem::beginEffects()
 {
+	Entity* ship = m_world->getEntityManager()->
+		getFirstEntityByComponentType(ComponentType::TAG_ShipEditMode);
+
+	if(ship != NULL){
+		m_wrapper->isInEditMode(true);
+	}
+	else{
+		m_wrapper->isInEditMode(false);
+	}
 	m_wrapper->setPrimitiveTopology( PrimitiveTopology::TRIANGLESTRIP );
 	m_wrapper->setBlendStateSettings( BlendState::SSAO );
 	m_wrapper->setRasterizerStateSettings( RasterizerState::FILLED_NOCULL_NOCLIP, false );
