@@ -259,6 +259,23 @@ Packet TcpClient::popNewPacket()
 	return NULL;
 }
 
+Packet& TcpClient::getFrontPacket()
+{
+	return m_newPackets.front();
+}
+
+void TcpClient::popFrontPacket()
+{
+	if (!m_newPackets.empty())
+	{
+		const Packet& packet = m_newPackets.front();
+		m_newPackets.pop();
+
+		m_totalPacketsPopped += 1;
+		m_totalDataReceived += packet.getDataSize() + 1;
+	}
+}
+
 int TcpClient::getId()
 {
 	return m_id;

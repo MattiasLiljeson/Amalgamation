@@ -142,7 +142,8 @@ void ServerPacketHandlerSystem::handleIngame()
 {
 	while( m_server->hasNewPackets() )
 	{
-		Packet packet = m_server->popNewPacket();
+		//Packet packet = m_server->popNewPacket();
+		Packet& packet = m_server->getFrontPacket();
 
 		char packetType;
 		packetType = packet.getPacketType();
@@ -406,6 +407,9 @@ void ServerPacketHandlerSystem::handleIngame()
 			else if (sep.type == SimpleEventType::TOGGLE_PREFERRED_SLOT)
 				pickSystem->togglePreferredSlot(packet.getSenderId());
 		}
+
+		// Pop packet!
+		m_server->popFrontPacket();
 	}
 }
 
@@ -523,7 +527,6 @@ void ServerPacketHandlerSystem::handleLobby()
 				m_server->broadcastPacket(newState.pack());
 			}
 		}
-
 		else
 		{
 			printPacketTypeNotHandled("Lobby", (int)packetType);
