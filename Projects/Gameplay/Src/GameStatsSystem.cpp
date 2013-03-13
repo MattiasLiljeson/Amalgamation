@@ -104,28 +104,19 @@ void GameStatsSystem::process()
 
 	if(gameState->getCurrentState() == GameStates::INGAME ){
 
-		auto inputSystem = static_cast<InputBackendSystem*>(
-			m_world->getSystem(SystemType::InputBackendSystem));
+		InputActionsBackendSystem* inputSystem = static_cast<InputActionsBackendSystem*>(
+			m_world->getSystem(SystemType::InputActionsBackendSystem));
 	
-		auto rocketBackend = static_cast<LibRocketBackendSystem*>
+		LibRocketBackendSystem* rocketBackend = static_cast<LibRocketBackendSystem*>
 			(m_world->getSystem(SystemType::LibRocketBackendSystem));
 
-		if ((inputSystem->getControlByEnum(InputHelper::KeyboardKeys_T))->getStatus() > 0.5f)
-		{
-			if (!m_infoPanelVisible)
-			{
-				m_infoPanelVisible = !m_infoPanelVisible;
-				rocketBackend->showDocument(m_rocketDocument);
-				m_infoPanel->updateTheVisualInfoPanel();
-			}
-		}
-		else
-		{
-			if (m_infoPanelVisible)
-			{
-				m_infoPanelVisible = !m_infoPanelVisible;
-				rocketBackend->hideDocument(m_rocketDocument);
-			}
+		double delta = inputSystem->getDeltaByAction(InputActionsBackendSystem::Actions_SHOW_SCORE);
+
+		if( delta > 0.5) {
+			rocketBackend->showDocument( m_rocketDocument );
+			m_infoPanel->updateTheVisualInfoPanel();
+		} else if( delta < -0.5f) {
+			rocketBackend->hideDocument( m_rocketDocument );
 		}
 	}
 

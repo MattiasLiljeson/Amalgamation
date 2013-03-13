@@ -38,11 +38,11 @@ private:
 		Transform transform;
 		float timestamp;
 	};
-	map<Transform*, TransformRecord> m_previousTransforms;
+	map<int, TransformRecord> m_previousTransforms;
 
 	struct ParticleRecord {
 		AglParticleSystemHeader particleHeader;
 		float timestamp;
 	};
-	map<ParticleSystemServerComponent*, ParticleRecord> m_previousParticles;
+	map<AglParticleSystemHeader*, ParticleRecord> m_previousParticles;
 };

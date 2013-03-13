@@ -64,16 +64,6 @@ void InputBackendSystem::initialize()
 			mouseButtons[i].second, mouseButtons[i].first );
 	}
 
-	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
-		InputHelper::KeyboardKeys_SPACE,
-		factory.createKeyboardKey( InputHelper::KeyboardKeys_SPACE ),
-		"Space" );
-
-	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
-		InputHelper::KeyboardKeys_LCTRL,
-		factory.createKeyboardKey( InputHelper::KeyboardKeys_LCTRL ),
-		"LCtrl" );
-
 	// All analogs: stick/triggers on gamepad
 	vector<pair<string, Control*> > analogs = factory.createAll360Analogs();
 	for( int i=0, size = (int)analogs.size(); i<size; i++ )
@@ -118,46 +108,81 @@ void InputBackendSystem::initialize()
 			keysNumZeroToNumNine[i].second, keysNumZeroToNumNine[i].first );
 	}
 	// special keys
+
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_LEFT_CTRL,
+		factory.createKeyboardKey( InputHelper::KeyboardKeys_LEFT_CTRL ),
+		"KeyboardKeys_LEFT_CONTROL" );
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_RIGHT_CTRL,
+		factory.createKeyboardKey( InputHelper::KeyboardKeys_RIGHT_CTRL ),
+		"KeyboardKeys_RIGHT_CONTROL" );
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_LEFT_SHIFT,
+		factory.createKeyboardKey( InputHelper::KeyboardKeys_LEFT_SHIFT ),
+		"KeyboardKeys_LEFT_SHIFT" );
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_RIGHT_SHIFT,
+		factory.createKeyboardKey( InputHelper::KeyboardKeys_RIGHT_SHIFT ),
+		"KeyboardKeys_RIGHT_SHIFT" );
+
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_LEFT,
+		factory.createKeyboardKey( InputHelper::KeyboardKeys_LEFT ),
+		"KeyboardKeys_LEFT" );
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_UP,
+		factory.createKeyboardKey( InputHelper::KeyboardKeys_UP ),
+		"KeyboardKeys_UP" );
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_DOWN,
+		factory.createKeyboardKey( InputHelper::KeyboardKeys_DOWN ),
+		"KeyboardKeys_DOWN" );
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_RIGHT,
+		factory.createKeyboardKey( InputHelper::KeyboardKeys_RIGHT ),
+		"KeyboardKeys_RIGHT" );
+
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_LEFT_ARROW,
+		factory.createKeyboardKey( InputHelper::KeyboardKeys_LEFT_ARROW ),
+		"KeyboardKeys_LEFT_ARROW" );
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_UP,
+		factory.createKeyboardKey( InputHelper::KeyboardKeys_UP_ARROW ),
+		"KeyboardKeys_UP_ARROW" );
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_DOWN_ARROW,
+		factory.createKeyboardKey( InputHelper::KeyboardKeys_DOWN_ARROW ),
+		"KeyboardKeys_DOWN_ARROW" );
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_RIGHT_ARROW,
+		factory.createKeyboardKey( InputHelper::KeyboardKeys_RIGHT_ARROW ),
+		"KeyboardKeys_RIGHT_ARROW" );
+
 	// space
-	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
-		InputHelper::KeyboardKeys_SPACE,
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_SPACE,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_SPACE),
 		"KeyboardKeys_SPACE" );
 	//Left alt
-	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
-		InputHelper::KeyboardKeys_LEFT_ALT,
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_LEFT_ALT,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_LEFT_ALT),
 		"KeyboardKeys_LEFT_ALT" );
 	//Right alt
-	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
-		InputHelper::KeyboardKeys_RIGHT_ALT,
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_RIGHT_ALT,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_RIGHT_ALT),
 		"KeyboardKeys_RIGHT_ALT" );
 	// backspace
-	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
-		InputHelper::KeyboardKeys_BACKSPACE,
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_BACKSPACE,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_BACKSPACE),
-		"KEY_BACKSPACE" );
+		"KeyboardKeys_BACKSPACE" );
 	// return
-	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
-		InputHelper::KeyboardKeys_RETURN,
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_RETURN,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_RETURN),
-		"KEY_RETURN" );
+		"KeyboardKeys_RETURN" );
 	// esc
-	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, 
-		InputHelper::KeyboardKeys_ESC,
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_ESC,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_ESC),
-		"KEY_ESCAPE" );
+		"KeyboardKeys_ESCAPE" );
 	// f4
-	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, 
-		InputHelper::KeyboardKeys_F4,
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_F4,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_F4),
-		"KEY_F4" );
+		"KeyboardKeys_F4" );
 	// period
-	saveControl( InputHelper::InputDeviceTypes_KEYBOARD,
-		InputHelper::KeyboardKeys_PERIOD,
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_PERIOD,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_PERIOD),
-		"KEY_PERIOD" );
+		"KeyboardKeys_PERIOD" );
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_TAB,
+		factory.createKeyboardKey(InputHelper::KeyboardKeys_TAB),
+		"KeyboardKeys_TAB" );
 
 	// Intitiate cursor
 	// Moved Control set initialization for cursor to InputActionBackend's initialize().

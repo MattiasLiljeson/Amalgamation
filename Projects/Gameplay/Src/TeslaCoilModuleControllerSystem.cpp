@@ -133,7 +133,7 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 		TeslaHitPacket hitPacket;
 		hitPacket.identitySource = p_teslaEntity->getIndex();
 		while( hitIndex + hitIndexFloating < (unsigned int)hitPacket.NUM_TESLA_HITS_MAX &&
-			hitIndex < entitiesHit.size() )
+			hitIndex + hitIndexFloating < entitiesHit.size() )
 		{
 			ShipModule* otherModule = static_cast<ShipModule*>(m_world->getEntity(
 				entitiesHit[hitIndex])->getComponent(ComponentType::ShipModule));
