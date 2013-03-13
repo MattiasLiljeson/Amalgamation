@@ -15,10 +15,13 @@
 #include "ShieldModuleActivation.h"
 #include "AnimationUpdatePacket.h"
 #include "ServerDynamicPhysicalObjectsSystem.h"
+#include <PhysicsController.h>
+#include "ModuleHelper.h"
 
 ShieldModuleControllerSystem::ShieldModuleControllerSystem(TcpServer* p_server)
-	: EntitySystem(SystemType::ShieldModuleControllerSystem, 3,
-	ComponentType::ShieldModule, ComponentType::ShipModule, ComponentType::Transform)
+	: EntitySystem(SystemType::ShieldModuleControllerSystem, 5,
+	ComponentType::ShieldModule, ComponentType::ShipModule, ComponentType::Transform,
+	ComponentType::PhysicsBody, ComponentType::MeshOffsetTransform)
 {
 	m_server = p_server;
 }
@@ -30,6 +33,10 @@ ShieldModuleControllerSystem::~ShieldModuleControllerSystem()
 
 void ShieldModuleControllerSystem::initialize()
 {
+	m_dynamicSystem = static_cast<ServerDynamicPhysicalObjectsSystem*>(m_world->getSystem(
+		SystemType::ServerDynamicPhysicalObjectsSystem));
+	m_physSystem = static_cast<PhysicsSystem*>(m_world->getSystem(
+		SystemType::PhysicsSystem));
 }
 
 void ShieldModuleControllerSystem::processEntities(const vector<Entity*>& p_entities)
@@ -40,16 +47,16 @@ void ShieldModuleControllerSystem::processEntities(const vector<Entity*>& p_enti
 	{
 		ShipModule* module = static_cast<ShipModule*>(
 			p_entities[i]->getComponent(ComponentType::ShipModule));
-		ShieldModule* shield = static_cast<ShieldModule*>(
-			p_entities[i]->getComponent(ComponentType::ShieldModule));
-		shield->cooldown -= m_world->getDelta();
-		if(module->getActive())
+		if(module->isOwned())
 		{
-			ServerDynamicPhysicalObjectsSystem* dynamicSystem = static_cast<
-				ServerDynamicPhysicalObjectsSystem*>(m_world->getSystem(
-				SystemType::ServerDynamicPhysicalObjectsSystem));
-			processDynamicEntities(dynamicSystem->getActiveEntities());
-			
+			ShieldModule* shield = static_cast<ShieldModule*>(
+				p_entities[i]->getComponent(ComponentType::ShieldModule));
+			shield->cooldown -= m_world->getDelta();
+			if(shield->cooldown <= 0.0f && module->getActive())
+			{
+				shield->cooldown = shield->cooldownTime;
+				pushEntitiesBack(p_entities[i], m_dynamicSystem->getActiveEntities());
+			}
 		}
 
 		//if (module->m_parentEntity >= 0)
@@ -151,9 +158,55 @@ void ShieldModuleControllerSystem::processEntities(const vector<Entity*>& p_enti
 	}
 }*/
 
-void ShieldModuleControllerSystem::processDynamicEntities(
-	const vector<Entity*>& p_dynamics )
+void ShieldModuleControllerSystem::pushEntitiesBack(Entity* p_shield,
+	const vector<Entity*>& p_targets )
 {
+	Transform* sourceTransform = static_cast<Transform*>(p_shield->getComponent(
+		ComponentType::Transform));
+	for(unsigned int i=0; i<p_targets.size(); i++)
+	{
+		if(canTarget(p_shield, p_targets[i]))
+		{
+			Transform* targetTransform = static_cast<Transform*>(p_targets[i]->getComponent(
+				ComponentType::Transform));
+			AglVector3 dir = targetTransform->getTranslation() -
+				sourceTransform->getTranslation();
+			float lengthSquared = dir.lengthSquared();
+			if(lengthSquared < 1000.0f * 1000.0f)
+			{
+				dir.normalize();
+				PhysicsBody* targetBody = static_cast<PhysicsBody*>(p_targets[i]->
+					getComponent(ComponentType::PhysicsBody));
+				m_physSystem->getController()->ApplyExternalImpulse(targetBody->m_id,
+					dir * 1000.0f / lengthSquared, AglVector3::zero());
+			}
+		}
+	}
+}
+
+bool ShieldModuleControllerSystem::canTarget( Entity* p_shield, Entity* p_target ) const
+{
+	ShipModule* module = static_cast<ShipModule*>(p_shield->getComponent(
+		ComponentType::ShipModule));
+	Entity* shieldOwner = NULL;
+	ModuleHelper::FindParentShip(m_world, &shieldOwner, module);
+	ShipModule* targetModule = static_cast<ShipModule*>(p_target->getComponent(
+		ComponentType::ShipModule));
+	if(targetModule)
+	{
+		Entity* targetOwner = NULL;
+		ModuleHelper::FindParentShip(m_world, &targetOwner, targetModule);
+		if(!targetOwner ||
+			targetOwner && targetOwner->getIndex() != shieldOwner->getIndex())
+		{
+			if(p_shield != p_target &&
+				shieldOwner != p_target)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 void ShieldModuleControllerSystem::inserted( Entity* p_entity )

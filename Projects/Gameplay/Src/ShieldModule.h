@@ -21,6 +21,7 @@ public:
 
 public:
 	float cooldown;
+	float cooldownTime;
 	float shieldAge;
 
 };
