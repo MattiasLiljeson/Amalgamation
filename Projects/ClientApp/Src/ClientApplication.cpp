@@ -269,9 +269,13 @@ void ClientApplication::initSystems()
 	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, 
 		graphicsBackend );
 	m_world->setSystem( inputBackend );
-	m_world->setSystem( new InputActionsBackendSystem( SETTINGSPATH +"stdSettings.input"));
+
+	InputActionsBackendSystem* actionBackendSys =
+		new InputActionsBackendSystem( SETTINGSPATH + "settings.input" );
+	m_world->setSystem( actionBackendSys );
+
 	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend,
-		inputBackend );
+		inputBackend, actionBackendSys );
 	m_world->setSystem( rocketBackend );
 	m_world->setSystem( new LibRocketEventManagerSystem(m_client) );
 

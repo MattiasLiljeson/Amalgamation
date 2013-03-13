@@ -223,6 +223,9 @@ void DirectInputFetcher::createDikKeyMap()
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_X]			= DIK_X;
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_Y]			= DIK_Y;
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_Z]			= DIK_Z;
+	m_dikFromKeyMap[InputHelper::KeyboardKeys_AA]			= DIK_LBRACKET;
+	m_dikFromKeyMap[InputHelper::KeyboardKeys_AE]			= DIK_APOSTROPHE;
+	m_dikFromKeyMap[InputHelper::KeyboardKeys_OE]			= DIK_SEMICOLON;
 
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_LEFT_SHIFT]	= DIK_LSHIFT;
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_LEFT_CTRL]	= DIK_LCONTROL;
@@ -232,10 +235,17 @@ void DirectInputFetcher::createDikKeyMap()
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_RIGHT_CTRL]	= DIK_RCONTROL;
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_RIGHT_SHIFT]	= DIK_RSHIFT;
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_BACKSPACE]	= DIK_BACKSPACE;
+	m_dikFromKeyMap[InputHelper::KeyboardKeys_DELETE]		= DIK_DELETE;
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_RETURN]		= DIK_RETURN;
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_PERIOD]		= DIK_PERIOD;
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_ESC]			= DIK_ESCAPE;
+
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_TAB]			= DIK_TAB;
+	m_dikFromKeyMap[InputHelper::KeyboardKeys_CAPS_LOCK]	= DIK_CAPITAL;
+	m_dikFromKeyMap[InputHelper::KeyboardKeys_NUM_LOCK]		= DIK_NUMLOCK;
+	m_dikFromKeyMap[InputHelper::KeyboardKeys_SCROLL_LOCK]	= DIK_SCROLL;
+	m_dikFromKeyMap[InputHelper::KeyboardKeys_LEFT_WIN]		= DIK_LWIN;
+	m_dikFromKeyMap[InputHelper::KeyboardKeys_RIGHT_WIN]	= DIK_RWIN;
 
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_LEFT]			= DIK_LEFT;
 	m_dikFromKeyMap[InputHelper::KeyboardKeys_UP]			= DIK_UP;

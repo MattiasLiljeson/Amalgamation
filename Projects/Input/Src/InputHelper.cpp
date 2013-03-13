@@ -1,17 +1,6 @@
 #include "InputHelper.h"
 #include <cstring>
 
-	//libRocketFromKeysMap[W]		= Rocket::Core::Input::KI_W;
-	//libRocketFromKeysMap[A]		= Rocket::Core::Input::KI_A;
-	//libRocketFromKeysMap[S]		= Rocket::Core::Input::KI_S;
-	//libRocketFromKeysMap[D]		= Rocket::Core::Input::KI_D;
-	//libRocketFromKeysMap[SPACE] = Rocket::Core::Input::KI_SPACE;
-	//libRocketFromKeysMap[LCTRL] = Rocket::Core::Input::KI_LCONTROL;
-	//libRocketFromKeysMap[F1]	= Rocket::Core::Input::KI_F1;
-	//libRocketFromKeysMap[F2]	= Rocket::Core::Input::KI_F2;
-	//libRocketFromKeysMap[F3]	= Rocket::Core::Input::KI_F3;
-	//libRocketFromKeysMap[F4]	= Rocket::Core::Input::KI_F4;
-
 // Gives performance warning, therefore commented away.
 //InputHelper::KeyStates InputHelper::calcState( const InputHelper::KeyStates p_oldState,
 //											  const int p_down )
@@ -185,6 +174,10 @@ void InputHelper::initialize()
 	upperCaseCharacterMap[KeyboardKeys_X] = 'X';
 	upperCaseCharacterMap[KeyboardKeys_Y] = 'Y';
 	upperCaseCharacterMap[KeyboardKeys_Z] = 'Z';
+	// As we're using ASCII char set. We can't use unicode chars which libRocket enforces
+	//upperCaseCharacterMap[KeyboardKeys_AA] = 'Å';
+	//upperCaseCharacterMap[KeyboardKeys_AE] = 'Ä';
+	//upperCaseCharacterMap[KeyboardKeys_OE] = 'Ö';
 	upperCaseCharacterMap[KeyboardKeys_0] = '0';
 	upperCaseCharacterMap[KeyboardKeys_1] = '1';
 	upperCaseCharacterMap[KeyboardKeys_2] = '2';
@@ -223,6 +216,10 @@ void InputHelper::initialize()
 	lowerCaseCharacterMap[KeyboardKeys_X] = 'x';
 	lowerCaseCharacterMap[KeyboardKeys_Y] = 'y';
 	lowerCaseCharacterMap[KeyboardKeys_Z] = 'z';
+	// As we're using ASCII char set. We can't use unicode chars which libRocket enforces
+	//lowerCaseCharacterMap[KeyboardKeys_AA] = 'å';
+	//lowerCaseCharacterMap[KeyboardKeys_AE] = 'ä';
+	//lowerCaseCharacterMap[KeyboardKeys_OE] = 'ö';
 	lowerCaseCharacterMap[KeyboardKeys_0] = '0';
 	lowerCaseCharacterMap[KeyboardKeys_1] = '1';
 	lowerCaseCharacterMap[KeyboardKeys_2] = '2';

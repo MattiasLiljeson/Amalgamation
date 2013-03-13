@@ -1,28 +1,30 @@
 #include "libRocketBackendSystem.h"
 
+#include "ClientConnectToServerSystem.h"
+#include "ClientStateSystem.h"
 #include "GraphicsBackendSystem.h"
+#include "InputActionsBackendSystem.h"
 #include "InputBackendSystem.h"
+#include "LibRocketEventManagerSystem.h"
+#include "LibRocketInputHelper.h"
 #include "LibRocketRenderInterface.h"
 #include "LibRocketSystemInterface.h"
 #include <AntTweakBarWrapper.h>
 #include <Control.h>
 #include <Cursor.h>
+#include <DebugUtil.h>
+#include <EventInstancer.h>
 #include <Globals.h>
 #include <GraphicsWrapper.h>
-#include <DebugUtil.h>
 #include <Rocket/Controls.h>
-#include <EventInstancer.h>
-#include "LibRocketInputHelper.h"
-#include "ClientConnectToServerSystem.h"
-#include "LibRocketEventManagerSystem.h"
-#include "ClientStateSystem.h"
 
-LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend
-											   , InputBackendSystem* p_inputBackend )
+LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend,
+	InputBackendSystem* p_inputBackend, InputActionsBackendSystem* p_actionBackend )
 	: EntitySystem( SystemType::LibRocketBackendSystem )
 {
 	m_graphicsBackend = p_graphicsBackend;
 	m_inputBackend = p_inputBackend;
+	m_actionBackend = p_actionBackend;
 	m_renderGUI = true;
 	m_renderDebug = false;
 }
@@ -261,38 +263,39 @@ void LibRocketBackendSystem::process()
 		m_rocketContext->SetDimensions(Rocket::Core::Vector2i(m_wndWidth,m_wndHeight));
 	}
 
-	// Debug help functionality
+	// Show libRocket visual debugger
 	if(m_inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys::KeyboardKeys_0) > 0.5f){
 		m_renderDebug = !m_renderDebug;
 		Rocket::Debugger::SetVisible( m_renderDebug );
 	}
 	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
 		getSystem(SystemType::ClientStateSystem));
-	if(stateSystem->getCurrentState() == GameStates::MENU ||
-		stateSystem->getCurrentState() == GameStates::LOBBY)
-	{
-		if(m_inputBackend->getDeltaByEnum(InputHelper::MouseButtons_RIGHT) > 0.0 ||
-			m_inputBackend->getDeltaByEnum(InputHelper::Xbox360Digitals_SHOULDER_PRESS_L) > 0.0)
-		{
+
+	// Rotate ship in the menu. Hide the menu so that the ship can be seen
+	GameStates state = stateSystem->getCurrentState();
+	if( state == GameStates::MENU || state == GameStates::LOBBY ) {
+		double secondaryDelta = m_actionBackend->getDeltaByAction(
+			InputActionsBackendSystem::Actions_CURSOR_SECONDARY );
+		if( secondaryDelta > 0.5) {
 			m_renderGUI = false;
-		}
-		else if(m_inputBackend->getDeltaByEnum(InputHelper::MouseButtons_RIGHT) < 0.0 ||
-			m_inputBackend->getDeltaByEnum(InputHelper::Xbox360Digitals_SHOULDER_PRESS_L) < 0.0)
-		{
+		} else if( secondaryDelta < -0.5 ) {
 			m_renderGUI = true;
 		}
 	}
-	else if(stateSystem->getCurrentState() == GameStates::INGAME){
+
+	// DEBUG: Turn off GUI during gameplay
+	else if(stateSystem->getCurrentState() == GameStates::INGAME) {
 		if(m_inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys::KeyboardKeys_9) > 0.5f ){
 			m_renderGUI = !m_renderGUI;
 		}
 	}
-	else
-	{
+
+	//Always shot GUI otherwise
+	else {
 		m_renderGUI = true;
 	}
 	
-	processMouseMove();
+	processCursorMove();
 	processKeyStates();
 
 	m_rocketContext->Update();
@@ -311,44 +314,57 @@ Rocket::Core::Context* LibRocketBackendSystem::getContext() const
 	return m_rocketContext;
 }
 
-void LibRocketBackendSystem::processMouseMove()
+void LibRocketBackendSystem::processCursorMove()
 {
 	GraphicsWrapper* gfx = m_graphicsBackend->getGfxWrapper();
 
-	pair<int,int> mousePos = gfx->getScreenPixelPosFromNDC( (float)m_cursor->getX(),
+	pair<int,int> cursorPos = gfx->getScreenPixelPosFromNDC( (float)m_cursor->getX(),
 		(float)m_cursor->getY());
-	int mouseX = mousePos.first;
-	int mouseY = mousePos.second;
+	int cursorX = cursorPos.first;
+	int cursorY = cursorPos.second;
 
-	m_rocketContext->ProcessMouseMove( mouseX, mouseY, 0 );
-	m_rocketContext->ShowMouseCursor(m_cursor->isVisible());
-	if( m_cursor->getPrimaryState() == InputHelper::KeyStates_KEY_PRESSED )
-	{
-		m_rocketContext->ProcessMouseButtonDown( 0, 0 );
+	int keyModifiers = getKeyModifiers();
+
+	m_rocketContext->ProcessMouseMove( cursorX, cursorY, keyModifiers );
+	m_rocketContext->ShowMouseCursor( m_cursor->isVisible() );
+
+	if( m_cursor->getPrimaryState() == InputHelper::KeyStates_KEY_PRESSED ) {
+		m_rocketContext->ProcessMouseButtonDown( 0, keyModifiers );
+	} else if( m_cursor->getPrimaryState() == InputHelper::KeyStates_KEY_RELEASED ) {
+		m_rocketContext->ProcessMouseButtonUp( 0, keyModifiers );
 	}
-	else if( m_cursor->getPrimaryState() == InputHelper::KeyStates_KEY_RELEASED )
-	{
-		m_rocketContext->ProcessMouseButtonUp( 0, 0 );
+
+	if( m_cursor->getSecondaryState() == InputHelper::KeyStates_KEY_PRESSED ) {
+		m_rocketContext->ProcessMouseButtonDown( 1, keyModifiers );
+	} else if( m_cursor->getSecondaryState() == InputHelper::KeyStates_KEY_RELEASED ) {
+		m_rocketContext->ProcessMouseButtonUp( 1, keyModifiers );
 	}
 }
 
 void LibRocketBackendSystem::processKeyStates()
 {
-	for (int keyCode = 0; keyCode < InputHelper::KeyboardKeys_CNT; keyCode++)
+	int keyModifiers = getKeyModifiers();
+
+	bool caps = false;
+	double shiftPressness = 0.0;
+	shiftPressness += m_inputBackend->getStatusByEnum( InputHelper::KeyboardKeys_LEFT_SHIFT );
+	shiftPressness += m_inputBackend->getStatusByEnum( InputHelper::KeyboardKeys_RIGHT_SHIFT );
+	if( shiftPressness > 0.5 ) {
+		caps = true;
+	}
+
+
+	for( int keyCode=0; keyCode<InputHelper::KeyboardKeys_CNT; keyCode++ )
 	{
-		InputHelper::KeyboardKeys kbk = (InputHelper::KeyboardKeys)keyCode;
-		Control* control = m_inputBackend->getControlByEnum(kbk);
-		if (LibRocketInputHelper::isKeyMapped(keyCode) && control->getDelta() != 0)
-		{
+		InputHelper::KeyboardKeys key = (InputHelper::KeyboardKeys)keyCode;
+		Control* control = m_inputBackend->getControlByEnum(key);
+		if (LibRocketInputHelper::isKeyMapped(keyCode) && control->getDelta() != 0) {
 			if (control->getStatus() > 0.5f)
 			{
-				/*DEBUGPRINT(((toString("Key ") +
-							toString(keyCode) + 
-							toString(" was pressed\n")).c_str()));*/
 				m_rocketContext->ProcessKeyDown(
-					LibRocketInputHelper::rocketKeyFromInputKey(keyCode), 0);
+					LibRocketInputHelper::rocketKeyFromInputKey(keyCode), keyModifiers);
 
-				char c = InputHelper::charFromKeyboardKey(kbk);
+				char c = InputHelper::charFromKeyboardKey(key, caps);
 				if (c != InputHelper::NONPRINTABLE_CHAR)
 				{	
 					m_rocketContext->ProcessTextInput(c);
@@ -356,16 +372,65 @@ void LibRocketBackendSystem::processKeyStates()
 			}
 			else
 			{
-				/*DEBUGPRINT(((toString("Key ") +
-							toString(keyCode) + 
-							toString(" was released\n")).c_str()));*/
 				m_rocketContext->ProcessKeyUp(
-					LibRocketInputHelper::rocketKeyFromInputKey(keyCode), 0);
+					LibRocketInputHelper::rocketKeyFromInputKey(keyCode), keyModifiers);
 			}
 
 		}
 	}
 }
+
+
+int LibRocketBackendSystem::getKeyModifiers()
+{
+	int keyModifiers = 0;
+
+	double ctrlPressness = 0.0;
+	ctrlPressness += m_inputBackend->getStatusByEnum( InputHelper::KeyboardKeys_LEFT_CTRL );
+	ctrlPressness += m_inputBackend->getStatusByEnum( InputHelper::KeyboardKeys_RIGHT_CTRL );
+	if( ctrlPressness > 0.5 ) {
+		keyModifiers |= Rocket::Core::Input::KM_CTRL;
+	}
+
+	double shiftPressness = 0.0;
+	shiftPressness += m_inputBackend->getStatusByEnum( InputHelper::KeyboardKeys_LEFT_SHIFT );
+	shiftPressness += m_inputBackend->getStatusByEnum( InputHelper::KeyboardKeys_RIGHT_SHIFT );
+	if( shiftPressness > 0.5 ) {
+		keyModifiers |= Rocket::Core::Input::KM_SHIFT;
+	}
+
+	double altPressness = 0.0;
+	altPressness += m_inputBackend->getStatusByEnum( InputHelper::KeyboardKeys_LEFT_ALT );
+	altPressness += m_inputBackend->getStatusByEnum( InputHelper::KeyboardKeys_RIGHT_ALT );
+	if( ctrlPressness > 0.5 ) {
+		keyModifiers |= Rocket::Core::Input::KM_ALT;
+	}
+
+	double winPressness = 0.0;
+	winPressness += m_inputBackend->getStatusByEnum( InputHelper::KeyboardKeys_LEFT_WIN );
+	winPressness += m_inputBackend->getStatusByEnum( InputHelper::KeyboardKeys_RIGHT_WIN );
+	if( winPressness > 0.5 ) {
+		keyModifiers |= Rocket::Core::Input::KM_META;
+	}
+
+	double capsPressness = m_inputBackend->getStatusByEnum( InputHelper::KeyboardKeys_CAPS_LOCK );
+	if( capsPressness > 0.5 ) {
+		keyModifiers |= Rocket::Core::Input::KM_CAPSLOCK;
+	}
+	
+	double numPressness = m_inputBackend->getStatusByEnum( InputHelper::KeyboardKeys_NUM_LOCK );
+	if( numPressness > 0.5 ) {
+		keyModifiers |= Rocket::Core::Input::KM_NUMLOCK;
+	}
+
+	double scrollPressness = m_inputBackend->getStatusByEnum( InputHelper::KeyboardKeys_SCROLL_LOCK );
+	if( scrollPressness > 0.5 ) {
+		keyModifiers |= Rocket::Core::Input::KM_SCROLLLOCK;
+	}
+
+	return keyModifiers;
+}
+
 
 void LibRocketBackendSystem::showCursor()
 {
