@@ -168,7 +168,7 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 						}
 						ps->getParticleSystemFromIdx(0)->updateData.spawnPoint = target;
 						ps->getParticleSystemFromIdx(1)->updateData.spawnPoint = target;
-						if (ship)
+						if (ship && gun->cooldown <= 0)
 						{
 							gun->lockCoolDown = max(0, gun->lockCoolDown - m_world->getDelta());
 							gun->target = ship->getIndex();
