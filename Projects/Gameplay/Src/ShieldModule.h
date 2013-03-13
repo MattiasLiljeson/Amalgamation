@@ -1,13 +1,12 @@
 #pragma once
-
 #include <Component.h>
-
+#include <ComponentFactory.h>
 // =======================================================================================
 //	ShieldModule
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Describes a module that boosts the ship speed
+/// \brief A module that when activated pushes other entities away with great force.
 ///        
 /// # PlayerScore
 /// Detailed description...
@@ -18,9 +17,18 @@ class ShieldModule: public Component
 {
 public:
 	ShieldModule();
+	void init( vector<ComponentData> p_initData ) final;
 
 public:
 	float cooldown;
-	float shieldAge;
+	float cooldownTime;
+	float activation;
+	float activationTime;
 
+	float maxRange;
+	float minRange;
+	float impulse;
+
+public:
+	static ComponentRegister<ShieldModule> s_reg;
 };
