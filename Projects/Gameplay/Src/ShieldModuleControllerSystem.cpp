@@ -14,9 +14,10 @@
 #include "SpawnSoundEffectPacket.h"
 #include "ShieldModuleActivation.h"
 #include "AnimationUpdatePacket.h"
+#include "ServerDynamicPhysicalObjectsSystem.h"
 
 ShieldModuleControllerSystem::ShieldModuleControllerSystem(TcpServer* p_server)
-	: EntitySystem(SystemType::ShieldModuleControllerSystem, 2,
+	: EntitySystem(SystemType::ShieldModuleControllerSystem, 3,
 	ComponentType::ShieldModule, ComponentType::ShipModule, ComponentType::Transform)
 {
 	m_server = p_server;
@@ -38,19 +39,29 @@ void ShieldModuleControllerSystem::processEntities(const vector<Entity*>& p_enti
 	for (unsigned int i = 0; i < p_entities.size(); i++)
 	{
 		ShipModule* module = static_cast<ShipModule*>(
-			m_world->getComponentManager()->getComponent(p_entities[i],
-			ComponentType::getTypeFor(ComponentType::ShipModule)));
-		if (module->m_parentEntity >= 0)
+			p_entities[i]->getComponent(ComponentType::ShipModule));
+		ShieldModule* shield = static_cast<ShieldModule*>(
+			p_entities[i]->getComponent(ComponentType::ShieldModule));
+		shield->cooldown -= m_world->getDelta();
+		if(module->getActive())
 		{
-			ShieldModule* shieldModule = static_cast<ShieldModule*>(
-				m_world->getComponentManager()->getComponent(p_entities[i],
-				ComponentType::getTypeFor(ComponentType::ShieldModule)));
+			ServerDynamicPhysicalObjectsSystem* dynamicSystem = static_cast<
+				ServerDynamicPhysicalObjectsSystem*>(m_world->getSystem(
+				SystemType::ServerDynamicPhysicalObjectsSystem));
+			processDynamicEntities(dynamicSystem->getActiveEntities());
 			
-			handleShieldEntity(shieldModule, m_world->getEntity(module->m_parentEntity), module->getActive(), p_entities[i]);
 		}
+
+		//if (module->m_parentEntity >= 0)
+		//{
+		//	ShieldModule* shieldModule = static_cast<ShieldModule*>(
+		//		m_world->getComponentManager()->getComponent(p_entities[i],
+		//		ComponentType::getTypeFor(ComponentType::ShieldModule)));
+		//	handleShieldEntity(shieldModule, m_world->getEntity(module->m_parentEntity), module->getActive(), p_entities[i]);
+		//}
 	}
 }
-void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity, bool p_active, Entity* p_e)
+/*void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity, bool p_active, Entity* p_e)
 {
 	Transform* parentTransform = static_cast<Transform*>(
 		m_world->getComponentManager()->getComponent(p_parentEntity,
@@ -68,10 +79,10 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 		if (p_active)
 		{
 			//Handle animation
-			if (p_module->m_shieldAge == 0)
+			if (p_module->shieldAge == 0)
 				activateShield(p_e);
 
-			p_module->m_shieldAge++;
+			p_module->shieldAge++;
 
 
 			transform->setTranslation(parentTransform->getTranslation());
@@ -105,9 +116,9 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 		}
 		else
 		{
-			if (p_module->m_shieldAge != 0)
+			if (p_module->shieldAge != 0)
 				deactivateShield(p_e);
-			p_module->m_shieldAge = 0;
+			p_module->shieldAge = 0;
 			transform->setScale(AglVector3(0, 0, 0));
 		}
 	}
@@ -138,6 +149,11 @@ void ShieldModuleControllerSystem::handleShieldEntity(ShieldModule* p_module, En
 //
 //		m_server->broadcastPacket(data.pack());
 	}
+}*/
+
+void ShieldModuleControllerSystem::processDynamicEntities(
+	const vector<Entity*>& p_dynamics )
+{
 }
 
 void ShieldModuleControllerSystem::inserted( Entity* p_entity )

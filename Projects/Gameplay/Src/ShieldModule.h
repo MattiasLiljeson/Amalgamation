@@ -17,11 +17,10 @@
 class ShieldModule: public Component
 {
 public:
-	float m_cooldown;
-	float m_shieldAge;
-	int m_shieldEntity;
 	ShieldModule();
-	~ShieldModule();
-private:
+
+public:
+	float cooldown;
+	float shieldAge;
 
 };
