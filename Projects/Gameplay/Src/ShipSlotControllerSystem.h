@@ -38,6 +38,8 @@ private:
 	void sendSlot90Sub();
 	void sendSlot90Add();
 
+	void sendPreferredSlotToggle();
+
 private:
 	InputActionsBackendSystem* m_actionBackend;
 	InputBackendSystem* m_inputBackend;

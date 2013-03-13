@@ -547,19 +547,22 @@ void ServerPickingSystem::attemptConnect(PickComponent& p_ray)
 		if (!conPoints)
 			return;
 
-		int sel = -1;
+		vector<int> available;
 		for (unsigned int i = 0; i < conPoints->m_connectionPoints.size(); i++)
 		{
 			if (conPoints->m_connectionPoints[i].cpConnectedEntity < 0)
 			{
-				sel = i;
-				break;
+				available.push_back(i);
 			}
 		}
 
 		//Don't allow connection if the module doesn't have any free connection points
-		if (sel < 0)
+		if (available.size() == 0)
 			return;
+
+		if (p_ray.m_desiredSlot >= available.size())
+			p_ray.m_desiredSlot = 0;
+		int sel = available[p_ray.m_desiredSlot];
 
 		//Target
 		Entity* target = m_world->getEntity(p_ray.m_targetEntity);
@@ -901,6 +904,17 @@ void ServerPickingSystem::addRotationEvent(int direction, int client)
 		}
 	}
 }
+void ServerPickingSystem::togglePreferredSlot(int client)
+{
+	for (unsigned int i = 0; i < m_pickComponents.size(); i++)
+	{
+		if (client == m_pickComponents[i].m_clientIndex)
+		{
+			m_pickComponents[i].m_desiredSlot++;
+			break;
+		}
+	}
+}
 void ServerPickingSystem::add90RotationEvent(int direction, int client)
 {
 	for (unsigned int i = 0; i < m_pickComponents.size(); i++)
@@ -1017,19 +1031,22 @@ void ServerPickingSystem::updateSelectionMarker(PickComponent& p_ray)
 		if (!conPoints)
 			return;
 
-		int sel = -1;
+		vector<int> available;
 		for (unsigned int i = 0; i < conPoints->m_connectionPoints.size(); i++)
 		{
 			if (conPoints->m_connectionPoints[i].cpConnectedEntity < 0)
 			{
-				sel = i;
-				break;
+				available.push_back(i);
 			}
 		}
 
 		//Don't allow connection if the module doesn't have any free connection points
-		if (sel < 0)
+		if (available.size() == 0)
 			return;
+
+		if (p_ray.m_desiredSlot >= available.size())
+			p_ray.m_desiredSlot = 0;
+		int sel = available[p_ray.m_desiredSlot];
 
 		//Target
 		Entity* target = m_world->getEntity(p_ray.m_targetEntity);

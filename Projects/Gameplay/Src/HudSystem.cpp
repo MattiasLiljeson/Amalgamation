@@ -8,6 +8,7 @@
 #include <AglParticleSystem.h>
 #include "Transform.h"
 #include "GraphicsBackendSystem.h"
+#include "GameplayTags.h"
 
 HudSystem::HudSystem( LibRocketBackendSystem* p_backend )
 	: EntitySystem( SystemType::HudSystem )
@@ -46,7 +47,7 @@ void HudSystem::process()
 
 		m_screenSize = gfx->getWindowSize();
 
-		float screenRatio = 1280 / m_screenSize.x;
+		float screenRatio = gfx->getAspectRatio();
 
 		/*float wingRatio = 228.0f / 527.0f;
 		AglVector2 wingsize = AglVector2(1.0f, 1.0f*gfx->getAspectRatio() * wingRatio) * screenRatio;
@@ -55,14 +56,16 @@ void HudSystem::process()
 		AglVector2 timerSize = AglVector2(0.4f, 0.4f*gfx->getAspectRatio() * timerRatio) * screenRatio;
 		*/
 		float constRatio = 65.0f / 1025.0f;
-		AglVector2 constSize = AglVector2(0.4f, 0.4f*gfx->getAspectRatio() * constRatio) * screenRatio;
+		AglVector2 constSize = AglVector2(0.6f, 0.6f*gfx->getAspectRatio() * constRatio) * screenRatio;
 
 		/*m_leftWing = createSprite(AglVector3(-1.0f+wingsize.x*0.5f, 1.0f-wingsize.y*0.5f, 0.0f), "leftwing_HUD.png", wingsize);
 		m_rightWing = createSprite(AglVector3(1.0f-wingsize.x*0.5f, 1.0f-wingsize.y*0.5f, 0.0f), "rightwing_HUD.png", wingsize);
 		m_timerMonitor = createSprite(AglVector3(0.0f, 1.0f-timerSize.y, 0.0f), "timer_HUD.png", timerSize);*/
 
 
-		m_constructionMode = createConstructionSprite(AglVector3(-1.0f+constSize.x*0.5f, -1.0f-constSize.y + 0.3f, 0.0f), "construction_mode_label.png", constSize);
+		m_constructionMode = createConstructionSprite(
+			AglVector3(0.0f, -1.0f-constSize.y + 0.5f, 0.0f), 
+			"construction_mode_label.png", constSize);
 	}
 	else if (stateSystem->getCurrentState() == GameStates::INGAME)
 	{
@@ -82,14 +85,37 @@ void HudSystem::process()
 			AglVector2 timerSize = AglVector2(0.4f, 0.4f*gfx->getAspectRatio() * timerRatio) * screenRatio;
 			*/
 			float constRatio = 65.0f / 1025.0f;
-			AglVector2 constSize = AglVector2(0.4f, 0.4f*gfx->getAspectRatio() * constRatio) * screenRatio;
+			AglVector2 constSize = AglVector2(0.6f, 0.6f*gfx->getAspectRatio() * constRatio) * screenRatio;
 			/*
 			reinitSprite(m_leftWing, AglVector3(-1.0f+wingsize.x*0.5f, 1.0f-wingsize.y*0.5f, 0.0f), wingsize);
 			reinitSprite(m_rightWing, AglVector3(1.0f-wingsize.x*0.5f, 1.0f-wingsize.y*0.5f, 0.0f), wingsize);
 			reinitSprite(m_timerMonitor, AglVector3(0.0f, 1.0f-timerSize.y, 0.0f), timerSize);*/
 			
-			reinitSprite(m_constructionMode, AglVector3(-1.0f+constSize.x*0.5f, -1.0f-constSize.y + 0.3f, 0.0f), constSize);
+			reinitSprite(m_constructionMode, AglVector3(0.0f, -1.0f-constSize.y + 0.5f, 0.0f), constSize);
 		}
+		
+		EntityManager* entitymanager = m_world->getEntityManager();
+		
+		Entity* ship = entitymanager->getFirstEntityByComponentType(ComponentType::TAG_MyShip);
+		ShipEditMode_TAG* editMode = static_cast<ShipEditMode_TAG*>(ship->getComponent(ComponentType::TAG_ShipEditMode));
+		if (editMode)
+		{
+			ParticleSystemsComponent* ps = static_cast<ParticleSystemsComponent*>(
+				m_constructionMode->getComponent(ComponentType::ParticleSystemsComponent));
+			ps->getParticleSystemPtr(0)->getHeaderPtr()->color = AglVector4(1, 1, 1, 1);
+		}
+		else
+		{
+			
+			ParticleSystemsComponent* ps = static_cast<ParticleSystemsComponent*>(
+				m_constructionMode->getComponent(ComponentType::ParticleSystemsComponent));
+			AglParticleSystem* partSystem = ps->getParticleSystemPtr(0);
+			if(partSystem){
+				partSystem->getHeaderPtr()->color = AglVector4(0, 0, 0, 0);
+			}
+		}
+		
+
 	}
 	else if(stateSystem->getStateDelta(GameStates::RESULTS) == EnumGameDelta::ENTEREDTHISFRAME){
 		m_backend->hideDocument(m_hudIndex);
@@ -153,7 +179,8 @@ Entity* HudSystem::createSprite(AglVector3 p_position, string p_texture, AglVect
 	m_world->addEntity(sprite);
 	return sprite;
 }
-Entity* HudSystem::createConstructionSprite(AglVector3 p_position, string p_texture, AglVector2 p_size)
+Entity* HudSystem::createConstructionSprite(AglVector3 p_position, string p_texture, 
+											AglVector2 p_size)
 {
 	Entity* sprite = m_world->createEntity();
 
@@ -163,17 +190,17 @@ Entity* HudSystem::createConstructionSprite(AglVector3 p_position, string p_text
 
 	AglParticleSystem ps;
 	ps.setSpawnPoint(p_position);
-	ps.setSpawnType(AglParticleSystemHeader::CONTINUOUSLY);
+	ps.setSpawnType(AglParticleSystemHeader::ONCE);
 	ps.setAlignmentType(AglParticleSystemHeader::SCREEN);
 	ps.getHeaderPtr()->blendMode = AglParticleSystemHeader::AglBlendMode_ALPHA;
 	ps.setSpawnSpace(AglParticleSystemHeader::AglSpace_SCREEN);
 	ps.setParticleSpace(AglParticleSystemHeader::AglSpace_SCREEN);
 	ps.setParticleSize(p_size);
-	ps.setParticleAge(2.0f);
+	ps.setParticleAge(10000000.0f);
 	ps.setMaxOpacity(1.0f);
-	ps.setFadeOutStart(1.0f);
-	ps.setFadeInStop(1.0f);
-	ps.setSpawnFrequency(0.5f);
+	ps.setFadeOutStart(10000000.0f);
+	ps.setFadeInStop(0.0f);
+	ps.setSpawnFrequency(1.0f);
 
 	ParticleSystemInstruction particleInstructionFlares;
 	particleInstructionFlares.textureFileName = p_texture.c_str();

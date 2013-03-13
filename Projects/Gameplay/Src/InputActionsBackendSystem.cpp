@@ -125,6 +125,7 @@ void InputActionsBackendSystem::initControlMap()
 	m_actionMap["Actions_ROTATE_MODULE_RIGHT"]			= Actions_ROTATE_MODULE_RIGHT;
 	m_actionMap["Actions_ROTATE90_MODULE_LEFT"]			= Actions_ROTATE90_MODULE_LEFT;
 	m_actionMap["Actions_ROTATE90_MODULE_RIGHT"]		= Actions_ROTATE90_MODULE_RIGHT;
+	m_actionMap["Actions_TOGGLE_DESIRED_SLOT"]			= Actions_TOGGLE_DESIRED_SLOT;
 	m_actionMap["Actions_STRAFE_LEFT"]					= Actions_STRAFE_LEFT;
 	m_actionMap["Actions_STRAFE_RIGHT"]					= Actions_STRAFE_RIGHT;
 	m_actionMap["Actions_STRAFE_UP"]					= Actions_STRAFE_UP;

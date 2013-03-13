@@ -10,16 +10,17 @@
 #include "ClientStateSystem.h"
 #include "MenuSystem.h"
 #include "TimerSystem.h"
-#include "GameSettingsInfo.h"
 
 GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphicsBackend,
-	ShadowSystem*	p_shadowSystem, RenderInterface* p_mesh, RenderInterface* p_libRocket, 
-	RenderInterface* p_particle, RenderInterface* p_antTweakBar, RenderInterface* p_light,
-	GameSettingsInfo& p_settings ) 
+											   RenderInterface* p_mesh, 
+											   RenderInterface* p_libRocket,
+											   RenderInterface* p_particle, 
+											   RenderInterface* p_antTweakBar, 
+											   RenderInterface* p_light,
+											   GameSettingsInfo& p_settings ) 
 	: EntitySystem( SystemType::GraphicsRendererSystem )
 {
 	m_backend						= p_graphicsBackend;
-	m_shadowSystem					= p_shadowSystem;
 	m_meshRenderer					= p_mesh;
 	m_libRocketRenderSystem			= p_libRocket;
 	m_particleRenderSystem			= p_particle;

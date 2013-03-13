@@ -19,6 +19,7 @@ public:
 		m_latestAttached = -1;
 		m_rotationDirection = 0;
 		m_lastHovered = -1;
+		m_desiredSlot = 0;
 	}
 
 	~PickComponent() {}
@@ -43,6 +44,8 @@ public:
 
 	int m_targetEntity; ///< current entity to receive latest pick if released
 	int m_targetSlot; ///< idx to current target connection point of targetentity
+
+	int m_desiredSlot; ///< desiredSlot on the module to be placed.
 
 	//Used for rotation
 	int m_latestAttached;

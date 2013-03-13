@@ -51,18 +51,6 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 	{
 		NetworkSynced* netSync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(ComponentType::NetworkSynced));
 		
-		for (unsigned int j = 0; j < m_toHighlight.size(); j++)
-		{
-			if (m_toHighlight[j].id == netSync->getNetworkOwner())
-			{
-				//Do highlight
-				changeHighlight(p_entities[i], m_toHighlight[j].slot,
-					m_toHighlight[j].status);
-				m_toHighlight[j] = m_toHighlight.back();
-				m_toHighlight.pop_back();
-				j--;
-			}
-		}
 		for (unsigned int j = 0; j < m_toActivate.size(); j++)
 		{
 			if (m_toActivate[j] == netSync->getNetworkOwner())
@@ -82,6 +70,18 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 				setActivation(p_entities[i], false);
 				m_toDeactivate[j] = m_toDeactivate.back();
 				m_toDeactivate.pop_back();
+				j--;
+			}
+		}
+		for (unsigned int j = 0; j < m_toHighlight.size(); j++)
+		{
+			if (m_toHighlight[j].id == netSync->getNetworkOwner())
+			{
+				//Do highlight
+				changeHighlight(p_entities[i], m_toHighlight[j].slot,
+					m_toHighlight[j].status);
+				m_toHighlight[j] = m_toHighlight.back();
+				m_toHighlight.pop_back();
 				j--;
 			}
 		}	

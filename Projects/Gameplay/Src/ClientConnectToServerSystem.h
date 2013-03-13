@@ -35,6 +35,10 @@ public:
 
 	bool setAddressAndConnect(const std::string& p_address, const std::string& p_port);
 	bool setConnectionAddress(const std::string& p_address, const std::string& p_port);
+
+	string getServerAddress();
+	string getServerPort();
+	int getServerPortByInt();
 private:
 	bool validateNetworkAddress(const std::string& p_address, const std::string& p_port);
 	bool validateIPFormat(const std::string& p_address);

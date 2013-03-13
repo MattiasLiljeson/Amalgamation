@@ -51,6 +51,25 @@ void ClientConnectToServerSystem::connectToNetworkAddress()
 	m_isLookingForConnection = true;
 }
 
+
+std::string ClientConnectToServerSystem::getServerAddress()
+{
+	return m_serverAddress;
+}
+
+std::string ClientConnectToServerSystem::getServerPort()
+{
+	return m_serverPort;
+}
+
+int ClientConnectToServerSystem::getServerPortByInt()
+{
+	istringstream buffer(m_serverPort);
+	int portValue;
+	buffer >> portValue;
+	return portValue;
+}
+
 bool ClientConnectToServerSystem::setAddressAndConnect( const std::string& p_address, 
 													   const std::string& p_port )
 {
@@ -114,3 +133,6 @@ bool ClientConnectToServerSystem::validatePortFormat( const std::string& p_port 
 
 	return true;
 }
+
+
+
