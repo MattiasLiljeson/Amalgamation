@@ -49,9 +49,10 @@
 #include "ClientPacketHandlerSystem.h"
 #include "PlayerReadyPacket.h"
 #include "LobbySystem.h"
+#include "MenuSystem.h"
 
 LibRocketEventManagerSystem::LibRocketEventManagerSystem(TcpClient* p_client)
-	: EntitySystem(SystemType::LibRocketEventManagerSystem, 1, ComponentType::GameState)
+	: EntitySystem(SystemType::LibRocketEventManagerSystem)
 {
 	m_context = NULL;
 	wantsToExit = false;
@@ -146,7 +147,6 @@ void LibRocketEventManagerSystem::clearDocumentStack()
 			document->Hide();
 		}
 	}
-	
 	m_currentDocId = "";
 }
 
@@ -203,6 +203,16 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 			clearStackUntilFoundDocId(ownerDocument->GetId());
 			loadWindow(values[1]);
 			ownerDocument->Show(Rocket::Core::ElementDocument::NONE);
+		}
+		else if (values[0] == "get" && values.size() > 1){
+			auto menuSystem = static_cast<MenuSystem*>
+				(m_world->getSystem(SystemType::MenuSystem));
+			if(values[1] == "join"){
+				menuSystem->setJoin();
+			}
+			else if(values[1] == "host"){
+				menuSystem->setHost();
+			}
 		}
 		else if (values[0] == "clearStack"){
 			clearDocumentStack();
@@ -281,7 +291,7 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 	}
 }
 
-void LibRocketEventManagerSystem::processEntities( const vector<Entity*>& p_entities )
+void LibRocketEventManagerSystem::process()
 {
 	if (wantsToExit){
 		m_world->requestToShutDown();

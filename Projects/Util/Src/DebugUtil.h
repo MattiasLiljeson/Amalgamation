@@ -1,10 +1,20 @@
 #pragma once
 
+/***************************************************************************/
+/* FORCE_DISABLE_OUTPUT removes all debug prints silently discarding them  */
+/***************************************************************************/
+#define _FORCE_DISABLE_OUTPUT
+
+
 // Will only print in debug, will replace call in release with "nothing"
 // call like this: DEBUGPRINT(("text"));
 // #ifdef _DEBUG
 	static void debugPrint(const char* msg);
-	#define DEBUGPRINT(x) debugPrint x
+	#ifndef FORCE_DISABLE_OUTPUT
+		#define DEBUGPRINT(x) debugPrint x
+	#else
+		#define DEBUGPRINT(x)
+	#endif
 	#ifdef WINAPI
 		#include <Windows.h>
 		void debugPrint(const char* msg)
@@ -33,8 +43,11 @@
 // Warning version
 // #ifdef _DEBUG
 static void debugWarn(const char* msg);
- #define DEBUGWARNING(x) debugWarn x
-
+#ifndef FORCE_DISABLE_OUTPUT
+	 #define DEBUGWARNING(x) debugWarn x
+#else
+	#define DEBUGWARNING(x)
+#endif
 // #ifdef WINAPI  // commented this out to force popup
 #include <Windows.h>
 void debugWarn(const char* msg)

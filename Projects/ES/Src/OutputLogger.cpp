@@ -9,6 +9,7 @@ bool OutputLogger::checkProcessing()
 
 void OutputLogger::write( const char* p_msg, WriteType p_type /*= WRITETYPE_INFO*/ )
 {
+#ifndef FORCE_DISABLE_OUTPUT
 	if (m_outStream.is_open())
 	{
 		if (p_type == WRITETYPE_WARNING)
@@ -28,17 +29,22 @@ void OutputLogger::write( const char* p_msg, WriteType p_type /*= WRITETYPE_INFO
 		}
 		m_outStream << p_msg;
 	}
+#endif
 }
 
 OutputLogger::OutputLogger( const char* p_fileName )
 	: EntitySystem(SystemType::LogToFileSystem)
 {
+#ifndef FORCE_DISABLE_OUTPUT
 	m_outStream.open(p_fileName, std::ios_base::out | std::ios_base::trunc);
+#endif
 }
 
 OutputLogger::~OutputLogger()
 {
+#ifndef FORCE_DISABLE_OUTPUT
 	if (m_outStream.is_open())
 		m_outStream.close();
+#endif
 }
 

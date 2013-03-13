@@ -1162,6 +1162,16 @@ void ClientPacketHandlerSystem::handleLobby()
 			
 			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
 				addNewPlayer(newlyConnected);
+
+			// Reset all ready states.
+			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))
+				->setAllPlayersReady(false);
+
+			// Reset ready button
+			auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+				m_world->getSystem(SystemType::LibRocketBackendSystem));
+			int lobbyDocIdx = rocketBackend->getDocumentByName("lobby");
+			rocketBackend->updateElement(lobbyDocIdx, "player_ready", "Ready");
 		}
 		else if (packetType == (char)PacketType::ClientDisconnect)
 		{
