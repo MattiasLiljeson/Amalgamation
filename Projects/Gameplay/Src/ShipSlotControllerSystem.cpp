@@ -58,47 +58,23 @@ void SlotInputControllerSystem::handleSlotSelection(bool p_editMode)
 	{
 		Entity* myShip = m_world->getEntityManager()->getFirstEntityByComponentType(
 			ComponentType::TAG_MyShip);
-		ParticleSystemsComponent* particles = static_cast<ParticleSystemsComponent*>(
-			myShip->getComponent(ComponentType::ParticleSystemsComponent));
 		int highlight = -1;
-		if(particles != NULL)
+
+		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_1) > 0)
 		{
-			if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_1) > 0)
-			{
-				highlight = 0;
-				AglParticleSystem* particleSystem =	particles->getParticleSystemPtr(highlight);
-				if(particleSystem != NULL)
-				{
-					particleSystem->restart();
-				}
-			}
-			if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_2) > 0)
-			{
-				highlight = 1;
-				AglParticleSystem* particleSystem =	particles->getParticleSystemPtr(highlight);
-				if(particleSystem != NULL)
-				{
-					particleSystem->restart();
-				}
-			}
-			if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_3) > 0)
-			{
-				highlight = 2;
-				AglParticleSystem* particleSystem =	particles->getParticleSystemPtr(highlight);
-				if(particleSystem != NULL)
-				{
-					particleSystem->restart();
-				}
-			}
-			if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_4) > 0)
-			{
-				highlight = 3;
-				AglParticleSystem* particleSystem =	particles->getParticleSystemPtr(highlight);
-				if(particleSystem != NULL)
-				{
-					particleSystem->restart();
-				}
-			}
+			highlight = 0;
+		}
+		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_2) > 0)
+		{
+			highlight = 1;
+		}
+		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_3) > 0)
+		{
+			highlight = 2;
+		}
+		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_4) > 0)
+		{
+			highlight = 3;
 		}
 
 		if (highlight >= 0)
