@@ -283,6 +283,11 @@ void ServerPacketHandlerSystem::handleIngame()
 							slotPacket.inEditMode = false;
 
 							m_server->unicastPacket(slotPacket.pack(), packet.getSenderId() );
+
+							//Tell the picking system to stop any possible picking
+							ServerPickingSystem* pickSystem = 
+								static_cast<ServerPickingSystem*>(m_world->getSystem(SystemType::ServerPickingSystem));
+							pickSystem->setReleased(packet.getSenderId());
 						}
 					}
 				}
@@ -361,7 +366,9 @@ void ServerPacketHandlerSystem::handleIngame()
 
 			HighlightSlotPacket hp;
 			hp.unpack( packet );
+			modsystem->addDeactivateEvent(packet.getSenderId());
 			modsystem->addHighlightEvent(hp.id, packet.getSenderId());
+
 		}
 		else if (packetType == (char)PacketType::SimpleEvent)
 		{

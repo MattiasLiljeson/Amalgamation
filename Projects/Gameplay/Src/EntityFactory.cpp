@@ -451,6 +451,22 @@ Entity* EntityFactory::createRocketLauncherClient(EntityCreationPacket p_packet)
 
 	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
+	SoundComponent* soundComponent = new SoundComponent();
+	entity->addComponent(soundComponent);
+
+	Component* component = NULL;
+
+	string name = "lockonSound";
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::AMBIENT, name);
+	explodeSound->file = "lockonsoundsnap.wav";
+	explodeSound->path = TESTSOUNDEFFECTPATH;
+	explodeSound->maxFrequencyOffeset = 2.0f;
+	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::FOREVER;
+	explodeSound->sourceChannels = 1;
+	explodeSound->queuedPlayingState = AudioHeader::STOP;
+	explodeSound->volume = 0.05f;
+	soundComponent->addAudioHeader(explodeSound);
+
 	m_world->addEntity(entity);
 	return entity;
 }
