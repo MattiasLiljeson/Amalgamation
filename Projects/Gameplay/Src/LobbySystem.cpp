@@ -21,11 +21,6 @@ void LobbySystem::resetPlayer( int p_playerId )
 	m_players[p_playerId].ready			= false;
 }
 
-LobbySystem::~LobbySystem()
-{
-
-}
-
 void LobbySystem::GetRow( Rocket::Core::StringList& row, const Rocket::Core::String& table, 
 						 int row_index, const Rocket::Core::StringList& columns )
 {
@@ -45,7 +40,12 @@ void LobbySystem::GetRow( Rocket::Core::StringList& row, const Rocket::Core::Str
 			else if (columns[col_index] == "ready")
 			{
 				//row.push_back(Rocket::Core::String("ping"));;
-				row.push_back(toString(m_players[row_index].ready).c_str());
+				if(m_players[row_index].ready){
+					row.push_back("Yes");
+				}
+				else{
+					row.push_back("No");
+				}
 			}
 		}
 	}
@@ -53,17 +53,6 @@ void LobbySystem::GetRow( Rocket::Core::StringList& row, const Rocket::Core::Str
 
 int LobbySystem::GetNumRows( const Rocket::Core::String& table )
 {
-		/*
-	if (table == m_tableName)
-	{
-		
-		int numberOfPlayers = 0;
-		for(unsigned int i=0;i < MAXPLAYERS;i++){
-			if(m_players[i].playerName != "")
-				numberOfPlayers++;
-		}
-		return numberOfPlayers;
-	}*/
 	return MAXPLAYERS;
 }
 
