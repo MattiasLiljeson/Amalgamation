@@ -4,12 +4,11 @@
 #include <ParticleSystemAndTexture.h>
 
 
-DamageVisualizerSystem::DamageVisualizerSystem( GraphicsBackendSystem* p_gfxBackend )
+DamageVisualizerSystem::DamageVisualizerSystem()
 	: EntitySystem( SystemType::DamageVisualizerSystem, 2,
 	ComponentType::ParticleSystemsComponent,
 	ComponentType::DamageComponent )
 {
-	m_gfxBackend = p_gfxBackend;
 }
 
 

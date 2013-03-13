@@ -22,20 +22,23 @@ void AddToParentSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	for (unsigned int i = 0; i < p_entities.size(); i++)
 	{
-		EntityParent* parentRef = static_cast<EntityParent*>(p_entities[i]->getComponent(ComponentType::EntityParent));
+		EntityParent* parentRef = static_cast<EntityParent*>
+			(p_entities[i]->getComponent(ComponentType::EntityParent));
 
 		if (parentRef)
 		{
 			Entity* parent = m_world->getEntity(parentRef->getParentEntityId());
 			
-			LevelPieceRoot* piece = static_cast<LevelPieceRoot*>(parent->getComponent(ComponentType::LevelPieceRoot));
+			LevelPieceRoot* piece = static_cast<LevelPieceRoot*>
+				(parent->getComponent(ComponentType::LevelPieceRoot));
 
 			if (piece)
 			{
 				AglBoundingSphere toAdd = getBoundingSphereWorld(p_entities[i]);
 				if (piece->boundingSphere.radius > 0)
 				{
-					piece->boundingSphere = AglBoundingSphere::mergeSpheres(toAdd, piece->boundingSphere);
+					piece->boundingSphere = 
+						AglBoundingSphere::mergeSpheres(toAdd, piece->boundingSphere);
 				}
 				else
 				{
