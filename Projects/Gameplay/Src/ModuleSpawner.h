@@ -7,7 +7,7 @@ class TimerSystem;
 class EntityFactory;
 class TcpServer;
 // =======================================================================================
-//                                      TempModuleSpawner
+//                                      ModuleSpawner
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
@@ -19,11 +19,11 @@ class TcpServer;
 /// Created on: 27-2-2013 
 ///---------------------------------------------------------------------------------------
 
-class TempModuleSpawner : public EntitySystem
+class ModuleSpawner : public EntitySystem
 {
 public:
-	TempModuleSpawner(TcpServer* p_server);
-	virtual ~TempModuleSpawner();
+	ModuleSpawner(TcpServer* p_server);
+	virtual ~ModuleSpawner();
 
 	virtual void process();
 
@@ -44,4 +44,6 @@ private:
 	TimerSystem*		m_timerSystem;
 	EntityFactory*		m_factory;
 
+	int m_spawnedModulesCount;
+	int m_spawnedModulesMax;
 };

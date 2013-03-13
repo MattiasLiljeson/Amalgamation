@@ -716,7 +716,6 @@
     <ClInclude Include="BombActivationPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
-    <ClInclude Include="TempModuleSpawner.h" />
     <ClInclude Include="SpawnPointSystem.h">
       <Filter>Systems\Level</Filter>
     </ClInclude>
@@ -862,6 +861,7 @@
     <ClInclude Include="PlayerReadyPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleSpawner.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1358,7 +1358,6 @@
     <ClCompile Include="BombActivationPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
-    <ClCompile Include="TempModuleSpawner.cpp" />
     <ClCompile Include="SpawnPointSystem.cpp">
       <Filter>Systems\Level</Filter>
     </ClCompile>
@@ -1485,5 +1484,6 @@
     <ClCompile Include="PlayerReadyPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleSpawner.cpp" />
   </ItemGroup>
 </Project>

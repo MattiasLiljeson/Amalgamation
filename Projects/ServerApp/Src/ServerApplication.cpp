@@ -38,7 +38,7 @@
 #include <ShipModulesControllerSystem.h>
 #include <ShipModulesTrackerSystem.h>
 #include <SpawnPointSystem.h>
-#include <TempModuleSpawner.h>
+#include <ModuleSpawner.h>
 #include <TeslaCoilModuleControllerSystem.h>
 #include <TimerSystem.h>
 #include <WinningConditionSystem.h>
@@ -242,7 +242,7 @@ namespace Srv
 		//WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
 		m_world->setSystem(new WinningConditionSystem(m_server), true);
 		m_world->setSystem(new SpawnPointSystem(), true);
-		m_world->setSystem(new TempModuleSpawner(m_server), true);
+		m_world->setSystem(new ModuleSpawner(m_server), true);
 
 		/************************************************************************/
 		/* Network																*/
@@ -275,7 +275,7 @@ namespace Srv
 
 	void ServerApplication::initEntities()
 	{
-		InitModulesTestByAnton();
+		//InitModulesTestByAnton();
 
 	}
 
