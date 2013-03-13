@@ -129,7 +129,7 @@ namespace Srv
 			}
 			processMessages();
 			
-			sleep(2);
+			sleep(4);
 		}
 	}
 

@@ -20,6 +20,7 @@
 #include "LoadMesh.h"
 #include "ParticleSystemServerComponent.h"
 #include "ShipManagerSystem.h"
+#include "AnimationUpdatePacket.h"
 
 RocketLauncherModuleControllerSystem::RocketLauncherModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::RocketLauncherModuleControllerSystem, 1, ComponentType::RocketLauncherModule)
@@ -90,6 +91,16 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 	Entity* child = p_entity;
 	if (module->m_parentEntity >= 0)
 	{
+		//Ensure the particle systems showing sight and lockon are unicast
+		Entity* ship;
+		int clientID = ModuleHelper::FindParentShipClientId(m_world, module, &ship);
+
+		ParticleSystemServerComponent* ps = static_cast<ParticleSystemServerComponent*>(
+			p_entity->getComponent(ComponentType::ParticleSystemServerComponent));
+		ps->getParticleSystemFromIdx(0)->unicastTo = clientID;
+		ps->getParticleSystemFromIdx(1)->unicastTo = clientID;
+
+
 		//Check if the module is highlighted
 		Entity* parent = NULL;
 		while (true)
@@ -157,7 +168,7 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 						}
 						ps->getParticleSystemFromIdx(0)->updateData.spawnPoint = target;
 						ps->getParticleSystemFromIdx(1)->updateData.spawnPoint = target;
-						if (ship)
+						if (ship && gun->cooldown <= 0)
 						{
 							gun->lockCoolDown = max(0, gun->lockCoolDown - m_world->getDelta());
 							gun->target = ship->getIndex();
@@ -294,14 +305,20 @@ void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity,ShipModu
 		p_entity->getComponent(ComponentType::ParticleSystemServerComponent));
 	ps->getParticleSystemFromIdx(4)->updateData.spawnFrequency = -1;
 
-//	// Also send a positional sound effect.
-//	SpawnSoundEffectPacket soundEffectPacket;
-//	soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::MissileStartAndFlight;
-//	soundEffectPacket.positional = true;
-//	soundEffectPacket.position = t->getTranslation();
-//	// NOTE: (Johan) Uncommented entity-sound because the entity id doesn't make sense.
-//	soundEffectPacket.attachedToNetsyncEntity = -1; // entity->getIndex();
-//	m_server->broadcastPacket(soundEffectPacket.pack());
+
+	//Fire animation
+	AnimationUpdatePacket packet;
+	packet.networkIdentity = p_entity->getIndex();
+	packet.shouldPlay = true;
+	packet.playSpeed = 1.0f;
+	packet.take = "Fire";
+	m_server->broadcastPacket( packet.pack() );
+
+	packet.shouldPlay = true;
+	packet.playSpeed = 1.0f;
+	packet.shouldQueue = true;
+	packet.take = "Default";
+	m_server->broadcastPacket( packet.pack() );
 }
 Entity* RocketLauncherModuleControllerSystem::getClosestShip(Entity* p_entity, Entity* p_parentShip, AglVector3& p_target)
 {

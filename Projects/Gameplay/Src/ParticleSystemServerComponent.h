@@ -12,6 +12,8 @@ struct ParticleSystemData
 	ParticleSystemData()
 	{
 		name = "NOT INITIALIZED!";
+		firstNetworkPass = true;
+		unicastTo = -1;
 	}
 
 	ParticleSystemData( const AglParticleSystemHeader& p_header, const string& p_name )
@@ -19,6 +21,8 @@ struct ParticleSystemData
 		originalSettings = p_header;
 		updateData = p_header;
 		name = p_name;
+		firstNetworkPass = true;
+		unicastTo = -1;
 	}
 
 	ParticleSystemData( const ParticleSystemInstruction& p_instruction, const string& p_name )
@@ -26,11 +30,15 @@ struct ParticleSystemData
 		originalSettings = AglParticleSystemHeader( p_instruction.particleSystem.getHeader() );
 		updateData = originalSettings;
 		name = p_name;
+		firstNetworkPass = true;
+		unicastTo = -1;
 	}
 
 	AglParticleSystemHeader originalSettings;
 	AglParticleSystemHeader updateData;
 	string name; // Used to fetch a PS by name, expensive!
+	bool firstNetworkPass;
+	int unicastTo;
 };
 
 class ParticleSystemServerComponent: public Component

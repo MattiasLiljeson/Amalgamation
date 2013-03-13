@@ -7,16 +7,16 @@
 		<form onsubmit="connectToServer; play_confirm;">
 			<div>
 				Server IP:
-				<Input id="host" name="server_host" type="text" size="15"
-				maxlength="15" value="194.47.150.29" />
+				<Input id="1" name="server_host" type="text" size="15"
+				maxlength="15" value="" />
 				<br/>
 				Server Port:
-				<Input id="port" name="server_port" type="text" size="5"
-				maxlength="5" value="1337" />
+				<Input id="2" name="server_port" type="text" size="5"
+				maxlength="5" value="" />
 				<br/>
 				Player Name:
-				<Input id="name" name="player_name" type="text" size="15"
-				maxlength="10" value="Max" />
+				<Input id="3" name="player_name" type="text" size="15"
+				maxlength="10" value="" />
 			</div>
 			<input type="submit" value="accept">Connect</input>
 			<button onclick="goto previous">Cancel</button>

@@ -39,7 +39,7 @@ body.window
 body.loading
 {
 	background-decorator: image;
-	background-image: ../../Assets/GUI/texture/vaderLoad.png;
+	background-image: ../../Assets/GUI/texture/LoadingScreen.png;
 	width: 100%;
 	height: 100%;
 }

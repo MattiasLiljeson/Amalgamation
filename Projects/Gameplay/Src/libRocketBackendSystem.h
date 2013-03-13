@@ -38,6 +38,7 @@ public:
 
 	void loadCursor( const char* p_cursorPath );
 	void updateElement(int p_docId, string p_element, string p_value );
+	void changeValue(int p_docId, string p_element, string p_value );
 
 	void showDocument(int p_docId, int p_focusFlags = Rocket::Core::ElementDocument::FOCUS);
 	void hideDocument(int p_docId);

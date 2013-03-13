@@ -25,8 +25,7 @@
 #include "WinningConditionSystem.h"
 
 ServerUpdateSystem::ServerUpdateSystem( TcpServer* p_server )
-	: EntitySystem( SystemType::NetworkUpdateSystem, 2, ComponentType::NetworkSynced,
-	ComponentType::Transform )
+	: EntitySystem( SystemType::NetworkUpdateSystem, 1, ComponentType::NetworkSynced )
 {
 	m_server = p_server;
 }
@@ -37,6 +36,15 @@ ServerUpdateSystem::~ServerUpdateSystem()
 
 void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	static float timestamp = m_world->getElapsedTime();
+	bool timeStampTime = false;
+	if(m_world->getElapsedTime() >
+		timestamp + 1.0f)
+	{
+		timestamp = m_world->getElapsedTime();
+		timeStampTime = true;
+	}
+
 	NetworkSynced* netSync = NULL;
 	Transform* transform = NULL;
 	PhysicsBody* physicsBody = NULL;
@@ -77,7 +85,7 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 			}
 			// NOTE: (Johan) This interval check is currently set to be very high delay because
 			// packet handling is too slow when running Debug build otherwise.
-			TimerIntervals::Enum entityupdateInterval = TimerIntervals::Every16Millisecond;
+			TimerIntervals::Enum entityupdateInterval = TimerIntervals::Every8Millisecond;
 #ifdef _DEBUG
 			entityupdateInterval = TimerIntervals::Every64Millisecond;
 #endif
@@ -85,7 +93,7 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 			{
 				for( unsigned int entityIdx=0; entityIdx<p_entities.size(); entityIdx++ )
 				{
-					int currentEntity = p_entities[entityIdx]->getIndex();
+
 					netSync = static_cast<NetworkSynced*>(
 						m_world->getComponentManager()->getComponent(
 						p_entities[entityIdx]->getIndex(), ComponentType::NetworkSynced ) );
@@ -118,9 +126,10 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 									}
 								}
 
-								if(hasChanged || m_world->getElapsedTime() >
-									m_previousParticles[updateData].timestamp + 1.0f)
+								if(hasChanged || timeStampTime || psServerComp->particleSystems[psIdx].firstNetworkPass)
 								{
+									psServerComp->particleSystems[psIdx].firstNetworkPass = false;
+
 									m_previousParticles[updateData].particleHeader =
 										*updateData;
 									m_previousParticles[updateData].timestamp =
@@ -140,7 +149,13 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 									updatePacket.forceParticleMove = false;
 									if (updateData->particleSpace == (char)AglParticleSystemHeader::AglSpace_SCREEN)
 										updatePacket.forceParticleMove = true;
-									m_server->broadcastPacket( updatePacket.pack() );
+
+									if (psServerComp->particleSystems[psIdx].unicastTo >= 0)
+									{
+										m_server->unicastPacket(updatePacket.pack(), psServerComp->particleSystems[psIdx].unicastTo);
+									}
+									else
+										m_server->broadcastPacket( updatePacket.pack() );
 								}
 							}
 						}
@@ -152,9 +167,9 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 							p_entities[entityIdx]->getIndex(), ComponentType::Transform ) );
 
 						bool hasChanged = true;
-						if(m_previousTransforms.count(currentEntity) > 0)
+						if(m_previousTransforms.count(entityIdx) > 0)
 						{
-							Transform& prevTransform = m_previousTransforms[currentEntity].transform;
+							Transform& prevTransform = m_previousTransforms[entityIdx].transform;
 							if(prevTransform.getTranslation() == transform->getTranslation() &&
 								prevTransform.getRotation() == transform->getRotation() &&
 								prevTransform.getScale() == transform->getScale())
@@ -164,10 +179,10 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 						}
 
 						if(hasChanged || m_world->getElapsedTime() > 
-							m_previousTransforms[currentEntity].timestamp + 1.0f)
+							m_previousTransforms[entityIdx].timestamp + 1.0f)
 						{
-							m_previousTransforms[currentEntity].transform = *transform;
-							m_previousTransforms[currentEntity].timestamp = 
+							m_previousTransforms[entityIdx].transform = *transform;
+							m_previousTransforms[entityIdx].timestamp = 
 								m_world->getElapsedTime();
 							EntityUpdatePacket updatePacket;
 							updatePacket.networkIdentity = netSync->getNetworkIdentity();
