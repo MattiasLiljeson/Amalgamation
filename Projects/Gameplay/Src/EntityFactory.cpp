@@ -822,7 +822,7 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 }
 Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 {
-	Entity* entity = entityFromRecipeOrFile( "Shield",
+	Entity* entity = entityFromRecipeOrFile( "ServerShield",
 		"Assemblages/Modules/Shield/ServerShield.asd");
 	auto transform = static_cast<Transform*>(entity->getComponent(ComponentType::Transform));
 	transform->setTranslation(p_packet.translation);
@@ -832,8 +832,7 @@ Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 	bodyInitData->m_position = p_packet.translation;
 	bodyInitData->m_orientation = p_packet.rotation;
 	bodyInitData->m_scale = p_packet.scale;
-	// 
-	entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
+
 	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(
 		entity->getIndex(), -1, EntityType::ShieldModule));
 	m_world->addEntity(entity);
