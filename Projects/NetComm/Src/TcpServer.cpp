@@ -64,6 +64,7 @@ void TcpServer::stopListening()
 		delete m_listenerProcess;
 		m_listenerProcess = NULL;
 	}
+
 }
 
 bool TcpServer::isListening()
