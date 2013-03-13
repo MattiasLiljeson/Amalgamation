@@ -25,9 +25,10 @@ public:
 	void initialize();
 	void inserted( Entity* p_entity );
 	void removed( Entity* p_entity );
-	void processEntities(const vector<Entity*>& p_entities );
+	void processEntities(const vector<Entity*>& p_entities) final;
 private:
-	void handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity, bool p_active, Entity* p_e);
+	void processDynamicEntities(const vector<Entity*>& p_dynamics);
+	//void handleShieldEntity(ShieldModule* p_module, Entity* p_parentEntity, bool p_active, Entity* p_e);
 	void activateShield(Entity* p_shield);
 	void deactivateShield(Entity* p_shield);
 private:

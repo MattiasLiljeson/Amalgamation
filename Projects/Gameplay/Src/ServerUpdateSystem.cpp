@@ -112,10 +112,10 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 								AglParticleSystemHeader* updateData =
 									&psServerComp->particleSystems[psIdx].updateData;
 								bool hasChanged = true;
-								if(m_previousParticles.count(psServerComp) > 0)
+								if(m_previousParticles.count(updateData) > 0)
 								{
 									AglParticleSystemHeader& previousHeader =
-										m_previousParticles[psServerComp].particleHeader;
+										m_previousParticles[updateData].particleHeader;
 									if(previousHeader.spawnPoint == updateData->spawnPoint &&
 										previousHeader.spawnDirection == updateData->spawnDirection &&
 										fabs(previousHeader.spawnSpeed - updateData->spawnSpeed) < 0.0001f &&
@@ -130,9 +130,9 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 								{
 									psServerComp->particleSystems[psIdx].firstNetworkPass = false;
 
-									m_previousParticles[psServerComp].particleHeader =
+									m_previousParticles[updateData].particleHeader =
 										*updateData;
-									m_previousParticles[psServerComp].timestamp =
+									m_previousParticles[updateData].timestamp =
 										m_world->getElapsedTime();
 									ParticleUpdatePacket updatePacket;
 									updatePacket.networkIdentity	= netSync->getNetworkIdentity();
@@ -167,9 +167,9 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 							p_entities[entityIdx]->getIndex(), ComponentType::Transform ) );
 
 						bool hasChanged = true;
-						if(m_previousTransforms.count(transform) > 0)
+						if(m_previousTransforms.count(entityIdx) > 0)
 						{
-							Transform& prevTransform = m_previousTransforms[transform].transform;
+							Transform& prevTransform = m_previousTransforms[entityIdx].transform;
 							if(prevTransform.getTranslation() == transform->getTranslation() &&
 								prevTransform.getRotation() == transform->getRotation() &&
 								prevTransform.getScale() == transform->getScale())
@@ -179,10 +179,10 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 						}
 
 						if(hasChanged || m_world->getElapsedTime() > 
-							m_previousTransforms[transform].timestamp + 1.0f)
+							m_previousTransforms[entityIdx].timestamp + 1.0f)
 						{
-							m_previousTransforms[transform].transform = *transform;
-							m_previousTransforms[transform].timestamp = 
+							m_previousTransforms[entityIdx].transform = *transform;
+							m_previousTransforms[entityIdx].timestamp = 
 								m_world->getElapsedTime();
 							EntityUpdatePacket updatePacket;
 							updatePacket.networkIdentity = netSync->getNetworkIdentity();
