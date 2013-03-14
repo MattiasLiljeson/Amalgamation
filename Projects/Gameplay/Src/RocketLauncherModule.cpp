@@ -12,6 +12,7 @@ RocketLauncherModule::RocketLauncherModule()
 	currentBurst = 0;
 	target = -1;
 	lockOnPlaying = false;
+	cooldown = 0;
 }
 
 RocketLauncherModule::RocketLauncherModule(AglVector3 p_muzzleOffset, AglVector3 p_fireDirection)
