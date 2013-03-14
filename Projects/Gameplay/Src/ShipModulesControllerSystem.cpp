@@ -337,7 +337,7 @@ void ShipModulesControllerSystem::changeHighlight(Entity* p_entity, int p_new,
 	ShipConnectionPointHighlights* highlights = static_cast<ShipConnectionPointHighlights*>(
 		p_entity->getComponent(ComponentType::ShipConnectionPointHighlights) );
 
-	if (p_new!=-1)
+	if (p_new>=0)
 	{
 		for (unsigned int i=0;i<ShipConnectionPointHighlights::slots;i++)
 		{
@@ -367,7 +367,7 @@ void ShipModulesControllerSystem::changeHighlight(Entity* p_entity, int p_new,
 			}
 		}	
 	}
-	else
+	else if (p_new==-1)
 	{
 		// if the new specified slot==-1, deactivate all
 		// this id is sent for example when switching to edit mode

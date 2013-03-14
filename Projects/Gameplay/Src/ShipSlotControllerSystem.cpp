@@ -18,6 +18,8 @@ SlotInputControllerSystem::SlotInputControllerSystem(InputBackendSystem* p_input
 {
 	m_inputBackend = p_inputBackend;
 	m_client = p_client;
+	m_previousModeWasEditMode = false;
+	m_previousHighlight=-1;
 }
 
 SlotInputControllerSystem::~SlotInputControllerSystem()
@@ -49,6 +51,7 @@ void SlotInputControllerSystem::handleSlotSelection(bool p_editMode)
 		{
 			sendSlot90Sub();
 		}
+		m_previousModeWasEditMode = true;
 	}
 	else
 	{
@@ -59,46 +62,34 @@ void SlotInputControllerSystem::handleSlotSelection(bool p_editMode)
 		int highlight = -1;
 		if(particles != NULL)
 		{
+			// history based
+			if (m_previousModeWasEditMode)
+			{
+				highlight=m_previousHighlight;
+			}
+			// input based
 			if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_1) > 0)
 			{
-				highlight = 0;
-				AglParticleSystem* particleSystem =	particles->getParticleSystemPtr(highlight);
-				if(particleSystem != NULL)
-				{
-					particleSystem->restart();
-				}
+				highlight=0;
 			}
 			if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_2) > 0)
 			{
-				highlight = 1;
-				AglParticleSystem* particleSystem =	particles->getParticleSystemPtr(highlight);
-				if(particleSystem != NULL)
-				{
-					particleSystem->restart();
-				}
+				highlight=1;
 			}
 			if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_3) > 0)
 			{
-				highlight = 2;
-				AglParticleSystem* particleSystem =	particles->getParticleSystemPtr(highlight);
-				if(particleSystem != NULL)
-				{
-					particleSystem->restart();
-				}
+				highlight=2;
 			}
 			if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_4) > 0)
 			{
-				highlight = 3;
-				AglParticleSystem* particleSystem =	particles->getParticleSystemPtr(highlight);
-				if(particleSystem != NULL)
-				{
-					particleSystem->restart();
-				}
+				highlight=3;
 			}
+			highlightSlot(highlight,particles);
 		}
 
 		if (highlight >= 0)
 		{
+			m_previousHighlight=highlight;
 			//Highlight slot
 
 			sendModuleSlotHighlight(highlight);
@@ -208,4 +199,14 @@ void SlotInputControllerSystem::sendSlot90Add()
 	packet.type = SimpleEventType::ROTATE_90_ADD;
 
 	m_client->sendPacket( packet.pack() );
+}
+
+void SlotInputControllerSystem::highlightSlot( int p_slot, 
+											   ParticleSystemsComponent* p_particlesComponent )
+{
+	AglParticleSystem* particleSystem =	p_particlesComponent->getParticleSystemPtr(p_slot);
+	if(particleSystem != NULL)
+	{
+		particleSystem->restart();
+	}
 }
