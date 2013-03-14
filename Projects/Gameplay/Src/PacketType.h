@@ -44,6 +44,7 @@ public:
 		TeslaHitPacket,
 		HitIndicatorPacket,
 		ModulesHighlightPacket,
+		ShieldActivationPacket,
 
 		// Client -> Server:
 		/************************************************************************/
@@ -65,6 +66,7 @@ public:
 		HighlightEntityPacket,
 		RootBoundingSpherePacket,
 		SoundPacket,
+		SpawnDebugModulePacket,
 	};
 
 };

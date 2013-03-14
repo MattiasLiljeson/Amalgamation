@@ -8,6 +8,7 @@
 #include "AudioBackendSystem.h"
 #include "SpawnPointSet.h"
 #include "MeshOffsetTransform.h"
+#include "ShieldModule.h"
 
 ShieldPlaterSystem::ShieldPlaterSystem()
 	: EntitySystem(SystemType::ShieldPlaterSystem, 5, ComponentType::ShieldModule,
@@ -16,11 +17,36 @@ ShieldPlaterSystem::ShieldPlaterSystem()
 {
 }
 
+void ShieldPlaterSystem::processEntities( const vector<Entity*>& p_entities )
+{
+	for(unsigned int i=0; i<p_entities.size(); i++)
+	{
+		ShieldModule* shieldModule = static_cast<ShieldModule*>(
+			p_entities[i]->getComponent(ComponentType::ShieldModule));
+		if(shieldModule->activation > 0.0f)
+		{
+			vector<Entity*>& plates = m_shieldPlates[p_entities[i]];
+			for(unsigned int plateIdx=0; plateIdx<plates.size(); plateIdx++)
+			{
+				plates[plateIdx]->setEnabled(true);
+			}
+		}
+		else
+		{
+			vector<Entity*>& plates = m_shieldPlates[p_entities[i]];
+			for(unsigned int plateIdx=0; plateIdx<plates.size(); plateIdx++)
+			{
+				plates[plateIdx]->setEnabled(false);
+			}
+		}
+	}
+}
+
 void ShieldPlaterSystem::inserted( Entity* p_entity )
 {
 	const int plateCount = 120;
 	vector<Entity*> plateEntities;
-	plateEntities.resize(120);
+	plateEntities.resize(plateCount);
 	for(unsigned int i=0; i<plateCount; i++)
 	{
 		Entity* entity = m_world->createEntity();
@@ -45,8 +71,9 @@ void ShieldPlaterSystem::inserted( Entity* p_entity )
 		AglVector3 position = spawnPoint + transform.GetRight()*spawnX*radius +
 			transform.GetUp()*spawnY*radius;
 		position.normalize();
-		AglQuaternion plateRotation = AglQuaternion::rotateToFrom(AglVector3(0, 1.0f, 0.0f), position);
-		position = position * spawnPoint.length();
+		AglQuaternion plateRotation = AglQuaternion::rotateToFrom(
+			AglVector3(0, 1.0f, 0.0f), position);
+		position = spawnPoint + transform.GetForward()*radius;//position * spawnPoint.length();
 		float plateScale = 1.0f;
 		Transform* plateTransform = new Transform(position, plateRotation,
 			AglVector3(plateScale, plateScale, plateScale));
@@ -54,15 +81,12 @@ void ShieldPlaterSystem::inserted( Entity* p_entity )
 		entity->addComponent(new LoadMesh("shield_plate.agl"));
 		entity->addComponent(new EntityParent(p_entity->getIndex(),
 			plateTransform->getMatrix()));
-		entity->addComponent(new ShieldPlate(0.2f + 0.8f * (float)rand()/(float)RAND_MAX));
+		entity->addComponent(new ShieldPlate(
+			0.2f + 0.8f * (float)rand()/(float)RAND_MAX));
 		entity->setEnabled(false);
 		m_world->addEntity(entity);
 	}
-	ShipModule* shipModule = static_cast<ShipModule*>(p_entity->getComponent(
-		ComponentType::ShipModule));
-	shipModule->addActivationEvent(new ShieldModuleActivationClient(plateEntities,
-		p_entity, static_cast<AudioBackendSystem*>(
-		m_world->getSystem(SystemType::AudioBackendSystem))));
+	m_shieldPlates[p_entity] = plateEntities;
 }
 
 void ShieldPlaterSystem::circularRandom( float* p_spawnX, float* p_spawnY,

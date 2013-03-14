@@ -40,6 +40,7 @@
 #include "WelcomePacket.h"
 #include <BasicSoundCreationInfo.h>
 #include <PositionalSoundCreationInfo.h>
+#include "ShieldModule.h"
 
 
 // Packets
@@ -67,6 +68,7 @@
 #include "SpawnExplosionPacket.h"
 #include "SpawnSoundEffectPacket.h"
 #include "UpdateClientStatsPacket.h"
+#include "ShieldActivationPacket.h"
 
 // Debug
 
@@ -1104,6 +1106,30 @@ void ClientPacketHandlerSystem::handleIngameState()
 					{
 						netModule->addComponent(new GlowAnimation(AglVector4(0.1f, 0.3f, 0.1f, 1.0f), true, 0.75f));
 						netModule->applyComponentChanges();
+					}
+				}
+			}
+		}
+		else if(packetType == (char)PacketType::ShieldActivationPacket)
+		{
+			ShieldActivationPacket data;
+			data.unpack(packet);
+			Entity* netModule = static_cast<NetsyncDirectMapperSystem*>(
+				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+				data.entityIndex);
+			if(netModule)
+			{
+				ShieldModule* shieldModule = static_cast<ShieldModule*>(
+					netModule->getComponent(ComponentType::ShieldModule));
+				if(shieldModule)
+				{
+					if(data.shieldActivationState)
+					{
+						shieldModule->activation = 1.0f;
+					}
+					else
+					{
+						shieldModule->activation = 0;
 					}
 				}
 			}
