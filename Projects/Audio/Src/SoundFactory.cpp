@@ -61,6 +61,7 @@ Sound* SoundFactory::createSoundFromHeader( const AudioHeader* p_audioHeader )
 			X3DAUDIO_EMITTER		emitter = {0};
 			X3DAUDIO_DSP_SETTINGS	dspSettings = {0};
 			PositionalSoundInfo info;
+			ZeroMemory(&info, sizeof(PositionalSoundInfo));
 
 			initEmitter(&emitter, p_audioHeader);
 			initDSPSettings(&dspSettings, 2, p_audioHeader);

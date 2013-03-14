@@ -209,7 +209,7 @@ void LoadMeshSystemClient::setUpAmbientRangeSound( Entity* p_entity, ModelResour
 			ar->file = ardat->filename+".wav";
 			ar->path = SOUNDEFFECTPATH;
 			ar->playInterval = AudioHeader::FOREVER;
-			ar->playingState = AudioHeader::PLAY;
+			//ar->playingState = AudioHeader::PLAY;
 			ar->queuedPlayingState = AudioHeader::PLAY;
 			ar->sourceChannels = ardat->channels;
 			ar->pos = ardat->transform.GetTranslation();

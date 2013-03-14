@@ -46,14 +46,13 @@ public:
 	AglVector3 top;
 	AglVector3 velocity;
 	PlayInterval playInterval;
-	PlayState playingState;
 	PlayState queuedPlayingState;
 	SoundType soundType;
 	std::string path;
 	std::string file;
 private:
 	std::string soundName;
-
+	PlayState playingState;
 public:
 	AudioHeader(const SoundType& p_soundType, const std::string& p_soundName){
 		timerInterval = 0;
@@ -80,4 +79,11 @@ public:
 	const string& getSoundName(){
 		return soundName;
 	}
+	const PlayState& getPlayingState(){
+		return playingState;
+	}
+	void setPlayingState(const PlayState& p_playState){
+		playingState = p_playState;
+	}
+
 };

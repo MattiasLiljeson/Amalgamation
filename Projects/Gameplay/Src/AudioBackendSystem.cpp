@@ -43,5 +43,5 @@ void AudioBackendSystem::updateListenerVolume( float p_volume )
 
 void AudioBackendSystem::updateOutputMatrix( int p_index )
 {
-	m_soundWrapper->updateOutputMatrix(p_index);
+	m_soundWrapper->calculate3DSound(p_index);
 }
