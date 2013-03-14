@@ -12,6 +12,11 @@
 MenuSystem::MenuSystem()
 	: EntitySystem( SystemType::MenuSystem)
 {
+	m_joinIdx		= -1;
+	m_hostIdx		= -1;
+	m_lobbyDocIdx	= -1;
+	m_disconnectPopupIdx = -1;
+	m_loadingWindowIdx = -1;
 }
 
 

@@ -1509,7 +1509,8 @@ void ClientPacketHandlerSystem::resetFromDisconnect()
 
 void ClientPacketHandlerSystem::handleServerDisconnect()
 {
-	if (!m_tcpClient->hasActiveConnection() && m_gameState->getCurrentState() != GameStates::MENU)
+	if (!m_tcpClient->hasActiveConnection() && m_gameState->getCurrentState() != GameStates::MENU
+		&& m_gameState->getCurrentState() != GameStates::NONE)
 	{
 		static_cast<MenuSystem*>(m_world->getSystem(SystemType::MenuSystem))
 			->displayDisconnectPopup();
