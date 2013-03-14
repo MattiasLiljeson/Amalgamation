@@ -21,3 +21,12 @@ vector<ShipModule*> ShipModulesTrackerSystem::getModulesFromParent( int p_entity
 	}
 	return modules;
 }
+
+void ShipModulesTrackerSystem::destroyAllModules()
+{
+	const vector<Entity*>& entities = getActiveEntities();
+	for(unsigned int i=0; i<entities.size(); i++)
+	{
+		m_world->deleteEntity(entities[i]);
+	}
+}

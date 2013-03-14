@@ -18,6 +18,7 @@ public:
 	void processEntities( const vector<Entity*>& p_entities ) final;
 	void initialize() final;
 
+	void destroyAllModules();
 private:
 	unsigned int m_numberOfModules;
 };

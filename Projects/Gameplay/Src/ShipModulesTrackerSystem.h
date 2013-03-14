@@ -17,4 +17,6 @@ class ShipModulesTrackerSystem: public EntitySystem
 public:
 	ShipModulesTrackerSystem();
 	vector<ShipModule*> getModulesFromParent( int p_entityIndex );
+
+	void destroyAllModules();
 };

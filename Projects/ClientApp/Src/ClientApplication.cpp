@@ -146,6 +146,7 @@ using namespace std;
 #include <DestroyOnParticlesDeathSystem.h>
 #include <ModuleStatusEffectSystem.h>
 #include <StateManagementSystem.h>
+#include <ShipManagerSystem.h>
 
 // unsorted includes. Sort these as soon as they're added!
 #include <PlayerSystem.h>
@@ -298,6 +299,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ShipFlyControllerSystem(shipInputProc, NULL, m_client, slotInput ));
 	m_world->setSystem( new ShipEditControllerSystem(shipInputProc, NULL, slotInput) );
 	m_world->setSystem( new PlayerCameraControllerSystem( shipInputProc, m_client ) );
+	m_world->setSystem( new ShipManagerSystem());
 
 	//---NETWORKHANDLING SYSTEMS
 	m_world->setSystem( new ClientPacketHandlerSystem( m_client ) );
@@ -409,7 +411,7 @@ void ClientApplication::initSystems()
 	/* Debugging															*/
 	/************************************************************************/
 	m_world->setSystem( new DebugMovementSystem(), false );
-	m_world->setSystem( new MenuBackgroundSceneSystem());
+	m_world->setSystem( new MenuBackgroundSceneSystem()); // NOTE: Used for menu background!
 	m_world->setSystem( new OrbitalMovementSystem() );
 	m_world->setSystem( new AxisRotationSystem() );
 	m_world->setSystem( new MoveShipLightsSystem() );
@@ -417,7 +419,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientEntityCountSystem() );
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
 	m_world->setSystem( new OutputLogger("log_client.txt"));
-	m_world->setSystem( new ClientModuleCounterSystem() );
+	m_world->setSystem( new ClientModuleCounterSystem() ); // NOTE: Used to be able to remove modules!
 	m_world->setSystem( new ClientDebugModuleSpawnerSystem(m_client) );
 
 	m_world->initialize();

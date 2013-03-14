@@ -35,4 +35,5 @@ public:
 	AglBoundingSphere findEditSphere(int p_ownerId);
 	AglBoundingSphere findEditSphere(Entity* p_ship);
 
+	void destroyAllShips();
 };

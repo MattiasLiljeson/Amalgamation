@@ -1,6 +1,10 @@
 #include "StateManagementSystem.h"
 #include "MenuBackgroundSceneSystem.h"
 #include "ClientStateSystem.h"
+#include "LevelHandlerSystem.h"
+#include "ClientModuleCounterSystem.h"
+#include "ShipManagerSystem.h"
+#include "ConnectionVisualizerSystem.h"
 
 StateManagementSystem::StateManagementSystem()
 	: EntitySystem(SystemType::StateManagementSystem)
@@ -24,10 +28,29 @@ void StateManagementSystem::process()
 		auto menuBackgroundSys = static_cast<MenuBackgroundSceneSystem*>(
 			m_world->getSystem(SystemType::MenuBackgroundSceneSystem));
 		menuBackgroundSys->setEnabled(true);
-	}
-	else if (gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::ENTEREDTHISFRAME)
-	{
-		
+
+		if(gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::EXITTHISFRAME
+			|| gameState->getStateDelta(GameStates::FINISHEDLOADING) == EnumGameDelta::EXITTHISFRAME
+			|| gameState->getStateDelta(GameStates::INGAME) == EnumGameDelta::EXITTHISFRAME)
+		{
+			// Cleanup resources here, that hasn't been cleaned up.
+			// For instance:
+			// * Level Data
+			// * Modules
+			// * Ships
+			auto levelHandler = static_cast<LevelHandlerSystem*>(
+				m_world->getSystem(SystemType::LevelHandlerSystem));
+			levelHandler->destroyLevel();
+			auto moduleCounter = static_cast<ClientModuleCounterSystem*>(
+				m_world->getSystem(SystemType::ClientModuleCounterSystem));
+			moduleCounter->destroyAllModules();
+			auto shipManager = static_cast<ShipManagerSystem*>(
+				m_world->getSystem(SystemType::ShipManagerSystem));
+			shipManager->destroyAllShips();
+			auto connectionVisualizer = static_cast<ConnectionVisualizerSystem*>(
+				m_world->getSystem(SystemType::ConnectionVisualizerSystem));
+			connectionVisualizer->cleanup();
+		}
 	}
 }
 

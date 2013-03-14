@@ -48,6 +48,8 @@ public:
 
 	void addEffect(ConnectionEffectData p_fx);
 	void disableAll();
+
+	void cleanup();
 protected:
 private:
 	vector<ConnectionEffectData> m_effectsToCreate;

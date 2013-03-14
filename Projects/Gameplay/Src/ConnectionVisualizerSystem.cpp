@@ -14,7 +14,7 @@ ConnectionVisualizerSystem::ConnectionVisualizerSystem() :
 
 ConnectionVisualizerSystem::~ConnectionVisualizerSystem()
 {
-
+	cleanup();
 }
 
 void ConnectionVisualizerSystem::initialize()
@@ -140,4 +140,10 @@ void ConnectionVisualizerSystem::disableAll()
 	{
 		m_createdEffects[i].disabled = true;
 	}
+}
+
+void ConnectionVisualizerSystem::cleanup()
+{
+	m_effectsToCreate.clear();
+	m_createdEffects.clear();
 }

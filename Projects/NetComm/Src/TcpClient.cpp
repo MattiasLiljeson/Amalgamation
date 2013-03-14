@@ -209,6 +209,10 @@ void TcpClient::disconnect()
 	}
 	m_ioService->stop();
 	delete m_ioService;
+
+	while (hasNewPackets())
+		popFrontPacket();
+
 	m_ioService = new boost::asio::io_service();
 	DEBUGPRINT(("Client disconnected from server!\n"));
 }
