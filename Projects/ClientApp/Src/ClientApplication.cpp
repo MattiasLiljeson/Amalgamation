@@ -328,10 +328,10 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientPickingSystem(m_client) );
 	m_world->setSystem( new GameStatsSystem() );
 	m_world->setSystem( new LightBlinkerSystem() );
+	m_world->setSystem( new ShieldPlaterSystem() );
 	m_world->setSystem( new ShieldPlatingSystem() );
 	m_world->setSystem( new SlotMarkerSystem() );
 	m_world->setSystem( new AnomalyBombEffectSystem() );
-	m_world->setSystem( new ShieldPlaterSystem() );
 	m_world->setSystem( new TeslaEffectSystem() );
 	m_world->setSystem( new TeslaLightningSystem() );
 	m_world->setSystem( new GlowAnimationSystem() );
@@ -352,8 +352,8 @@ void ClientApplication::initSystems()
 	// InterpolationSystem* interpolationSystem = new InterpolationSystem();
 	// m_world->setSystem( interpolationSystem, true);
 	InterpolationSystem2* inter = new InterpolationSystem2();
-	m_world->setSystem( new EntityParentHandlerSystem() );
 	m_world->setSystem(inter, true);
+	m_world->setSystem( new EntityParentHandlerSystem() );
 
 	//---AUDIO SYSTEMS
 	m_world->setSystem( new AudioListenerSystem(audioBackend) );
