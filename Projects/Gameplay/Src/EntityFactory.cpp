@@ -60,6 +60,7 @@
 
 #include <ToString.h>
 #include <OutputLogger.h>
+#include "InitiallyDisable.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -475,6 +476,14 @@ Entity* EntityFactory::createRocketLauncherClient(EntityCreationPacket p_packet)
 	explodeSound->volume = 0.05f;
 	soundComponent->addAudioHeader(explodeSound);
 
+	InitiallyDisable* disable = new InitiallyDisable();
+	disable->data.push_back(DisableData(2, true, false));
+	disable->data.push_back(DisableData(3, true, false));
+	disable->data.push_back(DisableData(4, false, true));
+
+	entity->addComponent(ComponentType::InitiallyDisable, disable);
+
+
 	m_world->addEntity(entity);
 	return entity;
 }
@@ -515,6 +524,13 @@ Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 	explodeSound->queuedPlayingState = AudioHeader::STOP;
 	explodeSound->volume = 0.5f;
 	soundComponent->addAudioHeader(explodeSound);
+
+	InitiallyDisable* disable = new InitiallyDisable();
+	disable->data.push_back(DisableData(0, true, false));
+	disable->data.push_back(DisableData(1, true, false));
+	disable->data.push_back(DisableData(2, true, false));
+	
+	entity->addComponent(ComponentType::InitiallyDisable, disable);
 	
 	m_world->addEntity( entity );
 	return entity;

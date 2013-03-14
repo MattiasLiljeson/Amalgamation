@@ -18,6 +18,7 @@
 #include <GraphicsWrapper.h>
 #include <ModelResource.h>
 #include "SoundComponent.h"
+#include "InitiallyDisable.h"
 
 LoadMeshSystemClient::LoadMeshSystemClient( GraphicsBackendSystem* p_gfxBackend ) : 
 	LoadMeshSystem()
@@ -90,17 +91,33 @@ void LoadMeshSystemClient::setUpChildCollision( Entity* p_entity,
 
 void LoadMeshSystemClient::setUpParticles( Entity* p_entity, ModelResource* p_modelResource )
 {
+	bool applyInitiallyDisable = false;
 	if (!p_modelResource->particleSystems.m_collection.empty())
 	{
 		ParticleSystemsComponent* particleComp = static_cast<ParticleSystemsComponent*>(
 			p_entity->getComponent( ComponentType::ParticleSystemsComponent ) );
 
-		if( particleComp == NULL ) {
+		if( particleComp == NULL ) 
+		{
 			particleComp = new ParticleSystemsComponent();
 			p_entity->addComponent( particleComp );
+			applyInitiallyDisable = true;
 		}
 
 		particleComp->addParticleSystemInstructions( p_modelResource->particleSystems );
+
+		InitiallyDisable* disable = static_cast<InitiallyDisable*>(p_entity->getComponent(ComponentType::InitiallyDisable));
+		if (applyInitiallyDisable && disable)
+		{
+			for (unsigned int i = 0; i < disable->data.size(); i++)
+			{
+				ParticleSystemInstruction* inst = particleComp->getParticleSystemInstruction(disable->data[i].target);
+				if (disable->data[i].frequency)
+					inst->particleSystem.setSpawnFrequency(0);
+				if (disable->data[i].color)
+					inst->particleSystem.setColor(AglVector4(0, 0, 0, 0));
+			}
+		}
 	}
 }
 

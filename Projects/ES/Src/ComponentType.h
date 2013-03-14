@@ -129,6 +129,7 @@ public:	//Enums
 		ShipHighlight,
 		ShineSpawn,
 		GlowAnimation,
+		InitiallyDisable,
 		NUM_COMPONENT_TYPES
 	};
 

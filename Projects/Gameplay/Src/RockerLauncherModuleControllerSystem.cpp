@@ -66,7 +66,7 @@ void RocketLauncherModuleControllerSystem::processEntities(const vector<Entity*>
 				if (gun->currentBurst >= gun->burstCount)
 				{
 					gun->lockCoolDown = 2.0f;
-					gun->cooldown = 0.5f;
+					gun->cooldown = 2.0f;
 					gun->currentBurst = 0;
 				}
 			}
@@ -151,10 +151,11 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 						}
 
 						//Show some trailing smoke
-						if (gun->cooldown > 1.8f)
-							ps->getParticleSystemFromIdx(3)->updateData.spawnFrequency = ps->getParticleSystemFromIdx(3)->originalSettings.spawnFrequency;
+						if (gun->cooldown > 1.0f)
+							ps->getParticleSystemFromIdx(3)->updateData.spawnFrequency = ps->getParticleSystemFromIdx(3)->originalSettings.spawnFrequency*(gun->cooldown-1.0f);
 						else
 						{
+							//Lag spike here causes object to not be visible the first time
 							ps->getParticleSystemFromIdx(3)->updateData.spawnFrequency = 0;
 						}
 
