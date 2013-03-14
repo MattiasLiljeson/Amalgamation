@@ -209,6 +209,9 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 
 					//Hide the lasersight
 					ps->getParticleSystemFromIdx(2)->updateData.color = AglVector4(0, 0, 0, 0);
+
+					//Hide the smoke
+					ps->getParticleSystemFromIdx(3)->updateData.spawnFrequency = 0;
 				}
 			}
 		}
