@@ -236,7 +236,10 @@ void ServerPacketHandlerSystem::handleIngame()
 
 						//Send a packet back to the client telling him where connection points are
 						ShipModulesControllerSystem* smcs = static_cast<ShipModulesControllerSystem*>(m_world->getSystem(SystemType::ShipModulesControllerSystem));
+						ServerPickingSystem* pickSystem = 
+							static_cast<ServerPickingSystem*>(m_world->getSystem(SystemType::ServerPickingSystem));
 						smcs->setEditMode(true);
+						pickSystem->setInEditMode(packet.getSenderId(), true);
 
 						ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
 						vector<FreeSlotData> slots = sms->findFreeConnectionPoints(packet.getSenderId());
@@ -290,6 +293,7 @@ void ServerPacketHandlerSystem::handleIngame()
 							ServerPickingSystem* pickSystem = 
 								static_cast<ServerPickingSystem*>(m_world->getSystem(SystemType::ServerPickingSystem));
 							pickSystem->setReleased(packet.getSenderId());
+							pickSystem->setInEditMode(packet.getSenderId(), false);
 						}
 					}
 				}
