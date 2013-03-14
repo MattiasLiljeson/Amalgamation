@@ -81,7 +81,7 @@ public:
 	/// \param p_index
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void updateOutputMatrix(int p_index);
+	void calculate3DSound(int p_index);
 
 	///-----------------------------------------------------------------------------------
 	/// Updates the given sound with the specified sound instruction.

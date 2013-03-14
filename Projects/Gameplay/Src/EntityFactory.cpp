@@ -373,17 +373,9 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		engineSound->path = TESTSOUNDEFFECTPATH;
 		engineSound->maxFrequencyOffeset = 2.0f;
 		engineSound->playInterval	= AudioHeader::FOREVER;
-		engineSound->sourceChannels = 1;
 		engineSound->volume = 0.5f;
 		soundComponent->addAudioHeader(engineSound);
 
-		engineSound = new AudioHeader(AudioHeader::POSITIONALSOUND, "ShipEngineIdle");
-		engineSound->file = "space_ship_engine_idle.wav";
-		engineSound->path = TESTSOUNDEFFECTPATH;
-		engineSound->playInterval	= AudioHeader::FOREVER;
-		engineSound->queuedPlayingState = AudioHeader::PLAY;
-		engineSound->maxRange = 200.0f;
-		soundComponent->addAudioHeader(engineSound);
 		// RM-RT 2013-03-04
 		/*
 		entity->addComponent(new SoundComponent( TESTSOUNDEFFECTPATH,
@@ -1081,7 +1073,9 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 
 	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
 
-	effect->addComponent( ComponentType::Transform, new Transform());
+	Transform* trans = new Transform();
+	trans->setTranslation(p_packet.position);
+	effect->addComponent( trans );
 
 	//Flares spreading
 	AglParticleSystem flares;
@@ -1193,10 +1187,11 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 	Component* component = NULL;
 
 	string name = "Explosion";
-	AudioHeader* explodeSound = new AudioHeader(AudioHeader::AMBIENT, name);
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
 	explodeSound->file = "bomb-03.wav";
 	explodeSound->path = TESTSOUNDEFFECTPATH;
-	explodeSound->maxFrequencyOffeset = 2.0f;
+	explodeSound->maxRange = 1000.0f;
+	explodeSound->maxFrequencyOffeset = 1.0f;
 	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
 	explodeSound->sourceChannels = 1;
 	explodeSound->queuedPlayingState = AudioHeader::PLAY;

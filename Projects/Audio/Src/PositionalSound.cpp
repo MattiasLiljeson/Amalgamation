@@ -2,11 +2,12 @@
 
 PositionalSound::PositionalSound( IXAudio2SourceVoice* p_sourceVoice, 
 								 XAUDIO2_BUFFER* p_buffer, 
-								 const PositionalSoundInfo& p_info)
+								 const PositionalSoundInfo& p_info )
 								 : Sound(p_sourceVoice, p_buffer)
 {
 	m_dataInfo = p_info;
 }
+
 
 PositionalSound::~PositionalSound()
 {
@@ -56,6 +57,15 @@ void PositionalSound::updateEmitter( const AglVector3& p_orientFront,
 	setTop(p_orientTop);
 	setVelocity(p_velocity);
 }
+
+void PositionalSound::updateEmitter( const AudioHeader* p_header )
+{
+	setPosition(p_header->pos);
+	setFront(p_header->front);
+	setTop(p_header->top);
+	setVelocity(p_header->velocity);
+}
+
 
 X3DAUDIO_DSP_SETTINGS PositionalSound::getDSPSettings()
 {
