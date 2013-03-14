@@ -45,3 +45,13 @@ SoundOrientation* AudioListenerSystem::getListenerOrientation()
 {
 	return &m_listener;
 }
+
+void AudioListenerSystem::initialize()
+{
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(AntTweakBarWrapper::OVERALL,
+		"ListenerPosX", TwType::TW_TYPE_FLOAT, &m_listener.listenerPos.x, "group=Ship");
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(AntTweakBarWrapper::OVERALL,
+		"ListenerPosY", TwType::TW_TYPE_FLOAT, &m_listener.listenerPos.y, "group=Ship");
+	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(AntTweakBarWrapper::OVERALL,
+		"ListenerPosZ", TwType::TW_TYPE_FLOAT, &m_listener.listenerPos.z, "group=Ship");
+}

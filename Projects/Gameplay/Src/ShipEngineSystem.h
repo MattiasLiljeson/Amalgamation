@@ -1,5 +1,7 @@
 #pragma once
 #include <EntitySystem.h>
+#include <AglVector3.h>
+
 // =======================================================================================
 //                                      ShipEngineSystem
 // =======================================================================================
@@ -27,6 +29,5 @@ public:
 protected:
 private:
 	unsigned int m_shipIdleSoundIndex;
-	unsigned int m_shipActiveSoundIndex;
-	
+	unsigned int m_shipActiveSoundIndex;	
 };

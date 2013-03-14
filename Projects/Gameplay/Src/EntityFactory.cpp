@@ -1177,10 +1177,11 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 	Component* component = NULL;
 
 	string name = "Explosion";
-	AudioHeader* explodeSound = new AudioHeader(AudioHeader::AMBIENT, name);
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
 	explodeSound->file = "bomb-03.wav";
 	explodeSound->path = TESTSOUNDEFFECTPATH;
-	explodeSound->maxFrequencyOffeset = 2.0f;
+	explodeSound->maxRange = 1000.0f;
+	explodeSound->maxFrequencyOffeset = 1.0f;
 	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
 	explodeSound->sourceChannels = 1;
 	explodeSound->queuedPlayingState = AudioHeader::PLAY;
