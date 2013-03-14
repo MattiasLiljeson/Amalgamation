@@ -412,19 +412,22 @@ void ServerPacketHandlerSystem::handleIngame()
 		{
 			SpawnDebugModulePacket data;
 			data.unpack(packet);
-			EntityCreationPacket entityCreation;
-			entityCreation.scale = AglVector3(1.0f, 1.0f, 1.0f);
-			entityCreation.translation = AglVector3(0, 0, 0);
-			AglMatrix pos = AglMatrix::createTranslationMatrix(entityCreation.translation);
-			entityCreation.entityType = EntityType::ShieldModule;
-			Entity* entity = static_cast<EntityFactory*>(m_world->getSystem(
-				SystemType::EntityFactory))->entityFromPacket(entityCreation, &pos);
-			NetworkSynced* netsync = static_cast<NetworkSynced*>(entity->getComponent(
-				ComponentType::NetworkSynced));
-			entityCreation.networkIdentity = netsync->getNetworkIdentity();
-			entityCreation.owner = netsync->getNetworkOwner();
-			entityCreation.playerID = netsync->getPlayerID();
-			m_server->broadcastPacket(entityCreation.pack());
+			for(unsigned char i=0; i<data.numberOfModules; i++)
+			{
+				EntityCreationPacket entityCreation;
+				entityCreation.scale = AglVector3(1.0f, 1.0f, 1.0f);
+				entityCreation.translation = AglVector3(0, 0, 0);
+				AglMatrix pos = AglMatrix::createTranslationMatrix(entityCreation.translation);
+				entityCreation.entityType = data.moduleTypes[i];
+				Entity* entity = static_cast<EntityFactory*>(m_world->getSystem(
+					SystemType::EntityFactory))->entityFromPacket(entityCreation, &pos);
+				NetworkSynced* netsync = static_cast<NetworkSynced*>(entity->getComponent(
+					ComponentType::NetworkSynced));
+				entityCreation.networkIdentity = netsync->getNetworkIdentity();
+				entityCreation.owner = netsync->getNetworkOwner();
+				entityCreation.playerID = netsync->getPlayerID();
+				m_server->broadcastPacket(entityCreation.pack());
+			}
 		}
 
 		// Pop packet!

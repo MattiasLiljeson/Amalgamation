@@ -19,5 +19,8 @@ public:
 	void unpack( Packet& p_packet ) final;
 
 public:
-	int moduleType;
+	static const int MAX_MODULETYPES = 10;
+
+	unsigned char numberOfModules;
+	int moduleTypes[MAX_MODULETYPES];
 };

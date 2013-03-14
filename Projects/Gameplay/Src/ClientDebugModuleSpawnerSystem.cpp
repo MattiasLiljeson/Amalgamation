@@ -17,7 +17,12 @@ void ClientDebugModuleSpawnerSystem::process()
 	if(m_input->getDeltaByEnum(InputHelper::KeyboardKeys_F4) > 0.0)
 	{
 		SpawnDebugModulePacket data;
-		data.moduleType = EntityType::ShieldModule;
+		data.moduleTypes[0] = EntityType::ShieldModule;
+		data.moduleTypes[1] = EntityType::AnomalyModule;
+		data.moduleTypes[2] = EntityType::BoosterModule;
+		data.moduleTypes[3] = EntityType::MineLayerModule;
+		data.moduleTypes[4] = EntityType::MinigunModule;
+		data.numberOfModules = 5;
 		m_client->sendPacket(data.pack());
 	}
 }

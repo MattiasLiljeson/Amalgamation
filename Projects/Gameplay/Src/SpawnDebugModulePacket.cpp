@@ -2,17 +2,25 @@
 
 SpawnDebugModulePacket::SpawnDebugModulePacket()
 {
-	moduleType = -1;
+	numberOfModules = 0;
 }
 
 Packet SpawnDebugModulePacket::pack()
 {
 	Packet packet((char)PacketType::SpawnDebugModulePacket);
-	packet << moduleType;
+	packet << numberOfModules;
+	for(unsigned char i=0; i<numberOfModules; i++)
+	{
+		packet << moduleTypes[i];
+	}
 	return packet;
 }
 
 void SpawnDebugModulePacket::unpack( Packet& p_packet )
 {
-	p_packet >> moduleType;
+	p_packet >> numberOfModules;
+	for(unsigned char i=0; i<numberOfModules; i++)
+	{
+		p_packet >> moduleTypes[i];
+	}
 }
