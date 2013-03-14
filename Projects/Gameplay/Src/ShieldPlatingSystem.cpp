@@ -6,7 +6,7 @@
 
 ShieldPlatingSystem::ShieldPlatingSystem()
 	: EntitySystem( SystemType::ShieldPlatingSystem, 4, ComponentType::Transform,
-	ComponentType::ShieldPlate, ComponentType::EntityParent, ComponentType::RenderInfo )
+	ComponentType::ShieldPlate, ComponentType::EntityParent, ComponentType::RenderInfo)
 {
 }
 
