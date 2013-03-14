@@ -32,7 +32,10 @@ void ShipEngineSystem::processEntities( const vector<Entity*>& p_entities )
 				(p_entities[i]->getComponent(ComponentType::ThrustComponent));
 
 			float factor = thrust->m_thrustPower / (float)thrust->POWERCAP ;
-			float soundVolume = factor;
+			float soundVolume = factor + 0.3f;
+			if(soundVolume>1.0f){
+				soundVolume = 1.0f;
+			}
 			factor += 1.0f;
 			idle->volume = soundVolume;
 			idle->frequency = factor;
