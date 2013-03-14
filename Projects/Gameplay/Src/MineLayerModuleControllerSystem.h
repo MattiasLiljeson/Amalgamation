@@ -32,6 +32,7 @@ private:
 	void launchMine(Entity* p_entity);
 	void updateMine(Entity* p_entity, float p_age);
 	void setSpawnAnimation(Entity* p_layer);
+	void setReviveAnimation(Entity* p_layer);
 private:
 	TcpServer* m_server;
 };

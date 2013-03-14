@@ -26,5 +26,6 @@ public:
 	float m_mineAge;
 	int m_currentMine;
 	float m_timeSinceSpawnStarted;
+	float m_cooldown;
 	static ComponentRegister<MineLayerModule> s_reg;
 };
