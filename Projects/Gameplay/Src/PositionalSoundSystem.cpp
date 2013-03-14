@@ -14,6 +14,7 @@
 #include <AudioHeader.h>
 #include "AudioListenerSystem.h"
 #include <ValueClamp.h>
+#include "MeshOffsetTransform.h"
 
 PositionalSoundSystem::PositionalSoundSystem()
 	: EntitySystem( SystemType::PositionalSoundSystem, 2,
@@ -52,7 +53,10 @@ void PositionalSoundSystem::processSoundComponent(Entity* p_entity,
 
 	vector<AudioHeader*>* ambientRange = 
 		p_soundComponent->getAllAudiosByType(AudioHeader::AMBIENTRANGE);
-	
+
+	MeshOffsetTransform* offsetTrans = static_cast<MeshOffsetTransform*>(
+		p_entity->getComponent( ComponentType::MeshOffsetTransform ));
+
 	SoundOrientation* listener = m_audioListenerSystem->getListenerOrientation();
 	for (unsigned int i = 0; i < ambientRange->size(); i++){
 		
@@ -83,7 +87,6 @@ void PositionalSoundSystem::processSoundComponent(Entity* p_entity,
 		float max = header->maxRange;
 		newVolume = (1.0f-((clamp(length, min, max+min)-min)/max))*header->volume;
 
-
 		m_audioBackendSystem->getSoundWrapper()->getSound(header->soundIndex)->
 			getSourceVoice()->SetVolume(newVolume);
 	}
@@ -93,13 +96,24 @@ void PositionalSoundSystem::processSoundComponent(Entity* p_entity,
 
 	for (unsigned int i = 0; i < positionalSound->size(); i++){
 		AudioHeader* header = positionalSound->at(i);
-		AglVector3 posw = header->pos;
-		posw.transform(trans->getMatrix());  // fix: local to world space (Jarl 11-03-2013)
+
+		AglMatrix worldTransform; 
+		if(offsetTrans){
+			worldTransform = offsetTrans->offset.inverse() * trans->getMatrix();
+		}
+		else{
+			worldTransform = trans->getMatrix();
+		}
+		
+		header->pos = worldTransform.GetTranslation();
+		header->front = worldTransform.GetForward();
+		header->top = worldTransform.GetUp();
+
+		//posw.transform(trans->getMatrix());  // fix: local to world space (Jarl 11-03-2013)
 
 		PositionalSound* sound = static_cast<PositionalSound*>
 			(m_audioBackendSystem->getSoundWrapper()->getSound(header->soundIndex));
-		sound->setPosition(posw);
-		sound->setRange(header->maxRange);
+		sound->updateEmitter(header);
 		m_audioBackendSystem->updateOutputMatrix(header->soundIndex);
 	}
 	
