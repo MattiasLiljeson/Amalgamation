@@ -75,13 +75,13 @@ void SoundSystem::updateSoundStatus( const SoundComponent* p_soundComponent )
 			}
 
 			//Update the sounds' playing status 
-			if( header->playingState != header->queuedPlayingState ){
-				header->playingState = header->queuedPlayingState;
+			if( header->getPlayingState() != header->queuedPlayingState ){
+				header->setPlayingState(header->queuedPlayingState);
 				m_audioBackend->changeAudioInstruction(header->soundIndex, 
-					header->playingState);
+					header->getPlayingState());
 
 				if (header->playInterval == AudioHeader::ONCE){
-					header->playingState = AudioHeader::STOP;
+					header->setPlayingState( AudioHeader::STOP);
 					header->queuedPlayingState = AudioHeader::STOP;
 				}
 			}
@@ -89,7 +89,7 @@ void SoundSystem::updateSoundStatus( const SoundComponent* p_soundComponent )
 			//Update timer based sounds
 			if(header->playInterval == AudioHeader::TIMERBASED){
 
-				if (header->playingState == AudioHeader::PLAY){
+				if (header->getPlayingState() == AudioHeader::PLAY){
 					header->timeSinceLastPlayed += m_world->getDelta();
 
 					if(header->timeSinceLastPlayed >= header->timerInterval){

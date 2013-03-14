@@ -364,7 +364,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		engineSound->maxFrequencyOffeset = 2.0f;
 		engineSound->playInterval	= AudioHeader::FOREVER;
 		engineSound->sourceChannels = 1;
-		//engineSound->queuedPlayingState = AudioHeader::PLAY;
+		engineSound->queuedPlayingState = AudioHeader::PLAY;
 		engineSound->volume = 0.5f;
 		soundComponent->addAudioHeader(engineSound);
 
