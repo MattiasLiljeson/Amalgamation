@@ -128,6 +128,7 @@
 #include <ClientModuleCounterSystem.h>
 #include <AddToParentSystem.h>
 #include <GlowAnimationSystem.h>
+#include <ClientDebugModuleSpawnerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -415,6 +416,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
 	m_world->setSystem( new OutputLogger("log_client.txt"));
 	m_world->setSystem( new ClientModuleCounterSystem() );
+	m_world->setSystem( new ClientDebugModuleSpawnerSystem(m_client) );
 
 	m_world->initialize();
 

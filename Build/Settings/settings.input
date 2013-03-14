@@ -1,10 +1,10 @@
 //-Actions-							-Inputs- (Separated by tabs and/or spaces)--
 Actions_ACTIVATE_PREV_SLOT			MouseAxes_Z_POSITIVE
 Actions_ACTIVATE_NEXT_SLOT          MouseAxes_Z_NEGATIVE
-Actions_ACTIVATE_SLOT_1				KeyboardKeys_3				KeyboardKeys_DOWN			BTN_A
-Actions_ACTIVATE_SLOT_2				KeyboardKeys_1				KeyboardKeys_UP				BTN_Y
-Actions_ACTIVATE_SLOT_3				KeyboardKeys_4				KeyboardKeys_LEFT			BTN_X
-Actions_ACTIVATE_SLOT_4				KeyboardKeys_2				KeyboardKeys_RIGHT			BTN_B
+Actions_ACTIVATE_SLOT_1				KeyboardKeys_1				KeyboardKeys_DOWN			BTN_A
+Actions_ACTIVATE_SLOT_2				KeyboardKeys_2				KeyboardKeys_UP				BTN_Y
+Actions_ACTIVATE_SLOT_3				KeyboardKeys_3				KeyboardKeys_LEFT			BTN_X
+Actions_ACTIVATE_SLOT_4				KeyboardKeys_4				KeyboardKeys_RIGHT			BTN_B
 Actions_ACTIVATE_MODULE				MouseButtons_0				TRIGGER_L
 Actions_ROTATE_MODULE_LEFT			KeyboardKeys_NUMPAD_7		DPAD_LEFT
 Actions_ROTATE_MODULE_RIGHT			KeyboardKeys_NUMPAD_8		DPAD_RIGHT

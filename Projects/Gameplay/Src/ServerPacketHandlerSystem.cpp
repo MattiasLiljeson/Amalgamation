@@ -59,6 +59,7 @@
 #include "RootBoundingSpherePacket.h"
 #include "DisconnectPacket.h"
 #include "PlayerReadyPacket.h"
+#include "SpawnDebugModulePacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -406,6 +407,24 @@ void ServerPacketHandlerSystem::handleIngame()
 				pickSystem->setReleased(packet.getSenderId());
 			else if (sep.type == SimpleEventType::TOGGLE_PREFERRED_SLOT)
 				pickSystem->togglePreferredSlot(packet.getSenderId());
+		}
+		else if(packetType == (char)PacketType::SpawnDebugModulePacket)
+		{
+			SpawnDebugModulePacket data;
+			data.unpack(packet);
+			EntityCreationPacket entityCreation;
+			entityCreation.scale = AglVector3(1.0f, 1.0f, 1.0f);
+			entityCreation.translation = AglVector3(0, 0, 0);
+			AglMatrix pos = AglMatrix::createTranslationMatrix(entityCreation.translation);
+			entityCreation.entityType = EntityType::ShieldModule;
+			Entity* entity = static_cast<EntityFactory*>(m_world->getSystem(
+				SystemType::EntityFactory))->entityFromPacket(entityCreation, &pos);
+			NetworkSynced* netsync = static_cast<NetworkSynced*>(entity->getComponent(
+				ComponentType::NetworkSynced));
+			entityCreation.networkIdentity = netsync->getNetworkIdentity();
+			entityCreation.owner = netsync->getNetworkOwner();
+			entityCreation.playerID = netsync->getPlayerID();
+			m_server->broadcastPacket(entityCreation.pack());
 		}
 
 		// Pop packet!

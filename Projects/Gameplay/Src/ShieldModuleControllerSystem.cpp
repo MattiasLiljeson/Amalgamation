@@ -133,8 +133,8 @@ bool ShieldModuleControllerSystem::canTarget( Entity* p_shield, Entity* p_target
 	Entity* shieldOwner = NULL;
 	ModuleHelper::FindParentShip(m_world, &shieldOwner, module);
 	
-	if(p_shield == p_target &&
-		shieldOwner == p_target)
+	if(p_target == p_shield ||
+		p_target == shieldOwner)
 	{
 		return false;
 	}
@@ -146,7 +146,8 @@ bool ShieldModuleControllerSystem::canTarget( Entity* p_shield, Entity* p_target
 		{
 			Entity* targetOwner = NULL;
 			ModuleHelper::FindParentShip(m_world, &targetOwner, targetModule);
-			if(targetOwner && targetOwner->getIndex() == shieldOwner->getIndex())
+			if(targetOwner &&
+				targetOwner == shieldOwner)
 			{
 				return false;
 			}

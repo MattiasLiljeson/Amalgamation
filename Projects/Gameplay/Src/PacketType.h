@@ -66,6 +66,7 @@ public:
 		HighlightEntityPacket,
 		RootBoundingSpherePacket,
 		SoundPacket,
+		SpawnDebugModulePacket,
 	};
 
 };
