@@ -145,6 +145,7 @@ using namespace std;
 #include <RandomUtil.h>
 #include <DestroyOnParticlesDeathSystem.h>
 #include <ModuleStatusEffectSystem.h>
+#include <StateManagementSystem.h>
 
 // unsorted includes. Sort these as soon as they're added!
 #include <PlayerSystem.h>
@@ -339,6 +340,7 @@ void ClientApplication::initSystems()
 	//---STATESYSTEM
 	m_world->setSystem( new ClientStateSystem( GameStates::MENU ) );
 	m_world->setSystem( new ClientConnectToServerSystem( m_client, false ) );
+	m_world->setSystem( new StateManagementSystem());
 
 	//---GUI UPDATE SYSTEMS
 	m_world->setSystem( new LobbySystem() );
@@ -407,7 +409,7 @@ void ClientApplication::initSystems()
 	/* Debugging															*/
 	/************************************************************************/
 	m_world->setSystem( new DebugMovementSystem(), false );
-	m_world->setSystem( new MenuBackgroundSceneSystem() );
+	m_world->setSystem( new MenuBackgroundSceneSystem());
 	m_world->setSystem( new OrbitalMovementSystem() );
 	m_world->setSystem( new AxisRotationSystem() );
 	m_world->setSystem( new MoveShipLightsSystem() );

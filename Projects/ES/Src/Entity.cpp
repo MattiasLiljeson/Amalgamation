@@ -19,10 +19,10 @@ void Entity::reset()
 	//m_UUID = UUID.randomUUID();
 }
 
-int Entity::getUUID()
-{
-	return m_UUID;
-}
+//int Entity::getUUID()
+//{
+//	return m_UUID;
+//}
 
 int Entity::getIndex()
 {

@@ -871,6 +871,7 @@
     <ClInclude Include="SpawnDebugModulePacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="StateManagementSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1503,5 +1504,6 @@
     <ClCompile Include="SpawnDebugModulePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
+    <ClCompile Include="StateManagementSystem.cpp" />
   </ItemGroup>
 </Project>

@@ -249,6 +249,7 @@
     <ClInclude Include="SpeedFovAdjustSystem.h" />
     <ClInclude Include="StandardMine.h" />
     <ClInclude Include="StandardRocket.h" />
+    <ClInclude Include="StateManagementSystem.h" />
     <ClInclude Include="StaticProp.h" />
     <ClInclude Include="TeslaCoilEffect.h" />
     <ClInclude Include="TeslaCoilModule.h" />
@@ -471,6 +472,7 @@
     <ClCompile Include="SpeedFovAdjustSystem.cpp" />
     <ClCompile Include="StandardMine.cpp" />
     <ClCompile Include="StandardRocket.cpp" />
+    <ClCompile Include="StateManagementSystem.cpp" />
     <ClCompile Include="TeslaCoilEffect.cpp" />
     <ClCompile Include="TeslaCoilModule.cpp" />
     <ClCompile Include="TeslaCoilModuleControllerSystem.cpp" />

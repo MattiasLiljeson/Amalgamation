@@ -138,6 +138,7 @@ public:	//Enums
 		AddToParentSystem,
 		ClientDebugModuleSpawnerSystem,
 		GlowAnimationSystem,
+		StateManagementSystem,
 		NUM_SYSTEM_TYPES
 	};
 

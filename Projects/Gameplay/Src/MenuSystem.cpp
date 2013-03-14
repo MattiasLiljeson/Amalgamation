@@ -82,6 +82,7 @@ void MenuSystem::process()
 		rocketEventManager->clearDocumentStack();
 		rocketEventManager->loadWindow("main_menu");
 	}
+
 }
 
 void MenuSystem::endLoadingState()
