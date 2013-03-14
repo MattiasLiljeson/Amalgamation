@@ -1,29 +1,26 @@
 #pragma once
 #include <EntitySystem.h>
-#include <map>
-using namespace std;
+class InputBackendSystem;
+class TcpClient;
 // =======================================================================================
-// ShieldPlaterSystem
+// ClientDebugModuleSpawnerSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Brief...
+/// \brief Being able to send create-module packet to server.
 ///        
-/// # ShieldPlaterSystem
+/// # ClientDebugModuleSpawnerSystem
 /// Detailed description...
-/// Created on: 27-2-2013 
+/// Created on: 14-3-2013 
 ///---------------------------------------------------------------------------------------
-class ShieldPlaterSystem: public EntitySystem
+class ClientDebugModuleSpawnerSystem: public EntitySystem
 {
 public:
-	ShieldPlaterSystem();
+	ClientDebugModuleSpawnerSystem(TcpClient* p_client);
 	void processEntities( const vector<Entity*>& p_entities ) final;
-	void inserted( Entity* p_entity ) final;
-	// NOTE: (Johan) Don't forget deleted(Entity*) event.
+	void initialize() final;
 
 private:
-	void circularRandom(float* p_spawnX, float* p_spawnY, bool p_warpCompensation=false);
-
-private:
-	map<Entity*, vector<Entity*> > m_shieldPlates;
+	InputBackendSystem* m_input;
+	TcpClient* m_client;
 };

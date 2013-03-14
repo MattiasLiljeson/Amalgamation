@@ -40,6 +40,7 @@
 #include "WelcomePacket.h"
 #include <BasicSoundCreationInfo.h>
 #include <PositionalSoundCreationInfo.h>
+#include "ShieldModule.h"
 
 
 // Packets
@@ -67,6 +68,7 @@
 #include "SpawnExplosionPacket.h"
 #include "SpawnSoundEffectPacket.h"
 #include "UpdateClientStatsPacket.h"
+#include "ShieldActivationPacket.h"
 
 // Debug
 
@@ -1112,6 +1114,30 @@ void ClientPacketHandlerSystem::handleIngameState()
 				}
 			}
 		}
+		else if(packetType == (char)PacketType::ShieldActivationPacket)
+		{
+			ShieldActivationPacket data;
+			data.unpack(packet);
+			Entity* netModule = static_cast<NetsyncDirectMapperSystem*>(
+				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+				data.entityIndex);
+			if(netModule)
+			{
+				ShieldModule* shieldModule = static_cast<ShieldModule*>(
+					netModule->getComponent(ComponentType::ShieldModule));
+				if(shieldModule)
+				{
+					if(data.shieldActivationState)
+					{
+						shieldModule->activation = 1.0f;
+					}
+					else
+					{
+						shieldModule->activation = 0;
+					}
+				}
+			}
+		}
 		else
 		{
 			DEBUGWARNING(( "Unhandled packet type!" ));
@@ -1513,7 +1539,8 @@ void ClientPacketHandlerSystem::resetFromDisconnect()
 
 void ClientPacketHandlerSystem::handleServerDisconnect()
 {
-	if (!m_tcpClient->hasActiveConnection() && m_gameState->getCurrentState() != GameStates::MENU)
+	if (!m_tcpClient->hasActiveConnection() && m_gameState->getCurrentState() != GameStates::MENU
+		&& m_gameState->getCurrentState() != GameStates::NONE)
 	{
 		static_cast<MenuSystem*>(m_world->getSystem(SystemType::MenuSystem))
 			->displayDisconnectPopup();

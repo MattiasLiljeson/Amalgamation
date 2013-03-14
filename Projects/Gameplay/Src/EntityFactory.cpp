@@ -817,7 +817,7 @@ void EntityFactory::createBackgroundScene()
 
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 {
-	Entity* shieldEntity = entityFromRecipeOrFile( "Shield",
+	Entity* shieldEntity = entityFromRecipeOrFile( "ClientShield",
 		"Assemblages/Modules/Shield/ClientShield.asd");
 	shieldEntity->setName("shieldModuleClient");
 	// set transform from packet directly
@@ -826,19 +826,11 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 	transform->setTranslation(p_packet.translation);
 	transform->setRotation(p_packet.rotation);	
 	transform->setScale(p_packet.scale);	
+	
 	// Add network dependent components
 	shieldEntity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
-	auto shipModule = static_cast<ShipModule*>(
-		shieldEntity->getComponent(ComponentType::ShipModule));
-	shieldEntity->addComponent(new ShieldModule());
 	m_world->addEntity(shieldEntity);
-
-
-	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	return shieldEntity;
 }
@@ -846,14 +838,14 @@ Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 {
 	Entity* entity = entityFromRecipeOrFile( "ServerShield",
 		"Assemblages/Modules/Shield/ServerShield.asd");
-	auto transform = static_cast<Transform*>(entity->getComponent(ComponentType::Transform));
-	transform->setTranslation(p_packet.translation);
-	transform->setRotation(p_packet.rotation);
-	transform->setScale(p_packet.scale);
-	auto bodyInitData = static_cast<BodyInitData*>(entity->getComponent(ComponentType::BodyInitData));
-	bodyInitData->m_position = p_packet.translation;
-	bodyInitData->m_orientation = p_packet.rotation;
-	bodyInitData->m_scale = p_packet.scale;
+//	auto transform = static_cast<Transform*>(entity->getComponent(ComponentType::Transform));
+//	transform->setTranslation(p_packet.translation);
+//	transform->setRotation(p_packet.rotation);
+//	transform->setScale(p_packet.scale);
+//	auto bodyInitData = static_cast<BodyInitData*>(entity->getComponent(ComponentType::BodyInitData));
+//	bodyInitData->m_position = p_packet.translation;
+//	bodyInitData->m_orientation = p_packet.rotation;
+//	bodyInitData->m_scale = p_packet.scale;
 
 	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(
 		entity->getIndex(), -1, EntityType::ShieldModule));

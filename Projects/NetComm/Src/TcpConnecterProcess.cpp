@@ -99,7 +99,7 @@ void TcpConnecterProcess::processMessages()
 
 		boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
-		if( msg->type = MessageType::TERMINATE )
+		if( msg->type == MessageType::TERMINATE )
 			m_running = false;
 
 		delete msg;

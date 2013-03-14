@@ -60,7 +60,7 @@ void TcpListenerProcess::processMessages()
 		ProcessMessage* msg = messages.front();
 		messages.pop();
 
-		if( msg->type = MessageType::TERMINATE )
+		if( msg->type == MessageType::TERMINATE )
 			m_running = false;
 
 		delete msg;
