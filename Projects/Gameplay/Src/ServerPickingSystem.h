@@ -67,6 +67,9 @@ private:
 
 	AglVector3 project(AglVector3 p_o, AglVector3 p_d, AglVector3 p_point);
 
+	void updateModuleHealthEffect( int p_moduleNetworkOwner, float p_healthPercent );
+
+	void updateModuleValueEffect( int p_moduleNetworkOwner, float p_valuePercent );
 
 	//Send information about the Selection marker
 	void updateSelectionMarker(PickComponent& p_ray);

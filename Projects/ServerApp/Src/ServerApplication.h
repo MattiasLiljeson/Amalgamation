@@ -26,7 +26,7 @@ namespace Srv
 	class ServerApplication : public ProcessThread
 	{
 	public:
-		ServerApplication(int p_activePort=1337);
+		ServerApplication(int p_activePort=1337, const string& p_name="monki");
 		virtual ~ServerApplication();
 
 		///-----------------------------------------------------------------------------------
@@ -76,5 +76,6 @@ namespace Srv
 		EntityWorld* m_world;
 		TcpServer* m_server;
 		int m_activePort;
+		string m_serverName;
 	};
 };
