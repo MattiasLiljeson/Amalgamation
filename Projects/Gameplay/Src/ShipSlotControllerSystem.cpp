@@ -18,6 +18,8 @@ SlotInputControllerSystem::SlotInputControllerSystem(InputBackendSystem* p_input
 {
 	m_inputBackend = p_inputBackend;
 	m_client = p_client;
+	m_previousModeWasEditMode = false;
+	m_previousHighlight=-1;
 }
 
 SlotInputControllerSystem::~SlotInputControllerSystem()
@@ -53,6 +55,7 @@ void SlotInputControllerSystem::handleSlotSelection(bool p_editMode)
 		{
 			sendPreferredSlotToggle();
 		}
+		m_previousModeWasEditMode = true;
 	}
 	else
 	{
@@ -60,25 +63,34 @@ void SlotInputControllerSystem::handleSlotSelection(bool p_editMode)
 			ComponentType::TAG_MyShip);
 		int highlight = -1;
 
+		// history based
+		if (m_previousModeWasEditMode)
+		{
+			highlight=m_previousHighlight;
+			m_previousModeWasEditMode=false;
+		}
+		// input based
 		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_1) > 0)
 		{
-			highlight = 0;
+			highlight=0;
 		}
 		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_2) > 0)
 		{
-			highlight = 1;
+			highlight=1;
 		}
 		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_3) > 0)
 		{
-			highlight = 2;
+			highlight=2;
 		}
 		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_4) > 0)
 		{
-			highlight = 3;
+			highlight=3;
 		}
+
 
 		if (highlight >= 0)
 		{
+			m_previousHighlight=highlight;
 			//Highlight slot
 
 			sendModuleSlotHighlight(highlight);

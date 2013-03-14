@@ -29,12 +29,18 @@ void AnomalyBombControllerSystem::processEntities( const vector<Entity*>& p_enti
 			ComponentType::PhysicsBody));
 		PhysicsSystem* physSystem = static_cast<PhysicsSystem*>(
 			m_world->getSystem(SystemType::PhysicsSystem));
-		bombBomb->lifeTime -= dt;
-		if(bombBomb->lifeTime <= 0.0f)
+		bombBomb->lifetime -= dt;
+		if(bombBomb->lifetime < bombBomb->maxLifetime - 0.2f &&
+			!bombBomb->physicsEnabled)
+		{
+			enablePhysics(p_entities[i]);
+		}
+
+		if(bombBomb->lifetime <= 0.0f)
 		{
 			m_world->deleteEntity(p_entities[i]);
 		}
-		else if(bombBomb->lifeTime <= bombBomb->explodeTime)
+		else if(bombBomb->lifetime <= bombBomb->explodeTime)
 		{
 			if(bombBomb->activated == false)
 			{
@@ -86,5 +92,20 @@ void AnomalyBombControllerSystem::processEntities( const vector<Entity*>& p_enti
 				}
 			}
 		}
+	}
+}
+
+void AnomalyBombControllerSystem::enablePhysics( Entity* p_bombEntity )
+{
+	PhysicsSystem* physSys = static_cast<PhysicsSystem*>(m_world->getSystem(
+		SystemType::PhysicsSystem));
+	PhysicsBody* body = static_cast<PhysicsBody*>(p_bombEntity->getComponent(
+		ComponentType::PhysicsBody));
+	Body* b = physSys->getController()->getBody(body->m_id);
+	if(!b->IsCompoundBody())
+	{
+		RigidBody* rigid = static_cast<RigidBody*>(b);
+		rigid->SetCollisionEnabled(true);
+		rigid->SetImpulseEnabled(true);
 	}
 }
