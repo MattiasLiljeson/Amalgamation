@@ -1,5 +1,6 @@
 #pragma once
 #include "Packetizer.h"
+#include <AglVector3.h>
 // =======================================================================================
 // SpawnDebugModulePacket
 // =======================================================================================
@@ -21,6 +22,7 @@ public:
 public:
 	static const int MAX_MODULETYPES = 10;
 
+	AglVector3 shipPosition;
 	unsigned char numberOfModules;
 	int moduleTypes[MAX_MODULETYPES];
 };

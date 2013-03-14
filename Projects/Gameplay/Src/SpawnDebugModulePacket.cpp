@@ -8,6 +8,7 @@ SpawnDebugModulePacket::SpawnDebugModulePacket()
 Packet SpawnDebugModulePacket::pack()
 {
 	Packet packet((char)PacketType::SpawnDebugModulePacket);
+	packet << shipPosition;
 	packet << numberOfModules;
 	for(unsigned char i=0; i<numberOfModules; i++)
 	{
@@ -18,6 +19,7 @@ Packet SpawnDebugModulePacket::pack()
 
 void SpawnDebugModulePacket::unpack( Packet& p_packet )
 {
+	p_packet >> shipPosition;
 	p_packet >> numberOfModules;
 	for(unsigned char i=0; i<numberOfModules; i++)
 	{

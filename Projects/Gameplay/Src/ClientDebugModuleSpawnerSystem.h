@@ -17,7 +17,7 @@ class ClientDebugModuleSpawnerSystem: public EntitySystem
 {
 public:
 	ClientDebugModuleSpawnerSystem(TcpClient* p_client);
-	void process() final;
+	void processEntities( const vector<Entity*>& p_entities ) final;
 	void initialize() final;
 
 private:
