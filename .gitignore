@@ -130,8 +130,6 @@ External/*
 /Build/log.txt
 /Build/log_server.txt
 /Build/log_client.txt
-settings.settings
-settings.input
 
 *.agl
 *.fbx

@@ -28,4 +28,5 @@ public:
 	float m_angularPower;
 
 	const static int POWERCAP = 100;
+	const static int ANGULARCAP = 15; //5 times 3.14f
 };

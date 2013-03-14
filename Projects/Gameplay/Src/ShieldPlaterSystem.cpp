@@ -44,6 +44,9 @@ void ShieldPlaterSystem::processEntities( const vector<Entity*>& p_entities )
 
 void ShieldPlaterSystem::inserted( Entity* p_entity )
 {
+	ShieldModule* shieldModule = static_cast<ShieldModule*>(p_entity->getComponent(
+		ComponentType::ShieldModule));
+
 	const int plateCount = 120;
 	vector<Entity*> plateEntities;
 	plateEntities.resize(plateCount);
@@ -68,12 +71,12 @@ void ShieldPlaterSystem::inserted( Entity* p_entity )
 			quaternionBuffer, spawnPoint);
 
 		float radius = 10.0f;
-		AglVector3 position = spawnPoint + transform.GetRight()*spawnX*radius +
+		AglVector3 dir = spawnPoint + transform.GetRight()*spawnX*radius +
 			transform.GetUp()*spawnY*radius;
-		position.normalize();
+		dir.normalize();
 		AglQuaternion plateRotation = AglQuaternion::rotateToFrom(
-			AglVector3(0, 1.0f, 0.0f), position);
-		position = spawnPoint + transform.GetForward()*radius;//position * spawnPoint.length();
+			AglVector3(0, 1.0f, 0.0f), dir);
+		AglVector3 position = dir * spawnPoint.length();
 		float plateScale = 1.0f;
 		Transform* plateTransform = new Transform(position, plateRotation,
 			AglVector3(plateScale, plateScale, plateScale));
@@ -82,7 +85,7 @@ void ShieldPlaterSystem::inserted( Entity* p_entity )
 		entity->addComponent(new EntityParent(p_entity->getIndex(),
 			plateTransform->getMatrix()));
 		entity->addComponent(new ShieldPlate(
-			0.2f + 0.8f * (float)rand()/(float)RAND_MAX));
+			0.2f + 0.8f * (float)rand()/(float)RAND_MAX, dir, shieldModule->maxRange));
 		entity->setEnabled(false);
 		m_world->addEntity(entity);
 	}

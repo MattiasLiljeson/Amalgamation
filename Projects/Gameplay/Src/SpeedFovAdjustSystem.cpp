@@ -3,16 +3,15 @@
 #include "Transform.h"
 #include <AntTweakBarWrapper.h>
 #include "SpeedBuffer.h"
+#include "ThrustComponent.h"
 
-const float SpeedFovAdjustSystem::PI = 3.1415926536f;
 
-SpeedFovAdjustSystem::SpeedFovAdjustSystem( float p_fov ) : 
+SpeedFovAdjustSystem::SpeedFovAdjustSystem( ) : 
 	EntitySystem( SystemType::InterpolationSystem, 3,
 	ComponentType::CameraInfo,
 	ComponentType::TAG_MainCamera,
 	ComponentType::Transform )
 {
-	m_stdFov = p_fov;
 }
 
 SpeedFovAdjustSystem::~SpeedFovAdjustSystem()
@@ -21,10 +20,19 @@ SpeedFovAdjustSystem::~SpeedFovAdjustSystem()
 
 void SpeedFovAdjustSystem::initialize()
 {
-	m_speedFovMult = 0.0;
+	m_fieldOfViewFactor = 2.0f;
+	m_offest = 1.10f;
+	m_maxAdjustment = 1.85f;
 
-	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::GRAPHICS,
-		"Fov speed mult", TwType::TW_TYPE_FLOAT, &m_speedFovMult, "" );
+	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::OVERALL,
+		"Factor", TwType::TW_TYPE_FLOAT, &m_fieldOfViewFactor, "group=FOV step=0.01f" );
+
+	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::OVERALL,
+		"Offset", TwType::TW_TYPE_FLOAT, &m_offest, "group=FOV step=0.01f" );
+
+	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::OVERALL,
+		"MaxAdjustment", TwType::TW_TYPE_FLOAT, &m_maxAdjustment, "group=FOV step=0.01f" );
+
 }
 
 void SpeedFovAdjustSystem::processEntities( const vector<Entity*>& p_entities )
@@ -34,9 +42,27 @@ void SpeedFovAdjustSystem::processEntities( const vector<Entity*>& p_entities )
 		Entity* ship = m_world->getEntityManager()->
 			getFirstEntityByComponentType( ComponentType::TAG_MyShip );
 
-		if( ship != NULL )
-		{
+		if( ship != NULL ){
+			CameraInfo* cam = static_cast<CameraInfo*>(
+				p_entities[0]->getComponent( ComponentType::CameraInfo ) );
 
+			ThrustComponent* thrust = static_cast<ThrustComponent*>
+				(ship->getComponent(ComponentType::ThrustComponent));
+
+			float thrustFactor = thrust->m_thrustPower / (float)thrust->POWERCAP;
+
+			thrustFactor = pow(thrustFactor, m_fieldOfViewFactor);
+
+			float resultingFactor = thrustFactor + m_offest;
+
+			if(resultingFactor >= m_maxAdjustment){
+				resultingFactor = m_maxAdjustment;
+			}
+
+			cam->m_fieldOfViewAsRadians = 0.785398163f * resultingFactor;
+			cam->createPerspectiveMatrix();
+
+			/*
 			SpeedBuffer* shipSpeedBuffer = static_cast<SpeedBuffer*>(
 				ship->getComponent( ComponentType::SpeedBuffer ) );
 
@@ -49,6 +75,7 @@ void SpeedFovAdjustSystem::processEntities( const vector<Entity*>& p_entities )
 				cam->m_fieldOfViewAsRadians = fovasRadians;
 				cam->createPerspectiveMatrix();
 			}
+			*/
 		}
 	}
 }
