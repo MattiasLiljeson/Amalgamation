@@ -46,8 +46,6 @@ private:
 	InputBackendSystem* m_inputBackend;
 	TcpClient* m_client;
 
-	void highlightSlot(int p_slot, ParticleSystemsComponent* p_particlesComponent);
-
 	// client side fix for remembering slot highlighting
 	bool m_previousModeWasEditMode;
 	int m_previousHighlight;
