@@ -309,7 +309,7 @@ void ClientApplication::initSystems()
 
 	//---EFFECTS
 	m_world->setSystem( new ScoreWorldVisualizerSystem() );
-	m_world->setSystem( new ModuleStatusEffectSystem() );
+	//m_world->setSystem( new ModuleStatusEffectSystem() );
 	m_world->setSystem( new ConnectionVisualizerSystem() );
 	m_world->setSystem( new ShipParticleSystemUpdater() );
 	m_world->setSystem( new EditSphereSystem() );
@@ -372,13 +372,14 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	m_world->setSystem( new LevelHandlerSystem() );
 	m_world->setSystem( new LevelInfoLoader() );
-
 	/************************************************************************/
 	/* Mesh loading															*/
 	/************************************************************************/
 	// Note! Must set *after* EntityFactory and GraphicsBackend, and *before* Physics
 	m_world->setSystem( new LoadMeshSystemClient(graphicsBackend) ); 
 	m_world->setSystem( new ParticleSystemInstructionTranslatorSystem( graphicsBackend ) );
+
+	m_world->setSystem( new ModuleStatusEffectSystem() );
 
 	// || RENDERING SYSTEMS ||
 	m_world->setSystem( new SkeletalAnimationSystem() );

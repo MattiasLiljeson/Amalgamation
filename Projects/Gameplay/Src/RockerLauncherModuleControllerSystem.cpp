@@ -373,7 +373,7 @@ Entity* RocketLauncherModuleControllerSystem::getClosestShip(Entity* p_entity, E
 	int id = -1;
 	for (unsigned int i = 0; i < ships.size(); i++)
 	{
-		if (true)//ships[i] != p_parentShip)
+		if (ships[i] != p_parentShip)
 		{
 			Transform* st = static_cast<Transform*>(ships[i]->getComponent(ComponentType::Transform));
 
@@ -382,7 +382,7 @@ Entity* RocketLauncherModuleControllerSystem::getClosestShip(Entity* p_entity, E
 			AglVector3 d2 = p-o;
 			d2.normalize();
 
-			if (true)//AglVector3::dotProduct(d, d2) > 0.9f)
+			if (AglVector3::dotProduct(d, d2) > 0.9f)
 			{
 				float dist = AglVector3::lengthSquared((o - p) - d*AglVector3::dotProduct(o-p, d));
 

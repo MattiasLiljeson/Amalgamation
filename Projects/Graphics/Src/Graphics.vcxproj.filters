@@ -87,6 +87,9 @@
     <ClCompile Include="DeferredTessBaseShader.cpp">
       <Filter>Shader\Shader types</Filter>
     </ClCompile>
+    <ClCompile Include="DeferredPostProcessing.cpp">
+      <Filter>Shader\Shader types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h" />
@@ -231,9 +234,6 @@
     <ClInclude Include="LightShader.h">
       <Filter>Shader\Shader types</Filter>
     </ClInclude>
-    <ClInclude Include="SSAOCBuffer.h">
-      <Filter>Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="GPUTimer.h">
       <Filter>Graphics Utilities\Timer</Filter>
     </ClInclude>
@@ -254,6 +254,15 @@
     </ClInclude>
     <ClInclude Include="GPUTimerProfile.h">
       <Filter>Graphics Utilities\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredPostProcessing.h">
+      <Filter>Shader\Shader types</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessingBuffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="ComposeCBuffer.h">
+      <Filter>Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

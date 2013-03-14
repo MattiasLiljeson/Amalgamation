@@ -25,4 +25,13 @@ struct LevelPieceFileData
 	string	assemblageName;
 	string	assemblageFileName;
 	int		weight;
+
+	LevelPieceFileData()
+	{
+		id					= -1;
+		modelFileName		= "(unknown)";
+		assemblageName		= "(unknown)";
+		assemblageFileName	= "(unknown)";
+		weight				= 0;
+	}
 };

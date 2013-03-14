@@ -481,12 +481,18 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 
 		if( particleComp != NULL )
 		{
+
 			int idx = static_cast<unsigned int>(p_data.particleSystemIdx);
 			if( -1 < idx && idx < particleComp->getParticleSystemsPtr()->size() )
 			{
 				AglParticleSystem* particleSys = particleComp->getParticleSystemPtr(idx);
 				if (particleSys)
 				{
+					if (entity->getName() == "ClientMinigun")
+					{
+						int k = 0;
+					}
+
 					AglVector3 pos = p_data.position;
 					if (particleSys->getParticleSpace() == AglParticleSystemHeader::AglSpace_SCREEN)
 					{
@@ -584,7 +590,8 @@ void ClientPacketHandlerSystem::handleIngameState()
 {
 	while (m_tcpClient->hasNewPackets())
 	{
-		Packet packet = m_tcpClient->popNewPacket();
+		//Packet packet = m_tcpClient->popNewPacket();
+		Packet& packet = m_tcpClient->getFrontPacket();
 
 		updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
 
@@ -1131,6 +1138,9 @@ void ClientPacketHandlerSystem::handleIngameState()
 		{
 			DEBUGWARNING(( "Unhandled packet type!" ));
 		}
+
+		// Pop packet!
+		m_tcpClient->popFrontPacket();
 	}
 }
 
