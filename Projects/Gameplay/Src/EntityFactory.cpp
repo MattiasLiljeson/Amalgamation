@@ -684,8 +684,6 @@ Entity* EntityFactory::createRocketClient(EntityCreationPacket p_packet)
 	entity = entityFromRecipeOrFile( "Rocket","Assemblages/Rocket.asd"  );
 
 	// Add network dependent components
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
