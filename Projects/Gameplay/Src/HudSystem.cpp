@@ -38,6 +38,7 @@ void HudSystem::process()
 	if(stateSystem->getStateDelta(GameStates::INGAME) == EnumGameDelta::ENTEREDTHISFRAME)
 	{
 		m_backend->showDocument(m_hudIndex);
+		m_hudVisible = true;
 
 		setHUDData(SCORE,"-1");
 		//setHUDData(MAPPING,"Empty");
@@ -119,12 +120,21 @@ void HudSystem::process()
 	}
 	else if(stateSystem->getStateDelta(GameStates::RESULTS) == EnumGameDelta::ENTEREDTHISFRAME){
 		m_backend->hideDocument(m_hudIndex);
+		m_hudVisible = false;
 	}
 }
 
-void HudSystem::setHUDVisebilty(bool p_setVisibility)
+void HudSystem::setHUDVisibility(bool p_setVisibility)
 {
+	if (m_hudVisible == p_setVisibility)
+		return;
+
 	m_hudVisible = p_setVisibility;
+
+	if (m_hudVisible)
+		m_backend->showDocument(m_hudIndex);
+	else
+		m_backend->hideDocument(m_hudIndex);
 }
 
 void HudSystem::setHUDData( HUD_TYPES p_type, const char* p_value )

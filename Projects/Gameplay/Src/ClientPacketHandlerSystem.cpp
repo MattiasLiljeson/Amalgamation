@@ -1527,6 +1527,7 @@ void ClientPacketHandlerSystem::resetFromDisconnect()
 	// * Remove all players from the client!
 	// * Clear lobby data!
 	// * Enable the 'connect to server' system!
+	// * Clear components from camera.
 	// * Queue state to menu!
 	static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
 		deleteAllPlayerEntities();
@@ -1534,6 +1535,16 @@ void ClientPacketHandlerSystem::resetFromDisconnect()
 		resetAllPlayers();
 	static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
 		setEnabled(true);
+	Entity* camera = m_world->getEntityManager()->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
+	if (camera)
+	{
+		camera->removeComponent(ComponentType::NetworkSynced);
+		camera->removeComponent(ComponentType::PlayerState);
+		camera->removeComponent(ComponentType::PickComponent);
+		camera->removeComponent(ComponentType::PlayerCameraController);
+		camera->applyComponentChanges();
+	}
+
 	m_gameState->setQueuedState(GameStates::MENU);
 }
 

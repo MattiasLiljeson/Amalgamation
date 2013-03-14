@@ -5,6 +5,7 @@
 #include "ClientModuleCounterSystem.h"
 #include "ShipManagerSystem.h"
 #include "ConnectionVisualizerSystem.h"
+#include "HudSystem.h"
 
 StateManagementSystem::StateManagementSystem()
 	: EntitySystem(SystemType::StateManagementSystem)
@@ -34,10 +35,12 @@ void StateManagementSystem::process()
 			|| gameState->getStateDelta(GameStates::INGAME) == EnumGameDelta::EXITTHISFRAME)
 		{
 			// Cleanup resources here, that hasn't been cleaned up.
-			// For instance:
-			// * Level Data
+			// Currently cleaning up:
+			// * Level pieces
 			// * Modules
 			// * Ships
+			// * Connection visualization
+			// * HUD (by hiding it)
 			auto levelHandler = static_cast<LevelHandlerSystem*>(
 				m_world->getSystem(SystemType::LevelHandlerSystem));
 			levelHandler->destroyLevel();
@@ -50,6 +53,9 @@ void StateManagementSystem::process()
 			auto connectionVisualizer = static_cast<ConnectionVisualizerSystem*>(
 				m_world->getSystem(SystemType::ConnectionVisualizerSystem));
 			connectionVisualizer->cleanup();
+			auto hudSystem = static_cast<HudSystem*>(
+				m_world->getSystem(SystemType::HudSystem));
+			hudSystem->setHUDVisibility(false);
 		}
 	}
 }

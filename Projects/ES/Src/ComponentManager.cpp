@@ -1,6 +1,7 @@
 #include "ComponentManager.h"
 #include <DebugUtil.h>
-
+#include "OutputLogger.h"
+#include <ToString.h>
 
 ComponentManager::ComponentManager()
 {
@@ -72,6 +73,15 @@ void ComponentManager::addComponent( Entity* p_entity, ComponentType p_type,
 	if( m_componentsByType[typeIndex][entityIndex] == NULL ) {
 		m_componentsByType[typeIndex][entityIndex] = p_component;
 	} else {
+		string err = "Entity "
+			+ p_entity->getName()
+			+ "("+ toString(p_entity->getIndex()) + ")"
+			+ " already has a component of type "
+			+ toString((int)p_component->getComponentTypeId())
+			+ "\n";
+
+		auto componentEnums = p_entity->getComponentEnums();
+		//m_world->getOutputLogger()->write(err.c_str(), WRITETYPE_WARNING);
 		DEBUGWARNING(("Component already existing!\n"));
 	}
 

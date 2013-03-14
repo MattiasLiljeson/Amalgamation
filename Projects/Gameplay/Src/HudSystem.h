@@ -17,7 +17,7 @@ public:
 	~HudSystem();
 	void initialize();
 	void process();
-	void setHUDVisebilty(bool p_setVisibility);
+	void setHUDVisibility(bool p_setVisibility);
 	void setHUDData(HUD_TYPES p_type, const char* p_value);
 
 private:

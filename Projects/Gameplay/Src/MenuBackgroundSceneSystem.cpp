@@ -16,6 +16,7 @@
 #include "GlowAnimation.h"
 #include "GameplayTags.h"
 #include "Transform.h"
+#include "EnvironmentValues.h"
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	: EntitySystem(SystemType::MenuBackgroundSceneSystem)
@@ -144,6 +145,9 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_ship->addComponent(new Transform(position, rotation, AglVector3::one()));
 	AxisRotate* axisRotate = new AxisRotate(axis, toVector, rotation, 0.0f);
 	m_ship->addComponent(axisRotate);
+	EnvironmentValues* envValues = new EnvironmentValues();
+	envValues->m_fogColor = AglVector3(0.1f, 0.1f, 0.1f);
+	m_ship->addComponent(envValues);
 
 	initOrbitingShip(AglVector3(20.0f, 0.0f, 80.0f), AglVector3(0, 1.0f, 0), 50.0f, 1.0f);
 	repositionCamera();

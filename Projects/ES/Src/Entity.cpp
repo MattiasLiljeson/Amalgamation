@@ -5,6 +5,8 @@ Entity::Entity( EntityWorld* p_world, int p_index )
 {
 	 m_world = p_world;
 	 m_index = p_index;
+	 m_enabled = true;
+	 m_name = "(unknown)";
 }
 
 
