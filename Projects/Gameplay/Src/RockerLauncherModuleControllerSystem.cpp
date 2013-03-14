@@ -66,7 +66,7 @@ void RocketLauncherModuleControllerSystem::processEntities(const vector<Entity*>
 				if (gun->currentBurst >= gun->burstCount)
 				{
 					gun->lockCoolDown = 2.0f;
-					gun->cooldown = 2.0f;
+					gun->cooldown = 0.5f;
 					gun->currentBurst = 0;
 				}
 			}

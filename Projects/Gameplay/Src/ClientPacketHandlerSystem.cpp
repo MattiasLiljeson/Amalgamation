@@ -208,13 +208,16 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	if (p_packet.entityType != EntityType::DebugBox)
 	{
 		Entity* entity = factory->entityFromPacket(p_packet);
-		Transform* transform = static_cast<Transform*>(entity->getComponent(
-			ComponentType::Transform));
-		if(transform)
+		if (entity)
 		{
-			transform->setTranslation(p_packet.translation);
-			transform->setRotation(p_packet.rotation);
-			transform->setScale(p_packet.scale);
+			Transform* transform = static_cast<Transform*>(entity->getComponent(
+				ComponentType::Transform));
+			if(transform)
+			{
+				transform->setTranslation(p_packet.translation);
+				transform->setRotation(p_packet.rotation);
+				transform->setScale(p_packet.scale);
+			}
 		}
 	}
 	else
@@ -919,6 +922,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 		{
 			EntityCreationPacket data;
 			data.unpack(packet);
+
 			handleEntityCreationPacket(data);
 		}
 		else if (packetType == (char)PacketType::EntityDeletion)
