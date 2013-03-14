@@ -29,7 +29,7 @@ class PlayerSystem;
 class ServerWelcomeSystem: public EntitySystem
 {
 public:
-	ServerWelcomeSystem( TcpServer* p_server, int p_activePort=1337 );
+	ServerWelcomeSystem( TcpServer* p_server, int p_activePort, int p_gameTime);
 	~ServerWelcomeSystem();
 
 	virtual void processEntities(const vector<Entity*>& p_entities );
@@ -43,5 +43,6 @@ private:
 private:
 	TcpServer*		m_server;
 	PlayerSystem*	m_playerSystem;
+	int				m_gameTime;
 	int				m_activePort;
 };

@@ -15,6 +15,10 @@
 			</div>
 			<div id="serverWindow">
 				Server - Info
+				<div id="server_info">
+					<div class="server_info_object" id="server_name">Name: Tord!</div>
+					<div class="server_info_object" id="server_time">Round Time(min): 10</div>
+				</div>
 			</div>
 		</div>
 		<div class="lowerPanel" id="buttons">

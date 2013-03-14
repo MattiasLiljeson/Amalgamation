@@ -22,8 +22,10 @@ struct GameSettingsInfo
 
 	// Network settings
 	string playerName;
+	string serverName;
 	string ip;
 	string port;
+	int defaultGameTime;
 
 	// Game settings
 	int rumble;				// Treated as bool
@@ -40,6 +42,8 @@ struct GameSettingsInfo
 		enableEffects			= true;
 		enableVSYNC			= false;
 
+		defaultGameTime		= 600; 
+
 		// Sound settings
 		masterVolume		= 75;		// Percentage, %
 		sfxVolume			= 75;		// Percentage, %
@@ -47,6 +51,7 @@ struct GameSettingsInfo
 		
 		// Network settings
 		playerName			= "PlayerName";
+		serverName			= "FunHouse";
 		ip					= "194.47.150.30";
 		port				= "1337";
 

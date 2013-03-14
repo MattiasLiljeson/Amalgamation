@@ -4,7 +4,7 @@
 #include <fstream>
 #include <EntitySystem.h>
 #include "GameSettingsInfo.h"
-#include "..\..\AssetsManagement\Src\Globals.h"
+#include <Globals.h>
 
 using namespace std;
 

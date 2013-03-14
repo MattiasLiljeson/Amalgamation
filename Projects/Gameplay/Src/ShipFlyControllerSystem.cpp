@@ -127,10 +127,7 @@ void ShipFlyControllerSystem::handleIngame( const vector<Entity*>& p_entities )
 		AglQuaternion quat = transform->getRotation();
 		quat.transformVector(angularVec);
 
-		auto thrustComp = static_cast<ThrustComponent*>
-			(p_entities[i]->getComponent(ComponentType::ThrustComponent));
-		thrustComp->addThrustVector(thrustVec, m_world->getDelta());
-		thrustComp->addAngularVector(angularVec, m_world->getDelta());
+		updateThrustComponent(thrustVec,angularVec);
 
 		controller->m_thrustPowerAccumulator += thrustVec/*+gearShift*/;
 		controller->m_turnPowerAccumulator += angularVec;
@@ -164,7 +161,6 @@ void ShipFlyControllerSystem::handleIngame( const vector<Entity*>& p_entities )
 			controller->m_thrustPowerAccumulator = AglVector3::zero();
 			controller->m_turnPowerAccumulator = AglVector3::zero();
 		}
-
 		// Handle data sent to us from server
 		// handleTransformInterpolation( controller, transform );
 
@@ -190,6 +186,9 @@ void ShipFlyControllerSystem::processEntities( const vector<Entity*>& p_entities
 			break;
 		}
 	}
+	else{
+		updateThrustComponent(AglVector3::zero(), AglVector3::zero());
+	}
 }
 
 
@@ -204,4 +203,18 @@ void ShipFlyControllerSystem::sendThrustPacketToServer(NetworkSynced* p_syncedIn
 	thrustPacket.angularVector = p_angularVec;
 
 	m_client->sendPacket( thrustPacket.pack() );
+}
+
+void ShipFlyControllerSystem::updateThrustComponent( const AglVector3& p_thrust, 
+													const AglVector3& p_angular )
+{
+	Entity* myShip = m_world->getEntityManager()->
+		getFirstEntityByComponentType(ComponentType::TAG_MyShip);
+
+	if(myShip){
+		auto thrustComp = static_cast<ThrustComponent*>
+			(myShip->getComponent(ComponentType::ThrustComponent));
+		thrustComp->addThrustVector(p_thrust, m_world->getDelta());
+		thrustComp->addAngularVector(p_angular, m_world->getDelta());
+	}
 }

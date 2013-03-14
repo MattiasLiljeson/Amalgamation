@@ -32,6 +32,10 @@
 #include <EntitySystem.h>
 #include <stack>
 
+
+#define FORCE_VS_DBG_OUTPUT
+
+
 namespace Rocket
 {
 	namespace Core
