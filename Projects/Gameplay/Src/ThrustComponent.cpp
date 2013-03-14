@@ -29,6 +29,6 @@ void ThrustComponent::addAngularVector( const AglVector3& p_angular, float p_del
 	m_resultingAngular -= m_resultingAngular*p_delta;
 	m_angularPower = AglVector3::length(m_resultingAngular);
 
-	if(m_angularPower > (float)POWERCAP)
-		m_angularPower = POWERCAP;
+	if(m_angularPower > (float)ANGULARCAP)
+		m_angularPower = ANGULARCAP;
 }
