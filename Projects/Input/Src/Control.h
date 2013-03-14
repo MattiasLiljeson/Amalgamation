@@ -50,7 +50,7 @@ public:
 	virtual ~Control();
 
 	///@brief Override and update "pressness" member  variables.
-	virtual void update(InputManager* p_manager) = 0;
+	virtual void update(float p_dt, InputManager* p_manager) = 0;
 
 	///@brief
 	///@return The current status of the control. Between 0.0 and 1.0

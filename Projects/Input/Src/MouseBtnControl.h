@@ -27,7 +27,7 @@ public:
 	MouseBtnControl( InputHelper::MouseButtons p_btn );
 	virtual ~MouseBtnControl();
 
-	virtual void update( InputManager* p_manager );
+	virtual void update( float p_dt, InputManager* p_manager );
 
 private:
 	 InputHelper::MouseButtons m_btn;

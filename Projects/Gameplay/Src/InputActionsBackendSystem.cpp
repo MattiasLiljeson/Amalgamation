@@ -5,10 +5,17 @@
 #include "InputBackendSystem.h"
 #include <Cursor.h>
 
-InputActionsBackendSystem::InputActionsBackendSystem( string p_inputIniFile )
+InputActionsBackendSystem::InputActionsBackendSystem( string p_path, string p_file )
 	: EntitySystem( SystemType::InputActionsBackendSystem )
 {
-	m_inputIniFile = p_inputIniFile;
+	m_path = p_path;
+	m_file = p_file;
+
+	m_sensitivities[Device_MOUSE]			= 1.0;
+	m_menuSensitivities[Device_MOUSE]		= 1.0;
+	m_sensitivities[Device_CONTROLLER]		= 1.0;
+	m_menuSensitivities[Device_CONTROLLER]	= 1.0;
+
 }
 
 InputActionsBackendSystem::~InputActionsBackendSystem()
@@ -22,17 +29,25 @@ void InputActionsBackendSystem::initialize()
 	m_inputBackend = static_cast<InputBackendSystem*>(
 		m_world->getSystem( SystemType::InputBackendSystem) );
 	ifstream file;
-	file.open(m_inputIniFile.c_str());
-	string line = "";
-	string token = "";
-	//int currentAction = 0;
+	string filePath = m_path + m_file;
+	file.open( filePath.c_str() );
+
+	// Load std settings if given settings file isn't found
+	if( !file.is_open() ) {
+		file.close();
+		filePath = m_path + "stdSettings.input";
+		file.open( filePath.c_str() );
+	}
+
 	if(file.is_open())
 	{
-		getline(file, line); // discard the first line which is a comment.
+		string line = "";
+		string token = "";
+		getline( file, line ); // discard the first line which is a comment.
 		while( file.good() )
 		{
-			getline(file, line);
-			stringstream ss(line);
+			getline( file, line );
+			stringstream ss( line );
 			ss >> token; // discard the first column which is the activation enum
 
 			if( m_actionMap.count( token ) )
@@ -44,14 +59,25 @@ void InputActionsBackendSystem::initialize()
 					m_inputControls[action].push_back(NULL);
 					readControlFromString( token, &m_inputControls[action].back() );
 				}
+			} else if( token == "controllerSensitivity" ) {
+				ss >> m_sensitivities[Device_CONTROLLER];
+			} else if( token == "mouseSensitivity" ) {
+				ss >> m_sensitivities[Device_MOUSE];
+			}else if( token == "menuControllerSensitivity" ) {
+				ss >> m_menuSensitivities[Device_CONTROLLER];
+			} else if( token == "menuMouseSensitivity" ) {
+				ss >> m_menuSensitivities[Device_MOUSE];
 			}
 		}
 	}
 	else
 	{
-		DEBUGWARNING(( string("WARNING: File: " + m_inputIniFile +
-			" could not be opened!").c_str() ));
+		DEBUGWARNING(( string( "WARNING: File: " + m_path + m_file +
+			" could not be opened!" ).c_str() ));
 	}
+
+	m_inputBackend->setControllerSensitivity( m_sensitivities[Device_CONTROLLER] );
+	m_inputBackend->setMouseSensitivity( m_sensitivities[Device_MOUSE] );
 	initCursor();
 }
 void InputActionsBackendSystem::readControlFromString(string p_key, Control** p_control)
@@ -93,23 +119,18 @@ Control* InputActionsBackendSystem::getControlByAction( Actions p_action, int p_
 void InputActionsBackendSystem::initCursor()
 {
 	Cursor* cursor = m_inputBackend->getCursor();
-	cursor->addControlSet(
-		60.0, 60.0, false,
-		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_LEFT, 0 ),
-		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_RIGHT, 0 ),
-		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_UP, 0 ),
-		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_DOWN, 0 ),
-		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_PRIMARY, 0 ),
-		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_SECONDARY, 0 ) );
-	cursor->addControlSet(
-		1000.0, 1000.0, true,
-		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_LEFT, 1 ),
-		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_RIGHT, 1 ),
-		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_UP, 1 ),
-		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_DOWN, 1 ),
-		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_PRIMARY, 1 ),
-		getControlByAction( InputActionsBackendSystem::Actions_CURSOR_SECONDARY, 1 ) );
 
+	for( int i=0; i<Device_CNT; i++ ) {
+		cursor->addControlSet(
+			m_menuSensitivities[i], m_menuSensitivities[i], false,
+			getControlByAction( InputActionsBackendSystem::Actions_CURSOR_LEFT, i ),
+			getControlByAction( InputActionsBackendSystem::Actions_CURSOR_RIGHT, i ),
+			getControlByAction( InputActionsBackendSystem::Actions_CURSOR_UP, i ),
+			getControlByAction( InputActionsBackendSystem::Actions_CURSOR_DOWN, i ),
+			getControlByAction( InputActionsBackendSystem::Actions_CURSOR_PRIMARY, i ),
+			getControlByAction( InputActionsBackendSystem::Actions_CURSOR_SECONDARY, i )
+			);
+	}
 }
 
 void InputActionsBackendSystem::initControlMap()

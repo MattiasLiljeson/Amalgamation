@@ -29,12 +29,14 @@ MouseMoveControl::~MouseMoveControl()
 {
 }
 
-void MouseMoveControl::update( InputManager* p_manager )
+void MouseMoveControl::update( float p_dt, InputManager* p_manager )
 {
 	IMouseKeyboardFetcher* fetcher = p_manager->getMouseKeyboardFetcher();
-	float mouseSensitivity = fetcher->getMouseSensitivity();
-	int travel = fetcher->getMouseTravel( m_axis ) * mouseSensitivity;
-	
+	double mouseSensitivity = fetcher->getMouseSensitivity();
+	double travel = (double)fetcher->getMouseTravel( m_axis );// * mouseSensitivity) / p_dt;
+	travel *= mouseSensitivity;
+	travel /= p_dt;
+
 	double newStatus = 0.0;
 	if( (m_subAxis == InputHelper:: SubAxes_POSITIVE && travel > 0) ||
 		(m_subAxis == InputHelper:: SubAxes_NEGATIVE && travel < 0) )

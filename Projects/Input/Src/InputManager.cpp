@@ -22,8 +22,7 @@ InputManager::~InputManager()
 	delete m_xInputFetcher;
 	m_xInputFetcher = NULL;
 
-	for( unsigned int i=0; i<m_controls.size(); i++)
-	{
+	for( unsigned int i=0; i<m_controls.size(); i++) {
 		delete m_controls[i];
 		m_controls[i] = NULL;
 	}
@@ -37,10 +36,11 @@ int InputManager::addControl( Control* p_control )
 
 Control* InputManager::getControl( int p_idx )
 {
-	if( 0 <= p_idx  && p_idx < (int)m_controls.size())
+	if( 0 <= p_idx  && p_idx < (int)m_controls.size()) {
 		return m_controls[p_idx];
-	else
+	} else {
 		return NULL;
+	}
 }
 
 IMouseKeyboardFetcher* InputManager::getMouseKeyboardFetcher() const
@@ -53,16 +53,15 @@ XInputFetcher* InputManager::getXInputFetcher() const
 	return m_xInputFetcher;
 }
 
-void InputManager::update()
+void InputManager::update( float p_dt )
 {
-	if( m_mouseKeyboardFetcher != NULL )
-	{
+	if( m_mouseKeyboardFetcher != NULL ) {
 		m_mouseKeyboardFetcher->update();
 	}
-	if( m_xInputFetcher != NULL )
-	{
+	if( m_xInputFetcher != NULL ) {
 		m_xInputFetcher->update();
 	}
-	for( unsigned int i=0; i<m_controls.size(); i++)
-		m_controls[i]->update( this );
+	for( unsigned int i=0; i<m_controls.size(); i++) {
+		m_controls[i]->update( p_dt, this );
+	}
 }
