@@ -29,7 +29,8 @@ void ClientDebugModuleSpawnerSystem::processEntities( const vector<Entity*>& p_e
 			data.moduleTypes[3] = EntityType::MineLayerModule;
 			data.moduleTypes[4] = EntityType::MinigunModule;
 			data.moduleTypes[5] = EntityType::TeslaCoilModule;
-			data.numberOfModules = 6;
+			data.moduleTypes[6] = EntityType::RocketLauncherModule;
+			data.numberOfModules = 7;
 			m_client->sendPacket(data.pack());
 		}
 	}
