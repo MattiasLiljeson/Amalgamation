@@ -4,6 +4,7 @@ class Control;
 class InputActionsBackendSystem;
 class InputBackendSystem;
 class TcpClient;
+class ParticleSystemsComponent;
 // =======================================================================================
 // SlotInputControllerSystem
 // =======================================================================================
@@ -44,4 +45,8 @@ private:
 	InputActionsBackendSystem* m_actionBackend;
 	InputBackendSystem* m_inputBackend;
 	TcpClient* m_client;
+
+	// client side fix for remembering slot highlighting
+	bool m_previousModeWasEditMode;
+	int m_previousHighlight;
 };
