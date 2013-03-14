@@ -376,11 +376,6 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		engineSound->volume = 0.5f;
 		soundComponent->addAudioHeader(engineSound);
 
-		// RM-RT 2013-03-04
-		/*
-		entity->addComponent(new SoundComponent( TESTSOUNDEFFECTPATH,
-			"Spaceship_Engine_Idle_-_Spacecraft_hovering.wav") );
-		*/
 		entity->addComponent( new AudioListener(1.0f) ); // This is "moved" from the camera to the ship.
 		m_world->addEntity(entity);
 
@@ -405,6 +400,20 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	}
 	else
 	{
+		//!!!!!!!! Don't change the name of the sounds !!!!!!!!
+		AudioHeader* engineSound = new AudioHeader(AudioHeader::POSITIONALSOUND, 
+			"EnemyShipEngineIdle");
+		engineSound->file = "space_ship_engine_idle.wav";
+		engineSound->path = TESTSOUNDEFFECTPATH;
+		engineSound->maxFrequencyOffeset = 1.0f;
+		engineSound->playInterval	= AudioHeader::FOREVER;
+		engineSound->sourceChannels = 1;
+		engineSound->queuedPlayingState = AudioHeader::PLAY;
+		engineSound->volume = 1.0f;
+		engineSound->maxRange = 400.0f;
+		engineSound->pos = transform->getTranslation();
+		soundComponent->addAudioHeader(engineSound);
+
 		m_world->addEntity(entity);
 	}
 
