@@ -93,7 +93,7 @@ void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 	// Give the new client its Network Identity.
 	WelcomePacket welcomePacket;
 	welcomePacket.clientNetworkIdentity = p_newlyConnectedClientId;
-	//welcomePacket.playerID = m_playerSystem->getActiveEntities().size();
+	welcomePacket.serverName = m_server->getServerName();
 	welcomePacket.playerID = m_playerSystem->createPlayerId(p_newlyConnectedClientId);
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );
 }

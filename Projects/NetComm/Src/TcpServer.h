@@ -33,7 +33,7 @@ class TcpListenerProcess;
 class TcpServer: public ThreadSafeMessaging
 {
 public:
-	TcpServer();
+	TcpServer(const string& p_serverName);
 	~TcpServer();
 
 	void shutdown();
@@ -73,6 +73,8 @@ public:
 	void askForCommProcessInfo();
 	const unsigned int& totalSentInCommProcess(const unsigned int& p_processIdentity);
 
+	string getServerName();
+
 private:
 	void giveBroadcastPacketAUniqueIdentifier( Packet* p_packet );
 
@@ -92,5 +94,7 @@ private:
 
 	// Will be increased by 1 for every sent packet.
 	unsigned int m_uniqueBroadcastPacketIdentifier;
+
+	string m_serverName;
 	
 };

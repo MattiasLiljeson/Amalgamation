@@ -64,11 +64,13 @@
 
 namespace Srv
 {
-	ServerApplication::ServerApplication(int p_activePort/* =1337 */)
+	ServerApplication::ServerApplication(int p_activePort/* =1337 */, 
+		const string& p_name/* ="monki" */)
 	{
 		m_running = false;
 		m_activePort = p_activePort;
-		m_server = new TcpServer();
+		m_serverName = p_name;
+		m_server = new TcpServer(m_serverName);
 
 		m_world = new EntityWorld();
 		initSystems();

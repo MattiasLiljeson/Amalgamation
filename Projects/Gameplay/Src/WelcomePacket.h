@@ -25,4 +25,5 @@ public:
 public:
 	int clientNetworkIdentity;
 	int playerID;
+	string serverName;
 };

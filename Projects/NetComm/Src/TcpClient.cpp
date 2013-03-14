@@ -36,6 +36,7 @@ TcpClient::TcpClient()
 
 	m_playerId = -1;
 	m_playerName = "Unknown";
+	m_serverName = "MONKI";
 
 }
 
@@ -391,4 +392,14 @@ int TcpClient::getPlayerID()
 void TcpClient::setPlayerID( int p_playerId )
 {
 	m_playerId = p_playerId;
+}
+
+void TcpClient::setServerName( const string& p_serverName )
+{
+	m_serverName = p_serverName;
+}
+
+std::string TcpClient::getServerName()
+{
+	return m_serverName;
 }

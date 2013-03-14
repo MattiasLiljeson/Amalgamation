@@ -266,7 +266,8 @@ public:
 
 	bool shouldShutDown();
 
-	void requestToHostServer();
+	void requestToHostServer(const string& p_serverName);
+	string getServerName();
 	void requestToQuitServer();
 	bool isHostingServer();
 
@@ -297,5 +298,6 @@ private:
 
 	bool m_shutdown;
 	bool m_hostServer;
+	string m_serverName;
 };
 

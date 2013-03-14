@@ -229,7 +229,9 @@ void ClientApplication::run()
 				auto clientConnectToServerSystem =  static_cast<ClientConnectToServerSystem*>
 					(m_world->getSystem(SystemType::ClientConnectoToServerSystem));
 
-				m_serverApp = new Srv::ServerApplication(clientConnectToServerSystem->getServerPortByInt());
+				m_serverApp = new Srv::ServerApplication(
+					clientConnectToServerSystem->getServerPortByInt(),
+					m_world->getServerName());
 				m_serverApp->start();
 			}
 			else if (!m_world->isHostingServer() && m_serverApp != NULL){
@@ -343,11 +345,11 @@ void ClientApplication::initSystems()
 
 	//---GUI UPDATE SYSTEMS
 	m_world->setSystem( new LobbySystem() );
-	m_world->setSystem( new HudSystem( rocketBackend ) );
+	m_world->setSystem( new HudSystem( rocketBackend, m_client ) );
 	// NOTE: MenuSystem looks up all systems that's also deriving from EventHandler, so
 	// that they can be properly be added to the LibRocketEventManager.
 	// The alternative would be that every event handler adds itself.
-	m_world->setSystem( new MenuSystem() );
+	m_world->setSystem( new MenuSystem( m_client ) );
 
 	//IS THIS SYSTEM USEEEEEEDDD????????-Robin
 	// InterpolationSystem* interpolationSystem = new InterpolationSystem();

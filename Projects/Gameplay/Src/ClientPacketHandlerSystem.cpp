@@ -191,6 +191,7 @@ void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
 	data.unpack(p_packet);
 	m_tcpClient->setId( data.clientNetworkIdentity );
 	m_tcpClient->setPlayerID( data.playerID );
+	m_tcpClient->setServerName( data.serverName );
 
 	/************************************************************************/
 	/* Debug info!															*/

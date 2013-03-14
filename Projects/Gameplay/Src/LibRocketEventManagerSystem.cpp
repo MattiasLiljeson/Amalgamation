@@ -258,14 +258,18 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 			m_client->sendPacket(playerReady.pack());
 		}
 		else if(values[0] == "host_server"){
-			m_world->requestToHostServer();
-
 			string server_port = p_event.GetParameter<Rocket::Core::String>
 				("server_port", "1337").CString();
 
 			string playerName = p_event.GetParameter<Rocket::Core::String>
 				("player_name", "NotFound").CString();
+
+			string server_name = p_event.GetParameter<Rocket::Core::String>
+				("server_name", "monki").CString();
+
 			m_client->setPlayerName(playerName);
+
+			m_world->requestToHostServer(server_name);
 
 			auto sys = static_cast<ClientConnectToServerSystem*>(
 				m_world->getSystem(SystemType::ClientConnectoToServerSystem));

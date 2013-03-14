@@ -8,8 +8,9 @@
 #include "ClientStateSystem.h"
 #include "LobbySystem.h"
 #include "SettingsSystem.h"
+#include <TcpClient.h>
 
-MenuSystem::MenuSystem()
+MenuSystem::MenuSystem(TcpClient* p_tcpClient)
 	: EntitySystem( SystemType::MenuSystem)
 {
 	m_joinIdx		= -1;
@@ -17,6 +18,7 @@ MenuSystem::MenuSystem()
 	m_lobbyDocIdx	= -1;
 	m_disconnectPopupIdx = -1;
 	m_loadingWindowIdx = -1;
+	m_tcpClient		= p_tcpClient;
 }
 
 
@@ -42,7 +44,8 @@ void MenuSystem::initialize()
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"options");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"credits");
 	m_lobbyDocIdx = rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"lobby");
-	m_disconnectPopupIdx = rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"connection_lost");
+	m_disconnectPopupIdx = rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),
+		"connection_lost");
 	m_loadingWindowIdx = rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"loading");
 
 	rocketEventManager->loadWindow("main_menu");
@@ -71,10 +74,14 @@ void MenuSystem::process()
 			m_world->getSystem(SystemType::LibRocketBackendSystem));
 		rocketBackend->updateElement(m_lobbyDocIdx, "player_ready", "Ready");
 
+		string temp = "Name: ";
+		temp += m_tcpClient->getServerName();
+		rocketBackend->updateElement(m_lobbyDocIdx, "server_name", temp.c_str());
+		rocketBackend->updateElement(m_lobbyDocIdx, "server_time", "60");
+
 		rocketEventManager->clearDocumentStack();
 		rocketEventManager->loadWindow("lobby");
 	}
-	//
 	else if(gameState->getStateDelta(GameStates::MENU) == EnumGameDelta::ENTEREDTHISFRAME){
 		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
 			m_world->getSystem(SystemType::LibRocketEventManagerSystem));
