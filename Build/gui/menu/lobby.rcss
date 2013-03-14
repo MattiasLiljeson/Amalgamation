@@ -25,6 +25,13 @@ div.lowerPanel
 	height: 10%;
 }
 
+div.server_info_object
+{
+	margin-top: 8px;
+	float:left;
+	width: 100%;
+}
+
 button{
 	margin-top: 8px;
 	width: 250px;
