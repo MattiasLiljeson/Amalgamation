@@ -1,32 +1,29 @@
 #pragma once
 
-#include "ShaderVariableContainer.h"
 #include "ShaderBase.h"
-#include "ComposeCBuffer.h"
+#include "PostProcessingBuffer.h"
 #include "Buffer.h"
 
 // =======================================================================================
-//                                 DeferredComposeShader
+//                                      DeferredPostProcessing
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	
 ///        
-/// # DeferredComposeShader
+/// # DeferredPostProcessing
 /// Detailed description.....
-/// Created on: 30-11-2012 
+/// Created on: 13-3-2013 
 ///---------------------------------------------------------------------------------------
 
-
-class DeferredComposeShader : public ShaderBase
+class DeferredPostProcessing : public ShaderBase
 {
 public:
-	DeferredComposeShader( Buffer<ComposeCBuffer>* p_composeBuffer, 
+	DeferredPostProcessing( Buffer<PostProcessingBuffer>* p_postProcessingBuffer,
 		ShaderVariableContainer p_initData);
-	virtual ~DeferredComposeShader();
-
+	virtual ~DeferredPostProcessing();
 	void apply();
-	void setComposeBuffer( const ComposeCBuffer& p_newComposeBuffer );
+	void setPostProcessingBuffer( const PostProcessingBuffer& p_newPosData );
 private:
-	Buffer<ComposeCBuffer>* m_composeBuffer;
+	Buffer<PostProcessingBuffer>* m_postProcessingBuffer;
 };

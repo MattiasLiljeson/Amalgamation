@@ -38,7 +38,7 @@
 #include <ShipModulesControllerSystem.h>
 #include <ShipModulesTrackerSystem.h>
 #include <SpawnPointSystem.h>
-#include <TempModuleSpawner.h>
+#include <ModuleSpawner.h>
 #include <TeslaCoilModuleControllerSystem.h>
 #include <TimerSystem.h>
 #include <WinningConditionSystem.h>
@@ -64,10 +64,10 @@
 
 namespace Srv
 {
-	ServerApplication::ServerApplication()
+	ServerApplication::ServerApplication(int p_activePort/* =1337 */)
 	{
 		m_running = false;
-
+		m_activePort = p_activePort;
 		m_server = new TcpServer();
 
 		m_world = new EntityWorld();
@@ -208,15 +208,10 @@ namespace Srv
 		LookAtSystem* lookAtSystem = new LookAtSystem(m_server);
 		m_world->setSystem(lookAtSystem, true);
 
-
 		/************************************************************************/
 		/* Picking																*/
 		/************************************************************************/
 		m_world->setSystem(new ServerPickingSystem(m_server,moduleeffect), true);
-
-
-		//Närverk var här innan
-
 
 		/************************************************************************/
 		/* Game play															*/
@@ -242,17 +237,15 @@ namespace Srv
 		//WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
 		m_world->setSystem(new WinningConditionSystem(m_server), true);
 		m_world->setSystem(new SpawnPointSystem(), true);
-		m_world->setSystem(new TempModuleSpawner(m_server), true);
+		m_world->setSystem(new ModuleSpawner(m_server), true);
 
 		/************************************************************************/
 		/* Network																*/
 		/************************************************************************/
-		m_world->setSystem(new ServerWelcomeSystem( m_server ), true);
+		m_world->setSystem(new ServerWelcomeSystem( m_server, m_activePort ), true);
 		m_world->setSystem(new ServerPacketHandlerSystem( m_server ), true);
 		m_world->setSystem(new ServerUpdateSystem( m_server ), true);
 		m_world->setSystem(new ServerScoreSystem( m_server ), true);
-		m_world->setSystem(new NetSyncedPlayerScoreTrackerSystem(), true);
-		m_world->setSystem(new ServerClientInfoSystem(), true);
 
 		// NOTE: (Johan) Should be called from some lobby-to-in-game state change:
 //		winningCondition->startGameSession(20.0f);
@@ -275,7 +268,7 @@ namespace Srv
 
 	void ServerApplication::initEntities()
 	{
-		InitModulesTestByAnton();
+		//InitModulesTestByAnton();
 
 	}
 

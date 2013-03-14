@@ -56,13 +56,9 @@ void InputActionsBackendSystem::initialize()
 }
 void InputActionsBackendSystem::readControlFromString(string p_key, Control** p_control)
 {
-	if(p_key != "NULL")
-	{
-		*p_control =
-			m_inputBackend->getInputControl( p_key );
-	}
-	else
-	{
+	if(p_key != "NULL") {
+		*p_control = m_inputBackend->getInputControl( p_key );
+	} else {
 		*p_control = NULL;
 	}
 }

@@ -1,4 +1,4 @@
-e Shield
+e ServerShield
 
 c LoadMesh
 d s m_filename shield_module.agl
@@ -30,3 +30,10 @@ c PhysicsBody
 c ShipModule
 d f m_maxhealth 100.0f
 d f m_maxvalue 100.0f
+
+c ShieldModule
+d f cooldownTime 2.0
+d f activationTime 0.25
+d f impulse 1000.0
+d f maxRange 100.0
+d f minRange 5.0

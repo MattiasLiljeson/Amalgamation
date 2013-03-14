@@ -80,19 +80,6 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 					gun->animationPlaying = true;
 				}
 
-				//Send a sound
-				if (gun->timeSinceSound > 0.08f)
-				{
-					SpawnSoundEffectPacket soundEffectPacket;
-					soundEffectPacket.soundIdentifier = (int)SpawnSoundEffectPacket::LaserGun;
-					soundEffectPacket.positional = true;
-					soundEffectPacket.position = rayPos;
-					soundEffectPacket.attachedToNetsyncEntity = -1; // entity->getIndex();
-					m_server->broadcastPacket(soundEffectPacket.pack());
-					gun->timeSinceSound = 0;
-				}
-
-
 				//Check if we hit something
 				if (gun->rayIndex >= 0)
 				{
@@ -115,8 +102,6 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 								physics->getController()->ApplyExternalImpulse(col, d*dt*3.0f, AglVector3(0, 0, 0));
 							}
 						}
-
-						return;
 					}
 				}
 			}
@@ -203,7 +188,7 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity, AglVector
 						AglVector3 colPoint;
 						int col = physics->getController()->LineClosestCollision(gun->rayIndex, colPoint, body->m_id);
 
-
+						ps->getParticleSystemFromIdx(2)->updateData.color = ps->getParticleSystemFromIdx(2)->originalSettings.color;
 						ps->getParticleSystemFromIdx(2)->updateData.spawnFrequency = ps->getParticleSystemFromIdx(0)->originalSettings.spawnFrequency;
 						ps->getParticleSystemFromIdx(3)->updateData.color = AglVector4(0, 0, 0, 0);
 						if (col >= 0)
@@ -218,6 +203,7 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity, AglVector
 					if (ps)
 					{
 						ps->getParticleSystemFromIdx(2)->updateData.spawnFrequency = 0;
+						ps->getParticleSystemFromIdx(2)->updateData.color = AglVector4(0, 0, 0, 0);
 						ps->getParticleSystemFromIdx(3)->updateData.color = AglVector4(0, 0, 0, 0);
 						ps->getParticleSystemFromIdx(3)->updateData.spawnPoint = trans->getTranslation();
 					}
@@ -232,6 +218,7 @@ void MinigunModuleControllerSystem::handleLaserSight(Entity* p_entity, AglVector
 		if (ps)
 		{
 			ps->getParticleSystemFromIdx(2)->updateData.spawnFrequency = 0;
+			ps->getParticleSystemFromIdx(2)->updateData.color = AglVector4(0, 0, 0, 0);
 			ps->getParticleSystemFromIdx(3)->updateData.color = AglVector4(0, 0, 0, 0);
 			ps->getParticleSystemFromIdx(3)->updateData.spawnPoint = trans->getTranslation();
 		}
@@ -250,7 +237,7 @@ void MinigunModuleControllerSystem::startAnimation(Entity* p_gun)
 
 	//Play the fire animation
 	ParticleSystemServerComponent* ps = static_cast<ParticleSystemServerComponent*>(
-											p_gun->getComponent(ComponentType::ParticleSystemServerComponent));
+		p_gun->getComponent(ComponentType::ParticleSystemServerComponent));
 	ps->getParticleSystemFromIdx(0)->updateData.spawnFrequency = ps->getParticleSystemFromIdx(0)->originalSettings.spawnFrequency;
 	ps->getParticleSystemFromIdx(1)->updateData.spawnFrequency = ps->getParticleSystemFromIdx(1)->originalSettings.spawnFrequency;
 

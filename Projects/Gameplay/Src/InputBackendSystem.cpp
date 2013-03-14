@@ -91,6 +91,19 @@ void InputBackendSystem::initialize()
 			(InputHelper::KeyboardKeys)(InputHelper::KeyboardKeys_A + i),
 			keysAtoZ[i].second, keysAtoZ[i].first );
 	}
+
+	// AA = Å, AE = Ä, OE = Ö
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_AA,
+		factory.createKeyboardKey( InputHelper::KeyboardKeys_AA ),
+		"KeyboardKeys_AA" );
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_AE,
+		factory.createKeyboardKey( InputHelper::KeyboardKeys_AE ),
+		"KeyboardKeys_AE" );
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_OE,
+		factory.createKeyboardKey( InputHelper::KeyboardKeys_OE ),
+		"KeyboardKeys_OE" );
+
+
 	// numbers
 	vector<pair<string, Control*> > keysZeroToNine = factory.create0To9();
 	for( int i=0, size = (int)keysZeroToNine.size(); i<size; i++ )
@@ -164,6 +177,10 @@ void InputBackendSystem::initialize()
 	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_BACKSPACE,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_BACKSPACE),
 		"KeyboardKeys_BACKSPACE" );
+	//delete
+	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_DELETE,
+		factory.createKeyboardKey(InputHelper::KeyboardKeys_DELETE),
+		"KeyboardKeys_DELETE" );
 	// return
 	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_RETURN,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_RETURN),

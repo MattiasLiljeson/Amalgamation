@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="AntTweakBarWrapper.cpp" />
     <ClCompile Include="DeferredAnimatedBaseShader.cpp" />
+    <ClCompile Include="DeferredPostProcessing.cpp" />
     <ClCompile Include="DeferredTessAnimatedBaseShader.cpp" />
     <ClCompile Include="DeferredTessBaseShader.cpp" />
     <ClCompile Include="Event.cpp" />
@@ -44,7 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AntTweakBarWrapper.h" />
+    <ClInclude Include="ComposeCBuffer.h" />
     <ClInclude Include="DeferredAnimatedBaseShader.h" />
+    <ClInclude Include="DeferredPostProcessing.h" />
     <ClInclude Include="DeferredTessAnimatedBaseShader.h" />
     <ClInclude Include="DeferredTessBaseShader.h" />
     <ClInclude Include="Event.h" />
@@ -95,7 +98,7 @@
     <ClInclude Include="ShadowMapRenderer.h" />
     <ClInclude Include="ShadowShader.h" />
     <ClInclude Include="SkeletonMappingVertex.h" />
-    <ClInclude Include="SSAOCBuffer.h" />
+    <ClInclude Include="PostProcessingBuffer.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureFactory.h" />
     <ClInclude Include="TextureParser.h" />

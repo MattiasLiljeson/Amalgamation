@@ -21,6 +21,7 @@
 #include "ParticleSystemServerComponent.h"
 #include "ShipManagerSystem.h"
 #include "AnimationUpdatePacket.h"
+#include "SoundPacket.h"
 
 RocketLauncherModuleControllerSystem::RocketLauncherModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::RocketLauncherModuleControllerSystem, 1, ComponentType::RocketLauncherModule)
@@ -65,7 +66,7 @@ void RocketLauncherModuleControllerSystem::processEntities(const vector<Entity*>
 				if (gun->currentBurst >= gun->burstCount)
 				{
 					gun->lockCoolDown = 2.0f;
-					gun->cooldown = 2.0f;
+					gun->cooldown = 0.5f;
 					gun->currentBurst = 0;
 				}
 			}
@@ -89,6 +90,7 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 		ComponentType::getTypeFor(ComponentType::Transform)));
 
 	Entity* child = p_entity;
+	bool highlighted = false;
 	if (module->m_parentEntity >= 0)
 	{
 		//Ensure the particle systems showing sight and lockon are unicast
@@ -128,6 +130,7 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 			{
 				if (cps->m_connectionPoints[i].cpConnectedEntity == child->getIndex())
 				{
+					highlighted = true;
 					AglVector3 target;
 					Entity* ship = getClosestShip(p_entity, parent, target);
 
@@ -160,6 +163,17 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 						{
 							//Show the lockon
 							ps->getParticleSystemFromIdx(1)->updateData.color = AglVector4(1, 1, 1, 1);
+
+							if (!gun->lockOnPlaying)
+							{
+								gun->lockOnPlaying = true;
+								SoundPacket sp;
+								sp.target = p_entity->getIndex();
+								sp.soundType = AudioHeader::AMBIENT;
+								sp.targetSlot = 0;
+								sp.queuedPlayingState = AudioHeader::PLAY;
+								m_server->broadcastPacket( sp.pack() );
+							}
 						}
 						else
 						{
@@ -215,6 +229,18 @@ void RocketLauncherModuleControllerSystem::handleLaserSight(Entity* p_entity)
 
 		ps->getParticleSystemFromIdx(0)->updateData.spawnPoint = trans->getTranslation();
 		ps->getParticleSystemFromIdx(1)->updateData.spawnPoint = trans->getTranslation();
+	}
+
+	if (gun->lockOnPlaying && (gun->lockCoolDown > 0 || !highlighted))
+	{
+		gun->lockCoolDown = 2.0f;
+		gun->lockOnPlaying = false;
+		SoundPacket sp;
+		sp.target = p_entity->getIndex();
+		sp.soundType = AudioHeader::AMBIENT;
+		sp.targetSlot = 0;
+		sp.queuedPlayingState = AudioHeader::STOP;
+		m_server->broadcastPacket( sp.pack() );
 	}
 }
 void RocketLauncherModuleControllerSystem::spawnRocket(Entity* p_entity,ShipModule* p_module)

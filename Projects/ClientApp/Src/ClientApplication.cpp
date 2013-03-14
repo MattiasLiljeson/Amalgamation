@@ -128,6 +128,7 @@
 #include <ClientModuleCounterSystem.h>
 #include <AddToParentSystem.h>
 #include <GlowAnimationSystem.h>
+#include <ClientDebugModuleSpawnerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -144,6 +145,7 @@ using namespace std;
 #include <RandomUtil.h>
 #include <DestroyOnParticlesDeathSystem.h>
 #include <ModuleStatusEffectSystem.h>
+#include <StateManagementSystem.h>
 
 // unsorted includes. Sort these as soon as they're added!
 #include <PlayerSystem.h>
@@ -224,7 +226,10 @@ void ClientApplication::run()
 			}
 			
 			if(m_world->isHostingServer() && m_serverApp == NULL){
-				m_serverApp = new Srv::ServerApplication();
+				auto clientConnectToServerSystem =  static_cast<ClientConnectToServerSystem*>
+					(m_world->getSystem(SystemType::ClientConnectoToServerSystem));
+
+				m_serverApp = new Srv::ServerApplication(clientConnectToServerSystem->getServerPortByInt());
 				m_serverApp->start();
 			}
 			else if (!m_world->isHostingServer() && m_serverApp != NULL){
@@ -266,9 +271,13 @@ void ClientApplication::initSystems()
 	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, 
 		graphicsBackend );
 	m_world->setSystem( inputBackend );
-	m_world->setSystem( new InputActionsBackendSystem( SETTINGSPATH +"stdSettings.input"));
+
+	InputActionsBackendSystem* actionBackendSys =
+		new InputActionsBackendSystem( SETTINGSPATH + "settings.input" );
+	m_world->setSystem( actionBackendSys );
+
 	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend,
-		inputBackend );
+		inputBackend, actionBackendSys );
 	m_world->setSystem( rocketBackend );
 	m_world->setSystem( new LibRocketEventManagerSystem(m_client) );
 
@@ -288,7 +297,6 @@ void ClientApplication::initSystems()
 	m_world->setSystem( slotInput );
 	m_world->setSystem( new ShipFlyControllerSystem(shipInputProc, NULL, m_client, slotInput ));
 	m_world->setSystem( new ShipEditControllerSystem(shipInputProc, NULL, slotInput) );
-	m_world->setSystem( new EntityParentHandlerSystem() );
 	m_world->setSystem( new PlayerCameraControllerSystem( shipInputProc, m_client ) );
 
 	//---NETWORKHANDLING SYSTEMS
@@ -303,7 +311,7 @@ void ClientApplication::initSystems()
 
 	//---EFFECTS
 	m_world->setSystem( new ScoreWorldVisualizerSystem() );
-	m_world->setSystem( new ModuleStatusEffectSystem() );
+	//m_world->setSystem( new ModuleStatusEffectSystem() );
 	m_world->setSystem( new ConnectionVisualizerSystem() );
 	m_world->setSystem( new ShipParticleSystemUpdater() );
 	m_world->setSystem( new EditSphereSystem() );
@@ -332,6 +340,7 @@ void ClientApplication::initSystems()
 	//---STATESYSTEM
 	m_world->setSystem( new ClientStateSystem( GameStates::MENU ) );
 	m_world->setSystem( new ClientConnectToServerSystem( m_client, false ) );
+	m_world->setSystem( new StateManagementSystem());
 
 	//---GUI UPDATE SYSTEMS
 	m_world->setSystem( new LobbySystem() );
@@ -345,6 +354,7 @@ void ClientApplication::initSystems()
 	// InterpolationSystem* interpolationSystem = new InterpolationSystem();
 	// m_world->setSystem( interpolationSystem, true);
 	InterpolationSystem2* inter = new InterpolationSystem2();
+	m_world->setSystem( new EntityParentHandlerSystem() );
 	m_world->setSystem(inter, true);
 
 	//---AUDIO SYSTEMS
@@ -365,13 +375,14 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	m_world->setSystem( new LevelHandlerSystem() );
 	m_world->setSystem( new LevelInfoLoader() );
-
 	/************************************************************************/
 	/* Mesh loading															*/
 	/************************************************************************/
 	// Note! Must set *after* EntityFactory and GraphicsBackend, and *before* Physics
 	m_world->setSystem( new LoadMeshSystemClient(graphicsBackend) ); 
 	m_world->setSystem( new ParticleSystemInstructionTranslatorSystem( graphicsBackend ) );
+
+	m_world->setSystem( new ModuleStatusEffectSystem() );
 
 	// || RENDERING SYSTEMS ||
 	m_world->setSystem( new SkeletalAnimationSystem() );
@@ -398,7 +409,7 @@ void ClientApplication::initSystems()
 	/* Debugging															*/
 	/************************************************************************/
 	m_world->setSystem( new DebugMovementSystem(), false );
-	m_world->setSystem( new MenuBackgroundSceneSystem() );
+	m_world->setSystem( new MenuBackgroundSceneSystem());
 	m_world->setSystem( new OrbitalMovementSystem() );
 	m_world->setSystem( new AxisRotationSystem() );
 	m_world->setSystem( new MoveShipLightsSystem() );
@@ -407,6 +418,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
 	m_world->setSystem( new OutputLogger("log_client.txt"));
 	m_world->setSystem( new ClientModuleCounterSystem() );
+	m_world->setSystem( new ClientDebugModuleSpawnerSystem(m_client) );
 
 	m_world->initialize();
 

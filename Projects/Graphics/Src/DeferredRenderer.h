@@ -13,6 +13,7 @@ class DeferredAnimatedBaseShader;
 class DeferredTessBaseShader;
 class DeferredTessAnimatedBaseShader;
 class DeferredComposeShader;
+class DeferredPostProcessing;
 class LightShader;
 class GUIShader;
 class ShaderFactory;
@@ -118,6 +119,8 @@ public:
 	// Debug
 	void hookUpAntTweakBar();
 
+	void toggleEditMode(bool p_isInEditMode);
+
 private:
 	void initDepthStencil();
 	void initGeometryBuffers();
@@ -126,8 +129,9 @@ private:
 	void buildBlendStates();
 	void buildRasterizerStates();
 	void initShaders();
+	void initPostProcessingPass();
 	void initFullScreenQuad();
-	void initSSAO();
+	void initCompose();
 
 	void unmapAllBuffers();
 
@@ -162,7 +166,7 @@ private:
 	DeferredTessAnimatedBaseShader*	m_tessAnimatedBaseShader;
 
 	LightShader*			m_lightShader;
-	DeferredComposeShader*	m_effectShader;
+	DeferredPostProcessing*	m_effectShader;
 	DeferredComposeShader*	m_lowResGenerationShader;
 	DeferredComposeShader*	m_composeShader;
 
@@ -181,7 +185,8 @@ private:
 	// Sampler States
 	ID3D11SamplerState* m_samplerStates[SamplerState::SamplerState_CNT];
 
-	SSAOBuffer	m_ssaoData;
+	PostProcessingBuffer	m_postProcessingData;
+	ComposeCBuffer			m_composeData;
 
 	int m_width;
 	int m_height;

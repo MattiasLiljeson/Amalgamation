@@ -85,8 +85,9 @@ public:
 	enum KeyboardKeys
 	{
 		KeyboardKeys_NON_EXISTING = -1,
+		KeyboardKeys_FIRST,
 
-		KeyboardKeys_A,
+		KeyboardKeys_A = KeyboardKeys_FIRST,
 		KeyboardKeys_B,
 		KeyboardKeys_C,
 		KeyboardKeys_D,
@@ -112,6 +113,9 @@ public:
 		KeyboardKeys_X,
 		KeyboardKeys_Y,
 		KeyboardKeys_Z,
+		KeyboardKeys_AA,		// Left bracket on ISO kb
+		KeyboardKeys_AE,		// Apostrophe on ISO kb
+		KeyboardKeys_OE,		// Semicolon on ISO kb
 		KeyboardKeys_LEFT_SHIFT,
 		KeyboardKeys_LEFT_CTRL,
 		KeyboardKeys_LEFT_ALT,
@@ -120,10 +124,16 @@ public:
 		KeyboardKeys_RIGHT_CTRL,
 		KeyboardKeys_RIGHT_SHIFT,
 		KeyboardKeys_BACKSPACE,
+		KeyboardKeys_DELETE,
 		KeyboardKeys_RETURN,
 		KeyboardKeys_PERIOD,
 		KeyboardKeys_ESC,
 		KeyboardKeys_TAB,
+		KeyboardKeys_CAPS_LOCK,
+		KeyboardKeys_NUM_LOCK,
+		KeyboardKeys_SCROLL_LOCK,
+		KeyboardKeys_LEFT_WIN,
+		KeyboardKeys_RIGHT_WIN,
 		KeyboardKeys_LEFT,
 		KeyboardKeys_UP,
 		KeyboardKeys_DOWN,

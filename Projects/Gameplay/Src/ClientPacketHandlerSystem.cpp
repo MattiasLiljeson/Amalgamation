@@ -40,6 +40,7 @@
 #include "WelcomePacket.h"
 #include <BasicSoundCreationInfo.h>
 #include <PositionalSoundCreationInfo.h>
+#include "ShieldModule.h"
 
 
 // Packets
@@ -67,6 +68,7 @@
 #include "SpawnExplosionPacket.h"
 #include "SpawnSoundEffectPacket.h"
 #include "UpdateClientStatsPacket.h"
+#include "ShieldActivationPacket.h"
 
 // Debug
 
@@ -206,13 +208,16 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	if (p_packet.entityType != EntityType::DebugBox)
 	{
 		Entity* entity = factory->entityFromPacket(p_packet);
-		Transform* transform = static_cast<Transform*>(entity->getComponent(
-			ComponentType::Transform));
-		if(transform)
+		if (entity)
 		{
-			transform->setTranslation(p_packet.translation);
-			transform->setRotation(p_packet.rotation);
-			transform->setScale(p_packet.scale);
+			Transform* transform = static_cast<Transform*>(entity->getComponent(
+				ComponentType::Transform));
+			if(transform)
+			{
+				transform->setTranslation(p_packet.translation);
+				transform->setRotation(p_packet.rotation);
+				transform->setScale(p_packet.scale);
+			}
 		}
 	}
 	else
@@ -479,12 +484,18 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 
 		if( particleComp != NULL )
 		{
+
 			int idx = static_cast<unsigned int>(p_data.particleSystemIdx);
 			if( -1 < idx && idx < particleComp->getParticleSystemsPtr()->size() )
 			{
 				AglParticleSystem* particleSys = particleComp->getParticleSystemPtr(idx);
 				if (particleSys)
 				{
+					if (entity->getName() == "ClientMinigun")
+					{
+						int k = 0;
+					}
+
 					AglVector3 pos = p_data.position;
 					if (particleSys->getParticleSpace() == AglParticleSystemHeader::AglSpace_SCREEN)
 					{
@@ -582,7 +593,8 @@ void ClientPacketHandlerSystem::handleIngameState()
 {
 	while (m_tcpClient->hasNewPackets())
 	{
-		Packet packet = m_tcpClient->popNewPacket();
+		//Packet packet = m_tcpClient->popNewPacket();
+		Packet& packet = m_tcpClient->getFrontPacket();
 
 		updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
 
@@ -910,6 +922,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 		{
 			EntityCreationPacket data;
 			data.unpack(packet);
+
 			handleEntityCreationPacket(data);
 		}
 		else if (packetType == (char)PacketType::EntityDeletion)
@@ -1101,10 +1114,37 @@ void ClientPacketHandlerSystem::handleIngameState()
 				}
 			}
 		}
+		else if(packetType == (char)PacketType::ShieldActivationPacket)
+		{
+			ShieldActivationPacket data;
+			data.unpack(packet);
+			Entity* netModule = static_cast<NetsyncDirectMapperSystem*>(
+				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+				data.entityIndex);
+			if(netModule)
+			{
+				ShieldModule* shieldModule = static_cast<ShieldModule*>(
+					netModule->getComponent(ComponentType::ShieldModule));
+				if(shieldModule)
+				{
+					if(data.shieldActivationState)
+					{
+						shieldModule->activation = 1.0f;
+					}
+					else
+					{
+						shieldModule->activation = 0;
+					}
+				}
+			}
+		}
 		else
 		{
 			DEBUGWARNING(( "Unhandled packet type!" ));
 		}
+
+		// Pop packet!
+		m_tcpClient->popFrontPacket();
 	}
 }
 
@@ -1499,7 +1539,8 @@ void ClientPacketHandlerSystem::resetFromDisconnect()
 
 void ClientPacketHandlerSystem::handleServerDisconnect()
 {
-	if (!m_tcpClient->hasActiveConnection() && m_gameState->getCurrentState() != GameStates::MENU)
+	if (!m_tcpClient->hasActiveConnection() && m_gameState->getCurrentState() != GameStates::MENU
+		&& m_gameState->getCurrentState() != GameStates::NONE)
 	{
 		static_cast<MenuSystem*>(m_world->getSystem(SystemType::MenuSystem))
 			->displayDisconnectPopup();
