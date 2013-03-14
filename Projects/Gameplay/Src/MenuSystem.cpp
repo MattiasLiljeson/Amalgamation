@@ -77,7 +77,9 @@ void MenuSystem::process()
 		string temp = "Name: ";
 		temp += m_tcpClient->getServerName();
 		rocketBackend->updateElement(m_lobbyDocIdx, "server_name", temp.c_str());
-		rocketBackend->updateElement(m_lobbyDocIdx, "server_time", "60");
+		temp = "Round Time(sec): ";
+		temp += toString(m_tcpClient->getServerGameTime());
+		rocketBackend->updateElement(m_lobbyDocIdx, "server_time", temp.c_str());
 
 		rocketEventManager->clearDocumentStack();
 		rocketEventManager->loadWindow("lobby");

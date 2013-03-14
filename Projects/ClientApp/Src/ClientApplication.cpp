@@ -229,7 +229,7 @@ void ClientApplication::run()
 				auto clientConnectToServerSystem =  static_cast<ClientConnectToServerSystem*>
 					(m_world->getSystem(SystemType::ClientConnectoToServerSystem));
 
-				m_serverApp = new Srv::ServerApplication(
+				m_serverApp = new Srv::ServerApplication( m_world->getServerGameTime(),
 					clientConnectToServerSystem->getServerPortByInt(),
 					m_world->getServerName());
 				m_serverApp->start();

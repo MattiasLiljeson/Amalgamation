@@ -45,11 +45,12 @@
 
 
 
-ServerWelcomeSystem::ServerWelcomeSystem( TcpServer* p_server, 
-										 int p_activePort/* =13337 */ )
+ServerWelcomeSystem::ServerWelcomeSystem(TcpServer* p_server, 
+										 int p_activePort, int p_gameTime)
 	: EntitySystem( SystemType::ServerWelcomeSystem, 1, ComponentType::NetworkSynced)
 {
 	m_server = p_server;
+	m_gameTime = p_gameTime;
 	m_activePort = p_activePort;
 }
 
@@ -90,9 +91,11 @@ void ServerWelcomeSystem::initialize()
 
 void ServerWelcomeSystem::sendWelcomePacket(int p_newlyConnectedClientId)
 {
+
 	// Give the new client its Network Identity.
 	WelcomePacket welcomePacket;
 	welcomePacket.clientNetworkIdentity = p_newlyConnectedClientId;
+	welcomePacket.serverGameTime = m_gameTime;
 	welcomePacket.serverName = m_server->getServerName();
 	welcomePacket.playerID = m_playerSystem->createPlayerId(p_newlyConnectedClientId);
 	m_server->unicastPacket( welcomePacket.pack(), p_newlyConnectedClientId );

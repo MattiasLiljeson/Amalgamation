@@ -25,5 +25,6 @@ public:
 public:
 	int clientNetworkIdentity;
 	int playerID;
+	int serverGameTime;
 	string serverName;
 };

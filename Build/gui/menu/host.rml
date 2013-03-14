@@ -13,6 +13,10 @@
 				Server Port:
 				<Input id="5" name="server_port" type="text" size="5"
 				maxlength="5" value="" />
+				<br/>		
+				Server Game Time(sec):
+				<Input id="5" name="server_time" type="text" size="5"
+				maxlength="5" value="0" />
 				<br/>
 				Player Name:
 				<Input id="6" name="player_name" type="text" size="15"

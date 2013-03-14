@@ -267,9 +267,27 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 			string server_name = p_event.GetParameter<Rocket::Core::String>
 				("server_name", "monki").CString();
 
+			string server_time = p_event.GetParameter<Rocket::Core::String>
+				("server_time", "-1").CString();
+
+			istringstream buffer(server_time);
+			int gameTime;
+			try{
+				buffer >> gameTime;
+			}
+			catch(exception& e){
+				DEBUGPRINT(("Invalid Round Time address submitted\n"));
+				return;
+			}
+
+			if(gameTime < 0 || gameTime > 65535){
+				DEBUGPRINT(("Invalid Round Time\n"));
+				return;
+			}
+
 			m_client->setPlayerName(playerName);
 
-			m_world->requestToHostServer(server_name);
+			m_world->requestToHostServer(server_name, gameTime);
 
 			auto sys = static_cast<ClientConnectToServerSystem*>(
 				m_world->getSystem(SystemType::ClientConnectoToServerSystem));
