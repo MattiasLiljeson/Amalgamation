@@ -1,0 +1,15 @@
+ScreenWidth= 1280
+ScreenHeight= 720
+Windowed= 1
+HDRLights= 1
+EnableTesselation= 0
+EnableEffects= 0
+EnableVSYNC= 0
+MasterVolume= 75
+SoundEffectVolume= 75
+MusicVolume= 75
+PlayerName= Grymmare
+LastUsedIP= 127.0.0.1
+LastUsedPort= 1337
+Rumble= 1
+EnableCheats= 1
