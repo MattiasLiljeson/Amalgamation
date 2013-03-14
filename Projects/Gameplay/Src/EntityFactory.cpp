@@ -948,7 +948,7 @@ Entity* EntityFactory::createAnomalyBombServer( Transform* p_transform,
 	entity->addComponent(new BodyInitData(p_transform->getTranslation(),
 		p_transform->getRotation(), scale, p_moduleVelocity,
 		AglVector3::zero(), 0, BodyInitData::DYNAMIC, BodyInitData::SINGLE,
-		false, true));
+		false, false));
 	entity->addComponent(new NetworkSynced(entity->getIndex(), -1,
 		EntityType::AnomalyBomb));
 	m_world->addEntity(entity);
