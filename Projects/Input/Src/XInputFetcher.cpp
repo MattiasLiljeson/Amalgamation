@@ -22,6 +22,7 @@ int XInputFetcher::s_btnMaskMap[InputHelper::Xbox360Digitals_CNT] =
 XInputFetcher::XInputFetcher()
 {
 	m_epsilon = 0.0;
+	m_sensitivity = 1.0;
 
 	ZeroMemory( &m_analogOffsets, sizeof(m_analogOffsets) );
 	ZeroMemory( &m_currentState, sizeof(XINPUT_STATE) );
@@ -73,6 +74,16 @@ short XInputFetcher::getRawAnalog( int p_analog )
 		return m_rawAnalogs[p_analog];
 	else
 		return -1;
+}
+
+void XInputFetcher::setControllerSensitivity( const double p_sensitivity )
+{
+	m_sensitivity = p_sensitivity;
+}
+
+const double XInputFetcher::getControllerSensitivity() const
+{
+	return m_sensitivity;
 }
 
 double XInputFetcher::getCalibratedAnalog( int p_analog )

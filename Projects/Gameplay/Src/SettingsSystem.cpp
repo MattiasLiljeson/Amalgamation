@@ -18,10 +18,15 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile(string p_path, strin
 
 	ifstream inFile;
 	inFile.open( p_path+p_file );
-	string ignore;
-	if( checkFileReadOperation( &inFile ) != FileStatus_OK ) {
-		status =  FileStatus_FILE_NOT_FOUND;
-	} else {
+	if( checkFileReadOperation( &inFile ) != FileStatus_OK ) 
+	{
+		string filePath = p_path + "stdSettings.settings";
+		inFile.open( filePath );
+	}
+
+	if( checkFileReadOperation( &inFile ) == FileStatus_OK ) 
+	{
+		string ignore;
 		// Gfx settings
 		inFile >> ignore;
 		inFile >> m_settings.screenWidth;
@@ -62,6 +67,10 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile(string p_path, strin
 
 		status = checkFileReadOperation( &inFile );
 		m_settingsAreSet = true;
+	} 
+	else 
+	{
+		status =  FileStatus_FILE_NOT_FOUND;
 	}
 
 	inFile.close();

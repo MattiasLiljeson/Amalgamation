@@ -43,6 +43,7 @@ void InputBackendSystem::initialize()
 	XInputFetcher* xInput = new XInputFetcher();
 	HWND hWnd = m_graphicsBackend->getWindowRef();
 	IMouseKeyboardFetcher* directInput = new DirectInputFetcher( m_hInstance, hWnd, true, true );
+	directInput->setMouseSensitivity( 1.0f );
 	m_inputManager = new InputManager( directInput, xInput );
 
 	InputControlFactory factory;
@@ -213,7 +214,7 @@ void InputBackendSystem::process()
 {
 	float dt = m_world->getDelta();
 
-	m_inputManager->update();
+	m_inputManager->update( dt );
 
 	int currentWidth	= m_graphicsBackend->getGfxWrapper()->getWindowWidth();
 	int currentHeight	= m_graphicsBackend->getGfxWrapper()->getWindowHeight();
@@ -332,12 +333,22 @@ void InputBackendSystem::setControllerVibration(float p_leftMotor, float p_right
 	if (xinput) xinput->vibrate(p_leftMotor,p_rightMotor);
 }
 
-void InputBackendSystem::setMouseSensitivity( const float p_sensitivity )
+void InputBackendSystem::setControllerSensitivity( const double p_sensitivity )
 {
-	m_inputManager->getMouseKeyboardFetcher()->setMouseSensitivity(p_sensitivity);
+	m_inputManager->getXInputFetcher()->setControllerSensitivity( p_sensitivity );
 }
 
-const float InputBackendSystem::getMouseSensitivity() const
+const double InputBackendSystem::getControllerSensitivity() const
+{
+	return m_inputManager->getXInputFetcher()->getControllerSensitivity();
+}
+
+void InputBackendSystem::setMouseSensitivity( const double p_sensitivity )
+{
+	m_inputManager->getMouseKeyboardFetcher()->setMouseSensitivity( p_sensitivity );
+}
+
+const double InputBackendSystem::getMouseSensitivity() const
 {
 	return m_inputManager->getMouseKeyboardFetcher()->getMouseSensitivity();
 }

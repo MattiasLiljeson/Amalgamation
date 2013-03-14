@@ -29,7 +29,7 @@ public:
 	AnalogueControl( InputHelper::Xbox360Analogs p_axis);
 	~AnalogueControl();
 
-	virtual void update( InputManager* p_manager );
+	virtual void update( float p_dt, InputManager* p_manager );
 
 private:
 	InputHelper::Xbox360Analogs m_axis;
