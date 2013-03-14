@@ -1,5 +1,6 @@
 #pragma once
 #include <EntitySystem.h>
+#include <Globals.h>
 class Control;
 class InputBackendSystem;
 // =======================================================================================
@@ -68,7 +69,7 @@ public:
 		Actions_CNT//End Actions enum
 	};
 
-	InputActionsBackendSystem(string p_inputIniFile);
+	InputActionsBackendSystem( string p_path = SETTINGSPATH, string p_file = "setting.input");
 	~InputActionsBackendSystem();
 	void initialize();
 	double getDeltaByAction(Actions p_action);
@@ -82,9 +83,14 @@ private:
 	void initControlMap();
 
 private:
+	InputBackendSystem* m_inputBackend;
 	vector<Control*> m_inputControls[Actions_CNT];
 	map<string, int> m_actionMap;
-	string m_inputIniFile;
-	InputBackendSystem* m_inputBackend;
+	string m_path;
+	string m_file;
 
+	enum Device { Device_NONE = -1, Device_MOUSE, Device_CONTROLLER, Device_CNT };
+
+	double m_sensitivities[Device_CNT];
+	double m_menuSensitivities[Device_CNT];
 };

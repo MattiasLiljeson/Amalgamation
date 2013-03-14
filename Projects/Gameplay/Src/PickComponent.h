@@ -20,6 +20,7 @@ public:
 		m_rotationDirection = 0;
 		m_lastHovered = -1;
 		m_desiredSlot = 0;
+		m_inEditMode = false;
 	}
 
 	~PickComponent() {}
@@ -52,6 +53,8 @@ public:
 	int m_rotationDirection;
 
 	int m_lastHovered; ///< Latest entity the pick component hovered over
+
+	bool m_inEditMode; ///< Tells the pick whether or not it is in edit mode
 
 private:
 	int m_latestPick; ///< the current picked entity

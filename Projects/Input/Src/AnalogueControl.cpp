@@ -37,10 +37,12 @@ AnalogueControl::~AnalogueControl()
 {
 }
 
-void AnalogueControl::update( InputManager* p_manager )
+void AnalogueControl::update( float p_dt, InputManager* p_manager )
 {
 	XInputFetcher* fetcher = p_manager->getXInputFetcher();
+	double mouseSensitivity = fetcher->getControllerSensitivity();
 	double travel = fetcher->getCalibratedAnalog( m_axis );
+	travel *= mouseSensitivity;
 
 	double newStatus = 0.0;
 	if( (m_subAxis == InputHelper:: SubAxes_POSITIVE && travel > 0.0) ||

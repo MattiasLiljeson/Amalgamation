@@ -13,7 +13,7 @@
 ShipInputProcessingSystem::ShipInputProcessingSystem(InputBackendSystem* p_inputBackend) :
 										EntitySystem( SystemType::ShipInputProcessingSystem )
 {
-	m_angleInputMultiplier = 1000.0f;
+	m_angleInputMultiplier = 10.0f;
 
 	m_controllerEpsilon = 0.15f;
 	m_editSwitchTrigReleased = true;
@@ -35,7 +35,8 @@ void ShipInputProcessingSystem::initialize()
 
 void ShipInputProcessingSystem::process()
 {
-	m_inputBackend->setMouseSensitivity(m_angleInputMultiplier);
+	// This is read from the settings.input file naow. /ML
+	//m_inputBackend->setMouseSensitivity(m_angleInputMultiplier);
 	// Fetch the status of the various input methods.
 	m_processedInput = readAllInput();
 

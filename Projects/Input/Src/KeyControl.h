@@ -25,7 +25,7 @@ public:
 	KeyControl( InputHelper::KeyboardKeys p_key );
 	virtual ~KeyControl(void);
 
-	virtual void update( InputManager* p_manager );
+	virtual void update( float p_dt, InputManager* p_manager );
 
 private:
 	int m_key;

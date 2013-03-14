@@ -23,7 +23,7 @@ void SkeletalAnimationSystem::processEntities( const vector<Entity*>& p_entities
 			AnimationTake take = anim->m_takes[anim->m_currentTake];
 
 			if (take.endFrame == take.startFrame)
-				anim->m_time = take.startFrame * anim->m_fps;
+				anim->m_time = take.startFrame / anim->m_fps;
 			else
 			{
 				anim->m_time += dt * take.speed;

@@ -44,6 +44,15 @@ void MineLayerModuleControllerSystem::processEntities(const vector<Entity*>& p_e
 			m_world->getComponentManager()->getComponent(p_entities[i],
 			ComponentType::getTypeFor(ComponentType::ShipModule)));
 
+		MineLayerModule* mineLayer = static_cast<MineLayerModule*>(
+			m_world->getComponentManager()->getComponent(p_entities[i],
+			ComponentType::getTypeFor(ComponentType::MineLayerModule)));
+
+		if (mineLayer->m_cooldown > 0 && mineLayer->m_cooldown - dt <= 0)
+		{
+			setReviveAnimation(p_entities[i]);
+		}
+		mineLayer->m_cooldown = max(mineLayer->m_cooldown - dt, 0);
 		if (module->m_parentEntity >= 0)
 		{
 			//Check if the layer is highlighted
@@ -82,41 +91,46 @@ void MineLayerModuleControllerSystem::processEntities(const vector<Entity*>& p_e
 				}
 			}
 
+			mineLayer->m_mineAge += dt;
 
+			if (mineLayer->m_currentMine >= 0)
+				updateMine(p_entities[i], min(mineLayer->m_mineAge, 1.0f));
 
-
-			MineLayerModule* mineLayer = static_cast<MineLayerModule*>(
-				m_world->getComponentManager()->getComponent(p_entities[i],
-				ComponentType::getTypeFor(ComponentType::MineLayerModule)));
-
-			mineLayer->m_mineAge += dt*highlighted;
-
-			if (mineLayer->m_currentMine < 0 && highlighted)
+			if (highlighted || mineLayer->m_timeSinceSpawnStarted > 0)
 			{
-				spawnMine(p_entities[i]);
-				mineLayer->m_mineAge = 0;
-			}
-			else if (mineLayer->m_currentMine >= 0)
-				updateMine(p_entities[i], min(mineLayer->m_mineAge / 2.5f, 1.0f));
-
-			if (highlighted)
-			{
-				if (mineLayer->m_mineAge >= 2.5f && (module->getActive() || mineLayer->m_timeSinceSpawnStarted > 0))
+				if ((module->getActive() && mineLayer->m_cooldown == 0.0f) || mineLayer->m_timeSinceSpawnStarted > 0)
 				{
 					if (mineLayer->m_timeSinceSpawnStarted == 0)
 					{
 						setSpawnAnimation(p_entities[i]);
 					}
+					
+					if (mineLayer->m_timeSinceSpawnStarted > 0.67f && mineLayer->m_currentMine < 0)
+					{
+						spawnMine(p_entities[i]);
+						mineLayer->m_mineAge = 0;
+					}
 
 					mineLayer->m_timeSinceSpawnStarted += dt;
 
-					if (mineLayer->m_timeSinceSpawnStarted >= 0.5f)
+					if (mineLayer->m_timeSinceSpawnStarted >= 2.08f)
 					{
 						launchMine(p_entities[i]);
 						mineLayer->m_currentMine = -1;
 						mineLayer->m_timeSinceSpawnStarted = 0.0f;
+						mineLayer->m_cooldown = 4.0f;
 					}
 				}
+			}
+		}
+		else
+		{
+			if (mineLayer->m_currentMine >= 0)
+			{
+				launchMine(p_entities[i]);
+				mineLayer->m_currentMine = -1;
+				mineLayer->m_timeSinceSpawnStarted = 0.0f;
+				mineLayer->m_cooldown = 4.0f;
 			}
 		}
 	}
@@ -300,8 +314,42 @@ void MineLayerModuleControllerSystem::setSpawnAnimation(Entity* p_layer)
 	AnimationUpdatePacket packetIdle;
 	packetIdle.networkIdentity = p_layer->getIndex();
 	packetIdle.shouldPlay = true;
+	packetIdle.playSpeed = 1.0f;
+	packetIdle.take = "Death";
+	packetIdle.shouldQueue = true;
+	m_server->broadcastPacket( packetIdle.pack() );
+
+	AnimationUpdatePacket packetDead;
+	packetDead.networkIdentity = p_layer->getIndex();
+	packetDead.shouldPlay = true;
+	packetDead.playSpeed = 1.0f;
+	packetDead.take = "Dead";
+	packetDead.shouldQueue = true;
+	m_server->broadcastPacket( packetDead.pack() );
+
+	/*AnimationUpdatePacket packetIdle;
+	packetIdle.networkIdentity = p_layer->getIndex();
+	packetIdle.shouldPlay = true;
 	packetIdle.playSpeed = 15.0f;
 	packetIdle.take = "Default";
 	packetIdle.shouldQueue = true;
-	m_server->broadcastPacket( packetIdle.pack() );
+	m_server->broadcastPacket( packetIdle.pack() );*/
+}
+void MineLayerModuleControllerSystem::setReviveAnimation(Entity* p_layer)
+{
+	AnimationUpdatePacket packet;
+	packet.networkIdentity = p_layer->getIndex();
+	packet.shouldPlay = true;
+	packet.playSpeed = 1.0f;
+	packet.take = "Revive";
+	m_server->broadcastPacket( packet.pack() );
+
+
+	AnimationUpdatePacket packetDead;
+	packetDead.networkIdentity = p_layer->getIndex();
+	packetDead.shouldPlay = true;
+	packetDead.playSpeed = 1.0f;
+	packetDead.take = "Default";
+	packetDead.shouldQueue = true;
+	m_server->broadcastPacket( packetDead.pack() );
 }

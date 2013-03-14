@@ -55,7 +55,7 @@ public:
 	/// @brief getters used by controls to update themselves
 	IMouseKeyboardFetcher* getMouseKeyboardFetcher() const;
 	XInputFetcher* getXInputFetcher() const;
-	void update();
+	void update( float p_dt );
 
 private:
 	static const int DIGITAL_ID_OFFSET = INT_MAX/2;
