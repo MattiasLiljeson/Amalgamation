@@ -46,7 +46,7 @@
 
 
 ServerWelcomeSystem::ServerWelcomeSystem( TcpServer* p_server, 
-										 int p_activePort/* =1337 */ )
+										 int p_activePort/* =13337 */ )
 	: EntitySystem( SystemType::ServerWelcomeSystem, 1, ComponentType::NetworkSynced)
 {
 	m_server = p_server;

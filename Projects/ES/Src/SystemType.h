@@ -136,6 +136,8 @@ public:	//Enums
 		ShipEngineSystem,
 		ClientModuleCounterSystem,
 		AddToParentSystem,
+		ClientDebugModuleSpawnerSystem,
+		GlowAnimationSystem,
 		NUM_SYSTEM_TYPES
 	};
 

@@ -20,12 +20,13 @@ public:
 	};
 
 	SettingsSystem();
-	virtual ~SettingsSystem();
+	~SettingsSystem();
 
-	FileStatus readSettingsFile( string p_path, string p_file = "stdSettings.settings");
-	FileStatus writeSettingsFile( string p_path, string p_file = "stdSettings.settings");
+	FileStatus readSettingsFile( string p_path, string p_file = "settings.settings");
+	FileStatus writeSettingsFile( string p_path, string p_file = "settings.settings");
 
 	GameSettingsInfo getSettings();
+	GameSettingsInfo* getSettingsRef();
 	void setSettings( GameSettingsInfo p_settings );
 
 private:

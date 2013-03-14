@@ -5,6 +5,7 @@
 #include "AnomalyBomb.h"
 #include "AudioInfo.h"
 #include "AudioListener.h"
+#include "AxisRotate.h"
 #include "BodyInitData.h"
 #include "ConnectionPointSet.h"
 #include "Connector1to2Module.h"
@@ -39,7 +40,6 @@
 #include "TeslaEffectPiece.h"
 #include "Transform.h"
 #include "Vibration.h"
-#include "AxisRotate.h"
 
 // unsorted automatically added includes. Sort them when added!
 #include <Component.h>
@@ -51,6 +51,7 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<AnomalyBomb>();
 	handle<AudioInfo>();
 	handle<AudioListener>();
+	handle<AxisRotate>();
 	handle<BodyInitData>();
 	handle<ConnectionPointSet>();
 	handle<Connector1to2Module>();
@@ -84,5 +85,4 @@ ComponentAssemblageAllocator::ComponentAssemblageAllocator()
 	handle<TeslaEffectPiece>();
 	handle<Transform>();
 	handle<Vibration>();
-	handle<AxisRotate>();
 }

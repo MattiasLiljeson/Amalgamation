@@ -28,7 +28,8 @@ public:
 public:
 	AglVector3 muzzleOffset;
 	AglVector3 fireDirection;
-	float	   coolDown;
+	float	   lockCoolDown;
+	float	   cooldown;
 	int		   burstCount;
 	float	   timeSinceRocket;
 	int		   currentBurst;
@@ -36,6 +37,7 @@ public:
 	//Maybe temporary
 	int		   laserSightEntity;
 	int		   target;
+	bool	   lockOnPlaying;
 
 	static ComponentRegister<RocketLauncherModule> s_reg;
 };

@@ -51,16 +51,19 @@ void SlotInputControllerSystem::handleSlotSelection(bool p_editMode)
 		{
 			sendSlot90Sub();
 		}
+		else if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_TOGGLE_DESIRED_SLOT) > 0)
+		{
+			sendPreferredSlotToggle();
+		}
 		m_previousModeWasEditMode = true;
 	}
 	else
 	{
 		Entity* myShip = m_world->getEntityManager()->getFirstEntityByComponentType(
 			ComponentType::TAG_MyShip);
-		ParticleSystemsComponent* particles = static_cast<ParticleSystemsComponent*>(
-			myShip->getComponent(ComponentType::ParticleSystemsComponent));
 		int highlight = -1;
-		if(particles != NULL)
+
+		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_1) > 0)
 		{
 			// history based
 			if (m_previousModeWasEditMode)
@@ -85,6 +88,18 @@ void SlotInputControllerSystem::handleSlotSelection(bool p_editMode)
 				highlight=3;
 			}
 			highlightSlot(highlight,particles);
+		}
+		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_2) > 0)
+		{
+			highlight = 1;
+		}
+		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_3) > 0)
+		{
+			highlight = 2;
+		}
+		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_4) > 0)
+		{
+			highlight = 3;
 		}
 
 		if (highlight >= 0)
@@ -199,6 +214,14 @@ void SlotInputControllerSystem::sendSlot90Add()
 	packet.type = SimpleEventType::ROTATE_90_ADD;
 
 	m_client->sendPacket( packet.pack() );
+}
+void SlotInputControllerSystem::sendPreferredSlotToggle()
+{
+	SimpleEventPacket packet;
+	packet.type = SimpleEventType::TOGGLE_PREFERRED_SLOT;
+
+	m_client->sendPacket( packet.pack() );
+}
 }
 
 void SlotInputControllerSystem::highlightSlot( int p_slot, 

@@ -1,4 +1,4 @@
-e Shield
+e ClientShield
 
 c Transform
 d f m_translationX 0.0
@@ -9,6 +9,7 @@ c LoadMesh
 d s m_filename shield_module.agl
 
 c ShipModule
+c ShieldModule
 
 c SkeletalAnimation
 

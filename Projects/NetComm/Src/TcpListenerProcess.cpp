@@ -40,7 +40,7 @@ void TcpListenerProcess::body()
 
 	while( m_running )
 	{
-		//boost::this_thread::sleep( boost::posix_time::millisec(1) );
+		boost::this_thread::sleep( boost::posix_time::millisec(1) );
 
 		// Poll for a new connection. (This is what calls the handleAccept method).
 		m_ioService->poll();
@@ -60,7 +60,7 @@ void TcpListenerProcess::processMessages()
 		ProcessMessage* msg = messages.front();
 		messages.pop();
 
-		if( msg->type = MessageType::TERMINATE )
+		if( msg->type == MessageType::TERMINATE )
 			m_running = false;
 
 		delete msg;

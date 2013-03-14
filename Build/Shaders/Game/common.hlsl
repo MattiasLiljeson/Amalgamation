@@ -46,11 +46,12 @@ Texture2D g_diffLightLowRes				: register(t9);
 
 Texture2D g_depth						: register(t10);
 
-SamplerState g_samplerPointWrap 		: register(s0);
-SamplerState g_samplerLinearWrap 		: register(s1);
-SamplerState g_samplerAnisotropicWrap 	: register(s2);
-SamplerState g_samplerPointClamp 		: register(s3);
-SamplerState g_samplerLinearClamp 		: register(s4);
-SamplerState g_samplerAnisotropicClamp 	: register(s5);
+SamplerState g_samplerDefault	 		: register(s0);
+SamplerState g_samplerPointWrap 		: register(s1);
+SamplerState g_samplerLinearWrap 		: register(s2);
+SamplerState g_samplerAnisotropicWrap 	: register(s3);
+SamplerState g_samplerPointClamp 		: register(s4);
+SamplerState g_samplerLinearClamp 		: register(s5);
+SamplerState g_samplerAnisotropicClamp 	: register(s6);
 
 #endif

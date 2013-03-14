@@ -59,6 +59,7 @@
 #include "RootBoundingSpherePacket.h"
 #include "DisconnectPacket.h"
 #include "PlayerReadyPacket.h"
+#include "SpawnDebugModulePacket.h"
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -142,7 +143,8 @@ void ServerPacketHandlerSystem::handleIngame()
 {
 	while( m_server->hasNewPackets() )
 	{
-		Packet packet = m_server->popNewPacket();
+		//Packet packet = m_server->popNewPacket();
+		Packet& packet = m_server->getFrontPacket();
 
 		char packetType;
 		packetType = packet.getPacketType();
@@ -283,6 +285,11 @@ void ServerPacketHandlerSystem::handleIngame()
 							slotPacket.inEditMode = false;
 
 							m_server->unicastPacket(slotPacket.pack(), packet.getSenderId() );
+
+							//Tell the picking system to stop any possible picking
+							ServerPickingSystem* pickSystem = 
+								static_cast<ServerPickingSystem*>(m_world->getSystem(SystemType::ServerPickingSystem));
+							pickSystem->setReleased(packet.getSenderId());
 						}
 					}
 				}
@@ -351,7 +358,7 @@ void ServerPacketHandlerSystem::handleIngame()
 			rayPacket.unpack( packet );
 			picking->setRay(packet.getSenderId(), rayPacket.o, rayPacket.d);
 		}
-		else if (packetType == (char)PacketType::ModuleHighlightPacket)
+		else if (packetType == (char)PacketType::HighlightSlotPacket)
 		{
 			// =========================================
 			// MODULEHIGHLIGHTPACKET
@@ -361,7 +368,9 @@ void ServerPacketHandlerSystem::handleIngame()
 
 			HighlightSlotPacket hp;
 			hp.unpack( packet );
+			modsystem->addDeactivateEvent(packet.getSenderId());
 			modsystem->addHighlightEvent(hp.id, packet.getSenderId());
+
 		}
 		else if (packetType == (char)PacketType::SimpleEvent)
 		{
@@ -396,7 +405,38 @@ void ServerPacketHandlerSystem::handleIngame()
 				pickSystem->setEnabled(packet.getSenderId(), false);
 			else if (sep.type == SimpleEventType::RELEASE_PICK)
 				pickSystem->setReleased(packet.getSenderId());
+			else if (sep.type == SimpleEventType::TOGGLE_PREFERRED_SLOT)
+				pickSystem->togglePreferredSlot(packet.getSenderId());
 		}
+		else if(packetType == (char)PacketType::SpawnDebugModulePacket)
+		{
+			SpawnDebugModulePacket data;
+			data.unpack(packet);
+			EntityFactory* factory = static_cast<EntityFactory*>(m_world->getSystem(
+				SystemType::EntityFactory));
+			for(unsigned char i=0; i<data.numberOfModules; i++)
+			{
+				EntityCreationPacket entityCreation;
+				AglVector3 offset = AglVector3((float)i * 5.0f, 0.0f, 0.0f);
+				AglMatrix transform = AglMatrix(AglVector3(1.0f, 1.0f, 1.0f),
+					AglQuaternion::identity(), data.shipPosition + offset);
+				entityCreation.entityType = data.moduleTypes[i];
+				Entity* entity = factory->entityFromPacket(entityCreation, &transform);
+
+				NetworkSynced* netsync = static_cast<NetworkSynced*>(entity->getComponent(
+					ComponentType::NetworkSynced));
+				entityCreation.scale = transform.GetScale();
+				entityCreation.translation = transform.GetTranslation();
+				entityCreation.rotation = transform.GetRotation();
+				entityCreation.networkIdentity = netsync->getNetworkIdentity();
+				entityCreation.owner = netsync->getNetworkOwner();
+				entityCreation.playerID = netsync->getPlayerID();
+				m_server->broadcastPacket(entityCreation.pack());
+			}
+		}
+
+		// Pop packet!
+		m_server->popFrontPacket();
 	}
 }
 
@@ -464,8 +504,12 @@ void ServerPacketHandlerSystem::handleLobby()
 
 				// Send all the existing players to the new client.
 				m_server->unicastPacket(alreadyConnectedPlayers.pack(), newComp->m_networkID);
+				
 				//m_server->broadcastPacket(alreadyConnectedPlayers.pack());
-			}			
+			}
+
+			// Force all players to be set unready.
+			memset(&m_lobbyPlayerReadyStates, 0, sizeof(m_lobbyPlayerReadyStates));
 		}
 		else if(packetType == (char)PacketType::ClientDisconnect){
 			DisconnectPacket dcPacket;
@@ -510,7 +554,6 @@ void ServerPacketHandlerSystem::handleLobby()
 				m_server->broadcastPacket(newState.pack());
 			}
 		}
-
 		else
 		{
 			printPacketTypeNotHandled("Lobby", (int)packetType);

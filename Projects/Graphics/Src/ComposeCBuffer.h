@@ -1,30 +1,23 @@
 #pragma once
 
-#include <EntitySystem.h>
-
-class GraphicsBackendSystem;
-class InputBackendSystem;
-
 // =======================================================================================
-//                                      SpriteSystem
+//                                      ComposeCBuffer
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Brief
+/// \brief	Contains all data needed by the CBuffer
 ///        
-/// # SpriteSystem
+/// # ComposeCBuffer
 /// Detailed description.....
-/// Created on: 20-12-2012 
+/// Created on: 13-3-2013 
 ///---------------------------------------------------------------------------------------
 
-class SpriteSystem : public EntitySystem
+struct ComposeCBuffer
 {
-public:
-	SpriteSystem();
-	~SpriteSystem();
+	float circleOfConfusion;
+	float empty[3];
 
-	virtual void initialize();
-	virtual void processEntities( const vector<Entity*>& p_entities );
-private:
+	void setData(const ComposeCBuffer& p_data){
+		circleOfConfusion = p_data.circleOfConfusion;
+	}
 };
-

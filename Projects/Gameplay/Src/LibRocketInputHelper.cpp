@@ -44,21 +44,31 @@ void LibRocketInputHelper::initialize()
 	rocketKeyCodeMapping[InputHelper::KeyboardKeys_X] = KI_X;
 	rocketKeyCodeMapping[InputHelper::KeyboardKeys_Y] = KI_Y;
 	rocketKeyCodeMapping[InputHelper::KeyboardKeys_Z] = KI_Z;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_AA] = KI_OEM_4;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_AE] = KI_OEM_7;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_OE] = KI_OEM_1;
 
-	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_0] = KI_NUMPAD0;
-	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_1] = KI_NUMPAD1;
-	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_2] = KI_NUMPAD2;
-	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_3] = KI_NUMPAD3;
-	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_4] = KI_NUMPAD4;
-	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_5] = KI_NUMPAD5;
-	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_6] = KI_NUMPAD6;
-	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_7] = KI_NUMPAD7;
-	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_8] = KI_NUMPAD8;
-	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_9] = KI_NUMPAD9;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_LEFT]	= KI_LEFT;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_UP]		= KI_UP;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_DOWN]	= KI_DOWN;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_RIGHT]	= KI_RIGHT;
+
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_0]	= KI_NUMPAD0;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_1]	= KI_NUMPAD1;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_2]	= KI_NUMPAD2;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_3]	= KI_NUMPAD3;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_4]	= KI_NUMPAD4;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_5]	= KI_NUMPAD5;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_6]	= KI_NUMPAD6;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_7]	= KI_NUMPAD7;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_8]	= KI_NUMPAD8;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_NUMPAD_9]	= KI_NUMPAD9;
 
 	rocketKeyCodeMapping[InputHelper::KeyboardKeys_PERIOD]		= KI_OEM_PERIOD;
 	rocketKeyCodeMapping[InputHelper::KeyboardKeys_BACKSPACE]	= KI_BACK;
-
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_DELETE]		= KI_DELETE;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_LEFT_WIN]	= KI_LWIN;
+	rocketKeyCodeMapping[InputHelper::KeyboardKeys_RIGHT_WIN]	= KI_RWIN;
 }
 
 bool LibRocketInputHelper::isKeyMapped( int p_key )

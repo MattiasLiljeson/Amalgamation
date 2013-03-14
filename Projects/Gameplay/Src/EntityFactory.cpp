@@ -58,6 +58,10 @@
 #include "ShineSpawn.h"
 #include "ThrustComponent.h"
 
+#include <ToString.h>
+#include <OutputLogger.h>
+#include "InitiallyDisable.h"
+
 #define FORCE_VS_DBG_OUTPUT
 
 
@@ -158,8 +162,12 @@ Entity* EntityFactory::entityFromRecipe( const string& p_entityName )
 	map<string, Recipe*>::iterator it = m_entityRecipes.find( p_entityName );
 	if( it != m_entityRecipes.end())
 	{
+		//m_world->getOutputLogger()->write( ("entityFromRecipy found " + p_entityName + "\n").c_str() );
+
 		meal = m_world->createEntity();
 		it->second->cook( meal );
+		//m_world->getOutputLogger()->write( ("entityFromRecipy cooked " + p_entityName + "\n").c_str() );
+
 		meal->setName( p_entityName );
 	}
 
@@ -407,6 +415,7 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	{
 		m_world->addEntity(entity);
 	}
+
 	return entity;
 }
 Entity* EntityFactory::createShipEntityServer(EntityCreationPacket p_packet)
@@ -451,6 +460,30 @@ Entity* EntityFactory::createRocketLauncherClient(EntityCreationPacket p_packet)
 
 	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
+	SoundComponent* soundComponent = new SoundComponent();
+	entity->addComponent(soundComponent);
+
+	Component* component = NULL;
+
+	string name = "lockonSound";
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::AMBIENT, name);
+	explodeSound->file = "lockonsoundsnap.wav";
+	explodeSound->path = TESTSOUNDEFFECTPATH;
+	explodeSound->maxFrequencyOffeset = 2.0f;
+	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::FOREVER;
+	explodeSound->sourceChannels = 1;
+	explodeSound->queuedPlayingState = AudioHeader::STOP;
+	explodeSound->volume = 0.05f;
+	soundComponent->addAudioHeader(explodeSound);
+
+	InitiallyDisable* disable = new InitiallyDisable();
+	disable->data.push_back(DisableData(2, true, false));
+	disable->data.push_back(DisableData(3, true, false));
+	disable->data.push_back(DisableData(4, false, true));
+
+	entity->addComponent(ComponentType::InitiallyDisable, disable);
+
+
 	m_world->addEntity(entity);
 	return entity;
 }
@@ -475,22 +508,29 @@ Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
-	//AglParticleSystemHeader header;
-	//header.particleSize = AglVector2(2, 2);
-	//header.spawnFrequency = 10;
-	//header.spawnSpeed = 5.0f;
-	//header.spread = 0.0f;
-	//header.fadeOutStart = 2.0f;
-	//header.fadeInStop = 0.0f;
-	//header.particleAge = 2;
-	//header.maxOpacity = 1.0f;
-	//header.color = AglVector4(0, 1, 0, 1.0f);
-	//header.alignmentType = AglParticleSystemHeader::OBSERVER;
+	SoundComponent* soundComponent = new SoundComponent();
+	entity->addComponent(soundComponent);
 
-	//ParticleEmitters* psComp = new ParticleEmitters();
-	//psComp->addParticleSystem( header );
-	//entity->addComponent( psComp );
-	//int particleSysIdx = psComp->addParticleSystem( ParticleSystemData( header, updateData, "minigun" ) );
+	Component* component = NULL;
+
+	string name = "minigunFire";
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::AMBIENT, name);
+	explodeSound->file = "machinegunsoundsnap.wav";//"Spaceship_Weapon_-_Fighter Blaster or Laser-Shot-Mid.wav";
+	explodeSound->path = TESTSOUNDEFFECTPATH;
+	explodeSound->maxFrequencyOffeset = 2.0f;
+	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::TIMERBASED;
+	explodeSound->timerInterval = 0.1f;
+	explodeSound->sourceChannels = 1;
+	explodeSound->queuedPlayingState = AudioHeader::STOP;
+	explodeSound->volume = 0.5f;
+	soundComponent->addAudioHeader(explodeSound);
+
+	InitiallyDisable* disable = new InitiallyDisable();
+	disable->data.push_back(DisableData(0, true, false));
+	disable->data.push_back(DisableData(1, true, false));
+	disable->data.push_back(DisableData(2, true, false));
+	
+	entity->addComponent(ComponentType::InitiallyDisable, disable);
 	
 	m_world->addEntity( entity );
 	return entity;
@@ -660,22 +700,30 @@ Entity* EntityFactory::createRocketClient(EntityCreationPacket p_packet)
 	entity = entityFromRecipeOrFile( "Rocket","Assemblages/Rocket.asd"  );
 
 	// Add network dependent components
-	Component* component = new Transform(p_packet.translation, p_packet.rotation, p_packet.scale);
-	entity->addComponent( ComponentType::Transform, component );
 	entity->addComponent(ComponentType::NetworkSynced,
 		new NetworkSynced(p_packet.networkIdentity, p_packet.owner, (EntityType::EntityEnums)p_packet.entityType));
 	// entity->addComponent( ComponentType::Extrapolate, new Extrapolate() );
 	entity->addComponent(ComponentType::InterpolationComponent,new InterpolationComponent());
 
-	// RM-RT 2013-03-04
-	/*
-	entity->addComponent( ComponentType::SoundComponent, new SoundComponent(
-		TESTSOUNDEFFECTPATH, "Missile_Flight.wav" ));
-	*/
+
+	SoundComponent* soundComponent = new SoundComponent();
+	entity->addComponent(soundComponent);
+
+	string name = "rocketfire";
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::AMBIENT, name);
+	explodeSound->file = "firerocket2soundsnap.wav";
+	explodeSound->path = TESTSOUNDEFFECTPATH;
+	explodeSound->maxFrequencyOffeset = 2.0f;
+	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
+	explodeSound->sourceChannels = 1;
+	explodeSound->queuedPlayingState = AudioHeader::PLAY;
+	explodeSound->volume = 0.5f;
+	soundComponent->addAudioHeader(explodeSound);
+
+	
+
 	m_world->addEntity(entity);
-	//static_cast<AudioBackendSystem*>(m_world->getSystem(SystemType::AudioBackendSystem))->
-	//	playPositionalSoundEffect(TESTSOUNDEFFECTPATH, "Missile_Start.wav",
-	//	p_packet.translation);
+
 	return entity;
 }
 Entity* EntityFactory::createRocketServer(EntityCreationPacket p_packet)
@@ -785,7 +833,7 @@ void EntityFactory::createBackgroundScene()
 
 Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 {
-	Entity* shieldEntity = entityFromRecipeOrFile( "Shield",
+	Entity* shieldEntity = entityFromRecipeOrFile( "ClientShield",
 		"Assemblages/Modules/Shield/ClientShield.asd");
 	shieldEntity->setName("shieldModuleClient");
 	// set transform from packet directly
@@ -794,36 +842,27 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 	transform->setTranslation(p_packet.translation);
 	transform->setRotation(p_packet.rotation);	
 	transform->setScale(p_packet.scale);	
+	
 	// Add network dependent components
 	shieldEntity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
-	auto shipModule = static_cast<ShipModule*>(
-		shieldEntity->getComponent(ComponentType::ShipModule));
-	shieldEntity->addComponent(new ShieldModule());
 	m_world->addEntity(shieldEntity);
-
-
-	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//RUINED BY ASSEMBLAGE. ASK ANTON WHY? ASK JOHAN HOW HE WANTS TO ADJUST IT!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	return shieldEntity;
 }
 Entity* EntityFactory::createShieldServer(EntityCreationPacket p_packet)
 {
-	Entity* entity = entityFromRecipeOrFile( "Shield",
+	Entity* entity = entityFromRecipeOrFile( "ServerShield",
 		"Assemblages/Modules/Shield/ServerShield.asd");
-	auto transform = static_cast<Transform*>(entity->getComponent(ComponentType::Transform));
-	transform->setTranslation(p_packet.translation);
-	transform->setRotation(p_packet.rotation);
-	transform->setScale(p_packet.scale);
-	auto bodyInitData = static_cast<BodyInitData*>(entity->getComponent(ComponentType::BodyInitData));
-	bodyInitData->m_position = p_packet.translation;
-	bodyInitData->m_orientation = p_packet.rotation;
-	bodyInitData->m_scale = p_packet.scale;
-	// 
-	entity->addComponent(ComponentType::ShieldModule, new ShieldModule());
+//	auto transform = static_cast<Transform*>(entity->getComponent(ComponentType::Transform));
+//	transform->setTranslation(p_packet.translation);
+//	transform->setRotation(p_packet.rotation);
+//	transform->setScale(p_packet.scale);
+//	auto bodyInitData = static_cast<BodyInitData*>(entity->getComponent(ComponentType::BodyInitData));
+//	bodyInitData->m_position = p_packet.translation;
+//	bodyInitData->m_orientation = p_packet.rotation;
+//	bodyInitData->m_scale = p_packet.scale;
+
 	entity->addComponent(ComponentType::NetworkSynced, new NetworkSynced(
 		entity->getIndex(), -1, EntityType::ShieldModule));
 	m_world->addEntity(entity);
@@ -1154,7 +1193,7 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 	Component* component = NULL;
 
 	string name = "Explosion";
-	AudioHeader* explodeSound = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::AMBIENT, name);
 	explodeSound->file = "bomb-03.wav";
 	explodeSound->path = TESTSOUNDEFFECTPATH;
 	explodeSound->maxFrequencyOffeset = 2.0f;

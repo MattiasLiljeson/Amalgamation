@@ -116,7 +116,7 @@ Entity* ConnectionVisualizerSystem::createConnectionEffectEntity(ConnectionEffec
 	particleSystem.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
 	particleSystem.setParticleSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
 	particleSystem.setSpawnSpeed(0.0f);
-	particleSystem.setParticleSize(AglVector2(1.0f, 1.0f));
+	particleSystem.setParticleSize(AglVector2(3.0f, 3.0f));
 	particleSystem.setParticleAge(0.25f);
 	particleSystem.setFadeOutStart(0.0f);
 

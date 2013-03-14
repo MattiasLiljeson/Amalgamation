@@ -2,7 +2,7 @@
 
 #include "ShaderVariableContainer.h"
 #include "ShaderBase.h"
-#include "SSAOCBuffer.h"
+#include "ComposeCBuffer.h"
 #include "Buffer.h"
 
 // =======================================================================================
@@ -21,12 +21,12 @@
 class DeferredComposeShader : public ShaderBase
 {
 public:
-	DeferredComposeShader( Buffer<SSAOBuffer>* p_ssaoBuffer, 
+	DeferredComposeShader( Buffer<ComposeCBuffer>* p_composeBuffer, 
 		ShaderVariableContainer p_initData);
 	virtual ~DeferredComposeShader();
 
 	void apply();
-	void setSSAOBufferData( const SSAOBuffer& p_newSSAOBuffer );
+	void setComposeBuffer( const ComposeCBuffer& p_newComposeBuffer );
 private:
-	Buffer<SSAOBuffer>* m_ssaoBuffer;
+	Buffer<ComposeCBuffer>* m_composeBuffer;
 };

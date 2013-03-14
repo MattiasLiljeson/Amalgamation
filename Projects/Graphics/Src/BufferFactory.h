@@ -10,7 +10,8 @@
 #include "RenderSceneInfoCBuffer.h"
 #include "ShadowCBuffer.h"
 #include "PerShadowCBuffer.h"
-#include "SSAOCBuffer.h"
+#include "PostProcessingBuffer.h"
+#include "ComposeCBuffer.h"
 
 // #include "TextureBuffers.h"
 // #include "VertexBuffers.h"
@@ -89,7 +90,9 @@ public:
 
 	Buffer<PerShadowCBuffer>*	createPerShadowBuffer();
 
-	Buffer<SSAOBuffer>*		createSSAOBuffer();
+	Buffer<PostProcessingBuffer>*		createPostProcessingBuffer();
+
+	Buffer<ComposeCBuffer>*		createComposeBuffer();
 
 	///-----------------------------------------------------------------------------------
 	/// This function should create a box mesh only.

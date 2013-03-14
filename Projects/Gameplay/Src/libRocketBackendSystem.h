@@ -1,18 +1,19 @@
 #pragma once
 
 #include <EntitySystem.h>
-#include <string>
-#include <vector>
+#include <RenderInterface.h>
 #include <Rocket/Core.h>
 #include <Rocket/Debugger.h>
-#include <RenderInterface.h>
 #include <map>
+#include <string>
+#include <vector>
 
 class AntTweakBarWrapper;
 class Control;
 class Cursor;
 class EventHandler;
 class GraphicsBackendSystem;
+class InputActionsBackendSystem;
 class InputBackendSystem;
 class LibRocketRenderInterface;
 class LibRocketSystemInterface;
@@ -21,7 +22,7 @@ class LibRocketBackendSystem : public EntitySystem, public RenderInterface
 {
 public:
 	LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend,
-		InputBackendSystem* p_inputBackend );
+		InputBackendSystem* p_inputBackend, InputActionsBackendSystem* p_actionBackend  );
 	~LibRocketBackendSystem();
 
 	void initialize();
@@ -38,6 +39,7 @@ public:
 
 	void loadCursor( const char* p_cursorPath );
 	void updateElement(int p_docId, string p_element, string p_value );
+	void changeValue(int p_docId, string p_element, string p_value );
 
 	void showDocument(int p_docId, int p_focusFlags = Rocket::Core::ElementDocument::FOCUS);
 	void hideDocument(int p_docId);
@@ -50,8 +52,9 @@ public:
 
 	Rocket::Core::Context* getContext() const;
 private:
-	void processMouseMove();
+	void processCursorMove();
 	void processKeyStates();
+	int getKeyModifiers();
 	int loadDocumentP( const char* p_filePath, const char* p_windowName=NULL);
 
 private:
@@ -62,6 +65,7 @@ private:
 
 	GraphicsBackendSystem* m_graphicsBackend;
 	InputBackendSystem* m_inputBackend;
+	InputActionsBackendSystem* m_actionBackend;
 
 	Cursor* m_cursor;
 

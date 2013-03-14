@@ -64,6 +64,7 @@ void TcpServer::stopListening()
 		delete m_listenerProcess;
 		m_listenerProcess = NULL;
 	}
+
 }
 
 bool TcpServer::isListening()
@@ -147,6 +148,19 @@ Packet TcpServer::popNewPacket()
 		throw domain_error( "Trying to pop from an empty packet queue!" );
 	}
 	return NULL;
+}
+
+Packet& TcpServer::getFrontPacket()
+{
+	return m_newPackets.front();
+}
+
+void TcpServer::popFrontPacket()
+{
+	if (!m_newPackets.empty())
+	{
+		m_newPackets.pop();
+	}
 }
 
 void TcpServer::processMessages()
@@ -327,4 +341,3 @@ const unsigned int& TcpServer::totalSentInCommProcess(
 {
 	return m_totalSentInCommProcesses[p_processIdentity];
 }
-

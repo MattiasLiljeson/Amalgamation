@@ -9,6 +9,7 @@ MinigunModule::MinigunModule()
 	animationPlaying = false;
 	rayIndex = -1;
 	timeSinceSound = 0;
+	minigunState = IDLE;
 }
 
 MinigunModule::MinigunModule( AglVector3 p_muzzleOffset, AglVector3 p_fireDirection )
@@ -24,6 +25,7 @@ MinigunModule::MinigunModule( AglVector3 p_muzzleOffset, AglVector3 p_fireDirect
 	animationPlaying = false;
 	rayIndex = -1;
 	timeSinceSound = 0;
+	minigunState = IDLE;
 }
 MinigunModule::~MinigunModule()
 {

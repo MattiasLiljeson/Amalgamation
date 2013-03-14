@@ -1,6 +1,8 @@
 #include "ClientApplication.h"
 #include <windows.h>
 
+#include <SettingsSystem.h>
+
 #include "ServerApplication.h"
 
 #include <EntityWorld.h>
@@ -63,7 +65,6 @@
 #include <EntityFactory.h>
 #include <EnvironmentSystem.h>
 #include <ExtrapolationSystem.h>
-#include <GameOptionsSystem.h>
 #include <GameStatsSystem.h>
 #include <GamepadRumbleSystem.h>
 #include <GraphicsBackendSystem.h>
@@ -103,7 +104,6 @@
 #include <RocketLauncherModuleControllerSystem.h>
 #include <ScoreWorldVisualizerSystem.h>
 #include <SelectionMarkerSystem.h>
-#include <SettingsSystem.h>
 #include <ShadowSystem.h>
 #include <ShieldModuleControllerSystem.h>
 #include <ShieldPlaterSystem.h>
@@ -117,7 +117,6 @@
 #include <SlotHighlightParticleMakerSystem.h>
 #include <SpeedBufferUpdaterSystem.h>
 #include <SpeedFovAdjustSystem.h>
-#include <SpriteSystem.h>
 #include <SlotMarkerSystem.h>
 #include <TeslaEffectSystem.h>
 #include <TeslaLightningSystem.h>
@@ -128,6 +127,8 @@
 #include <PortalCullingSystem.h>
 #include <ClientModuleCounterSystem.h>
 #include <AddToParentSystem.h>
+#include <GlowAnimationSystem.h>
+#include <ClientDebugModuleSpawnerSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -200,6 +201,7 @@ void ClientApplication::run()
 	QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
 
 	MSG msg = {0};
+
 	while(m_running)
 	{
 		if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE) )
@@ -224,7 +226,10 @@ void ClientApplication::run()
 			}
 			
 			if(m_world->isHostingServer() && m_serverApp == NULL){
-				m_serverApp = new Srv::ServerApplication();
+				auto clientConnectToServerSystem =  static_cast<ClientConnectToServerSystem*>
+					(m_world->getSystem(SystemType::ClientConnectoToServerSystem));
+
+				m_serverApp = new Srv::ServerApplication(clientConnectToServerSystem->getServerPortByInt());
 				m_serverApp->start();
 			}
 			else if (!m_world->isHostingServer() && m_serverApp != NULL){
@@ -246,36 +251,121 @@ void ClientApplication::initSystems()
 	// systems are added here is the order the systems will be processed
 	//----------------------------------------------------------------------------------
 
+	/************************************************************************/
+	/* ---------------------THE NEW WORLD ORDER!--------------------------	*/
+	/************************************************************************/
+	//SYSTEMS USED BY MANY IN CREATIONSTAGES
 	SettingsSystem* settingsSystem = new SettingsSystem();
 	settingsSystem->readSettingsFile(SETTINGSPATH);
 	GameSettingsInfo settings = settingsSystem->getSettings();
 	m_world->setSystem( settingsSystem );
 
-	/************************************************************************/
-	/* TimerSystem used by other systems should be first.					*/
-	/************************************************************************/
-	m_world->setSystem(SystemType::TimerSystem, new TimerSystem(), true);
-
-	/************************************************************************/
-	/* Game State system.													*/
-	/************************************************************************/
-	m_world->setSystem( new ClientStateSystem( GameStates::MENU ) );
-
-	/************************************************************************/
-	/* PlayerSystem allows for accessing connected players					*/
-	/************************************************************************/
-	m_world->setSystem( new PlayerSystem(), true);
-
-	/************************************************************************/
-	/* Graphics																*/
-	/************************************************************************/
 	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance,
 		settings );
-
 	m_world->setSystem( graphicsBackend );
+	m_world->setSystem( new NetsyncDirectMapperSystem() );
+	AudioBackendSystem* audioBackend = new AudioBackendSystem();
+	m_world->setSystem( audioBackend );
 
+	// || INPUT ||
+	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, 
+		graphicsBackend );
+	m_world->setSystem( inputBackend );
+
+	InputActionsBackendSystem* actionBackendSys =
+		new InputActionsBackendSystem( SETTINGSPATH + "settings.input" );
+	m_world->setSystem( actionBackendSys );
+
+	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend,
+		inputBackend, actionBackendSys );
+	m_world->setSystem( rocketBackend );
+	m_world->setSystem( new LibRocketEventManagerSystem(m_client) );
+
+	//---NETWORK
+	m_world->setSystem( new ProcessingMessagesSystem( m_client ) );
+	//m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem() );
+	//m_world->setSystem( new ExtrapolationSystem( m_client ) );
+
+	// || UPDATE SYSTEMS ||
+	m_world->setSystem(new TimerSystem());
+
+	//---SHIP CONTROLLING SYSTEMS
+	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend);
+	m_world->setSystem( shipInputProc );
+	SlotInputControllerSystem* slotInput = new SlotInputControllerSystem(inputBackend,
+		m_client);
+	m_world->setSystem( slotInput );
+	m_world->setSystem( new ShipFlyControllerSystem(shipInputProc, NULL, m_client, slotInput ));
+	m_world->setSystem( new ShipEditControllerSystem(shipInputProc, NULL, slotInput) );
+	m_world->setSystem( new PlayerCameraControllerSystem( shipInputProc, m_client ) );
+
+	//---NETWORKHANDLING SYSTEMS
+	m_world->setSystem( new ClientPacketHandlerSystem( m_client ) );
+	m_world->setSystem( new CameraSystem( graphicsBackend ) );
+
+	//---GAMEPLAY AFFECTING SYSTEMS
+	m_world->setSystem( new LookAtSystem(NULL) );
+	m_world->setSystem( new SpeedBufferUpdaterSystem() );
+	m_world->setSystem( new DamageUpdaterSystem() );
+	m_world->setSystem( new GamepadRumbleSystem( inputBackend, settings ) );
+
+	//---EFFECTS
+	m_world->setSystem( new ScoreWorldVisualizerSystem() );
+	//m_world->setSystem( new ModuleStatusEffectSystem() );
+	m_world->setSystem( new ConnectionVisualizerSystem() );
+	m_world->setSystem( new ShipParticleSystemUpdater() );
+	m_world->setSystem( new EditSphereSystem() );
+	m_world->setSystem( new SelectionMarkerSystem() );
+	m_world->setSystem( new ShipHighlightSystem() );
+	m_world->setSystem( new ModuleHighlightSystem() );
+	m_world->setSystem( new DamageVisualizerSystem() );
+	m_world->setSystem( new EnvironmentSystem() );	// Chamber fog and ambient
+	m_world->setSystem( new SpeedFovAdjustSystem() );
+	m_world->setSystem( new ShipEngineSystem() );
+
+	//---GAMEPLAY
+	m_world->setSystem( new PlayerSystem(), true);
+	m_world->setSystem( new DisplayPlayerScoreSystem(m_client) );
+	m_world->setSystem( new ClientPickingSystem(m_client) );
+	m_world->setSystem( new GameStatsSystem() );
+	m_world->setSystem( new LightBlinkerSystem() );
+	m_world->setSystem( new ShieldPlaterSystem() );
+	m_world->setSystem( new ShieldPlatingSystem() );
+	m_world->setSystem( new SlotMarkerSystem() );
+	m_world->setSystem( new AnomalyBombEffectSystem() );
+	m_world->setSystem( new TeslaEffectSystem() );
+	m_world->setSystem( new TeslaLightningSystem() );
+	m_world->setSystem( new GlowAnimationSystem() );
+
+	//---STATESYSTEM
+	m_world->setSystem( new ClientStateSystem( GameStates::MENU ) );
+	m_world->setSystem( new ClientConnectToServerSystem( m_client, false ) );
+
+	//---GUI UPDATE SYSTEMS
+	m_world->setSystem( new LobbySystem() );
+	m_world->setSystem( new HudSystem( rocketBackend ) );
+	// NOTE: MenuSystem looks up all systems that's also deriving from EventHandler, so
+	// that they can be properly be added to the LibRocketEventManager.
+	// The alternative would be that every event handler adds itself.
+	m_world->setSystem( new MenuSystem() );
+
+	//IS THIS SYSTEM USEEEEEEDDD????????-Robin
+	// InterpolationSystem* interpolationSystem = new InterpolationSystem();
+	// m_world->setSystem( interpolationSystem, true);
+	InterpolationSystem2* inter = new InterpolationSystem2();
+	m_world->setSystem(inter, true);
+	m_world->setSystem( new EntityParentHandlerSystem() );
+
+	//---AUDIO SYSTEMS
+	m_world->setSystem( new AudioListenerSystem(audioBackend) );
+	m_world->setSystem( new PositionalSoundSystem() );
+	m_world->setSystem( new SoundSystem(audioBackend) );
+
+	m_world->setSystem( new DestroyOnParticlesDeathSystem() );
+
+	// || CREATION THINGS ||
 	/************************************************************************/
-	/* Entity creation														*/
+	/* Entity Creation														*/
 	/************************************************************************/
 	m_world->setSystem( new EntityFactory(m_client, NULL) );
 
@@ -284,196 +374,35 @@ void ClientApplication::initSystems()
 	/************************************************************************/
 	m_world->setSystem( new LevelHandlerSystem() );
 	m_world->setSystem( new LevelInfoLoader() );
-
 	/************************************************************************/
 	/* Mesh loading															*/
 	/************************************************************************/
 	// Note! Must set *after* EntityFactory and GraphicsBackend, and *before* Physics
 	m_world->setSystem( new LoadMeshSystemClient(graphicsBackend) ); 
 	m_world->setSystem( new ParticleSystemInstructionTranslatorSystem( graphicsBackend ) );
-	/************************************************************************/
-	/* Physics																*/
-	/************************************************************************/
-	//PhysicsSystem* physics = new PhysicsSystem( NULL );
-	//m_world->setSystem( physics );
 
-	/************************************************************************/
-	/* General controlling													*/
-	/************************************************************************/
-	m_world->setSystem( new LookAtSystem(NULL) );
-	m_world->setSystem( new SpeedBufferUpdaterSystem() );
-	m_world->setSystem( new DamageUpdaterSystem() );
-	
-	/************************************************************************/
-	/* Input																*/
-	/************************************************************************/
-	InputBackendSystem* inputBackend = new InputBackendSystem( m_hInstance, 
-		graphicsBackend );
-	m_world->setSystem( inputBackend );
-	m_world->setSystem( new InputActionsBackendSystem( SETTINGSPATH + "stdSettings.input" ) );
+	m_world->setSystem( new ModuleStatusEffectSystem() );
 
-	GamepadRumbleSystem* rumbleSys = new GamepadRumbleSystem( inputBackend );
-	rumbleSys->setRumbleEnabled( settings.rumble );
-	m_world->setSystem( rumbleSys );
+	// || RENDERING SYSTEMS ||
+	m_world->setSystem( new SkeletalAnimationSystem() );
 
-	/************************************************************************/
-	/* Culling																*/
-	/************************************************************************/
+	//---CULLING
+	m_world->setSystem(new AddToParentSystem());
 	m_world->setSystem(new PortalCullingSystem());
 	m_world->setSystem(new CullingSystem() );
 
-	
-	/************************************************************************/
-	/* GUI																	*/
-	/************************************************************************/
-	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend,
-		inputBackend );
-	m_world->setSystem( rocketBackend );
-
-	m_world->setSystem( new LobbySystem() );
-	m_world->setSystem( new HudSystem( rocketBackend ) );
-	m_world->setSystem( new LibRocketEventManagerSystem(m_client) );
-	m_world->setSystem( new GameOptionsSystem() );
-	m_world->setSystem( new DamageVisualizerSystem( graphicsBackend ) );
-
-	// NOTE: MenuSystem looks up all systems that's also deriving from EventHandler, so
-	// that they can be properly be added to the LibRocketEventManager.
-	// The alternative would be that every event handler adds itself.
-	m_world->setSystem( new MenuSystem() );
-
-
-	/************************************************************************/
-	/* Effects																*/
-	/************************************************************************/
-	m_world->setSystem( new SlotHighlightParticleMakerSystem(), false );
-	m_world->setSystem( new ScoreWorldVisualizerSystem() );
-	m_world->setSystem( new ModuleStatusEffectSystem() );
-	m_world->setSystem( new ConnectionVisualizerSystem() );
-	m_world->setSystem( new ShipParticleSystemUpdater() );
-	m_world->setSystem( new EditSphereSystem() );
-	m_world->setSystem( new SelectionMarkerSystem());
-	m_world->setSystem( new ShipHighlightSystem());
-	m_world->setSystem( new ModuleHighlightSystem());
-
-	/************************************************************************/
-	/* Player    															*/
-	/************************************************************************/
-	// Input system for ships
-	ShipInputProcessingSystem* shipInputProc = new ShipInputProcessingSystem(inputBackend);
-	m_world->setSystem( shipInputProc );
-	SlotInputControllerSystem* slotInput = new SlotInputControllerSystem(inputBackend, m_client);
-	m_world->setSystem( slotInput );
-
-	// Controller systems for the ship
-	m_world->setSystem( new ShipFlyControllerSystem(shipInputProc, NULL, m_client, slotInput ));
-	m_world->setSystem( new ShipEditControllerSystem(shipInputProc, NULL, slotInput) );
-
-	/************************************************************************/
-	/* Hierarchy															*/
-	/************************************************************************/
-	m_world->setSystem( new EntityParentHandlerSystem() );
-
-
-	/************************************************************************/
-	/* Camera																*/
-	/************************************************************************/
-	// Chamber fog and ambient
-	m_world->setSystem( new EnvironmentSystem() );
-
-	// Controller logic for camera
-	m_world->setSystem( new PlayerCameraControllerSystem( shipInputProc, m_client ) );
-	// Camera system sets its viewport info to the graphics backend for render
-	m_world->setSystem( new CameraSystem( graphicsBackend ) );
-
-	m_world->setSystem( new SpeedFovAdjustSystem() );
-
-	/************************************************************************/
-	/* Sprites																*/
-	/************************************************************************/
-	SpriteSystem* spriteSystem = new SpriteSystem();
-	m_world->setSystem(spriteSystem);
-
-	/************************************************************************/
-	/* Renderer																*/
-	/************************************************************************/
-	MeshRenderSystem* renderer = new MeshRenderSystem( graphicsBackend );
-	m_world->setSystem( renderer );
-
+	//---RENDERSYSTEMS
+	MeshRenderSystem* meshRender = new MeshRenderSystem( graphicsBackend );
+	m_world->setSystem( meshRender );
 	ParticleRenderSystem* particleRender = new ParticleRenderSystem( graphicsBackend );
 	m_world->setSystem( particleRender );
-
 	LightRenderSystem* lightRender = new LightRenderSystem( graphicsBackend );
 	m_world->setSystem( lightRender );
-	
 	AntTweakBarSystem* antTweakBar = new AntTweakBarSystem( graphicsBackend, inputBackend );
 	m_world->setSystem( antTweakBar, false );
 
-	ShadowSystem* shadowSystem = new ShadowSystem ();
-	m_world->setSystem( shadowSystem );
-
-	/************************************************************************/
-	/* Network																*/
-	/************************************************************************/
-	m_world->setSystem( new ProcessingMessagesSystem( m_client ) );
-	m_world->setSystem( new ClientConnectToServerSystem( m_client, false ) );
-	m_world->setSystem( new NetsyncDirectMapperSystem() );
-	m_world->setSystem( new NetSyncedPlayerScoreTrackerSystem() );
-	m_world->setSystem( new ClientPacketHandlerSystem( m_client ) );
-	m_world->setSystem( new ExtrapolationSystem( m_client ) );
-
-	/************************************************************************/
-	/* Interpolation  														*/
-	/************************************************************************/
-	// InterpolationSystem* interpolationSystem = new InterpolationSystem();
-	// m_world->setSystem( interpolationSystem, true);
-	InterpolationSystem2* inter = new InterpolationSystem2();
-	m_world->setSystem(inter, true);
-
-	/************************************************************************/
-	/* Audio																*/
-	/************************************************************************/
-	AudioBackendSystem* audioBackend = new AudioBackendSystem();
-	m_world->setSystem( audioBackend );
-	m_world->setSystem( new ShipEngineSystem() );
-
-	//Must be last the last systems that handles any sound operations
-	//otherwise a one frame delay will be added. Robin T
-	m_world->setSystem( new AudioListenerSystem(audioBackend) );
-	m_world->setSystem( new PositionalSoundSystem() );
-	m_world->setSystem( new SoundSystem(audioBackend) );
-
-	/************************************************************************/
-	/* Gameplay																*/
-	/************************************************************************/
-	m_world->setSystem( new DisplayPlayerScoreSystem(m_client) );
-	m_world->setSystem( new ClientPickingSystem(m_client) );
-	m_world->setSystem( new GameStatsSystem() );
-	m_world->setSystem( new LightBlinkerSystem() );
-	m_world->setSystem( new ShieldPlatingSystem() );
-	m_world->setSystem( new SlotMarkerSystem() );
-	m_world->setSystem( new AnomalyBombEffectSystem() );
-	m_world->setSystem( new ShieldPlaterSystem() );
-	m_world->setSystem( new TeslaEffectSystem() );
-	m_world->setSystem( new TeslaLightningSystem() );
-
-	/************************************************************************/
-	/* Animation															*/
-	/************************************************************************/
-	m_world->setSystem( new SkeletalAnimationSystem() );
-
-	/************************************************************************/
-	/* Graphics representer													*/
-	/************************************************************************/
-	m_world->setSystem( new GraphicsRendererSystem( graphicsBackend, shadowSystem,
-		renderer, rocketBackend, particleRender, antTweakBar, lightRender, settings ) );
-
-	/************************************************************************/
-	/* Destroyers															*/
-	/************************************************************************/
-	m_world->setSystem( new DestroyOnParticlesDeathSystem() );
-
-
-	m_world->setSystem(new AddToParentSystem());
+	m_world->setSystem( new GraphicsRendererSystem( graphicsBackend, meshRender, 
+		rocketBackend, particleRender, antTweakBar, lightRender, settings ) );
 
 	/************************************************************************/
 	/* Debugging															*/
@@ -488,7 +417,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new AntTweakBarEnablerSystem() );
 	m_world->setSystem( new OutputLogger("log_client.txt"));
 	m_world->setSystem( new ClientModuleCounterSystem() );
-
+	m_world->setSystem( new ClientDebugModuleSpawnerSystem(m_client) );
 
 	m_world->initialize();
 

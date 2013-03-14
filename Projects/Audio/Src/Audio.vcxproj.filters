@@ -63,6 +63,9 @@
     <ClInclude Include="AudioHeader.h">
       <Filter>AudioEngine\Structs</Filter>
     </ClInclude>
+    <ClInclude Include="AudioPlayInfo.h">
+      <Filter>AudioEngine\Structs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SoundWrapper.cpp">

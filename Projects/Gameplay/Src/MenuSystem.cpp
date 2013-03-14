@@ -2,16 +2,21 @@
 #include "LibRocketBackendSystem.h"
 #include "LibRocketEventManagerSystem.h"
 #include "ClientConnectToServerSystem.h"
-#include "GameOptionsSystem.h"
 #include <Globals.h>
 #include <ToString.h>
 #include "MenuItem.h"
 #include "ClientStateSystem.h"
 #include "LobbySystem.h"
+#include "SettingsSystem.h"
 
 MenuSystem::MenuSystem()
 	: EntitySystem( SystemType::MenuSystem)
 {
+	m_joinIdx		= -1;
+	m_hostIdx		= -1;
+	m_lobbyDocIdx	= -1;
+	m_disconnectPopupIdx = -1;
+	m_loadingWindowIdx = -1;
 }
 
 
@@ -30,15 +35,10 @@ void MenuSystem::initialize()
 	auto connectToServerSys = static_cast<ClientConnectToServerSystem*>(
 		m_world->getSystem(SystemType::ClientConnectoToServerSystem));
 
-	auto gameOptionsSys = static_cast<GameOptionsSystem*>(
-		m_world->getSystem(SystemType::GameOptionsSystem));
-
-	rocketEventManager->registerEventHandler(gameOptionsSys);
-
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"main_menu");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"play");
-	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"join");
-	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"host");
+	m_joinIdx = rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"join");
+	m_hostIdx = rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"host");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"options");
 	rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"credits");
 	m_lobbyDocIdx = rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"lobby");
@@ -106,4 +106,33 @@ void MenuSystem::displayDisconnectPopup()
 
 		rocketEventManager->loadWindow("connection_lost", Rocket::Core::ElementDocument::FOCUS);
 	}
+}
+
+void MenuSystem::setJoin()
+{
+	auto gameOptions = static_cast<SettingsSystem*>
+		(m_world->getSystem(SystemType::SettingsSystem));
+
+	GameSettingsInfo settings = gameOptions->getSettings();
+
+	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+		m_world->getSystem(SystemType::LibRocketBackendSystem));
+
+	rocketBackend->changeValue(m_joinIdx, "1", settings.ip);
+	rocketBackend->changeValue(m_joinIdx, "2", settings.port);
+	rocketBackend->changeValue(m_joinIdx, "3", settings.playerName);
+}
+
+void MenuSystem::setHost()
+{
+	auto gameOptions = static_cast<SettingsSystem*>
+		(m_world->getSystem(SystemType::SettingsSystem));
+
+	GameSettingsInfo settings = gameOptions->getSettings();
+
+	auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+		m_world->getSystem(SystemType::LibRocketBackendSystem));
+
+	rocketBackend->changeValue(m_hostIdx, "5", settings.port);
+	rocketBackend->changeValue(m_hostIdx, "6", settings.playerName);
 }

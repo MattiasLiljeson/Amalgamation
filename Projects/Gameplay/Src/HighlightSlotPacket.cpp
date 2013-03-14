@@ -34,7 +34,7 @@ HighlightSlotPacket::~HighlightSlotPacket()
 
 Packet HighlightSlotPacket::pack()
 {
-	Packet packet(static_cast<char>(PacketType::ModuleHighlightPacket));	
+	Packet packet(static_cast<char>(PacketType::HighlightSlotPacket));	
 	packet << id;
 	packet << status;
 

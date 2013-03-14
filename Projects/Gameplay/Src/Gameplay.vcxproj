@@ -20,6 +20,7 @@
     <ClInclude Include="AnimationUpdatePacket.h" />
     <ClInclude Include="AntTweakBarSystem.h" />
     <ClInclude Include="BombActivationPacket.h" />
+    <ClInclude Include="ClientDebugModuleSpawnerSystem.h" />
     <ClInclude Include="ClientModuleCounterSystem.h" />
     <ClInclude Include="ClientStateSystem.h" />
     <ClInclude Include="DamageUpdaterSystem.h" />
@@ -39,6 +40,9 @@
     <ClInclude Include="AxisRotationSystem.h" />
     <ClInclude Include="GameSettingsInfo.h" />
     <ClInclude Include="DamageComponent.h" />
+    <ClInclude Include="GlowAnimation.h" />
+    <ClInclude Include="GlowAnimationSystem.h" />
+    <ClInclude Include="InitiallyDisable.h" />
     <ClInclude Include="LobbySystem.h" />
     <ClInclude Include="FlareGunModule.h" />
     <ClInclude Include="HighlightEntityPacket.h" />
@@ -46,6 +50,7 @@
     <ClInclude Include="InterpolationSystem2.h" />
     <ClInclude Include="AnomalyBombEffectPiece.h" />
     <ClInclude Include="AnomalyBombEffectSystem.h" />
+    <ClInclude Include="ModulesHighlightPacket.h" />
     <ClInclude Include="ModuleHighlightSystem.h" />
     <ClInclude Include="ModuleOnChamberStartPoint.h" />
     <ClInclude Include="ModuleStatusVisualizationMode.h" />
@@ -53,6 +58,7 @@
     <ClInclude Include="PortalCullingSystem.h" />
     <ClInclude Include="RootBoundingSpherePacket.h" />
     <ClInclude Include="SettingsSystem.h" />
+    <ClInclude Include="ShieldActivationPacket.h" />
     <ClInclude Include="ShineSpawn.h" />
     <ClInclude Include="ShipEngineSystem.h" />
     <ClInclude Include="ShipHighlight.h" />
@@ -62,9 +68,9 @@
     <ClInclude Include="SlotMarkerSystem.h" />
     <ClInclude Include="SoundComponent.h" />
     <ClInclude Include="SoundSystem.h" />
+    <ClInclude Include="SpawnDebugModulePacket.h" />
     <ClInclude Include="Sprite.h" />
-    <ClInclude Include="SpriteSystem.h" />
-    <ClInclude Include="TempModuleSpawner.h" />
+    <ClInclude Include="ModuleSpawner.h" />
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStateChangePacket.h" />
     <ClInclude Include="AudioBackendSystem.h" />
@@ -100,7 +106,6 @@
     <ClInclude Include="EnumGameStates.h" />
     <ClInclude Include="Extrapolate.h" />
     <ClInclude Include="ExtrapolationSystem.h" />
-    <ClInclude Include="GameOptionsSystem.h" />
     <ClInclude Include="GamepadRumbleSystem.h" />
     <ClInclude Include="GameplayTags.h" />
     <ClInclude Include="GameState.h" />
@@ -260,6 +265,7 @@
     <ClInclude Include="EntityParent.h" />
     <ClInclude Include="TransformParentHandlerSystem.h" />
     <ClInclude Include="UpdateClientStatsPacket.h" />
+    <ClInclude Include="SoundPacket.h" />
     <ClInclude Include="Vibration.h" />
     <ClInclude Include="WelcomePacket.h" />
     <ClInclude Include="WinningConditionSystem.h" />
@@ -284,6 +290,10 @@
     <ClCompile Include="CameraControlPacket.cpp" />
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
+    <ClCompile Include="ClientDebugModuleSpawnerSystem.cpp" />
+    <ClCompile Include="GlowAnimation.cpp" />
+    <ClCompile Include="GlowAnimationSystem.cpp" />
+    <ClCompile Include="ModulesHighlightPacket.cpp" />
     <ClCompile Include="OrbitalMovementSystem.cpp" />
     <ClCompile Include="ClientConnectToServerSystem.cpp" />
     <ClCompile Include="ClientEntityCountSystem.cpp" />
@@ -318,7 +328,6 @@
     <ClCompile Include="EnvironmentValues.cpp" />
     <ClCompile Include="ExtrapolationSystem.cpp" />
     <ClCompile Include="FlareGunModule.cpp" />
-    <ClCompile Include="GameOptionsSystem.cpp" />
     <ClCompile Include="GamepadRumbleSystem.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GradientComponent.cpp" />
@@ -359,15 +368,17 @@
     <ClCompile Include="PortalCullingSystem.cpp" />
     <ClCompile Include="RootBoundingSpherePacket.cpp" />
     <ClCompile Include="SettingsSystem.cpp" />
+    <ClCompile Include="ShieldActivationPacket.cpp" />
     <ClCompile Include="ShipEngineSystem.cpp" />
     <ClCompile Include="ShipHighlightSystem.cpp" />
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp" />
     <ClCompile Include="SlotMarkerSystem.cpp" />
     <ClCompile Include="SoundComponent.cpp" />
+    <ClCompile Include="SoundPacket.cpp" />
     <ClCompile Include="SoundSystem.cpp" />
+    <ClCompile Include="SpawnDebugModulePacket.cpp" />
     <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="SpriteSystem.cpp" />
-    <ClCompile Include="TempModuleSpawner.cpp" />
+    <ClCompile Include="ModuleSpawner.cpp" />
     <ClCompile Include="MenuBackgroundSceneSystem.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuSystem.cpp" />

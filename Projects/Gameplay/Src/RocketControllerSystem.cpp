@@ -58,73 +58,73 @@ void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 		if (rocket->m_age > waitUntilActivation && rocket->m_age <= rocketMaxAge)
 		{
 			//Start targeting ships
-			ShipManagerSystem* shipManager = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
-
-			Entity* ship = m_world->getEntity(rocket->m_target);
-
-			Transform* from = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
-			Transform* to = static_cast<Transform*>(ship->getComponent(ComponentType::Transform));
-
-			//START APPLY IMPULSE
-
-			MeshOffsetTransform* meshOffset = static_cast<MeshOffsetTransform*>
-				( p_entities[i]->getComponent( ComponentType::MeshOffsetTransform) );
-
 			PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(ComponentType::PhysicsBody));
 			PhysicsSystem* ps = static_cast<PhysicsSystem*>(m_world->getSystem(SystemType::PhysicsSystem));
-
-			AglVector3 imp = to->getTranslation() - from->getTranslation();
-
-			float distance = imp.length();
-
-			imp.normalize();
 			RigidBody* body = static_cast<RigidBody*>(ps->getController()->getBody(pb->m_id));
 
-			AglMatrix world = meshOffset->offset * pb->getOffset().inverse() * body->GetWorld();
-
-			AglVector3 rotAxis = AglVector3::crossProduct(imp, -world.GetForward());
-			rotAxis.normalize();
-
-			//Compute fraction of turn power that should be applied
-			AglVector3 angVel = body->GetAngularVelocity();
-			
-			float angVelAxis = max(AglVector3::dotProduct(angVel, rotAxis), 0);
-
-			float amountToRotate = min(1.0f - AglVector3::dotProduct(imp, world.GetForward()), 1.0f); //0 -> 1
-
-			float frac = 1.0f;
-			if (amountToRotate / angVelAxis < 0.25f)
+			if (rocket->m_target >= 0)
 			{
-				frac = (amountToRotate / angVelAxis) / 0.25f;
-			}
+				ShipManagerSystem* shipManager = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
 
-			rotAxis *= m_turnPower * dt * frac;
+				Entity* ship = m_world->getEntity(rocket->m_target);
 
-			if (true)//distance < 100)
-			{
-				frac = 1-frac;
-				
-				/*if (distance < 100)
+				Transform* from = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
+				Transform* to = static_cast<Transform*>(ship->getComponent(ComponentType::Transform));
+
+				//START APPLY IMPULSE
+
+				MeshOffsetTransform* meshOffset = static_cast<MeshOffsetTransform*>
+					( p_entities[i]->getComponent( ComponentType::MeshOffsetTransform) );
+
+				AglVector3 imp = to->getTranslation() - from->getTranslation();
+				float distance = imp.length();
+				imp.normalize();
+
+				AglMatrix world = meshOffset->offset * pb->getOffset().inverse() * body->GetWorld();
+
+				AglVector3 rotAxis = AglVector3::crossProduct(imp, -world.GetForward());
+				rotAxis.normalize();
+
+				//Compute fraction of turn power that should be applied
+				AglVector3 angVel = body->GetAngularVelocity();
+
+				float angVelAxis = max(AglVector3::dotProduct(angVel, rotAxis), 0);
+
+				float amountToRotate = min(1.0f - AglVector3::dotProduct(imp, world.GetForward()), 1.0f); //0 -> 1
+
+				float frac = 1.0f;
+				if (amountToRotate / angVelAxis < 0.25f)
 				{
-					frac *= (0.5f + distance / 100.0f);
-				}*/
+					frac = (amountToRotate / angVelAxis) / 0.25f;
+				}
+
+				rotAxis *= m_turnPower * dt * frac;
+
+				frac = 1-frac;
+
+				AglVector3 impulse = imp*0.25f + world.GetForward();
+				impulse.normalize();
+				impulse *= dt*m_enginePower*frac;
+
+				ps->getController()->ApplyExternalImpulse(pb->m_id, impulse, rotAxis);
 			}
 			else
 			{
-				frac = 1.0f;
+				MeshOffsetTransform* meshOffset = static_cast<MeshOffsetTransform*>
+					( p_entities[i]->getComponent( ComponentType::MeshOffsetTransform) );
+
+				AglMatrix world = meshOffset->offset * pb->getOffset().inverse() * body->GetWorld();
+				AglVector3 impulse = world.GetForward() * m_enginePower * dt;
+				ps->getController()->ApplyExternalImpulse(pb->m_id, impulse, AglVector3(0, 0, 0));
 			}
 
-			AglVector3 impulse = imp*0.25f + world.GetForward();
-			impulse.normalize();
-			impulse *= dt*m_enginePower*frac;
-
-			ps->getController()->ApplyExternalImpulse(pb->m_id, impulse, rotAxis);
 
 			//END APPLY IMPULSE
 
 			//Check collision	
 			vector<unsigned int> cols = ps->getController()->CollidesWith(pb->m_id);
-			if (cols.size() > 0)
+			bool staticCol = ps->getController()->CollidesWithStaticEnvironment(pb->m_id);
+			if (cols.size() > 0 || staticCol)
 			{
 				explodeRocket(ps, pb, body, p_entities[i]);
 			}

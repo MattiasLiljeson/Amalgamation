@@ -488,9 +488,6 @@
     <ClInclude Include="LibRocketInputHelper.h">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClInclude>
-    <ClInclude Include="GameOptionsSystem.h">
-      <Filter>Systems\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="LibRocketEventManagerSystem.h">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClInclude>
@@ -719,7 +716,6 @@
     <ClInclude Include="BombActivationPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
-    <ClInclude Include="TempModuleSpawner.h" />
     <ClInclude Include="SpawnPointSystem.h">
       <Filter>Systems\Level</Filter>
     </ClInclude>
@@ -738,9 +734,6 @@
     </ClInclude>
     <ClInclude Include="MenuBackgroundSceneSystem.h" />
     <ClInclude Include="ModuleStatusEffectPacket.h" />
-    <ClInclude Include="SpriteSystem.h">
-      <Filter>Systems\GFX</Filter>
-    </ClInclude>
     <ClInclude Include="Sprite.h">
       <Filter>Components\GFX</Filter>
     </ClInclude>
@@ -854,8 +847,32 @@
     <ClInclude Include="DisconnectPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClInclude>
+    <ClInclude Include="SoundPacket.h">
+    </ClInclude>
+    <ClInclude Include="GlowAnimation.h">
+      <Filter>Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="GlowAnimationSystem.h">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClInclude>
+    <ClInclude Include="ModulesHighlightPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
     <ClInclude Include="PlayerReadyPacket.h">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleSpawner.h" />
+    <ClInclude Include="ShieldActivationPacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientDebugModuleSpawnerSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnDebugModulePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
+    <ClInclude Include="InitiallyDisable.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1164,9 +1181,6 @@
     <ClCompile Include="LibRocketInputHelper.cpp">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClCompile>
-    <ClCompile Include="GameOptionsSystem.cpp">
-      <Filter>Systems\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="LibRocketEventManagerSystem.cpp">
       <Filter>Systems\GUI\LibRocket</Filter>
     </ClCompile>
@@ -1356,7 +1370,6 @@
     <ClCompile Include="BombActivationPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
-    <ClCompile Include="TempModuleSpawner.cpp" />
     <ClCompile Include="SpawnPointSystem.cpp">
       <Filter>Systems\Level</Filter>
     </ClCompile>
@@ -1373,9 +1386,6 @@
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
     <ClCompile Include="ModuleStatusEffectPacket.cpp" />
-    <ClCompile Include="SpriteSystem.cpp">
-      <Filter>Systems\GFX</Filter>
-    </ClCompile>
     <ClCompile Include="Sprite.cpp">
       <Filter>Components\GFX</Filter>
     </ClCompile>
@@ -1472,7 +1482,28 @@
     <ClCompile Include="DisconnectPacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
+    <ClCompile Include="SoundPacket.cpp">
+    </ClCompile>
+    <ClCompile Include="GlowAnimation.cpp">
+      <Filter>Components\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="GlowAnimationSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only\Highlight</Filter>
+    </ClCompile>
+    <ClCompile Include="ModulesHighlightPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
     <ClCompile Include="PlayerReadyPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleSpawner.cpp" />
+    <ClCompile Include="ShieldActivationPacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientDebugModuleSpawnerSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnDebugModulePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>

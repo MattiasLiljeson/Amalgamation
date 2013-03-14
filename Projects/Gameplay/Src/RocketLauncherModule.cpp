@@ -5,12 +5,14 @@ ComponentRegister<RocketLauncherModule> RocketLauncherModule::s_reg("RocketLaunc
 RocketLauncherModule::RocketLauncherModule()
 	: Component( ComponentType::RocketLauncherModule )
 {
-	coolDown=0.0f; 
+	lockCoolDown=0.0f; 
 	laserSightEntity=-1;
 	burstCount = 1;
 	timeSinceRocket = FLT_MAX;
 	currentBurst = 0;
 	target = -1;
+	lockOnPlaying = false;
+	cooldown = 0;
 }
 
 RocketLauncherModule::RocketLauncherModule(AglVector3 p_muzzleOffset, AglVector3 p_fireDirection)
@@ -19,12 +21,14 @@ RocketLauncherModule::RocketLauncherModule(AglVector3 p_muzzleOffset, AglVector3
 	muzzleOffset = p_muzzleOffset;
 	fireDirection = p_fireDirection;
 	laserSightEntity = -1;
-	coolDown = 0;
+	lockCoolDown = 0;
+	cooldown = 0;
 
 	burstCount = 1;
 	timeSinceRocket = FLT_MAX;
 	currentBurst = 0;
 	target = -1;
+	lockOnPlaying = false;
 }
 
 RocketLauncherModule::~RocketLauncherModule()

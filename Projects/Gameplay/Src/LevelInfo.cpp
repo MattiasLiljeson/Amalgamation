@@ -33,6 +33,7 @@ LevelInfo::~LevelInfo()
 
 void LevelInfo::init( vector<ComponentData> p_initData )
 {
+
 	LevelPieceFileData* pieceData = NULL;
 
 	for (unsigned int i = 0; i < p_initData.size(); i++)
@@ -176,10 +177,4 @@ int LevelInfo::getLevelSize( int p_playerCount ) const
 {
 	return m_levelSize[p_playerCount-1];
 }
-
-
-
-
-
-
 

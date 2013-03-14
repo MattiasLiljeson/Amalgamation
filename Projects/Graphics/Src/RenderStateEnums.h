@@ -52,6 +52,7 @@ struct SamplerState
 	enum SamplerStateMode
 	{
 		SamplerState_NON_EXISTING = -1,
+		SamplerState_DEFAULT,
 		SamplerState_POINT_WRAP,
 		SamplerState_LINEAR_WRAP,
 		SamplerState_ANISOTROPIC_WRAP,
@@ -59,7 +60,6 @@ struct SamplerState
 		SamplerState_LINEAR_CLAMP,
 		SamplerState_ANISOTROPIC_CLAMP,
 		SamplerState_CNT
-
 	};
 };
 

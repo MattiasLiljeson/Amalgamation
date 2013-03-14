@@ -4,6 +4,11 @@
 #include <AglVector3.h>
 #include <ComponentFactory.h>
 
+enum MinigunState
+{
+	IDLE, HIGHLIGHTED, FIRING
+};
+
 // =======================================================================================
 //	MinigunModule
 // =======================================================================================
@@ -38,6 +43,7 @@ public:
 
 	//Animation status
 	bool animationPlaying;
+	MinigunState  minigunState;
 
 	static ComponentRegister<MinigunModule> s_reg;
 

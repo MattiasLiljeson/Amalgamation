@@ -6,7 +6,7 @@
 
 ShieldPlatingSystem::ShieldPlatingSystem()
 	: EntitySystem( SystemType::ShieldPlatingSystem, 4, ComponentType::Transform,
-	ComponentType::ShieldPlate, ComponentType::EntityParent, ComponentType::RenderInfo )
+	ComponentType::ShieldPlate, ComponentType::EntityParent, ComponentType::RenderInfo)
 {
 }
 
@@ -33,11 +33,24 @@ void ShieldPlatingSystem::processEntities( const vector<Entity*>& p_entities )
 			ComponentType::RenderInfo));
 		AglVector3 positionComponent;
 		AglQuaternion quarternionComponent;
-		AglVector3 scaleComponent;
+		AglVector3 scaleComponent; // used
 		AglMatrix::matrixToComponents(plate->spawnTransform,
 			scaleComponent, quarternionComponent, positionComponent);
 		float deltaScale = m_world->getDelta() * 0.5f;
 		plate->scale -= deltaScale;
+
+		float scaleFactor = 1.0f - plate->scale / plate->scaleSeed;
+		AglVector3 localPositionComp;
+		AglQuaternion localQuaternionComp;
+		AglVector3 localScaleComp;
+		AglMatrix::matrixToComponents(child->getLocalTransform(), localScaleComp,
+			localQuaternionComp, localPositionComp);
+		localPositionComp = plate->travelDir * scaleFactor * plate->maxRange;
+		//AglMatrix localTransform;
+		//AglMatrix::componentsToMatrix(localTransform, localScaleComp, localQuaternionComp,
+		//	localPositionComp);
+		//child->setLocalTransform(localTransform);
+
 		if(p_entities[i]->isEnabled())
 		{
 			render->m_shouldBeRendered = true;
@@ -63,7 +76,7 @@ void ShieldPlatingSystem::processEntities( const vector<Entity*>& p_entities )
 		}
 		AglMatrix rescaledLocalTransform;
 		AglMatrix::componentsToMatrix(rescaledLocalTransform,
-			scaleComponent, quarternionComponent, positionComponent);
+			scaleComponent, quarternionComponent, localPositionComp);
 		child->setLocalTransform(rescaledLocalTransform);
 	}
 }

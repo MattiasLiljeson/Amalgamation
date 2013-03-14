@@ -17,6 +17,7 @@ class DeferredAnimatedBaseShader;
 class DeferredTessBaseShader;
 class DeferredTessAnimatedBaseShader;
 class DeferredComposeShader;
+class DeferredPostProcessing;
 class LightShader;
 class GUIShader;
 class ParticleShader;
@@ -55,6 +56,8 @@ public:
 		const LPCWSTR& p_hullPath, const LPCWSTR& p_dominPath, const LPCWSTR& p_pixelPath);
 
 	DeferredComposeShader* createDeferredComposeShader(const LPCWSTR& p_filePath);
+
+	DeferredPostProcessing* createDeferredPostProcessingShader(const LPCWSTR& p_filePath);
 
 	LightShader* createLightShader(const LPCWSTR& p_filePath);
 

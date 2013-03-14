@@ -40,6 +40,7 @@
 #include "WelcomePacket.h"
 #include <BasicSoundCreationInfo.h>
 #include <PositionalSoundCreationInfo.h>
+#include "ShieldModule.h"
 
 
 // Packets
@@ -67,6 +68,7 @@
 #include "SpawnExplosionPacket.h"
 #include "SpawnSoundEffectPacket.h"
 #include "UpdateClientStatsPacket.h"
+#include "ShieldActivationPacket.h"
 
 // Debug
 
@@ -113,6 +115,9 @@
 #include <OutputLogger.h>
 #include "PlayerReadyPacket.h"
 #include "libRocketBackendSystem.h"
+#include "ModulesHighlightPacket.h"
+#include "GlowAnimation.h"
+#include "SettingsSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -203,13 +208,16 @@ void ClientPacketHandlerSystem::handleEntityCreationPacket(EntityCreationPacket 
 	if (p_packet.entityType != EntityType::DebugBox)
 	{
 		Entity* entity = factory->entityFromPacket(p_packet);
-		Transform* transform = static_cast<Transform*>(entity->getComponent(
-			ComponentType::Transform));
-		if(transform)
+		if (entity)
 		{
-			transform->setTranslation(p_packet.translation);
-			transform->setRotation(p_packet.rotation);
-			transform->setScale(p_packet.scale);
+			Transform* transform = static_cast<Transform*>(entity->getComponent(
+				ComponentType::Transform));
+			if(transform)
+			{
+				transform->setTranslation(p_packet.translation);
+				transform->setRotation(p_packet.rotation);
+				transform->setScale(p_packet.scale);
+			}
 		}
 	}
 	else
@@ -476,12 +484,18 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 
 		if( particleComp != NULL )
 		{
+
 			int idx = static_cast<unsigned int>(p_data.particleSystemIdx);
 			if( -1 < idx && idx < particleComp->getParticleSystemsPtr()->size() )
 			{
 				AglParticleSystem* particleSys = particleComp->getParticleSystemPtr(idx);
 				if (particleSys)
 				{
+					if (entity->getName() == "ClientMinigun")
+					{
+						int k = 0;
+					}
+
 					AglVector3 pos = p_data.position;
 					if (particleSys->getParticleSpace() == AglParticleSystemHeader::AglSpace_SCREEN)
 					{
@@ -508,7 +522,12 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 					particleSys->setSpawnPoint(		pos, p_data.forceParticleMove);
 					particleSys->setSpawnDirection(	p_data.direction);
 					particleSys->setSpawnSpeed(		p_data.speed);
-					particleSys->setSpawnFrequency(	p_data.spawnFrequency);
+					if (p_data.spawnFrequency != -1)
+						particleSys->setSpawnFrequency(	p_data.spawnFrequency);
+					else
+					{
+						particleSys->restart();
+					}
 					particleSys->setColor(p_data.color);
 				}
 			}
@@ -524,6 +543,17 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 			int breakHere = 1;
 		}
 	}
+}
+
+void ClientPacketHandlerSystem::handleEntitySounds(const SoundPacket& p_data)
+{
+	NetsyncDirectMapperSystem* directMapper = static_cast<NetsyncDirectMapperSystem*>
+		( m_world->getSystem( SystemType::NetsyncDirectMapperSystem ) );
+
+	Entity* entity = directMapper->getEntity( p_data.target );
+
+	SoundComponent* sound = static_cast<SoundComponent*>(entity->getComponent(ComponentType::SoundComponent));
+	sound->getSoundHeaderByIndex((AudioHeader::SoundType)p_data.soundType, p_data.targetSlot)->queuedPlayingState = (AudioHeader::PlayState)p_data.queuedPlayingState;
 }
 
 void ClientPacketHandlerSystem::handleParticleSystemCreation( const ParticleSystemCreationInfo& p_creationInfo )
@@ -563,7 +593,8 @@ void ClientPacketHandlerSystem::handleIngameState()
 {
 	while (m_tcpClient->hasNewPackets())
 	{
-		Packet packet = m_tcpClient->popNewPacket();
+		//Packet packet = m_tcpClient->popNewPacket();
+		Packet& packet = m_tcpClient->getFrontPacket();
 
 		updateBroadcastPacketLossDebugData( packet.getUniquePacketIdentifier() );
 
@@ -588,6 +619,12 @@ void ClientPacketHandlerSystem::handleIngameState()
 			ParticleSystemCreationInfo info;
 			packet.ReadData( &info, sizeof(ParticleSystemCreationInfo) );
 			handleParticleSystemCreation( info );
+		}
+		else if (packetType == (char)PacketType::SoundPacket)
+		{
+			SoundPacket spacket;
+			spacket.unpack(packet);
+			handleEntitySounds(spacket);
 		}
 
 		else if (packetType == (char)PacketType::ParticleUpdate)
@@ -885,6 +922,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 		{
 			EntityCreationPacket data;
 			data.unpack(packet);
+
 			handleEntityCreationPacket(data);
 		}
 		else if (packetType == (char)PacketType::EntityDeletion)
@@ -1051,10 +1089,62 @@ void ClientPacketHandlerSystem::handleIngameState()
 				hitPacket.identitiesHit, hitPacket.numberOfHits,
 				hitPacket.identitiesHitFloating, hitPacket.numberOfHitsFloating);
 		}
+		else if(packetType == (char)PacketType::ModulesHighlightPacket)
+		{
+			ModulesHighlightPacket data;
+			data.unpack(packet);
+			for(unsigned char i=0; i<data.numberOfHighlights; i++)
+			{
+				Entity* netModule = static_cast<NetsyncDirectMapperSystem*>(
+					m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+					data.modulesHighighted[i]);
+				if(netModule)
+				{
+					GlowAnimation* glow = static_cast<GlowAnimation*>(
+						netModule->getComponent(ComponentType::GlowAnimation));
+					if(glow)
+					{
+						glow->resetAnimation();
+					}
+					else
+					{
+						netModule->addComponent(new GlowAnimation(AglVector4(0.1f, 0.3f, 0.1f, 1.0f), true, 0.75f));
+						netModule->applyComponentChanges();
+					}
+				}
+			}
+		}
+		else if(packetType == (char)PacketType::ShieldActivationPacket)
+		{
+			ShieldActivationPacket data;
+			data.unpack(packet);
+			Entity* netModule = static_cast<NetsyncDirectMapperSystem*>(
+				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
+				data.entityIndex);
+			if(netModule)
+			{
+				ShieldModule* shieldModule = static_cast<ShieldModule*>(
+					netModule->getComponent(ComponentType::ShieldModule));
+				if(shieldModule)
+				{
+					if(data.shieldActivationState)
+					{
+						shieldModule->activation = 1.0f;
+					}
+					else
+					{
+						shieldModule->activation = 0;
+					}
+				}
+			}
+		}
 		else
 		{
 			DEBUGWARNING(( "Unhandled packet type!" ));
 		}
+
+		// Pop packet!
+		m_tcpClient->popFrontPacket();
 	}
 }
 
@@ -1077,6 +1167,16 @@ void ClientPacketHandlerSystem::handleMenu()
 			playerInfoPacket.playerID = m_tcpClient->getPlayerID();
 			m_tcpClient->sendPacket(playerInfoPacket.pack());
 			m_gameState->setQueuedState(GameStates::LOBBY);
+
+			auto connectionSystem = static_cast<ClientConnectToServerSystem*>
+				(m_world->getSystem(SystemType::ClientConnectoToServerSystem));
+
+			auto gameSettings = static_cast<SettingsSystem*>
+				(m_world->getSystem(SystemType::SettingsSystem));
+
+			gameSettings->getSettingsRef()->playerName = m_tcpClient->getPlayerName();
+			gameSettings->getSettingsRef()->ip = connectionSystem->getServerAddress();
+			gameSettings->getSettingsRef()->port = connectionSystem->getServerPort();
 		}	
 		else
 		{
@@ -1113,6 +1213,16 @@ void ClientPacketHandlerSystem::handleLobby()
 			
 			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
 				addNewPlayer(newlyConnected);
+
+			// Reset all ready states.
+			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))
+				->setAllPlayersReady(false);
+
+			// Reset ready button
+			auto rocketBackend = static_cast<LibRocketBackendSystem*>(
+				m_world->getSystem(SystemType::LibRocketBackendSystem));
+			int lobbyDocIdx = rocketBackend->getDocumentByName("lobby");
+			rocketBackend->updateElement(lobbyDocIdx, "player_ready", "Ready");
 		}
 		else if (packetType == (char)PacketType::ClientDisconnect)
 		{
@@ -1429,7 +1539,8 @@ void ClientPacketHandlerSystem::resetFromDisconnect()
 
 void ClientPacketHandlerSystem::handleServerDisconnect()
 {
-	if (!m_tcpClient->hasActiveConnection() && m_gameState->getCurrentState() != GameStates::MENU)
+	if (!m_tcpClient->hasActiveConnection() && m_gameState->getCurrentState() != GameStates::MENU
+		&& m_gameState->getCurrentState() != GameStates::NONE)
 	{
 		static_cast<MenuSystem*>(m_world->getSystem(SystemType::MenuSystem))
 			->displayDisconnectPopup();

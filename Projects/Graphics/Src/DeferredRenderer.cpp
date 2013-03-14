@@ -8,6 +8,7 @@
 #include "DeferredComposeShader.h"
 #include "DeferredAnimatedBaseShader.h"
 #include "DeferredTessAnimatedBaseShader.h"
+#include "DeferredPostProcessing.h"
 #include "DeferredTessBaseShader.h"
 #include "LightShader.h"
 #include "GUIShader.h"
@@ -44,7 +45,8 @@ DeferredRenderer::DeferredRenderer(
 	initRendertargetsAndDepthStencil( m_width, m_height );
 
 	initShaders();
-	initSSAO();
+	initPostProcessingPass();
+	initCompose();
 	initFullScreenQuad();
 
 	RenderStateHelper::fillBlendStateList( m_device, m_blendStates );
@@ -128,7 +130,7 @@ void DeferredRenderer::setDofRenderTargets()
 
 void DeferredRenderer::generateEffects()
 {
-	m_effectShader->setSSAOBufferData(m_ssaoData);
+	m_effectShader->setPostProcessingBuffer(m_postProcessingData);
 	m_effectShader->apply();
 	m_fullscreenQuad->apply();
 
@@ -136,8 +138,8 @@ void DeferredRenderer::generateEffects()
 }
 
 void DeferredRenderer::generateLowRes()
-{
-	m_lowResGenerationShader->setSSAOBufferData(m_ssaoData);
+{	
+	m_lowResGenerationShader->setComposeBuffer(m_composeData);
 	m_lowResGenerationShader->apply();
 	m_fullscreenQuad->apply();
 
@@ -146,7 +148,7 @@ void DeferredRenderer::generateLowRes()
 
 void DeferredRenderer::renderComposeStage()
 {
-	m_composeShader->setSSAOBufferData(m_ssaoData);
+	m_composeShader->setComposeBuffer(m_composeData);
 	m_composeShader->apply();
 	m_fullscreenQuad->apply();
 
@@ -299,6 +301,8 @@ RasterizerState::Mode DeferredRenderer::getCurrentRasterizerStateType()
 
 void DeferredRenderer::setSamplerStates()
 {
+	m_samplerStates[SamplerState::SamplerState_DEFAULT] =
+		m_samplerStates[SamplerState::SamplerState_ANISOTROPIC_WRAP];
 	m_deviceContext->PSSetSamplers( 0, SamplerState::SamplerState_CNT, m_samplerStates );
 }
 
@@ -330,24 +334,30 @@ LightShader* DeferredRenderer::getDeferredLightShader()
 void DeferredRenderer::hookUpAntTweakBar()
 {
 	AntTweakBarWrapper::getInstance()->addWriteVariable(
-		AntTweakBarWrapper::GRAPHICS,"Scale",TwType::TW_TYPE_FLOAT,&m_ssaoData.scale,
-		"group=SSAO min=0 max=10 step=0.001");
+		AntTweakBarWrapper::GRAPHICS,"Scale",TwType::TW_TYPE_FLOAT,
+		&m_postProcessingData.scale, "group=SSAO min=0 max=10 step=0.001");
 	AntTweakBarWrapper::getInstance()->addWriteVariable(
-		AntTweakBarWrapper::GRAPHICS,"Bias",TwType::TW_TYPE_FLOAT,&m_ssaoData.bias,
-		"group=SSAO step=0.001");
+		AntTweakBarWrapper::GRAPHICS,"Bias",TwType::TW_TYPE_FLOAT,
+		&m_postProcessingData.bias, "group=SSAO step=0.001");
 	AntTweakBarWrapper::getInstance()->addWriteVariable(
-		AntTweakBarWrapper::GRAPHICS,"Intensity",TwType::TW_TYPE_FLOAT,&m_ssaoData.intensity,
-		"group=SSAO step=0.001");
+		AntTweakBarWrapper::GRAPHICS,"Intensity",TwType::TW_TYPE_FLOAT,
+		&m_postProcessingData.intensity, "group=SSAO step=0.001");
 	AntTweakBarWrapper::getInstance()->addWriteVariable(
-		AntTweakBarWrapper::GRAPHICS,"SampleRad",TwType::TW_TYPE_FLOAT,&m_ssaoData.sampleRadius,
-		"group=SSAO step=0.001");
-	AntTweakBarWrapper::getInstance()->addWriteVariable(
-		AntTweakBarWrapper::GRAPHICS,"Epsilon",TwType::TW_TYPE_FLOAT,&m_ssaoData.epsilon,
-		"group=SSAO step=0.001");
+		AntTweakBarWrapper::GRAPHICS,"SampleRad",TwType::TW_TYPE_FLOAT,
+		&m_postProcessingData.sampleRadius, "group=SSAO step=0.001");
 
 	AntTweakBarWrapper::getInstance()->addWriteVariable(
-		AntTweakBarWrapper::GRAPHICS,"cocFac",TwType::TW_TYPE_FLOAT,&m_ssaoData.cocFactor,
-		"group=SSAO step=0.01");
+		AntTweakBarWrapper::GRAPHICS,"StartNear",TwType::TW_TYPE_FLOAT,
+		&m_postProcessingData.startNear, "group=DoF step=1.0f");
+	AntTweakBarWrapper::getInstance()->addWriteVariable(
+		AntTweakBarWrapper::GRAPHICS,"StartFar",TwType::TW_TYPE_FLOAT,
+		&m_postProcessingData.startFar, "group=DoF step=1.0f");
+	AntTweakBarWrapper::getInstance()->addWriteVariable(
+		AntTweakBarWrapper::GRAPHICS,"StopNear",TwType::TW_TYPE_FLOAT,
+		&m_postProcessingData.stopNear, "group=DoF step=1.0f");
+	AntTweakBarWrapper::getInstance()->addWriteVariable(
+		AntTweakBarWrapper::GRAPHICS,"StopFar",TwType::TW_TYPE_FLOAT,
+		&m_postProcessingData.stopFar, "group=DoF step=1.0f");
 }
 
 void DeferredRenderer::initDepthStencil()
@@ -453,7 +463,7 @@ void DeferredRenderer::initShaders()
 		L"Shaders/Game/deferredBaseTessleationVS.hlsl", L"Shaders/Game/deferredBaseTessleationHS.hlsl",
 		L"Shaders/Game/deferredBaseTessleationDS.hlsl", L"Shaders/Game/deferredBasePS.hlsl");
 
-	m_effectShader = m_shaderFactory->createDeferredComposeShader(
+	m_effectShader = m_shaderFactory->createDeferredPostProcessingShader(
 		L"Shaders/Game/effect.hlsl");
 
 	m_lowResGenerationShader = m_shaderFactory->createDeferredComposeShader(
@@ -483,16 +493,11 @@ void DeferredRenderer::initFullScreenQuad()
 {
 	m_fullscreenQuad = m_bufferFactory->createFullScreenQuadBuffer();
 }
-
-void DeferredRenderer::initSSAO()
+void DeferredRenderer::initCompose()
 {
-	m_ssaoData.scale	= 4.0f;
-	m_ssaoData.bias		= 0.242f;
-	m_ssaoData.intensity= 1.0f;
-	m_ssaoData.sampleRadius=0.02f;
-	m_ssaoData.epsilon  = 0.0f;
-	m_ssaoData.cocFactor  = 1.0f;
+	m_composeData.circleOfConfusion = 1.0f;
 }
+
 
 void DeferredRenderer::unmapAllBuffers()
 {
@@ -558,4 +563,30 @@ void DeferredRenderer::createSrvAndRtv( ID3D11ShaderResourceView** out_srv,
 	checkHr( hr, __FILE__, __FUNCTION__, __LINE__ );
 
 	bufferTexture->Release();
+}
+
+void DeferredRenderer::toggleEditMode(bool p_isInEditMode)
+{
+	if(p_isInEditMode){
+		m_postProcessingData.startNear	= 10.0f;
+		m_postProcessingData.stopNear	= 20.0f;
+		m_postProcessingData.startFar	= 40.0f;
+		m_postProcessingData.stopFar	= 80.0f; 
+	}
+	else{
+		m_postProcessingData.startNear	= 10.0f;
+		m_postProcessingData.stopNear	= 20.0f;
+		m_postProcessingData.startFar	= 50.0f;
+		m_postProcessingData.stopFar	= 1000.0f;
+	}
+}
+
+void DeferredRenderer::initPostProcessingPass()
+{
+	m_postProcessingData.scale			= 4.0f;
+	m_postProcessingData.bias			= 0.242f;
+	m_postProcessingData.intensity		= 1.0f;
+	m_postProcessingData.sampleRadius	= 0.02f;
+
+	toggleEditMode(false);
 }
