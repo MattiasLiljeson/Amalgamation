@@ -246,7 +246,7 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 				cb, init->m_impulseEnabled, init->m_collisionEnabled);
 
 
-			//Debug information - Not updated - May be incorrect
+			//Debug information
 			/*Entity* entity = m_world->createEntity();
 			Transform* t = new Transform(AglMatrix::createScaleMatrix(obb.size*0.5f)*obb.world);
 			entity->addComponent( ComponentType::Transform, t );

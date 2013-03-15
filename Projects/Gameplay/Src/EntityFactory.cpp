@@ -516,7 +516,7 @@ Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 
 	string name = "minigunFire";
 	AudioHeader* explodeSound = new AudioHeader(AudioHeader::AMBIENT, name);
-	explodeSound->file = "machinegunsoundsnap.wav";//"Spaceship_Weapon_-_Fighter Blaster or Laser-Shot-Mid.wav";
+	explodeSound->file = "minigunFreesound.wav";//machinegunsoundsnap.wav";//"Spaceship_Weapon_-_Fighter Blaster or Laser-Shot-Mid.wav";
 	explodeSound->path = TESTSOUNDEFFECTPATH;
 	explodeSound->maxFrequencyOffeset = 2.0f;
 	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::TIMERBASED;
@@ -711,14 +711,15 @@ Entity* EntityFactory::createRocketClient(EntityCreationPacket p_packet)
 	entity->addComponent(soundComponent);
 
 	string name = "rocketfire";
-	AudioHeader* explodeSound = new AudioHeader(AudioHeader::AMBIENT, name);
-	explodeSound->file = "firerocket2soundsnap.wav";
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
+	explodeSound->file = "firerocket3soundsnap.wav";
 	explodeSound->path = TESTSOUNDEFFECTPATH;
-	explodeSound->maxFrequencyOffeset = 2.0f;
+	explodeSound->maxFrequencyOffeset = 1.0f;
 	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
 	explodeSound->sourceChannels = 1;
 	explodeSound->queuedPlayingState = AudioHeader::PLAY;
 	explodeSound->volume = 0.5f;
+	explodeSound->maxRange = 200;
 	soundComponent->addAudioHeader(explodeSound);
 
 	
@@ -848,6 +849,21 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 	shieldEntity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
 	m_world->addEntity(shieldEntity);
+
+	SoundComponent* soundComponent = new SoundComponent();
+	shieldEntity->addComponent(ComponentType::SoundComponent, soundComponent);
+
+	//Do not change this name! If you absolutely have to because of your delicate taste
+	//for detail 2 days or so before release then at least talk to Anton first.
+	string name = "pusher";
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
+	explodeSound->file = "pusherFreesound.wav";
+	explodeSound->path = TESTSOUNDEFFECTPATH;
+	explodeSound->maxFrequencyOffeset = 1.0f;
+	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
+	explodeSound->volume = 1.0f;
+	explodeSound->maxRange = 200;
+	soundComponent->addAudioHeader(explodeSound);
 
 	return shieldEntity;
 }

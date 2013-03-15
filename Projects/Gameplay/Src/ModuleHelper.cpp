@@ -37,3 +37,8 @@ int ModuleHelper::FindParentShipClientId( EntityWorld* p_world, ShipModule* p_mo
 
 	return ownerId;
 }
+
+float ModuleHelper::changeModuleValueOnDetach( float p_value )
+{
+	return p_value*0.5f;
+}
