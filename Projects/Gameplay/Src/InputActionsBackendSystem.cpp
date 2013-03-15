@@ -104,7 +104,9 @@ double InputActionsBackendSystem::getDeltaByAction( Actions p_action )
 		}
 		else
 		{
-			if (currentDelta>0.0f) m_gamepadUsedLast=false;
+			if (currentDelta>0.1f && 
+				deviceT != InputHelper::InputDeviceTypes_MOUSE_AXIS) 
+				m_gamepadUsedLast=false;
 		}
 
 		delta += currentDelta;
@@ -127,7 +129,9 @@ double InputActionsBackendSystem::getStatusByAction( Actions p_action )
 		}
 		else
 		{
-			if (currentStatus>0.0f) m_gamepadUsedLast=false;
+			if (currentStatus>0.1f && 
+				deviceT != InputHelper::InputDeviceTypes_MOUSE_AXIS) 
+				m_gamepadUsedLast=false;
 		}
 
 		status += currentStatus;

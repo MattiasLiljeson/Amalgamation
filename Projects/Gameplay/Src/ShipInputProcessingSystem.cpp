@@ -22,12 +22,12 @@ const string ShipInputProcessingSystem::gamepadmap[] = {
 	"[",
 	"O",
 	"O",
-	"L",
-	"R",
-	"A",
-	"B",
-	"X",
-	"Y"
+	"[L]",
+	"[R]",
+	"<p style='color:rgba(181,230,29,220);'>A</p>",
+	"<p style='color:rgba(255,62,34,220);'>B</p>",
+	"<p style='color:rgba(34,122,255,220);'>X</p>",
+	"<p style='color:rgba(255,200,34,220);'>Y</p>"
 };
 
 
@@ -153,7 +153,7 @@ void ShipInputProcessingSystem::process()
 	m_processedInput = readAllInput();
 
 	if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
-		checkTimeInterval(TimerIntervals::EveryFourSeconds))
+		checkTimeInterval(TimerIntervals::EverySecond))
 	{
 		if (m_actionBackend->gamepadUsedLast())
 		{
@@ -167,7 +167,7 @@ void ShipInputProcessingSystem::process()
 		{
 			if (m_prevDeviceWasGamepad)
 			{
-				m_prevDeviceWasGamepad=true;
+				m_prevDeviceWasGamepad=false;
 				updateHudKeymappings();
 			}
 		}
@@ -325,43 +325,54 @@ void ShipInputProcessingSystem::updateHudKeymappings(bool p_useGamepad)
 		string front="F";
 		string bottom="B";
 		Control* ctrl = NULL;
+		int pos = INT_MAX;
 		if (p_useGamepad)
 		{
+			int size=sizeof(gamepadmap)/sizeof(gamepadmap[0]);
 			// BOTTOM
 			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_1,
 				InputHelper::InputDeviceTypes_XINPUT_DIGITAL);
-			if (ctrl) bottom = gamepadmap[ctrl->getControlEnum()];
+			pos = ctrl->getControlEnum();
+			if (ctrl && pos<size) bottom = gamepadmap[pos];
 			// UP
 			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_2,
 				InputHelper::InputDeviceTypes_XINPUT_DIGITAL);
-			if (ctrl) front = gamepadmap[ctrl->getControlEnum()];
+			pos = ctrl->getControlEnum();
+			if (ctrl && pos<size) front = gamepadmap[pos];
 			// LEFT
 			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_3,
 				InputHelper::InputDeviceTypes_XINPUT_DIGITAL);
-			if (ctrl) left = gamepadmap[ctrl->getControlEnum()];
+			pos = ctrl->getControlEnum();
+			if (ctrl && pos<size) left = gamepadmap[pos];
 			// RIGHT
 			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_4,
 				InputHelper::InputDeviceTypes_XINPUT_DIGITAL);
-			if (ctrl) right = gamepadmap[ctrl->getControlEnum()];
+			pos = ctrl->getControlEnum();
+			if (ctrl && pos<size) right = gamepadmap[pos];
 		}
 		else
 		{
+			int size=sizeof(keymap)/sizeof(keymap[0]);
 			// BOTTOM
 			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_1,
 				InputHelper::InputDeviceTypes_KEYBOARD);
-			if (ctrl) bottom = keymap[ctrl->getControlEnum()];
+			pos = ctrl->getControlEnum();
+			if (ctrl && pos<size) bottom = keymap[pos];
 			// UP
 			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_2,
 				InputHelper::InputDeviceTypes_KEYBOARD);
-			if (ctrl) front = keymap[ctrl->getControlEnum()];
+			pos = ctrl->getControlEnum();
+			if (ctrl && pos<size) front = keymap[pos];
 			// LEFT
 			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_3,
 				InputHelper::InputDeviceTypes_KEYBOARD);
-			if (ctrl) left = keymap[ctrl->getControlEnum()];
+			pos = ctrl->getControlEnum();
+			if (ctrl && pos<size) left = keymap[pos];
 			// RIGHT
 			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_4,
 				InputHelper::InputDeviceTypes_KEYBOARD);
-			if (ctrl) right = keymap[ctrl->getControlEnum()];
+			pos = ctrl->getControlEnum();
+			if (ctrl && pos<size) right = keymap[pos];
 		}
 		//
 		m_hudSystem->setHUDData(HudSystem::MAPPING_LEFT,left.c_str());
