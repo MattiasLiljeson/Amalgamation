@@ -363,8 +363,6 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new PositionalSoundSystem() );
 	m_world->setSystem( new SoundSystem(audioBackend) );
 
-	m_world->setSystem( new DestroyOnParticlesDeathSystem() );
-
 	// || CREATION THINGS ||
 	/************************************************************************/
 	/* Entity Creation														*/
@@ -407,6 +405,11 @@ void ClientApplication::initSystems()
 		rocketBackend, particleRender, antTweakBar, lightRender, settings ) );
 
 	/************************************************************************/
+	/* Destroyers															*/
+	/************************************************************************/
+	m_world->setSystem( new DestroyOnParticlesDeathSystem() );
+
+	/************************************************************************/
 	/* Debugging															*/
 	/************************************************************************/
 	m_world->setSystem( new DebugMovementSystem(), false );
@@ -420,6 +423,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new OutputLogger("log_client.txt"));
 	m_world->setSystem( new ClientModuleCounterSystem() );
 	m_world->setSystem( new ClientDebugModuleSpawnerSystem(m_client) );
+
 
 	m_world->initialize();
 

@@ -234,7 +234,7 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 	//     Update module data
 	// ===========================
 	m->m_health = m->getMaxHealth();
-	m->m_value = m->m_value * 0.5f;
+	m->m_value = ModuleHelper::changeModuleValueOnDetach(m->m_value);
 	m->deactivate();
 	m->m_lastShipEntityWhenAttached = -1; 
 
