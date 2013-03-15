@@ -106,7 +106,7 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 			shipmass = m_physicsSystem->getController()->getBody(body->m_id)->GetMass();
 			//
 			sendMassBoostersTotal(netSync->getNetworkOwner(),
-				shipmass+massBoosters.first,massBoosters.second);
+				50.0f*(1.5f*shipmass+0.4f*massBoosters.first),massBoosters.second);
 		}
 	}
 }

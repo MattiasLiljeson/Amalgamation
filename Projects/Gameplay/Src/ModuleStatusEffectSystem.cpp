@@ -63,7 +63,9 @@ void ModuleStatusEffectSystem::process()
 			// and has existing particles
 			if (visMode && visMode->hasUnusedHintParticles() && 
 				visMode->hasPositionHintParticle())
+			{
 				disableUnusedModuleParticleEffect(data.moduleEntity,visMode);
+			}
 		}
 
 

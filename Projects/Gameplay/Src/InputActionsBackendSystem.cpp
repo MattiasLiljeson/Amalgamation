@@ -15,7 +15,7 @@ InputActionsBackendSystem::InputActionsBackendSystem( string p_path, string p_fi
 	m_cursorSensitivities[Device_MOUSE]		= 1.0;
 	m_sensitivities[Device_CONTROLLER]		= 1.0;
 	m_cursorSensitivities[Device_CONTROLLER]	= 1.0;
-
+	m_gamepadUsedLast=false;
 }
 
 InputActionsBackendSystem::~InputActionsBackendSystem()
@@ -94,7 +94,10 @@ double InputActionsBackendSystem::getDeltaByAction( Actions p_action )
 	double delta = 0.0;
 	for(unsigned int i=0; i<m_inputControls[p_action].size(); i++)
 	{
-		delta += m_inputControls[p_action][i]->getDelta();
+		Control* currentControl = m_inputControls[p_action][i];
+		float current = currentControl->getDelta();
+		// if (currentControl->
+		// delta += 
 	}
 	return delta;
 }
@@ -178,4 +181,9 @@ void InputActionsBackendSystem::initControlMap()
 	m_actionMap["Actions_MENU_ACTIVATE_ROTATION"]		= Actions_MENU_ACTIVATE_ROTATION;
 	m_actionMap["Actions_SHOW_SCORE"]					= Actions_SHOW_SCORE;
 	m_actionMap["Actions_GAME_QUIT"]					= Actions_GAME_BACK;
+}
+
+const bool InputActionsBackendSystem::gamepadUsedLast()
+{
+	return m_gamepadUsedLast;
 }
