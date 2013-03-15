@@ -27,10 +27,10 @@ c LevelInfo
 	d s m_levelSize 2:1500
 	d s m_levelSize 3:2000
 	d s m_levelSize 4:3000
-	d s m_levelSize 5:3500
-	d s m_levelSize 6:4500
-	d s m_levelSize 7:5000
-	d s m_levelSize 8:6000
+	d s m_levelSize 5:5000
+	d s m_levelSize 6:6000
+	d s m_levelSize 7:8000
+	d s m_levelSize 8:10000
 
 	# Level size precision specified how accurate the size should be. For instance,
 	# if the desired size is 2000, and the level genererated becomes 2400, this is
@@ -47,19 +47,19 @@ c LevelInfo
 	d s piece begin
 	d s m_pieceAssemblageFileName 	prisonChamberServer.asd
 	d s m_pieceModelName 			WorldPrison_FinalWork_9_exporting.agl
-	d i m_pieceWeight 				1
+	d i m_pieceWeight 				3
 	d s piece end
 	# Piece 1
 	d s piece begin
 	d s m_pieceAssemblageFileName 	vegetationChamberServer.asd
 	d s m_pieceModelName 			vegetationchamber.agl
-	d i m_pieceWeight 				1
+	d i m_pieceWeight 				3
 	d s piece end
 	# Piece 2
 	d s piece begin
 	d s m_pieceAssemblageFileName 	alienChamberServer.asd
 	d s m_pieceModelName 			BlueAlienChamber2.agl
-	d i m_pieceWeight 				1
+	d i m_pieceWeight 				3
 	d s piece end
 	# Piece 3
 	d s piece begin
@@ -109,7 +109,7 @@ c LevelInfo
 
 	# Starting piece of this generator [0 to N-1] where N is the amount of pieces 
 	# above that will be loaded. Specify -1 to randomly select one.
-	d i m_startPieceId 				8
+	d i m_startPieceId 				-1
 
 	# End piece to plug connection points with.
 	# The end plug piece must be specified after all other pieces.

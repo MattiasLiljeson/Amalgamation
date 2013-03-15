@@ -186,8 +186,11 @@ void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent
 								}
 								// set negative effect to victim
 								float score = ScoreRuleHelper::scoreFromLoseModuleOnEnemyHit(m->m_value);
-								scoreComponent->addRelativeScore(score);
-								setScoreEffect( me, moduleTransform, (int)score);
+								if(scoreComponent)
+								{
+									scoreComponent->addRelativeScore(score);
+									setScoreEffect(me, moduleTransform, (int)score);
+								}
 							}
 						}
 						drop(p_parent, i);
