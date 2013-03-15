@@ -2,6 +2,7 @@
 #include <list>
 #include "RigidBody.h"
 #include "CollisionManager.h"
+#include <fstream>
 
 bool gjkCheckCollision(const vector<AglVector3>& pA, const vector<AglVector3>& pB, EPACollisionData* pData)
 {
@@ -23,8 +24,19 @@ bool gjkCheckCollision(const vector<AglVector3>& pA, const vector<AglVector3>& p
 	AglVector3 d = -s;
 	bool done = false;
 
+	int itercount = 0;
+
 	while (!done)
 	{
+		if (itercount > 50)
+		{
+			ofstream file;
+			file.open("GJKEPAROOF.txt", ios::app);
+			file << "Hit roof! GJK\n";
+			file.close();
+			return false;
+		}
+		itercount++;
 		s = gjkSupport(d, pA, pB);
 		if (AglVector3::dotProduct(s, d) < 0.00001f)
 			return false;
@@ -59,9 +71,20 @@ bool gjkCheckCollision(const vector<AglVector3>& pA, const AglBoundingSphere& pS
 
 	AglVector3 d = -s;
 	bool done = false;
+	int itercount = 0;
 
 	while (!done)
 	{
+		if (itercount > 50)
+		{
+			ofstream file;
+			file.open("GJKEPAROOF.txt", ios::app);
+			file << "Hit roof! GJK Sphere\n";
+			file.close();
+			return false;
+		}
+		itercount++;
+
 		s = gjkSupport(d, pA, pSphere);
 		if (AglVector3::dotProduct(s, d) < 0.00001f)
 			return false;
@@ -478,8 +501,24 @@ void epaProcessCollision(vector<AglVector3>& pSimplex, const vector<AglVector3>&
 			simplex[i].N = -simplex[i].N;
 		}
 	}
+
+	int iterCount = 0;
+
 	while (true)
 	{
+		if (iterCount >= 50)
+		{
+			ofstream file;
+			file.open("GJKEPAROOF.txt", ios::app);
+			file << "Hit roof! EPA\n";
+			file.close();
+
+			pData->Normal = AglVector3(0, 1, 0);
+			pData->Depth = 0;
+			break;
+		}
+		iterCount++;
+
 		float dist;
 		int index = epaFindClosestTriangle(simplex, dist);
 		if (index == -1)
@@ -502,8 +541,23 @@ void epaProcessCollision(vector<AglVector3>& pSimplex, const vector<AglVector3>&
 {
 	//Construct the simplex
 	vector<EPATriangle> simplex = epaConstructTriangleSimplex(pSimplex);
+
+	int iterCount = 0;
 	while (true)
 	{
+		if (iterCount >= 50)
+		{
+			ofstream file;
+			file.open("GJKEPAROOF.txt", ios::app);
+			file << "Hit roof! EPA Sphere\n";
+			file.close();
+
+			pData->Normal = AglVector3(0, 1, 0);
+			pData->Depth = 0;
+			break;
+		}
+		iterCount++;
+
 		float dist;
 		if (simplex.size() == 0)
 		{
