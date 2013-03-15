@@ -112,7 +112,10 @@ float4 PS( VertexOut input ) : SV_TARGET
 	float finalAO = 0.0f;
 	float3 finalEmissiveValue = float3(0,0,0);	
 	float4 sampledGlow;
+	float sampledCoc;
+	float sampledDepth;
 	float2 scale = float2(1.0f/1280.0f, 1.0f/720.0f);
+	float centerCoc = g_specLight.Load( index ).a;
 	float coc = 0.0f;
 
 	[unroll]
@@ -123,7 +126,18 @@ float4 PS( VertexOut input ) : SV_TARGET
 			float blurFactor = blurFilter5[x+2][y+2];
 
 			finalAO += g_diffLight.Load( idx ).a * blurFactor;
-			coc += g_specLight.Load( idx ).a * blurFactor;
+
+			sampledCoc = g_specLight.Load( idx ).a;
+			sampledDepth = g_depth.Load( idx ).r;
+			//if( sampledDepth < depth ) {
+				// If not protruding
+				//coc +=  centerCoc * blurFactor;
+				//coc += float4( 0.1, 0, 0, 1 );
+			//} else {
+				// If protruding
+				coc += sampledCoc * blurFactor;
+				//coc += float4( 0, 0, 0.1, 1 );
+			//}
 			
 			sampledGlow = g_diffuse.Load( index+uint3(x*2,y*2,0) ).rgba;
 			sampledGlow.rgb *= sampledGlow.a;
@@ -146,7 +160,7 @@ float4 PS( VertexOut input ) : SV_TARGET
 			finalEmissiveValue += sampledGlow.rgb * blurFilter5[x+2][y+2];
 		}
 	}
-	//return float4( coc, coc, coc, 1);
+	//return float4( coc, coc, coc, 1 );
 	float4 finalCol = PoissonDOF( input.texCoord, index );
 
 	// apply ao

@@ -92,5 +92,5 @@ private:
 	enum Device { Device_NONE = -1, Device_MOUSE, Device_CONTROLLER, Device_CNT };
 
 	double m_sensitivities[Device_CNT];
-	double m_menuSensitivities[Device_CNT];
+	double m_cursorSensitivities[Device_CNT];
 };

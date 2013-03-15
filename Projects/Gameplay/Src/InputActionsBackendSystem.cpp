@@ -12,9 +12,9 @@ InputActionsBackendSystem::InputActionsBackendSystem( string p_path, string p_fi
 	m_file = p_file;
 
 	m_sensitivities[Device_MOUSE]			= 1.0;
-	m_menuSensitivities[Device_MOUSE]		= 1.0;
+	m_cursorSensitivities[Device_MOUSE]		= 1.0;
 	m_sensitivities[Device_CONTROLLER]		= 1.0;
-	m_menuSensitivities[Device_CONTROLLER]	= 1.0;
+	m_cursorSensitivities[Device_CONTROLLER]	= 1.0;
 
 }
 
@@ -64,9 +64,9 @@ void InputActionsBackendSystem::initialize()
 			} else if( token == "mouseSensitivity" ) {
 				ss >> m_sensitivities[Device_MOUSE];
 			}else if( token == "menuControllerSensitivity" ) {
-				ss >> m_menuSensitivities[Device_CONTROLLER];
+				ss >> m_cursorSensitivities[Device_CONTROLLER];
 			} else if( token == "menuMouseSensitivity" ) {
-				ss >> m_menuSensitivities[Device_MOUSE];
+				ss >> m_cursorSensitivities[Device_MOUSE];
 			}
 		}
 	}
@@ -122,7 +122,7 @@ void InputActionsBackendSystem::initCursor()
 
 	for( int i=0; i<Device_CNT; i++ ) {
 		cursor->addControlSet(
-			m_menuSensitivities[i], m_menuSensitivities[i], false,
+			m_cursorSensitivities[i], m_cursorSensitivities[i],
 			getControlByAction( InputActionsBackendSystem::Actions_CURSOR_LEFT, i ),
 			getControlByAction( InputActionsBackendSystem::Actions_CURSOR_RIGHT, i ),
 			getControlByAction( InputActionsBackendSystem::Actions_CURSOR_UP, i ),
