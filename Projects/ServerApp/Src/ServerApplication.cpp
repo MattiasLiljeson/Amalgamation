@@ -64,17 +64,21 @@
 
 namespace Srv
 {
-	ServerApplication::ServerApplication(int p_activePort/* =1337 */)
+	ServerApplication::ServerApplication(int p_gameTime,int p_activePort, 
+										 const string& p_name)
 	{
 		m_running = false;
+		m_gameTime = p_gameTime;
 		m_activePort = p_activePort;
-		m_server = new TcpServer();
-
+		m_serverName = p_name;
+		m_server = new TcpServer(m_serverName);
+		m_serverName = p_name;
 		m_world = new EntityWorld();
 		initSystems();
 
 		initEntities();
 	}
+
 
 	ServerApplication::~ServerApplication()
 	{
@@ -242,8 +246,8 @@ namespace Srv
 		/************************************************************************/
 		/* Network																*/
 		/************************************************************************/
-		m_world->setSystem(new ServerWelcomeSystem( m_server, m_activePort ), true);
-		m_world->setSystem(new ServerPacketHandlerSystem( m_server ), true);
+		m_world->setSystem(new ServerWelcomeSystem( m_server, m_activePort, m_gameTime ), true);
+		m_world->setSystem(new ServerPacketHandlerSystem( m_server, m_gameTime ), true);
 		m_world->setSystem(new ServerUpdateSystem( m_server ), true);
 		m_world->setSystem(new ServerScoreSystem( m_server ), true);
 

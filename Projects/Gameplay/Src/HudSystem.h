@@ -4,20 +4,24 @@
 #include <AglVector2.h>
 
 class LibRocketBackendSystem;
+class TcpClient;
 
 class HudSystem :	public EntitySystem
 {
 public:
 	enum HUD_TYPES
 	{
-		TIME, SCORE, MAPPING, PLAYERNAME, SERVERNAME
+		TIME, SCORE, 
+		MAPPING_LEFT, MAPPING_RIGHT, MAPPING_UP, MAPPING_DOWN, 
+		MASS, BOOST,
+		PLAYERNAME, SERVERNAME
 	};
 public:
-	HudSystem( LibRocketBackendSystem* p_backend );
+	HudSystem( LibRocketBackendSystem* p_backend, TcpClient* p_client );
 	~HudSystem();
 	void initialize();
 	void process();
-	void setHUDVisebilty(bool p_setVisibility);
+	void setHUDVisibility(bool p_setVisibility);
 	void setHUDData(HUD_TYPES p_type, const char* p_value);
 
 private:
@@ -39,5 +43,5 @@ private:
 	Entity* m_timerMonitor;
 	Entity* m_constructionMode;
 
-
+	TcpClient* m_client;
 };

@@ -7,6 +7,8 @@ EntityWorld::EntityWorld()
 	m_delta = 0.01f;
 	m_shutdown = false;
 	m_hostServer = false;
+	m_serverName = "monki";
+	m_serverGameTime = -1;
 	
 	m_aspectRatio = 800.0f/600.0f;
 
@@ -317,8 +319,10 @@ bool EntityWorld::shouldShutDown()
 	return m_shutdown;
 }
 
-void EntityWorld::requestToHostServer()
+void EntityWorld::requestToHostServer(const string& p_serverName, int p_serverGameTime)
 {
+	m_serverName = p_serverName;
+	m_serverGameTime = p_serverGameTime;
 	m_hostServer = true;
 }
 
@@ -354,5 +358,17 @@ OutputLogger* EntityWorld::getOutputLogger()
 {
 	return static_cast<OutputLogger*>(m_systemManager->getSystem(SystemType::LogToFileSystem));
 }
+
+std::string EntityWorld::getServerName()
+{
+	return m_serverName;
+}
+
+int EntityWorld::getServerGameTime()
+{
+	return m_serverGameTime;
+}
+
+
 
 
