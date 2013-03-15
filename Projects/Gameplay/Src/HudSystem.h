@@ -11,7 +11,10 @@ class HudSystem :	public EntitySystem
 public:
 	enum HUD_TYPES
 	{
-		TIME, SCORE, MAPPING, PLAYERNAME, SERVERNAME
+		TIME, SCORE, 
+		MAPPING_LEFT, MAPPING_RIGHT, MAPPING_UP, MAPPING_DOWN, 
+		MASS, BOOST,
+		PLAYERNAME, SERVERNAME
 	};
 public:
 	HudSystem( LibRocketBackendSystem* p_backend, TcpClient* p_client );

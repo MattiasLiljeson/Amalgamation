@@ -30,6 +30,7 @@ public:
 	~AnalogueControl();
 
 	virtual void update( float p_dt, InputManager* p_manager );
+	virtual int getControlEnum();
 
 private:
 	InputHelper::Xbox360Analogs m_axis;

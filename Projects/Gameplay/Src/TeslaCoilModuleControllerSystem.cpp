@@ -15,6 +15,8 @@
 #include "ModuleHelper.h"
 #include "MeshOffsetTransform.h"
 #include "SpawnPointSet.h"
+#include "ScoreRuleHelper.h"
+#include "PlayerComponent.h"
 
 TeslaCoilModuleControllerSystem::TeslaCoilModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::TeslaCoilModuleControllerSystem, 7,
@@ -143,6 +145,14 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 					p_teslaNetsync->getNetworkOwner());
 				hitPacket.identitiesHit[hitIndex] = entitiesHit[hitIndex];
 				hitIndex++;
+
+				//Give the attacker some score
+				PlayerComponent* scoreComponent;
+				ModuleHelper::FindScoreComponent(m_world, p_teslaShipModule, &scoreComponent);
+				if (scoreComponent)
+				{
+					scoreComponent->addRelativeDamageScore(ScoreRuleHelper::scoreFromDamagingOpponent(p_teslaModule->damage));
+				}
 			}
 			hitPacket.identitiesHitFloating[hitIndexFloating] =
 				entitiesHit[hitIndexFloating];

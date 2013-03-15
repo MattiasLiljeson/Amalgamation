@@ -64,15 +64,15 @@
 
 namespace Srv
 {
-	ServerApplication::ServerApplication( int p_gameTime/*=600*/,
-		int p_activePort/*=1337*/, const string& p_name/*="monki"*/ )
+	ServerApplication::ServerApplication(int p_gameTime,int p_activePort, 
+										 const string& p_name)
 	{
 		m_running = false;
 		m_gameTime = p_gameTime;
 		m_activePort = p_activePort;
 		m_serverName = p_name;
 		m_server = new TcpServer(m_serverName);
-
+		m_serverName = p_name;
 		m_world = new EntityWorld();
 		initSystems();
 

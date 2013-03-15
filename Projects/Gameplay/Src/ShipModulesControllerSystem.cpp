@@ -88,6 +88,23 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 
 		//Check to see if modules should be dropped
 		checkDrop_ApplyScoreAndDamage(p_entities[i]);
+
+		//Check if the player has recieved enough damage score for it to be applied
+		PlayerSystem* playerSys = static_cast<PlayerSystem*>
+			(m_world->getSystem(SystemType::PlayerSystem));
+
+		NetworkSynced* sync = static_cast<NetworkSynced*>(p_entities[i]->getComponent(ComponentType::NetworkSynced));
+
+		PlayerComponent* scoreComponent = playerSys->getPlayerCompFromNetworkComp(sync);
+		if (scoreComponent)
+		{
+			Transform* trans = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
+			if (scoreComponent->getDealtDamageScore() > 5)
+			{
+				setScoreEffect(sync->getNetworkOwner(), trans, (int)(scoreComponent->getDealtDamageScore()+0.5f));
+				scoreComponent->applyDealtDamageScore();
+			}
+		}
 	}
 }
 void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent)
@@ -234,7 +251,7 @@ void ShipModulesControllerSystem::drop(Entity* p_parent, unsigned int p_slot)
 	//     Update module data
 	// ===========================
 	m->m_health = m->getMaxHealth();
-	m->m_value = m->m_value * 0.5f;
+	m->m_value = ModuleHelper::changeModuleValueOnDetach(m->m_value);
 	m->deactivate();
 	m->m_lastShipEntityWhenAttached = -1; 
 

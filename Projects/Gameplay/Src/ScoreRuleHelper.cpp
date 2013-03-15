@@ -23,3 +23,7 @@ float ScoreRuleHelper::scoreFromLoseModuleOnEnemyHit( float p_myHitModuleValue )
 {
 	return -p_myHitModuleValue/2;
 }
+float ScoreRuleHelper::scoreFromDamagingOpponent(float p_damage)
+{
+	return p_damage / 4.0f;
+}

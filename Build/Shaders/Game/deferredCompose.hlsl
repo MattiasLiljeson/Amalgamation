@@ -22,7 +22,7 @@ float3 getPosition( float2 p_uv,float p_depth )
 float4 PoissonDOF( float2 texCoord, uint3 index )
 {
 	float maxCoCRadius=5.0f, maxCoCDiameter = maxCoCRadius*2;
-	float radiusScale=1.0f/4.0f; // radius of CoC on low res downsampled image
+	float radiusScale=1.0f/g_LOW_RES_MULT; // radius of CoC on low res downsampled image
 	//float radiusScale=1.0f; // radius of CoC on low res downsampled image
 
 	float4 outColor = float4( 0.0f, 0.0f, 0.0f, 0.0f );
@@ -35,7 +35,7 @@ float4 PoissonDOF( float2 texCoord, uint3 index )
 
 	// Step size
 	float2 gDX_Tex = float2( 1/gRenderTargetSize.x, 1/gRenderTargetSize.y );
-	float2 gDX_TexDOF = gDX_Tex/4.0f;
+	float2 gDX_TexDOF = gDX_Tex/g_LOW_RES_MULT;
 	for( int i=0; i<NUM_TAPS; i++ )
 	{
 		// Get the tex-coords for high- and low-res tap
@@ -112,7 +112,10 @@ float4 PS( VertexOut input ) : SV_TARGET
 	float finalAO = 0.0f;
 	float3 finalEmissiveValue = float3(0,0,0);	
 	float4 sampledGlow;
+	float sampledCoc;
+	float sampledDepth;
 	float2 scale = float2(1.0f/1280.0f, 1.0f/720.0f);
+	float centerCoc = g_specLight.Load( index ).a;
 	float coc = 0.0f;
 
 	[unroll]
@@ -123,7 +126,18 @@ float4 PS( VertexOut input ) : SV_TARGET
 			float blurFactor = blurFilter5[x+2][y+2];
 
 			finalAO += g_diffLight.Load( idx ).a * blurFactor;
-			coc += g_specLight.Load( idx ).a * blurFactor;
+
+			sampledCoc = g_specLight.Load( idx ).a;
+			sampledDepth = g_depth.Load( idx ).r;
+			//if( sampledDepth < depth ) {
+				// If not protruding
+				//coc +=  centerCoc * blurFactor;
+				//coc += float4( 0.1, 0, 0, 1 );
+			//} else {
+				// If protruding
+				coc += sampledCoc * blurFactor;
+				//coc += float4( 0, 0, 0.1, 1 );
+			//}
 			
 			sampledGlow = g_diffuse.Load( index+uint3(x*2,y*2,0) ).rgba;
 			sampledGlow.rgb *= sampledGlow.a;
@@ -146,7 +160,7 @@ float4 PS( VertexOut input ) : SV_TARGET
 			finalEmissiveValue += sampledGlow.rgb * blurFilter5[x+2][y+2];
 		}
 	}
-	//return float4( coc, coc, coc, 1);
+	//return float4( coc, coc, coc, 1 );
 	float4 finalCol = PoissonDOF( input.texCoord, index );
 
 	// apply ao

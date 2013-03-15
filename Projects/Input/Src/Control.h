@@ -1,5 +1,7 @@
 #pragma once
 
+#include "InputHelper.h"
+
 class InputManager;
 
 // =======================================================================================
@@ -46,31 +48,38 @@ class InputManager;
 class Control
 {
 public:
-	Control();
+	Control( InputHelper::InputDeviceTypes p_deviceType );
 	virtual ~Control();
 
-	///@brief Override and update "pressness" member  variables.
+	///\brief Override and update "pressness" member  variables.
 	virtual void update(float p_dt, InputManager* p_manager) = 0;
 
-	///@brief
-	///@return The current status of the control. Between 0.0 and 1.0
+	///\brief
+	///\return double The current status of the control. Between 0.0 and 1.0.
 	virtual double getStatus();
 
-	///@brief
-	///@return The delta of status from last update and the update before. 
+	///\brief
+	///\return double The delta of status from last update and the update before. 
 	virtual double getDelta();
 
-	///\brief get raw data from input device. In the devices native format
-	///\return the raw data
+	///\brief get raw data from input device. In the devices native format.
+	///\return int The raw data
 	virtual int getRawData();
 
-	///-----------------------------------------------------------------------------------
-	/// Returns a reference of the variable that can be used by e.g. anttweakbar
-	/// \return double*
-	///-----------------------------------------------------------------------------------
-	virtual double* getStatusRef();
+	/// \brief Get a pointer to the status variable .
+	/// \return double* A pointer to the variable that can be used by e.g. anttweakbar.
+	virtual double* getStatusPtr();
+
+	/// \return InputHelper::InputDeviceTypes Device type of this control. 
+	virtual InputHelper::InputDeviceTypes getDeviceType();
+
+	/// \brief Which button/key/axis this control is mapped to.
+	/// \return int Enum cast to int for interoperability between different control types.
+	virtual int getControlEnum() = 0;
 
 protected:
+	InputHelper::InputDeviceTypes m_deviceType;
+
 	// Current amount of "Pressness" on the control 
 	double m_status;
 
@@ -79,5 +88,6 @@ protected:
 
 	// Latest raw data fetched from input device.
 	int m_rawData;
+
 };
 

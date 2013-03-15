@@ -1,8 +1,8 @@
 //-Actions-							-Inputs- (Separated by tabs and/or spaces)--
 controllerSensitivity				1
 mouseSensitivity					50
-menuControllerSensitivity			20
-menuMouseSensitivity				10
+menuControllerSensitivity			3000
+menuMouseSensitivity				3000
 Actions_ACTIVATE_PREV_SLOT			MouseAxes_Z_POSITIVE
 Actions_ACTIVATE_NEXT_SLOT          MouseAxes_Z_NEGATIVE
 Actions_ACTIVATE_SLOT_1				KeyboardKeys_3				KeyboardKeys_DOWN			BTN_A

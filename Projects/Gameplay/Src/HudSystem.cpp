@@ -111,7 +111,18 @@ void HudSystem::process()
 		{
 			ParticleSystemsComponent* ps = static_cast<ParticleSystemsComponent*>(
 				m_constructionMode->getComponent(ComponentType::ParticleSystemsComponent));
-			ps->getParticleSystemPtr(0)->getHeaderPtr()->color = AglVector4(1, 1, 1, 1);
+			if(ps)
+			{
+				AglParticleSystem* particleSystem = ps->getParticleSystemPtr(0);
+				if(particleSystem)
+				{
+					AglParticleSystemHeader* particleHeader = particleSystem->getHeaderPtr();
+					if(particleHeader)
+					{
+						particleHeader->color = AglVector4(1, 1, 1, 1);
+					}
+				}
+			}
 		}
 		else
 		{
@@ -119,8 +130,13 @@ void HudSystem::process()
 			ParticleSystemsComponent* ps = static_cast<ParticleSystemsComponent*>(
 				m_constructionMode->getComponent(ComponentType::ParticleSystemsComponent));
 			AglParticleSystem* partSystem = ps->getParticleSystemPtr(0);
-			if(partSystem){
-				partSystem->getHeaderPtr()->color = AglVector4(0, 0, 0, 0);
+			if(partSystem)
+			{
+				AglParticleSystemHeader* header = partSystem->getHeaderPtr();
+				if(header)
+				{
+					header->color = AglVector4(0, 0, 0, 0);
+				}
 			}
 		}
 		
@@ -155,8 +171,23 @@ void HudSystem::setHUDData( HUD_TYPES p_type, const char* p_value )
 	case HudSystem::SCORE:
 		m_backend->updateElement(m_hudIndex,SCOREELEMENT,p_value);
 		break;
-	case HudSystem::MAPPING:
-		m_backend->updateElement(m_hudIndex,MAPPINGELEMENT,p_value);
+	case HudSystem::MAPPING_LEFT:
+		m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_LEFT,p_value);
+		break;	
+	case HudSystem:: MAPPING_RIGHT:
+		m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_RIGHT,p_value);
+		break;	
+	case HudSystem::MAPPING_UP:
+		m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_UP,p_value);
+		break;
+	case HudSystem::MAPPING_DOWN:
+		m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_DOWN,p_value);
+		break;	
+	case HudSystem::MASS:
+		m_backend->updateElement(m_hudIndex,MASSELEMENT,p_value);
+		break;
+	case HudSystem::BOOST:
+		m_backend->updateElement(m_hudIndex,BOOSTELEMENT,p_value);
 		break;
 	case HudSystem::PLAYERNAME:
 		m_backend->updateElement(m_hudIndex,PLAYERELEMENT,p_value);

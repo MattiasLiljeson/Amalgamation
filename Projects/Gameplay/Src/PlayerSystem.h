@@ -36,6 +36,7 @@ public:
 
 	int createPlayerId(int p_fromNetworkOwnerId);
 	int findPlayerId(int p_fromNetworkOwnerId);
+	PlayerComponent* findPlayerComponentFromNetworkID( int p_fromNetworkOwnerId );
 	void recyclePlayerId(int p_playerId);
 private:
 	vector<PlayerComponent*> m_playerComponents;

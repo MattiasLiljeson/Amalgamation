@@ -120,8 +120,8 @@ void ClientMeasurementSystem::initMeasuredSystems()
 		m_world->getSystem(SystemType::ShieldPlatingSystem),
 		"ShieldPlating"));
 	m_measuredSystems.push_back(pair<EntitySystem*, string>(
-		m_world->getSystem(SystemType::ShieldPlaterSystem),
-		"ShieldPLATER"));
+		m_world->getSystem(SystemType::ShieldEffectSystem),
+		"ShieldEffectSystem"));
 	m_measuredSystems.push_back(pair<EntitySystem*, string>(
 		m_world->getSystem(SystemType::AnomalyBombEffectSystem),
 		"GravityField"));

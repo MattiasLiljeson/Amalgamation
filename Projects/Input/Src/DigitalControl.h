@@ -26,6 +26,7 @@ public:
 	~DigitalControl();
 
 	virtual void update( float p_dt, InputManager* p_manager );
+	virtual int getControlEnum();
 
 private:
 	InputHelper::Xbox360Digitals m_btn;

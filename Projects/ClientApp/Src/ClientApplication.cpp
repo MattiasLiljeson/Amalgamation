@@ -106,7 +106,7 @@
 #include <SelectionMarkerSystem.h>
 #include <ShadowSystem.h>
 #include <ShieldModuleControllerSystem.h>
-#include <ShieldPlaterSystem.h>
+#include <ShieldEffectSystem.h>
 #include <ShieldPlatingSystem.h>
 #include <ShipEditControllerSystem.h>
 #include <ShipFlyControllerSystem.h>
@@ -334,7 +334,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientPickingSystem(m_client) );
 	m_world->setSystem( new GameStatsSystem() );
 	m_world->setSystem( new LightBlinkerSystem() );
-	m_world->setSystem( new ShieldPlaterSystem() );
+	m_world->setSystem( new ShieldEffectSystem() );
 	m_world->setSystem( new ShieldPlatingSystem() );
 	m_world->setSystem( new SlotMarkerSystem() );
 	m_world->setSystem( new AnomalyBombEffectSystem() );
@@ -366,8 +366,6 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new AudioListenerSystem(audioBackend) );
 	m_world->setSystem( new PositionalSoundSystem() );
 	m_world->setSystem( new SoundSystem(audioBackend) );
-
-	m_world->setSystem( new DestroyOnParticlesDeathSystem() );
 
 	// || CREATION THINGS ||
 	/************************************************************************/
@@ -411,6 +409,11 @@ void ClientApplication::initSystems()
 		rocketBackend, particleRender, antTweakBar, lightRender, settings ) );
 
 	/************************************************************************/
+	/* Destroyers															*/
+	/************************************************************************/
+	m_world->setSystem( new DestroyOnParticlesDeathSystem() );
+
+	/************************************************************************/
 	/* Debugging															*/
 	/************************************************************************/
 	m_world->setSystem( new DebugMovementSystem(), false );
@@ -424,6 +427,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new OutputLogger("log_client.txt"));
 	m_world->setSystem( new ClientModuleCounterSystem() ); // NOTE: Used to be able to remove modules!
 	m_world->setSystem( new ClientDebugModuleSpawnerSystem(m_client) );
+
 
 	m_world->initialize();
 
