@@ -99,7 +99,7 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 		if (scoreComponent)
 		{
 			Transform* trans = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
-			if (scoreComponent->getDealtDamageScore() > 30)
+			if (scoreComponent->getDealtDamageScore() > 5)
 			{
 				setScoreEffect(sync->getNetworkOwner(), trans, (int)(scoreComponent->getDealtDamageScore()+0.5f));
 				scoreComponent->applyDealtDamageScore();

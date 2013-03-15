@@ -148,7 +148,7 @@ void TeslaCoilModuleControllerSystem::fireTeslaCoil(Entity* p_teslaEntity,
 
 				//Give the attacker some score
 				PlayerComponent* scoreComponent;
-				ModuleHelper::FindScoreComponent(m_world, p_teslaNetsync->getNetworkOwner(), &scoreComponent);
+				ModuleHelper::FindScoreComponent(m_world, p_teslaShipModule, &scoreComponent);
 				if (scoreComponent)
 				{
 					scoreComponent->addRelativeDamageScore(ScoreRuleHelper::scoreFromDamagingOpponent(p_teslaModule->damage));
