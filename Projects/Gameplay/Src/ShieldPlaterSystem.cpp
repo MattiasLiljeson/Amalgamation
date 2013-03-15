@@ -30,6 +30,11 @@ void ShieldPlaterSystem::processEntities( const vector<Entity*>& p_entities )
 			{
 				plates[plateIdx]->setEnabled(true);
 			}
+
+			//Play a cool sound
+			SoundComponent* soundComponent = static_cast<SoundComponent*>(p_entities[i]->getComponent(ComponentType::SoundComponent));
+			AudioHeader* header = soundComponent->getSoundHeaderByName(AudioHeader::POSITIONALSOUND, "pusher");
+			header->queuedPlayingState = AudioHeader::PLAY;
 		}
 		else
 		{
