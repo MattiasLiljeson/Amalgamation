@@ -4,6 +4,8 @@
 
 
 KeyControl::KeyControl( InputHelper::KeyboardKeys p_key )
+	: Control( InputHelper::InputDeviceTypes_KEYBOARD )
+
 {
 	m_key = p_key;
 }
@@ -20,4 +22,9 @@ void KeyControl::update( float p_dt, InputManager* p_manager )
 	m_status = InputHelper::statusFromState( state );
 	m_statusDelta = InputHelper::statusDeltaFromState( state );
 	m_rawData = state;
+}
+
+int KeyControl::getControlEnum()
+{
+	return m_key;
 }

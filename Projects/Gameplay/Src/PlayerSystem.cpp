@@ -122,7 +122,17 @@ int PlayerSystem::findPlayerId( int p_fromNetworkOwnerId )
 	}
 	return -1;
 }
-
+PlayerComponent* PlayerSystem::findPlayerComponentFromNetworkID( int p_fromNetworkOwnerId )
+{
+	for (unsigned int i = 0; i < m_playerComponents.size(); i++)
+	{
+		if (m_playerComponents[i]->m_networkID == p_fromNetworkOwnerId)
+		{
+			return m_playerComponents[i];
+		}
+	}
+	return NULL;
+}
 
 
 //PlayerComponent* PlayerSystem::serverCreatePlayerComponent()

@@ -19,7 +19,6 @@ class InputHelper
 {
 	//Sphagnums
 public:
-
 	///\brief Enum for enumerating input devices
 	/// Instead of having all input/control types share the same number space (each 
 	/// control type having its own unique integer) they now share the same integer space

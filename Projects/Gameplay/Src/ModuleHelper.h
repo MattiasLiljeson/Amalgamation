@@ -2,6 +2,7 @@
 #include <Entity.h>
 
 class ShipModule;
+class PlayerComponent;
 
 // =======================================================================================
 //                                      ModuleHelper
@@ -23,6 +24,10 @@ public:
 	static int FindParentShipClientId(EntityWorld* p_world, 
 		ShipModule* p_module,Entity** p_outShipEntity=NULL);
 	static float changeModuleValueOnDetach(float p_value);
+
+	static void FindScoreComponent(EntityWorld* p_world, ShipModule* p_module, PlayerComponent** p_score);
+	static void FindScoreComponent(EntityWorld* p_world, Entity* p_ship, PlayerComponent** p_score);
+	static void FindScoreComponent(EntityWorld* p_world, int p_clientID, PlayerComponent** p_score);
 protected:
 private:
 };

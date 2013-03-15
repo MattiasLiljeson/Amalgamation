@@ -105,18 +105,30 @@ void HudSystem::process()
 		{
 			ParticleSystemsComponent* ps = static_cast<ParticleSystemsComponent*>(
 				m_constructionMode->getComponent(ComponentType::ParticleSystemsComponent));
-			ps->getParticleSystemPtr(0)->getHeaderPtr()->color = AglVector4(1, 1, 1, 1);
+			if(ps)
+			{
+				AglParticleSystem* particleSystem = ps->getParticleSystemPtr(0);
+				if(particleSystem)
+				{
+					AglParticleSystemHeader* particleHeader = particleSystem->getHeaderPtr();
+					if(particleHeader)
+					{
+						particleHeader->color = AglVector4(1, 1, 1, 1);
+					}
+				}
+			}
 		}
 		else
 		{	
 			ParticleSystemsComponent* ps = static_cast<ParticleSystemsComponent*>(
 				m_constructionMode->getComponent(ComponentType::ParticleSystemsComponent));
-			if (ps)
+			AglParticleSystem* partSystem = ps->getParticleSystemPtr(0);
+			if(partSystem)
 			{
-				AglParticleSystem* partSystem = ps->getParticleSystemPtr(0);
-				if(partSystem && partSystem->getHeaderPtr())
+				AglParticleSystemHeader* header = partSystem->getHeaderPtr();
+				if(header)
 				{
-					partSystem->getHeaderPtr()->color = AglVector4(0, 0, 0, 0);
+					header->color = AglVector4(0, 0, 0, 0);
 				}
 			}
 		}

@@ -5,6 +5,8 @@
 #include "MessageLoopFetcher.h"
 
 DigitalControl::DigitalControl( InputHelper::Xbox360Digitals p_btn )
+	: Control( InputHelper::InputDeviceTypes_XINPUT_DIGITAL )
+
 {
 	m_btn = p_btn;
 }
@@ -25,4 +27,9 @@ void DigitalControl::update( float p_dt, InputManager* p_manager )
 		m_statusDelta = InputHelper::statusDeltaFromState( state );
 		m_rawData = state;
 	}
+}
+
+int DigitalControl::getControlEnum()
+{
+	return m_btn;
 }

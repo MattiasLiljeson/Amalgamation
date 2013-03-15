@@ -106,7 +106,7 @@
 #include <SelectionMarkerSystem.h>
 #include <ShadowSystem.h>
 #include <ShieldModuleControllerSystem.h>
-#include <ShieldPlaterSystem.h>
+#include <ShieldEffectSystem.h>
 #include <ShieldPlatingSystem.h>
 #include <ShipEditControllerSystem.h>
 #include <ShipFlyControllerSystem.h>
@@ -334,7 +334,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientPickingSystem(m_client) );
 	m_world->setSystem( new GameStatsSystem() );
 	m_world->setSystem( new LightBlinkerSystem() );
-	m_world->setSystem( new ShieldPlaterSystem() );
+	m_world->setSystem( new ShieldEffectSystem() );
 	m_world->setSystem( new ShieldPlatingSystem() );
 	m_world->setSystem( new SlotMarkerSystem() );
 	m_world->setSystem( new AnomalyBombEffectSystem() );

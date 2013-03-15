@@ -13,7 +13,6 @@ ShieldModule::ShieldModule()
 	activation = 0.0f;
 	impulse = 100.0f;
 	toggleActive = false;
-	toggleActiveChange = false;
 }
 
 void ShieldModule::init( vector<ComponentData> p_initData )

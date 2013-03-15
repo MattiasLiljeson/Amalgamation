@@ -13,10 +13,10 @@ using namespace std;
 /// Detailed description...
 /// Created on: 27-2-2013 
 ///---------------------------------------------------------------------------------------
-class ShieldPlaterSystem: public EntitySystem
+class ShieldEffectSystem: public EntitySystem
 {
 public:
-	ShieldPlaterSystem();
+	ShieldEffectSystem();
 	void processEntities( const vector<Entity*>& p_entities ) final;
 	void inserted( Entity* p_entity ) final;
 	// NOTE: (Johan) Don't forget deleted(Entity*) event.

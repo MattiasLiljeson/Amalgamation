@@ -1,4 +1,4 @@
-#include "ShieldPlaterSystem.h"
+#include "ShieldEffectSystem.h"
 #include "Transform.h"
 #include "LoadMesh.h"
 #include "EntityParent.h"
@@ -10,29 +10,41 @@
 #include "MeshOffsetTransform.h"
 #include "ShieldModule.h"
 
-ShieldPlaterSystem::ShieldPlaterSystem()
-	: EntitySystem(SystemType::ShieldPlaterSystem, 5, ComponentType::ShieldModule,
+ShieldEffectSystem::ShieldEffectSystem()
+	: EntitySystem(SystemType::ShieldEffectSystem, 5, ComponentType::ShieldModule,
 	ComponentType::Transform, ComponentType::SpawnPointSet, ComponentType::ShipModule,
 	ComponentType::MeshOffsetTransform)
 {
 }
 
-void ShieldPlaterSystem::processEntities( const vector<Entity*>& p_entities )
+void ShieldEffectSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	for(unsigned int i=0; i<p_entities.size(); i++)
 	{
 		ShieldModule* shieldModule = static_cast<ShieldModule*>(
 			p_entities[i]->getComponent(ComponentType::ShieldModule));
-		if(shieldModule->activation > 0.0f)
+		if(shieldModule->activation > 0.0f
+			&& !shieldModule->toggleActive)
 		{
+			shieldModule->toggleActive = true;
 			vector<Entity*>& plates = m_shieldPlates[p_entities[i]];
 			for(unsigned int plateIdx=0; plateIdx<plates.size(); plateIdx++)
 			{
-				plates[plateIdx]->setEnabled(true);
+				ShieldPlate* plate = static_cast<ShieldPlate*>(plates[plateIdx]->
+					getComponent(ComponentType::ShieldPlate));
+				plate->scale = plate->scaleSeed;
+				//plates[plateIdx]->setEnabled(true);
 			}
+
+			//Play a cool sound
+			SoundComponent* soundComponent = static_cast<SoundComponent*>(p_entities[i]->getComponent(ComponentType::SoundComponent));
+			AudioHeader* header = soundComponent->getSoundHeaderByName(AudioHeader::POSITIONALSOUND, "pusher");
+			header->queuedPlayingState = AudioHeader::PLAY;
 		}
-		else
+		else if(shieldModule->activation == 0.0f &&
+			shieldModule->toggleActive)
 		{
+			shieldModule->toggleActive = false;
 			vector<Entity*>& plates = m_shieldPlates[p_entities[i]];
 			for(unsigned int plateIdx=0; plateIdx<plates.size(); plateIdx++)
 			{
@@ -42,7 +54,7 @@ void ShieldPlaterSystem::processEntities( const vector<Entity*>& p_entities )
 	}
 }
 
-void ShieldPlaterSystem::inserted( Entity* p_entity )
+void ShieldEffectSystem::inserted( Entity* p_entity )
 {
 	ShieldModule* shieldModule = static_cast<ShieldModule*>(p_entity->getComponent(
 		ComponentType::ShieldModule));
@@ -92,7 +104,7 @@ void ShieldPlaterSystem::inserted( Entity* p_entity )
 	m_shieldPlates[p_entity] = plateEntities;
 }
 
-void ShieldPlaterSystem::circularRandom( float* p_spawnX, float* p_spawnY,
+void ShieldEffectSystem::circularRandom( float* p_spawnX, float* p_spawnY,
 	bool p_warpCompensation )
 {
 	if(!p_warpCompensation)

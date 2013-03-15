@@ -35,6 +35,17 @@ public:
 	void addRelativeScore(float p_relativeScore);
 
 	///-----------------------------------------------------------------------------------
+	/// Add a relative damage score.
+	/// \param p_relativeScore
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void addRelativeDamageScore(float p_relativeScore);
+
+	float getDealtDamageScore();
+
+	void applyDealtDamageScore();
+
+	///-----------------------------------------------------------------------------------
 	/// Reset the score to an absolute value. NOTE! This will reset the current score!
 	/// \param p_absoluteScore
 	/// \return void
@@ -47,4 +58,5 @@ public:
 	int m_networkID;
 private:
 	float m_score; // The accumulated score of the player
+	float m_dealtDamageScore; //Accumulated score of dealing damage to other players
 };

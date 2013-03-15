@@ -30,6 +30,7 @@ public:
 	virtual ~MouseMoveControl();
 
 	virtual void update( float p_dt, InputManager* p_manager );
+	virtual int getControlEnum();
 
 private:
 	InputHelper::MouseAxes m_axis;
