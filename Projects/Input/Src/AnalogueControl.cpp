@@ -4,6 +4,8 @@
 
 
 AnalogueControl::AnalogueControl( InputHelper::Xbox360Analogs p_axis )
+	: Control( InputHelper::InputDeviceTypes_XINPUT_ANALOG )
+
 {
 	m_axis = p_axis;
 
@@ -54,4 +56,9 @@ void AnalogueControl::update( float p_dt, InputManager* p_manager )
 	m_rawData = fetcher->getRawAnalog( m_axis );
 	m_statusDelta = newStatus - m_status;
 	m_status = newStatus;
+}
+
+int AnalogueControl::getControlEnum()
+{
+	return m_axis;
 }

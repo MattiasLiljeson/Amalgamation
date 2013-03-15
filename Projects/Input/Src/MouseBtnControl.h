@@ -28,6 +28,7 @@ public:
 	virtual ~MouseBtnControl();
 
 	virtual void update( float p_dt, InputManager* p_manager );
+	virtual int getControlEnum();
 
 private:
 	 InputHelper::MouseButtons m_btn;
