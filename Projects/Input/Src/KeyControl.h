@@ -23,9 +23,10 @@ class KeyControl : public Control
 {
 public:
 	KeyControl( InputHelper::KeyboardKeys p_key );
-	virtual ~KeyControl(void);
+	virtual ~KeyControl();
 
 	virtual void update( float p_dt, InputManager* p_manager );
+	virtual int getControlEnum();
 
 private:
 	int m_key;

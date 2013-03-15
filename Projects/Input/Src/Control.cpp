@@ -1,7 +1,8 @@
 #include "Control.h"
 
-Control::Control()
+Control::Control( InputHelper::InputDeviceTypes p_deviceType )
 {
+	m_deviceType = p_deviceType;
 	m_status = 0.0;
 	m_statusDelta = 0.0;
 	m_rawData = 0;
@@ -26,7 +27,12 @@ int Control::getRawData()
 	return m_rawData;
 }
 
-double* Control::getStatusRef()
+double* Control::getStatusPtr()
 {
 	return &m_status;
+}
+
+InputHelper::InputDeviceTypes Control::getDeviceType()
+{
+	return m_deviceType;
 }

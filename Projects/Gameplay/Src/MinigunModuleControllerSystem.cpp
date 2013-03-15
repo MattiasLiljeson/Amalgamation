@@ -22,6 +22,9 @@
 #include "MeshOffsetTransform.h"
 #include "AnimationUpdatePacket.h"
 #include "SoundPacket.h"
+#include "PlayerSystem.h"
+#include "PlayerComponent.h"
+#include "ScoreRuleHelper.h"
 
 MinigunModuleControllerSystem::MinigunModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MinigunModuleControllerSystem, 1, ComponentType::MinigunModule)
@@ -92,9 +95,18 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 							ShipModule* colModule = static_cast<ShipModule*>(
 								collided->getComponent(ComponentType::ShipModule));
 
-							if (colModule)
+							if (colModule && colModule->m_parentEntity >= 0)
 							{
-								colModule->addDamageThisTick(200*dt, ownerId);
+								float damage = 200*dt;
+								colModule->addDamageThisTick(damage, ownerId);
+
+								//Give the attacker some score
+								PlayerComponent* scoreComponent;
+								ModuleHelper::FindScoreComponent(m_world, module, &scoreComponent);
+								if (scoreComponent)
+								{
+									scoreComponent->addRelativeDamageScore(ScoreRuleHelper::scoreFromDamagingOpponent(damage));
+								}
 
 								AglVector3 o;
 								AglVector3 d;

@@ -29,6 +29,21 @@ void PlayerComponent::addRelativeScore( float p_relativeScore )
 {
 	m_score+=p_relativeScore;
 }
+void PlayerComponent::addRelativeDamageScore(float p_relativeScore)
+{
+	m_dealtDamageScore+=p_relativeScore;
+}
+
+float PlayerComponent::getDealtDamageScore()
+{
+	return m_dealtDamageScore;
+}
+
+void PlayerComponent::applyDealtDamageScore()
+{
+	m_score += m_dealtDamageScore;
+	m_dealtDamageScore = 0;
+}
 
 void PlayerComponent::setAbsoluteScore( float p_absoluteScore )
 {

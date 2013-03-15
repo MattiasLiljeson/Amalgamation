@@ -12,6 +12,9 @@
 #include "SpawnSoundEffectPacket.h"
 #include "ShipManagerSystem.h"
 #include "SpawnExplosionPacket.h"
+#include "PlayerComponent.h"
+#include "ModuleHelper.h"
+#include "ScoreRuleHelper.h"
 
 MineControllerSystem::MineControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::MineControllerSystem, 3, ComponentType::StandardMine,
@@ -95,8 +98,8 @@ void MineControllerSystem::explodeMine(PhysicsSystem* p_physicsSystem,
 		if(colEn)
 		{
 			ShipModule* colModule = static_cast<ShipModule*>(colEn->getComponent(ComponentType::ShipModule));
-			if (colModule &&
-				colModule->m_parentEntity >= 0)
+
+			if (colModule && colModule->m_parentEntity >= 0)
 			{
 				float damage = min(100, 1000 / collided[i].second);
 				if (damage > colModule->m_health)
@@ -108,6 +111,14 @@ void MineControllerSystem::explodeMine(PhysicsSystem* p_physicsSystem,
 					m_server->broadcastPacket(explosion.pack());
 				}
 				colModule->addDamageThisTick(damage, mine->m_ownerId);
+
+				//Give the attacker some score
+				PlayerComponent* scoreComponent;
+				ModuleHelper::FindScoreComponent(m_world, mine->m_ownerId, &scoreComponent);
+				if (scoreComponent)
+				{
+					scoreComponent->addRelativeDamageScore(ScoreRuleHelper::scoreFromDamagingOpponent(damage));
+				}
 			}
 		}
 	}

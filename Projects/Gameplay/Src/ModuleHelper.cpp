@@ -2,6 +2,7 @@
 
 #include "ShipModule.h"
 #include "NetworkSynced.h"
+#include "PlayerSystem.h"
 
 void ModuleHelper::FindParentShip( EntityWorld* p_world,
 								   Entity** p_inoutShip, ShipModule* p_module )
@@ -41,4 +42,26 @@ int ModuleHelper::FindParentShipClientId( EntityWorld* p_world, ShipModule* p_mo
 float ModuleHelper::changeModuleValueOnDetach( float p_value )
 {
 	return p_value*0.5f;
+}
+void ModuleHelper::FindScoreComponent(EntityWorld* p_world, ShipModule* p_module, PlayerComponent** p_score)
+{
+	Entity* ship;
+	FindParentShip(p_world, &ship, p_module);
+	PlayerSystem* playerSys = static_cast<PlayerSystem*>
+		(p_world->getSystem(SystemType::PlayerSystem));
+	NetworkSynced* sync = static_cast<NetworkSynced*>(ship->getComponent(ComponentType::NetworkSynced));
+	(*p_score) = playerSys->getPlayerCompFromNetworkComp(sync);
+}
+void ModuleHelper::FindScoreComponent(EntityWorld* p_world, Entity* p_ship, PlayerComponent** p_score)
+{
+	PlayerSystem* playerSys = static_cast<PlayerSystem*>
+		(p_world->getSystem(SystemType::PlayerSystem));
+	NetworkSynced* sync = static_cast<NetworkSynced*>(p_ship->getComponent(ComponentType::NetworkSynced));
+	(*p_score) = playerSys->getPlayerCompFromNetworkComp(sync);
+}
+void ModuleHelper::FindScoreComponent(EntityWorld* p_world, int p_clientID, PlayerComponent** p_score)
+{
+	PlayerSystem* playerSys = static_cast<PlayerSystem*>
+		(p_world->getSystem(SystemType::PlayerSystem));
+	(*p_score) = playerSys->findPlayerComponentFromNetworkID(p_clientID);
 }
