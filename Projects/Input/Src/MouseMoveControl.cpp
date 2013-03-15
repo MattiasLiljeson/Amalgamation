@@ -4,6 +4,7 @@
 
 
 MouseMoveControl::MouseMoveControl( InputHelper::MouseAxes p_axis)
+	: Control( InputHelper::InputDeviceTypes_MOUSE_AXIS )
 {
 	m_axis = p_axis;
 
@@ -48,4 +49,9 @@ void MouseMoveControl::update( float p_dt, InputManager* p_manager )
 	m_statusDelta = newStatus - m_status;
 	m_status = newStatus;
 	m_rawData = fetcher->getMouseTravel( m_axis );;
+}
+
+int MouseMoveControl::getControlEnum()
+{
+	return m_axis;
 }

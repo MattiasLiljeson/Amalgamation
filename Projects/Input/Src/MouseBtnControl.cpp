@@ -4,6 +4,8 @@
 
 
 MouseBtnControl::MouseBtnControl( InputHelper::MouseButtons p_btn )
+	: Control( InputHelper::InputDeviceTypes_MOUSE_BUTTON )
+
 {
 	m_btn = p_btn;
 }
@@ -21,4 +23,9 @@ void MouseBtnControl::update( float p_dt, InputManager* p_manager )
 	m_status = InputHelper::statusFromState( state );
 	m_statusDelta = InputHelper::statusDeltaFromState( state );
 	m_rawData = state;
+}
+
+int MouseBtnControl::getControlEnum()
+{
+	return m_btn;
 }
