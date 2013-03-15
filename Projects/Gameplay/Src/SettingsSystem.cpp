@@ -50,14 +50,18 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile(string p_path, strin
 		inFile >> m_settings.sfxVolume;
 		inFile >> ignore;
 		inFile >> m_settings.musicVolume;
-		inFile >> ignore;
 
 		// Network settings
+		inFile >> ignore;
 		inFile >> m_settings.playerName;
 		inFile >> ignore;
 		inFile >> m_settings.ip;
 		inFile >> ignore;
+		inFile >> m_settings.serverName;
+		inFile >> ignore;
 		inFile >> m_settings.port;
+		inFile >> ignore;
+		inFile >> m_settings.defaultGameTime;
 
 		// Game settings
 		inFile >> ignore;
@@ -119,8 +123,12 @@ SettingsSystem::FileStatus SettingsSystem::writeSettingsFile(string p_path, stri
 		outFile << m_settings.playerName		<< "\n";
 		outFile << "LastUsedIP= ";
 		outFile << m_settings.ip				<< "\n";
+		outFile << "LastUsedServerName= ";
+		outFile << m_settings.serverName		<< "\n";
 		outFile << "LastUsedPort= ";
 		outFile << m_settings.port				<< "\n";
+		outFile << "DefaultGameTime= ";
+		outFile << m_settings.defaultGameTime	<< "\n";
 
 		// Game settings
 		outFile << "Rumble= ";
