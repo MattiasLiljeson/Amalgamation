@@ -118,6 +118,7 @@
 #include "ModulesHighlightPacket.h"
 #include "GlowAnimation.h"
 #include "SettingsSystem.h"
+#include "ShipMassBoosterUpdatePacket.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -813,12 +814,28 @@ void ClientPacketHandlerSystem::handleIngameState()
 
 			if(hud){
 				hud->setHUDData(HudSystem::SCORE,
-					toString(updateClientPacket.scores[m_tcpClient->getPlayerID()]).c_str());
+					toString((int)(updateClientPacket.scores[m_tcpClient->getPlayerID()]+0.5f)).c_str());
 				hud->setHUDData(HudSystem::TIME,
 					toString(
 					toString(updateClientPacket.minutesUntilEndOfRound) + ":" +
 					toString(updateClientPacket.secondsUntilEndOfRound)
 					).c_str());
+			}
+		}
+		else if(packetType == (char)PacketType::ShipMassBoosterUpdatePacket)
+		{
+			ShipMassBoosterUpdatePacket shipMassBoosterPacket;
+			shipMassBoosterPacket.unpack(packet);
+
+
+			// Update score in hud
+			HudSystem* hud = static_cast<HudSystem*>(m_world->getSystem(SystemType::HudSystem));
+
+			if(hud){
+				hud->setHUDData(HudSystem::MASS,
+					toString((int)(shipMassBoosterPacket.mass+0.5f)).c_str());
+				hud->setHUDData(HudSystem::BOOST,
+					toString(shipMassBoosterPacket.boosters).c_str());
 			}
 		}
 		else if(packetType == (char)PacketType::PlayerWinLose)

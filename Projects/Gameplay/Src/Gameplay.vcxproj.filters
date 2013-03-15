@@ -874,6 +874,9 @@
     <ClInclude Include="InitiallyDisable.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="ShipMassBoosterUpdatePacket.h">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1504,6 +1507,9 @@
       <Filter>Systems\Debugging</Filter>
     </ClCompile>
     <ClCompile Include="SpawnDebugModulePacket.cpp">
+      <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipMassBoosterUpdatePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
     </ClCompile>
   </ItemGroup>

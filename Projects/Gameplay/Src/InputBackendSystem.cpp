@@ -23,7 +23,7 @@ InputBackendSystem::InputBackendSystem( HINSTANCE p_hInstance,
 {
 	m_hInstance = p_hInstance;
 	m_graphicsBackend = p_graphicsBackend;
-	m_controllerUsedLast=false;
+	m_gamepadUsedLast=false;
 	m_cursor = NULL;
 }
 
@@ -239,6 +239,11 @@ void InputBackendSystem::process()
 	if( kb_control && kb_control->getDelta()>0.5f )
 		m_world->requestToShutDown();
 
+	if (gamepadUsedLast()) 
+		DEBUGPRINT(("\nGamepad used!"));
+	else
+		DEBUGPRINT(("\nKeyboard used!"));
+
 	m_cursor->update(dt);
 }
 
@@ -280,70 +285,70 @@ Control* InputBackendSystem::getControlByEnum( InputHelper::Xbox360Analogs p_ana
 const double InputBackendSystem::getDeltaByEnum( InputHelper::KeyboardKeys p_key )
 {
 	float delta = getControlByEnum(p_key)->getDelta();
-	if (m_controllerUsedLast && delta>0) m_controllerUsedLast = false;
+	if (m_gamepadUsedLast && delta>0) m_gamepadUsedLast = false;
 	return delta;
 }
 
 const double InputBackendSystem::getDeltaByEnum( InputHelper::MouseButtons p_btn )
 {
 	float delta = getControlByEnum(p_btn)->getDelta();
-	if (m_controllerUsedLast && delta>0) m_controllerUsedLast = false;
+	if (m_gamepadUsedLast && delta>0) m_gamepadUsedLast = false;
 	return delta;
 }
 
 const double InputBackendSystem::getDeltaByEnum( InputHelper::MouseAxes p_axis )
 {
 	float delta = getControlByEnum(p_axis)->getDelta();
-	if (m_controllerUsedLast && delta>0) m_controllerUsedLast = false;
+	if (m_gamepadUsedLast && delta>0) m_gamepadUsedLast = false;
 	return delta;
 }
 
 const double InputBackendSystem::getDeltaByEnum( InputHelper::Xbox360Digitals p_digital )
 {
 	float delta = getControlByEnum(p_digital)->getDelta();
-	m_controllerUsedLast=delta>0;
+	m_gamepadUsedLast=delta>0.0f;
 	return delta;
 }
 
 const double InputBackendSystem::getDeltaByEnum( InputHelper::Xbox360Analogs p_analog )
 {
 	float delta = getControlByEnum(p_analog)->getDelta();
-	m_controllerUsedLast=delta>0;
+	m_gamepadUsedLast=delta>0.0f;
 	return delta;
 }
 
 const double InputBackendSystem::getStatusByEnum( InputHelper::KeyboardKeys p_key )
 {
 	float stat = getControlByEnum(p_key)->getStatus();
-	if (m_controllerUsedLast && stat>0) m_controllerUsedLast = false;
+	if (m_gamepadUsedLast && stat>0.0f) m_gamepadUsedLast = false;
 	return stat;
 }
 
 const double InputBackendSystem::getStatusByEnum( InputHelper::MouseButtons p_btn )
 {
 	float stat = getControlByEnum(p_btn)->getStatus();
-	if (m_controllerUsedLast && stat>0) m_controllerUsedLast = false;
+	if (m_gamepadUsedLast && stat>0.0f) m_gamepadUsedLast = false;
 	return stat;
 }
 
 const double InputBackendSystem::getStatusByEnum( InputHelper::MouseAxes p_axis )
 {
 	float stat = getControlByEnum(p_axis)->getStatus();
-	if (m_controllerUsedLast && stat>0) m_controllerUsedLast = false;
+	if (m_gamepadUsedLast && stat>0.0f) m_gamepadUsedLast = false;
 	return stat;
 }
 
 const double InputBackendSystem::getStatusByEnum( InputHelper::Xbox360Digitals p_digital )
 {
 	float stat = getControlByEnum(p_digital)->getStatus();
-	m_controllerUsedLast=stat>0;
+	m_gamepadUsedLast=stat>0.0f;
 	return stat;
 }
 
 const double InputBackendSystem::getStatusByEnum( InputHelper::Xbox360Analogs p_analog )
 {
 	float stat = getControlByEnum(p_analog)->getStatus();
-	m_controllerUsedLast=stat>0;
+	m_gamepadUsedLast=stat>0.0f;
 	return stat;
 }
 
@@ -427,7 +432,7 @@ void InputBackendSystem::expandIdxVectorIfNecessary( vector<int>* p_vec, int p_i
 	}
 }
 
-const bool InputBackendSystem::controllerUsedLast()
+const bool InputBackendSystem::gamepadUsedLast()
 {
-	return m_controllerUsedLast;
+	return m_gamepadUsedLast;
 }

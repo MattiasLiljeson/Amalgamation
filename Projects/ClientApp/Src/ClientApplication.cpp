@@ -150,6 +150,7 @@ using namespace std;
 #include <PlayerSystem.h>
 #include <SoundSystem.h>
 #include <ShipEngineSystem.h>
+#include <ValueClamp.h>
 
 
 #define FORCE_VS_DBG_OUTPUT
@@ -215,6 +216,8 @@ void ClientApplication::run()
 			dt = (currTimeStamp - m_prevTimeStamp) * secsPerCount;
 
 			m_prevTimeStamp = currTimeStamp;
+
+			dt = clamp(dt,0.0,DTCAP);
 
 			m_world->setDelta((float)dt);
 			m_world->process();

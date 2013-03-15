@@ -24,7 +24,8 @@ class ShipModulesControllerSystem: public EntitySystem
 {
 public:
 	ShipModulesControllerSystem(TcpServer* p_server,
-		ModuleVisualEffectServerBufferSystem* p_effectBuffer);
+		ModuleVisualEffectServerBufferSystem* p_effectBuffer,
+		PhysicsSystem* p_physicsSystem);
 	~ShipModulesControllerSystem();
 
 	virtual void initialize();
@@ -40,7 +41,7 @@ public:
 	void getConnectedChildren(Entity* p_root, vector<Entity*>* p_list);
 
 private:
-	void checkDrop_ApplyScoreAndDamage(Entity* p_parent);
+	void checkDrop_ApplyScoreAndDamage(Entity* p_parent, pair<float,int>& p_outMassBoosters);
 	void drop(Entity* p_parent, unsigned int p_slot);
 	void changeHighlight(Entity* p_entity, int p_new, int p_status);
 	void setActivation(Entity* p_entity, bool p_value);
@@ -53,6 +54,7 @@ private:
 	void disableModuleUnusuedEffect(int p_moduleNetworkOwner);
 	void updateModuleHealthEffect(int p_moduleNetworkOwner, float p_healthPercent);
 	void updateModuleValueEffect(int p_moduleNetworkOwner, float p_valuePercent);
+	void sendMassBoostersTotal(int p_moduleNetworkOwner, float p_massValue, int p_boosters);
 private:
 	struct HighlightEvent
 	{		
@@ -68,6 +70,7 @@ private:
 	// system dependencies
 	TcpServer* m_server;
 	ModuleVisualEffectServerBufferSystem* m_effectbuffer;
+	PhysicsSystem* m_physicsSystem;
 
 	bool m_editMode;
 
