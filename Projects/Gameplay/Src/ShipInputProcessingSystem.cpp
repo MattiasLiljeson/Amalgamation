@@ -8,22 +8,129 @@
 #include "SimpleEventPacket.h"
 #include "Cursor.h"
 #include <Globals.h>
+#include <DebugUtil.h>
+#include "TimerSystem.h"
+#include <InputHelper.h>
 
+
+const string ShipInputProcessingSystem::gamepadmap[] = {
+	"^",
+	"v",
+	"<",
+	">",
+	"S",
+	"[",
+	"O",
+	"O",
+	"L",
+	"R",
+	"A",
+	"B",
+	"X",
+	"Y"
+};
+
+
+const string ShipInputProcessingSystem::keymap[] = {
+	"A",
+	"B",
+	"C",
+	"D",
+	"E",
+	"F",
+	"G",
+	"H",
+	"I",
+	"J",
+	"K",
+	"L",
+	"M",
+	"N",
+	"O",
+	"P",
+	"Q",
+	"R",
+	"S",
+	"T",
+	"U",
+	"V",
+	"W",
+	"X",
+	"Y",
+	"Z",
+	"[",		
+	"'",		
+	";",		
+	"*",
+	"*",
+	"*",
+	"_",
+	"*",
+	"*",
+	"*",
+	"b",
+	"d",
+	"r",
+	".",
+	"*",
+	"*",
+	"*",
+	"*",
+	"*",
+	"<",
+	">",
+	"<",
+	"^",
+	"v",
+	">",
+	"<",
+	"^",
+	"v",
+	">",
+	"f1",
+	"f2",
+	"f3",
+	"f4",
+	"0",
+	"1",
+	"2",
+	"3",
+	"4",
+	"5",
+	"6",
+	"7",
+	"8",
+	"9",
+	"0",
+	"1",
+	"2",
+	"3",
+	"4",
+	"5",
+	"6",
+	"7",
+	"8",
+	"9",
+};
 
 ShipInputProcessingSystem::ShipInputProcessingSystem(InputBackendSystem* p_inputBackend) :
 										EntitySystem( SystemType::ShipInputProcessingSystem )
 {
 	m_angleInputMultiplier = 10.0f;
-
 	m_controllerEpsilon = 0.15f;
 	m_editSwitchTrigReleased = true;
 	m_inputBackend = p_inputBackend;
+	m_prevDeviceWasGamepad=false;
+	m_hudMappingsInited=false;
 }
 
 void ShipInputProcessingSystem::initialize()
 {
 	m_actionBackend = static_cast<InputActionsBackendSystem*>(m_world->getSystem(
 		SystemType::InputActionsBackendSystem));
+
+	m_hudSystem = static_cast<HudSystem*>(m_world->getSystem(
+		SystemType::HudSystem));
 
 	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::INPUT,
 		"ControllerEpsilon", TwType::TW_TYPE_FLOAT, getControllerEpsilonPointer(), 
@@ -35,10 +142,36 @@ void ShipInputProcessingSystem::initialize()
 
 void ShipInputProcessingSystem::process()
 {
+	if (!m_hudMappingsInited)
+	{
+		m_hudMappingsInited=true;
+		updateHudKeymappings();
+	}
 	// This is read from the settings.input file naow. /ML
 	//m_inputBackend->setMouseSensitivity(m_angleInputMultiplier);
 	// Fetch the status of the various input methods.
 	m_processedInput = readAllInput();
+
+	if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
+		checkTimeInterval(TimerIntervals::EveryFourSeconds))
+	{
+		if (m_actionBackend->gamepadUsedLast())
+		{
+			if (!m_prevDeviceWasGamepad)
+			{
+				m_prevDeviceWasGamepad=true;
+				updateHudKeymappings(true);
+			}
+		}
+		else
+		{
+			if (m_prevDeviceWasGamepad)
+			{
+				m_prevDeviceWasGamepad=true;
+				updateHudKeymappings();
+			}
+		}
+	}
 
 	// Apply correction vectors to the analogue sticks.
 	//m_processedInput.horizontalInput += static_cast<float>(m_leftStickCorrection[0]);
@@ -182,3 +315,60 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 	
 	return input;
 }
+
+void ShipInputProcessingSystem::updateHudKeymappings(bool p_useGamepad)
+{
+	if (m_hudSystem->isInited())
+	{
+		string left="L";
+		string right="R";
+		string front="F";
+		string bottom="B";
+		Control* ctrl = NULL;
+		if (p_useGamepad)
+		{
+			// BOTTOM
+			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_1,
+				InputHelper::InputDeviceTypes_XINPUT_DIGITAL);
+			if (ctrl) bottom = gamepadmap[ctrl->getControlEnum()];
+			// UP
+			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_2,
+				InputHelper::InputDeviceTypes_XINPUT_DIGITAL);
+			if (ctrl) front = gamepadmap[ctrl->getControlEnum()];
+			// LEFT
+			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_3,
+				InputHelper::InputDeviceTypes_XINPUT_DIGITAL);
+			if (ctrl) left = gamepadmap[ctrl->getControlEnum()];
+			// RIGHT
+			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_4,
+				InputHelper::InputDeviceTypes_XINPUT_DIGITAL);
+			if (ctrl) right = gamepadmap[ctrl->getControlEnum()];
+		}
+		else
+		{
+			// BOTTOM
+			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_1,
+				InputHelper::InputDeviceTypes_KEYBOARD);
+			if (ctrl) bottom = keymap[ctrl->getControlEnum()];
+			// UP
+			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_2,
+				InputHelper::InputDeviceTypes_KEYBOARD);
+			if (ctrl) front = keymap[ctrl->getControlEnum()];
+			// LEFT
+			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_3,
+				InputHelper::InputDeviceTypes_KEYBOARD);
+			if (ctrl) left = keymap[ctrl->getControlEnum()];
+			// RIGHT
+			ctrl = m_actionBackend->findControlOfDeviceByAction(InputActionsBackendSystem::Actions_ACTIVATE_SLOT_4,
+				InputHelper::InputDeviceTypes_KEYBOARD);
+			if (ctrl) right = keymap[ctrl->getControlEnum()];
+		}
+		//
+		m_hudSystem->setHUDData(HudSystem::MAPPING_LEFT,left.c_str());
+		m_hudSystem->setHUDData(HudSystem::MAPPING_RIGHT,right.c_str());
+		m_hudSystem->setHUDData(HudSystem::MAPPING_UP,front.c_str());
+		m_hudSystem->setHUDData(HudSystem::MAPPING_DOWN,bottom.c_str());
+	}
+
+}
+

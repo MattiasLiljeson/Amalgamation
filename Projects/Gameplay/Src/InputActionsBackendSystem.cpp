@@ -95,9 +95,19 @@ double InputActionsBackendSystem::getDeltaByAction( Actions p_action )
 	for(unsigned int i=0; i<m_inputControls[p_action].size(); i++)
 	{
 		Control* currentControl = m_inputControls[p_action][i];
-		float current = currentControl->getDelta();
-		// if (currentControl->
-		// delta += 
+		float currentDelta = currentControl->getDelta();
+		InputHelper::InputDeviceTypes deviceT = currentControl->getDeviceType();
+		if (deviceT == InputHelper::InputDeviceTypes_XINPUT_DIGITAL ||
+			deviceT == InputHelper::InputDeviceTypes_XINPUT_ANALOG) 
+		{
+			if (currentDelta>0.0f) m_gamepadUsedLast=true;
+		}
+		else
+		{
+			if (currentDelta>0.0f) m_gamepadUsedLast=false;
+		}
+
+		delta += currentDelta;
 	}
 	return delta;
 }
@@ -107,7 +117,20 @@ double InputActionsBackendSystem::getStatusByAction( Actions p_action )
 	double status = 0.0;
 	for(unsigned int i=0; i<m_inputControls[p_action].size(); i++)
 	{
-		status += m_inputControls[p_action][i]->getStatus();
+		Control* currentControl = m_inputControls[p_action][i];
+		float currentStatus = currentControl->getStatus();
+		InputHelper::InputDeviceTypes deviceT = currentControl->getDeviceType();
+		if (deviceT == InputHelper::InputDeviceTypes_XINPUT_DIGITAL ||
+			deviceT == InputHelper::InputDeviceTypes_XINPUT_ANALOG) 
+		{
+			if (currentStatus>0.0f) m_gamepadUsedLast=true;
+		}
+		else
+		{
+			if (currentStatus>0.0f) m_gamepadUsedLast=false;
+		}
+
+		status += currentStatus;
 	}
 	return status;
 }
@@ -118,6 +141,20 @@ Control* InputActionsBackendSystem::getControlByAction( Actions p_action, int p_
 		return m_inputControls[p_action][p_index];
 	return NULL;
 }
+
+
+Control* InputActionsBackendSystem::findControlOfDeviceByAction( Actions p_action,
+																 InputHelper::InputDeviceTypes p_deviceType )
+{
+	for (int i=0;i<m_inputControls[p_action].size();i++)
+	{
+		Control* ctrl = m_inputControls[p_action][i];
+		if (ctrl->getDeviceType()==p_deviceType)
+			return ctrl;
+	}
+	return NULL;
+}
+
 
 void InputActionsBackendSystem::initCursor()
 {

@@ -18,6 +18,7 @@ HudSystem::HudSystem( LibRocketBackendSystem* p_backend, TcpClient* p_client )
 	m_hudVisible = false;
 	m_currentState = false;
 	m_client = p_client;
+	m_isInited=false;
 }
 
 
@@ -28,7 +29,7 @@ HudSystem::~HudSystem()
 void HudSystem::initialize()
 {
 	m_hudIndex = m_backend->loadDocument( GUI_HUD_PATH.c_str(), "hud" );
-
+	m_isInited=true;
 	// m_backend->showDocument(m_hudIndex);
 }
 
@@ -147,40 +148,43 @@ void HudSystem::setHUDVisibility(bool p_setVisibility)
 
 void HudSystem::setHUDData( HUD_TYPES p_type, const char* p_value )
 {
-	switch (p_type)
+	if (isInited())
 	{
-	case HudSystem::TIME:
-		m_backend->updateElement(m_hudIndex,TIMERELEMENT,p_value);
-		break;
-	case HudSystem::SCORE:
-		m_backend->updateElement(m_hudIndex,SCOREELEMENT,p_value);
-		break;
-	case HudSystem::MAPPING_LEFT:
-		m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_LEFT,p_value);
-		break;	
-	case HudSystem:: MAPPING_RIGHT:
-		m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_RIGHT,p_value);
-		break;	
-	case HudSystem::MAPPING_UP:
-		m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_UP,p_value);
-		break;
-	case HudSystem::MAPPING_DOWN:
-		m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_DOWN,p_value);
-		break;	
-	case HudSystem::MASS:
-		m_backend->updateElement(m_hudIndex,MASSELEMENT,p_value);
-		break;
-	case HudSystem::BOOST:
-		m_backend->updateElement(m_hudIndex,BOOSTELEMENT,p_value);
-		break;
-	case HudSystem::PLAYERNAME:
-		m_backend->updateElement(m_hudIndex,PLAYERELEMENT,p_value);
-		break;
-	case HudSystem::SERVERNAME:
-		m_backend->updateElement(m_hudIndex, SERVERELEMENT,p_value);
-		break;
-	default:
-		break;
+		switch (p_type)
+		{
+		case HudSystem::TIME:
+			m_backend->updateElement(m_hudIndex,TIMERELEMENT,p_value);
+			break;
+		case HudSystem::SCORE:
+			m_backend->updateElement(m_hudIndex,SCOREELEMENT,p_value);
+			break;
+		case HudSystem::MAPPING_LEFT:
+			m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_LEFT,p_value);
+			break;	
+		case HudSystem:: MAPPING_RIGHT:
+			m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_RIGHT,p_value);
+			break;	
+		case HudSystem::MAPPING_UP:
+			m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_UP,p_value);
+			break;
+		case HudSystem::MAPPING_DOWN:
+			m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_DOWN,p_value);
+			break;	
+		case HudSystem::MASS:
+			m_backend->updateElement(m_hudIndex,MASSELEMENT,p_value);
+			break;
+		case HudSystem::BOOST:
+			m_backend->updateElement(m_hudIndex,BOOSTELEMENT,p_value);
+			break;
+		case HudSystem::PLAYERNAME:
+			m_backend->updateElement(m_hudIndex,PLAYERELEMENT,p_value);
+			break;
+		case HudSystem::SERVERNAME:
+			m_backend->updateElement(m_hudIndex, SERVERELEMENT,p_value);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -256,4 +260,9 @@ void HudSystem::reinitSprite(Entity* p_sprite, AglVector3 p_position, AglVector2
 		((*particles)[i]).size = p_size;
 		((*particles)[i]).position = p_position;
 	}
+}
+
+bool HudSystem::isInited()
+{
+	return m_isInited;
 }

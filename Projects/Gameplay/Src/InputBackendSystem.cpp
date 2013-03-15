@@ -239,10 +239,6 @@ void InputBackendSystem::process()
 	if( kb_control && kb_control->getDelta()>0.5f )
 		m_world->requestToShutDown();
 
-	if (gamepadUsedLast()) 
-		DEBUGPRINT(("\nGamepad used!"));
-	else
-		DEBUGPRINT(("\nKeyboard used!"));
 
 	m_cursor->update(dt);
 }

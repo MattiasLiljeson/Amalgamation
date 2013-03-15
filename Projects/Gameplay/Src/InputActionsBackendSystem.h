@@ -1,8 +1,10 @@
 #pragma once
 #include <EntitySystem.h>
 #include <Globals.h>
+#include <InputHelper.h>
 class Control;
 class InputBackendSystem;
+
 // =======================================================================================
 // InputActionsBackendSystem
 // =======================================================================================
@@ -75,6 +77,8 @@ public:
 	double getDeltaByAction(Actions p_action);
 	double getStatusByAction(Actions p_action);
 	Control* getControlByAction(Actions p_action, int p_index);
+	Control* findControlOfDeviceByAction(Actions p_action, 
+		InputHelper::InputDeviceTypes p_deviceType);
 	void setMouseSensitivity(float p_sensitivity);
 	const bool gamepadUsedLast();
 
