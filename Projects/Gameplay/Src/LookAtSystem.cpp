@@ -110,7 +110,7 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			// update transform
 
 			// lerp
-			if (false)//lookAt->getMoveSpd()*dt<1.0f)
+			if (lookAt->getMoveSpd()*dt<1.0f)
 			{
 				position = AglVector3::lerp(position,lookTargetPos+offset,
 					saturate(lookAt->getMoveSpd()*dt));
@@ -128,7 +128,7 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 			}
 
 			// slerp
-			if (false)//lookAt->getRotationSpeed()*dt<1.0f)
+			if (lookAt->getRotationSpeed()*dt<1.0f)
 			{
 				rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
 					saturate(lookAt->getRotationSpeed()*dt),true);

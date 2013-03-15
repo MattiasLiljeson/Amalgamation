@@ -344,7 +344,8 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 
 	soundComponent = new SoundComponent();
 	entity->addComponent(soundComponent);
-	
+	Entity* ship = entity;
+
 	Component* component = NULL;
 
 	/************************************************************************/
@@ -389,8 +390,17 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 			entity->removeComponent(ComponentType::AudioListener); // This is "moved" from the camera to the ship.
 		}
 		entity->addComponent( new PlayerCameraController(90.0f) );
-		entity->addComponent( new NetworkSynced(p_packet.miscData, p_packet.owner,
-			EntityType::PlayerCamera) );
+		component = new LookAtEntity(ship->getIndex(),
+			AglVector3(0,7,-38),
+			13.0f,
+			10.0f,
+			3.0f,
+			40.0f);
+		entity->addComponent( ComponentType::LookAtEntity, component );
+		// default tag is follow
+		entity->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+		/*entity->addComponent( new NetworkSynced(p_packet.miscData, p_packet.owner,
+			EntityType::PlayerCamera) );*/
 		entity->addComponent( new PlayerState );
 		//Add a picking ray to the camera so that edit mode can be performed
 		entity->addComponent( new PickComponent() );
