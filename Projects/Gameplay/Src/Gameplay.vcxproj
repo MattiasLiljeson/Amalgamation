@@ -173,7 +173,7 @@
     <ClInclude Include="ShieldModuleActivation.h" />
     <ClInclude Include="ShieldModuleActivationClient.h" />
     <ClInclude Include="ShieldPlate.h" />
-    <ClInclude Include="ShieldPlaterSystem.h" />
+    <ClInclude Include="ShieldEffectSystem.h" />
     <ClInclude Include="ShieldPlatingSystem.h" />
     <ClInclude Include="ShipConnectionPointHighlights.h" />
     <ClInclude Include="ShipModuleStatsSystem.h" />
@@ -432,7 +432,7 @@
     <ClCompile Include="ServerUpdateSystem.cpp" />
     <ClCompile Include="ServerWelcomeSystem.cpp" />
     <ClCompile Include="ShadowSystem.cpp" />
-    <ClCompile Include="ShieldPlaterSystem.cpp" />
+    <ClCompile Include="ShieldEffectSystem.cpp" />
     <ClCompile Include="ShieldPlatingSystem.cpp" />
     <ClCompile Include="ShipConnectionPointHighlights.cpp" />
     <ClCompile Include="ShipEditControllerSystem.cpp" />

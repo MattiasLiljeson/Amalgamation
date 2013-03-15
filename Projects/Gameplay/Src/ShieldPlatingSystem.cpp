@@ -25,59 +25,41 @@ void ShieldPlatingSystem::processEntities( const vector<Entity*>& p_entities )
 	{
 		ShieldPlate* plate = static_cast<ShieldPlate*>(p_entities[i]->getComponent(
 			ComponentType::ShieldPlate));
-		EntityParent* child = static_cast<EntityParent*>(p_entities[i]->getComponent(
-			ComponentType::EntityParent));
-		Transform* worldTransform = static_cast<Transform*>(p_entities[i]->getComponent(
-			ComponentType::Transform));
 		RenderInfo* render = static_cast<RenderInfo*>(p_entities[i]->getComponent(
 			ComponentType::RenderInfo));
-		AglVector3 positionComponent;
-		AglQuaternion quarternionComponent;
-		AglVector3 scaleComponent; // used
-		AglMatrix::matrixToComponents(plate->spawnTransform,
-			scaleComponent, quarternionComponent, positionComponent);
-		float deltaScale = m_world->getDelta() * 0.5f;
-		plate->scale -= deltaScale;
-
-		float scaleFactor = 1.0f - plate->scale / plate->scaleSeed;
-		AglVector3 localPositionComp;
-		AglQuaternion localQuaternionComp;
-		AglVector3 localScaleComp;
-		AglMatrix::matrixToComponents(child->getLocalTransform(), localScaleComp,
-			localQuaternionComp, localPositionComp);
-		localPositionComp = plate->travelDir * scaleFactor * plate->maxRange;
-		//AglMatrix localTransform;
-		//AglMatrix::componentsToMatrix(localTransform, localScaleComp, localQuaternionComp,
-		//	localPositionComp);
-		//child->setLocalTransform(localTransform);
-
-		if(p_entities[i]->isEnabled())
+		if(plate->scale >= 0.0f)
 		{
 			render->m_shouldBeRendered = true;
-			if(plate->scale <= 0.0f)
-			{
-				child->setLocalTransform(plate->spawnTransform); // Respawn.
-				plate->scale = plate->scaleSeed;
-			}
-			scaleComponent.x = plate->scale;
-			scaleComponent.y = plate->scale;
-			scaleComponent.z = plate->scale;
+			EntityParent* child = static_cast<EntityParent*>(p_entities[i]->getComponent(
+				ComponentType::EntityParent));
+			Transform* worldTransform = static_cast<Transform*>(p_entities[i]->getComponent(
+				ComponentType::Transform));
+			AglVector3 positionComponent;
+			AglQuaternion quarternionComponent;
+			AglVector3 scaleComponent; // used
+			AglMatrix::matrixToComponents(plate->spawnTransform,
+				scaleComponent, quarternionComponent, positionComponent);
+			float deltaScale = m_world->getDelta() * 0.5f;
+			plate->scale -= deltaScale;
+
+			float scaleFactor = 1.0f - plate->scale / plate->scaleSeed;
+			scaleComponent = AglVector3(plate->scale, plate->scale, plate->scale);
+			AglVector3 localPositionComp;
+			AglQuaternion localQuaternionComp;
+			AglVector3 localScaleComp;
+			AglMatrix::matrixToComponents(child->getLocalTransform(), localScaleComp,
+				localQuaternionComp, localPositionComp);
+			localPositionComp = plate->travelDir * scaleFactor * plate->maxRange;
+
+			AglMatrix rescaledLocalTransform;
+			AglMatrix::componentsToMatrix(rescaledLocalTransform,
+				scaleComponent, quarternionComponent, localPositionComp);
+			child->setLocalTransform(rescaledLocalTransform);
 		}
 		else
 		{
-			if(plate->scale <= 0.0f)
-			{
-				plate->scale = 0.0f;
-				render->m_shouldBeRendered = false;
-			}
-			scaleComponent.x = plate->scale;
-			scaleComponent.y = plate->scale;
-			scaleComponent.z = plate->scale;
+			render->m_shouldBeRendered = false;
 		}
-		AglMatrix rescaledLocalTransform;
-		AglMatrix::componentsToMatrix(rescaledLocalTransform,
-			scaleComponent, quarternionComponent, localPositionComp);
-		child->setLocalTransform(rescaledLocalTransform);
 	}
 }
 

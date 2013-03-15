@@ -829,9 +829,6 @@
     <ClInclude Include="TeslaCoilEffect.h">
       <Filter>Components\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="ShieldPlaterSystem.h">
-      <Filter>Systems\Gameplay\Client Only</Filter>
-    </ClInclude>
     <ClInclude Include="AddToParentSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -873,6 +870,9 @@
     </ClInclude>
     <ClInclude Include="InitiallyDisable.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldEffectSystem.h">
+      <Filter>Systems\Gameplay\Client Only</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1464,9 +1464,6 @@
     <ClCompile Include="TeslaCoilEffect.cpp">
       <Filter>Components\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="ShieldPlaterSystem.cpp">
-      <Filter>Systems\Gameplay\Client Only</Filter>
-    </ClCompile>
     <ClCompile Include="AddToParentSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -1505,6 +1502,9 @@
     </ClCompile>
     <ClCompile Include="SpawnDebugModulePacket.cpp">
       <Filter>Systems\Network\Packet Translation\Packetizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldEffectSystem.cpp">
+      <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

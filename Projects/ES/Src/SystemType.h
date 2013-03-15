@@ -117,7 +117,7 @@ public:	//Enums
 		AnomalyBombControllerSystem,
 		ServerDynamicPhysicalObjectsSystem,
 		AnomalyBombEffectSystem,
-		ShieldPlaterSystem,
+		ShieldEffectSystem,
 		TempModuleSpawner,
 		SlotHighlightParticleMakerSystem,
 		SpriteSystem,
