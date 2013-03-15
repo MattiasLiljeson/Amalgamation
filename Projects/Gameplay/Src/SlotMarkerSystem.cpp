@@ -13,11 +13,33 @@ SlotMarkerSystem::SlotMarkerSystem() :
 							ComponentType::SlotMarker)
 {
 	m_current = -1;
+	memset(&slots, 0, sizeof(slots));
 }
 
 
 SlotMarkerSystem::~SlotMarkerSystem()
 {
+
+}
+
+void SlotMarkerSystem::clear()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		if (slots[i])
+		{	
+			// Retrieve slot marker component, and remove the ship marker entity
+			auto slotMarker = static_cast<SlotMarker*>(
+				slots[i]->getComponent(ComponentType::SlotMarker));
+			if (slotMarker->shipMarker != -1) {
+				m_world->deleteEntity(m_world->getEntity(slotMarker->shipMarker));
+				slotMarker->shipMarker = -1;
+			}
+			m_world->deleteEntity(slots[i]);
+			slots[i] = NULL;
+		}
+	}
+	m_current = -1;
 }
 
 void SlotMarkerSystem::initialize()

@@ -17,6 +17,7 @@ public:
 	void setSlot(int p_index);
 	void addMarker(int p_slot, EntityType p_type);
 	void removeMarker(int p_slot, EntityType p_type);
+	void clear();
 private:
 	Entity* createShipMarkerEntity(AglVector3 p_position, string p_texture, AglVector2 p_size);
 	Entity* createModuleMarkerEntity(AglVector3 p_position, string p_texture, AglVector2 p_size);

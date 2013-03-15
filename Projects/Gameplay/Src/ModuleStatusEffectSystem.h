@@ -51,6 +51,8 @@ public:
 	ModuleStatusEffectSystem();
 	virtual ~ModuleStatusEffectSystem();
 	
+	void clear();
+
 	virtual void initialize();
 	virtual void process();
 
