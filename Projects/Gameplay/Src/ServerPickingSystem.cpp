@@ -152,11 +152,11 @@ void ServerPickingSystem::setReleased(int p_index)
 
 			NetworkSynced* networkComp = NULL;
 			PlayerComponent* scoreComponent = NULL;
-			Entity* shipModuleEntity = m_world->getEntity(m_pickComponents[i].getLatestPick());
+			Entity* shipModuleEntity = NULL;
 			// Get data for current module
 			if (m_pickComponents[i].getLatestPick()>-1)
 			{
-				
+				shipModuleEntity = m_world->getEntity(m_pickComponents[i].getLatestPick());
 				shipModule = NULL;
 				if (shipModuleEntity)
 				{
@@ -186,20 +186,6 @@ void ServerPickingSystem::setReleased(int p_index)
 			unsetPick(m_pickComponents[i]);
 
 			m_pickComponents[i].m_active = false;
-			if (shipModule) 
-			{
-				NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
-					shipModuleEntity->getComponent(ComponentType::NetworkSynced));
-				shipModule->m_lastShipEntityWhenAttached = -1; // module is now totally detached from parent ship
-				shipModule->m_health = shipModule->getMaxHealth();
-				shipModule->m_value = ModuleHelper::changeModuleValueOnDetach(shipModule->m_value);
-				// send status effect updates
-				updateModuleHealthEffect(networkSynced->getNetworkOwner(),
-					shipModule->m_health/shipModule->getMaxHealth());
-				updateModuleValueEffect(networkSynced->getNetworkOwner(),
-					shipModule->m_value/shipModule->getMaxValue());
-				shipModule->deactivate();
-			}
 
 			// set an effect
 			if (moduleTransform && parentShip && shipModule && scoreComponent)
@@ -209,6 +195,21 @@ void ServerPickingSystem::setReleased(int p_index)
 				setScoreEffect( parentShip, moduleTransform, (int)score);
 			}
 
+			// set value and health on module
+			if (shipModule && shipModuleEntity) 
+			{
+				NetworkSynced* networkSynced = static_cast<NetworkSynced*>(
+					shipModuleEntity->getComponent(ComponentType::NetworkSynced));
+				shipModule->m_lastShipEntityWhenAttached = -1; // module is now totally detached from parent ship
+				shipModule->m_health = shipModule->getMaxHealth();
+				// don't change value now: shipModule->m_value = ModuleHelper::changeModuleValueOnDetach(shipModule->m_value);
+				// send status effect updates
+				updateModuleHealthEffect(networkSynced->getNetworkOwner(),
+					shipModule->m_health/shipModule->getMaxHealth());
+				updateModuleValueEffect(networkSynced->getNetworkOwner(),
+					shipModule->m_value/shipModule->getMaxValue());
+				shipModule->deactivate();
+			}
 
 			return;
 		}
@@ -264,7 +265,7 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 
 					Transform* t1 = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
 					Transform* t2 = static_cast<Transform*>(rayShip->getComponent(ComponentType::Transform));
-					if ((t1->getTranslation()-t2->getTranslation()).lengthSquared() > 1600)
+					if ((t1->getTranslation()-t2->getTranslation()).lengthSquared() > 22500)
 						break;
 
 					//Send a message to the client showing the highlight of the object
