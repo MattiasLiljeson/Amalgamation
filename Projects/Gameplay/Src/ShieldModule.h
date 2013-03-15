@@ -30,7 +30,6 @@ public:
 	float impulse;
 
 	bool toggleActive;
-	bool toggleActiveChange;
 
 public:
 	static ComponentRegister<ShieldModule> s_reg;

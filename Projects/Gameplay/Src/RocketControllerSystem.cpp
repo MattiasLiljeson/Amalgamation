@@ -31,7 +31,7 @@ void RocketControllerSystem::initialize()
 void RocketControllerSystem::processEntities(const vector<Entity*>& p_entities)
 {
 	float dt = m_world->getDelta();
-	float waitUntilActivation = 0.1f;
+	float waitUntilActivation = 0.5f;
 	float rocketMaxAge = 15.0f;
 	for (unsigned int i = 0; i < p_entities.size(); i++)
 	{
@@ -156,7 +156,8 @@ void RocketControllerSystem::explodeRocket(PhysicsSystem* p_physicsSystem,
 		if(colEn)
 		{
 			ShipModule* colModule = static_cast<ShipModule*>(colEn->getComponent(ComponentType::ShipModule));
-			if (colModule)
+			if (colModule &&
+				colModule->m_parentEntity >= 0)
 			{
 				float damage = min(100, 1000 / collided[i].second);
 				if (damage > colModule->m_health)

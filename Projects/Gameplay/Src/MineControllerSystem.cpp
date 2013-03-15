@@ -95,7 +95,8 @@ void MineControllerSystem::explodeMine(PhysicsSystem* p_physicsSystem,
 		if(colEn)
 		{
 			ShipModule* colModule = static_cast<ShipModule*>(colEn->getComponent(ComponentType::ShipModule));
-			if (colModule)
+			if (colModule &&
+				colModule->m_parentEntity >= 0)
 			{
 				float damage = min(100, 1000 / collided[i].second);
 				if (damage > colModule->m_health)
