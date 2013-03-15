@@ -75,6 +75,8 @@ public:
 	const double getStatusByEnum( InputHelper::Xbox360Digitals p_digital );
 	const double getStatusByEnum( InputHelper::Xbox360Analogs p_analog );
 
+	const bool controllerUsedLast();
+
 	///-----------------------------------------------------------------------------------
 	/// Activates rumble on controller. Provide values between 
 	/// 0-100 indicating motor percentage use.
@@ -131,5 +133,6 @@ private:
 	vector<int> m_keyIdxsbyEnum;
 	vector<int> m_xboxAnalogIdxsbyEnum;
 	vector<int> m_xboxDigitalIdxsbyEnum;
+	bool m_controllerUsedLast; ///< True if last input was controller
 };
 
