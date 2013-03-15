@@ -16,12 +16,11 @@ Cursor::~Cursor()
 {
 }
 
-void Cursor::addControlSet( double p_xSensitivity, double p_ySensitivity,bool p_useDeltaTime,
+void Cursor::addControlSet( double p_xSensitivity, double p_ySensitivity,
 						   Control* p_left, Control* p_right, Control* p_down, Control* p_up,
 						   Control* p_primaryBtn, Control* p_secondaryBtn )
 {
 	ControlSet set;
-	set.m_useDeltaTime = p_useDeltaTime;
 	set.m_xSensitivity = p_xSensitivity;
 	set.m_ySensitivity = p_ySensitivity;
 	set.m_xNegative = p_left;
@@ -46,28 +45,20 @@ void Cursor::update(float p_dt)
 
 	for( unsigned int setIdx=0; setIdx<m_controlSets.size(); setIdx++ )
 	{
-		double multiplier = 1.0f;
-		if (m_controlSets[setIdx].m_useDeltaTime) multiplier=(double)p_dt;
-		m_x += m_controlSets[setIdx].dx((double)m_screenWidth)*multiplier;
-		m_y += m_controlSets[setIdx].dy((double)m_screenHeight)*multiplier;
+		m_x += m_controlSets[setIdx].dx((double)m_screenWidth) * p_dt;
+		m_y += m_controlSets[setIdx].dy((double)m_screenHeight) * p_dt;
 	}
 
 	// Keep cursor inside NDC
-	if( m_x < -1.0)
-	{
+	if( m_x < -1.0 ){
 		m_x = -1.0;
-	}
-	else if( m_x > 1.0)
-	{
+	} else if( m_x > 1.0) {
 		m_x = 1.0;
 	}
 
-	if( m_y < -1.0)
-	{
+	if( m_y < -1.0) {
 		m_y = -1.0;
-	}
-	else if( m_y > 1.0)
-	{
+	} else if( m_y > 1.0 ) {
 		m_y = 1.0;
 	}
 }

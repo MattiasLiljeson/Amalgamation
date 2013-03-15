@@ -31,8 +31,6 @@ struct ControlSet
 	double m_xSensitivity;
 	double m_ySensitivity;
 
-	bool m_useDeltaTime;
-
 	///-----------------------------------------------------------------------------------
 	/// Returns the secondary buttons state
 	/// \return InputHelper::KeyStates
