@@ -49,4 +49,6 @@ public:
 	/// \return int
 	///-----------------------------------------------------------------------------------
 	static float scoreFromLoseModuleOnEnemyHit(float p_myHitModuleValue);
+
+	static float scoreFromDamagingOpponent(float p_damage);
 };

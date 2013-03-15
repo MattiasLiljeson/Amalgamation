@@ -9,6 +9,9 @@
 #include "ParticleSystemCreationInfo.h"
 #include "SpawnExplosionPacket.h"
 #include "MeshOffsetTransform.h"
+#include "PlayerComponent.h"
+#include "ModuleHelper.h"
+#include "ScoreRuleHelper.h"
 
 RocketControllerSystem::RocketControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::RocketControllerSystem, 3, ComponentType::StandardRocket,
@@ -156,7 +159,7 @@ void RocketControllerSystem::explodeRocket(PhysicsSystem* p_physicsSystem,
 		if(colEn)
 		{
 			ShipModule* colModule = static_cast<ShipModule*>(colEn->getComponent(ComponentType::ShipModule));
-			if (colModule)
+			if (colModule && colModule->m_parentEntity >= 0)
 			{
 				float damage = min(100, 1000 / collided[i].second);
 				if (damage > colModule->m_health)
@@ -167,6 +170,14 @@ void RocketControllerSystem::explodeRocket(PhysicsSystem* p_physicsSystem,
 					m_server->broadcastPacket(explosion.pack());
 				}
 				colModule->addDamageThisTick(damage, rocket->m_ownerId);
+
+				//Give the attacker some score
+				PlayerComponent* scoreComponent;
+				ModuleHelper::FindScoreComponent(m_world, rocket->m_ownerId, &scoreComponent);
+				if (scoreComponent)
+				{
+					scoreComponent->addRelativeDamageScore(ScoreRuleHelper::scoreFromDamagingOpponent(damage));
+				}
 			}
 		}
 	}
