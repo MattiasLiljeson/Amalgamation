@@ -4,6 +4,7 @@
 #include <AglVector2.h>
 
 class LibRocketBackendSystem;
+class TcpClient;
 
 class HudSystem :	public EntitySystem
 {
@@ -13,7 +14,7 @@ public:
 		TIME, SCORE, MAPPING, PLAYERNAME, SERVERNAME
 	};
 public:
-	HudSystem( LibRocketBackendSystem* p_backend );
+	HudSystem( LibRocketBackendSystem* p_backend, TcpClient* p_client );
 	~HudSystem();
 	void initialize();
 	void process();
@@ -39,5 +40,5 @@ private:
 	Entity* m_timerMonitor;
 	Entity* m_constructionMode;
 
-
+	TcpClient* m_client;
 };

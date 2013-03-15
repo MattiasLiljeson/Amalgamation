@@ -130,8 +130,12 @@ External/*
 /Build/log.txt
 /Build/log_server.txt
 /Build/log_client.txt
+
+# DONT REMOVE LINES BELOW! /ML
 settings.settings
 settings.input
+settings.settings
+settings.input 
 
 *.agl
 *.fbx

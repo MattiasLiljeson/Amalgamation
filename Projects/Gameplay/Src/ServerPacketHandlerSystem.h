@@ -29,7 +29,7 @@ using namespace std;
 class ServerPacketHandlerSystem : public EntitySystem
 {
 public:
-	ServerPacketHandlerSystem( TcpServer* p_server );
+	ServerPacketHandlerSystem( TcpServer* p_server , int p_gameTime);
 	~ServerPacketHandlerSystem();
 
 	void initialize();
@@ -61,6 +61,5 @@ private:
 	int m_resultsPlayers; //Stupid name for a stupid variable
 	int m_readyLobbyPlayers;
 	bool m_lobbyPlayerReadyStates[MAXPLAYERS];
-
-	const static int roundTime = 1500;
+	int m_gameTime;
 };

@@ -13,7 +13,7 @@ MouseBtnControl::~MouseBtnControl()
 {
 }
 
-void MouseBtnControl::update( InputManager* p_manager )
+void MouseBtnControl::update( float p_dt, InputManager* p_manager )
 {
 	IMouseKeyboardFetcher* fetcher = p_manager->getMouseKeyboardFetcher();
 	InputHelper::KeyStates state = fetcher->getMouseBtnState( m_btn );

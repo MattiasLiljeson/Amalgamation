@@ -203,6 +203,7 @@ void ClientApplication::run()
 	QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
 
 	MSG msg = {0};
+
 	while(m_running)
 	{
 		if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE) )
@@ -230,7 +231,9 @@ void ClientApplication::run()
 				auto clientConnectToServerSystem =  static_cast<ClientConnectToServerSystem*>
 					(m_world->getSystem(SystemType::ClientConnectoToServerSystem));
 
-				m_serverApp = new Srv::ServerApplication(clientConnectToServerSystem->getServerPortByInt());
+				m_serverApp = new Srv::ServerApplication( m_world->getServerGameTime(),
+					clientConnectToServerSystem->getServerPortByInt(),
+					m_world->getServerName());
 				m_serverApp->start();
 			}
 			else if (!m_world->isHostingServer() && m_serverApp != NULL){
@@ -274,7 +277,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( inputBackend );
 
 	InputActionsBackendSystem* actionBackendSys =
-		new InputActionsBackendSystem( SETTINGSPATH + "settings.input" );
+		new InputActionsBackendSystem( SETTINGSPATH, "settings.input" );
 	m_world->setSystem( actionBackendSys );
 
 	LibRocketBackendSystem* rocketBackend = new LibRocketBackendSystem( graphicsBackend,
@@ -331,10 +334,10 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new ClientPickingSystem(m_client) );
 	m_world->setSystem( new GameStatsSystem() );
 	m_world->setSystem( new LightBlinkerSystem() );
+	m_world->setSystem( new ShieldPlaterSystem() );
 	m_world->setSystem( new ShieldPlatingSystem() );
 	m_world->setSystem( new SlotMarkerSystem() );
 	m_world->setSystem( new AnomalyBombEffectSystem() );
-	m_world->setSystem( new ShieldPlaterSystem() );
 	m_world->setSystem( new TeslaEffectSystem() );
 	m_world->setSystem( new TeslaLightningSystem() );
 	m_world->setSystem( new GlowAnimationSystem() );
@@ -346,18 +349,18 @@ void ClientApplication::initSystems()
 
 	//---GUI UPDATE SYSTEMS
 	m_world->setSystem( new LobbySystem() );
-	m_world->setSystem( new HudSystem( rocketBackend ) );
+	m_world->setSystem( new HudSystem( rocketBackend, m_client ) );
 	// NOTE: MenuSystem looks up all systems that's also deriving from EventHandler, so
 	// that they can be properly be added to the LibRocketEventManager.
 	// The alternative would be that every event handler adds itself.
-	m_world->setSystem( new MenuSystem() );
+	m_world->setSystem( new MenuSystem( m_client ) );
 
 	//IS THIS SYSTEM USEEEEEEDDD????????-Robin
 	// InterpolationSystem* interpolationSystem = new InterpolationSystem();
 	// m_world->setSystem( interpolationSystem, true);
 	InterpolationSystem2* inter = new InterpolationSystem2();
-	m_world->setSystem( new EntityParentHandlerSystem() );
 	m_world->setSystem(inter, true);
+	m_world->setSystem( new EntityParentHandlerSystem() );
 
 	//---AUDIO SYSTEMS
 	m_world->setSystem( new AudioListenerSystem(audioBackend) );

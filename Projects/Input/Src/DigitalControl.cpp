@@ -14,7 +14,7 @@ DigitalControl::~DigitalControl()
 {
 }
 
-void DigitalControl::update( InputManager* p_manager )
+void DigitalControl::update( float p_dt, InputManager* p_manager )
 {
 	XInputFetcher* fetcher = p_manager->getXInputFetcher();
 	if( fetcher != NULL )

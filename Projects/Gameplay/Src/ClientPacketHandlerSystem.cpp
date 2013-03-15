@@ -189,8 +189,16 @@ void ClientPacketHandlerSystem::handleWelcomePacket( Packet p_packet )
 {
 	WelcomePacket data;
 	data.unpack(p_packet);
+	m_tcpClient->setServerGameTime( data.serverGameTime );
 	m_tcpClient->setId( data.clientNetworkIdentity );
 	m_tcpClient->setPlayerID( data.playerID );
+	m_tcpClient->setServerName( data.serverName );
+
+	auto settingsSystem = static_cast<SettingsSystem*>
+		(m_world->getSystem(SystemType::SettingsSystem));
+
+	settingsSystem->getSettingsRef()->defaultGameTime = data.serverGameTime;
+	settingsSystem->getSettingsRef()->serverName = data.serverName;
 
 	/************************************************************************/
 	/* Debug info!															*/

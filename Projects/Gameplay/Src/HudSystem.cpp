@@ -9,13 +9,15 @@
 #include "Transform.h"
 #include "GraphicsBackendSystem.h"
 #include "GameplayTags.h"
+#include <TcpClient.h>
 
-HudSystem::HudSystem( LibRocketBackendSystem* p_backend )
+HudSystem::HudSystem( LibRocketBackendSystem* p_backend, TcpClient* p_client )
 	: EntitySystem( SystemType::HudSystem )
 {
 	m_backend = p_backend;
 	m_hudVisible = false;
 	m_currentState = false;
+	m_client = p_client;
 }
 
 
@@ -41,8 +43,8 @@ void HudSystem::process()
 		m_hudVisible = true;
 
 		setHUDData(SCORE,"-1");
-		//setHUDData(MAPPING,"Empty");
 		setHUDData(TIME,"00:00");
+		setHUDData(SERVERNAME, m_client->getServerName().c_str());
 
 		GraphicsBackendSystem* gfx = static_cast<GraphicsBackendSystem*>(m_world->getSystem(SystemType::GraphicsBackendSystem));
 
@@ -70,7 +72,8 @@ void HudSystem::process()
 	}
 	else if (stateSystem->getCurrentState() == GameStates::INGAME)
 	{
-		GraphicsBackendSystem* gfx = static_cast<GraphicsBackendSystem*>(m_world->getSystem(SystemType::GraphicsBackendSystem));
+		GraphicsBackendSystem* gfx = static_cast<GraphicsBackendSystem*>
+			(m_world->getSystem(SystemType::GraphicsBackendSystem));
 
 		AglVector2 newSize = gfx->getWindowSize();
 

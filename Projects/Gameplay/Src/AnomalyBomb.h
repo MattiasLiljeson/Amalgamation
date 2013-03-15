@@ -21,13 +21,15 @@ public:
 	void init( vector<ComponentData> p_initData ) final;
 
 public:
-	float lifeTime;
+	float lifetime;
+	float maxLifetime;
 	float explodeTime;
 	float radius;
 	float arriveRadius;
 	float eventHorizonRadius;
 	float impulse;
 	bool activated;
+	bool physicsEnabled;
 
 public:
 	static ComponentRegister<AnomalyBomb> s_reg;

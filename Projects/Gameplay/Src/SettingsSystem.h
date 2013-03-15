@@ -4,6 +4,7 @@
 #include <fstream>
 #include <EntitySystem.h>
 #include "GameSettingsInfo.h"
+#include <Globals.h>
 
 using namespace std;
 
@@ -22,8 +23,8 @@ public:
 	SettingsSystem();
 	~SettingsSystem();
 
-	FileStatus readSettingsFile( string p_path, string p_file = "settings.settings");
-	FileStatus writeSettingsFile( string p_path, string p_file = "settings.settings");
+	FileStatus readSettingsFile( string p_path = SETTINGSPATH, string p_file = "settings.settings");
+	FileStatus writeSettingsFile( string p_path = SETTINGSPATH, string p_file = "settings.settings");
 
 	GameSettingsInfo getSettings();
 	GameSettingsInfo* getSettingsRef();

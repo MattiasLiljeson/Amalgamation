@@ -60,6 +60,7 @@
 
 #include <ToString.h>
 #include <OutputLogger.h>
+#include "InitiallyDisable.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -372,22 +373,9 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		engineSound->path = TESTSOUNDEFFECTPATH;
 		engineSound->maxFrequencyOffeset = 2.0f;
 		engineSound->playInterval	= AudioHeader::FOREVER;
-		engineSound->sourceChannels = 1;
 		engineSound->volume = 0.5f;
 		soundComponent->addAudioHeader(engineSound);
 
-		engineSound = new AudioHeader(AudioHeader::POSITIONALSOUND, "ShipEngineIdle");
-		engineSound->file = "space_ship_engine_idle.wav";
-		engineSound->path = TESTSOUNDEFFECTPATH;
-		engineSound->playInterval	= AudioHeader::FOREVER;
-		engineSound->queuedPlayingState = AudioHeader::PLAY;
-		engineSound->maxRange = 200.0f;
-		soundComponent->addAudioHeader(engineSound);
-		// RM-RT 2013-03-04
-		/*
-		entity->addComponent(new SoundComponent( TESTSOUNDEFFECTPATH,
-			"Spaceship_Engine_Idle_-_Spacecraft_hovering.wav") );
-		*/
 		entity->addComponent( new AudioListener(1.0f) ); // This is "moved" from the camera to the ship.
 		m_world->addEntity(entity);
 
@@ -412,6 +400,20 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 	}
 	else
 	{
+		//!!!!!!!! Don't change the name of the sounds !!!!!!!!
+		AudioHeader* engineSound = new AudioHeader(AudioHeader::POSITIONALSOUND, 
+			"EnemyShipEngineIdle");
+		engineSound->file = "space_ship_engine_idle.wav";
+		engineSound->path = TESTSOUNDEFFECTPATH;
+		engineSound->maxFrequencyOffeset = 1.0f;
+		engineSound->playInterval	= AudioHeader::FOREVER;
+		engineSound->sourceChannels = 1;
+		engineSound->queuedPlayingState = AudioHeader::PLAY;
+		engineSound->volume = 1.0f;
+		engineSound->maxRange = 400.0f;
+		engineSound->pos = transform->getTranslation();
+		soundComponent->addAudioHeader(engineSound);
+
 		m_world->addEntity(entity);
 	}
 
@@ -475,6 +477,14 @@ Entity* EntityFactory::createRocketLauncherClient(EntityCreationPacket p_packet)
 	explodeSound->volume = 0.05f;
 	soundComponent->addAudioHeader(explodeSound);
 
+	InitiallyDisable* disable = new InitiallyDisable();
+	disable->data.push_back(DisableData(2, true, false));
+	disable->data.push_back(DisableData(3, true, false));
+	disable->data.push_back(DisableData(4, false, true));
+
+	entity->addComponent(ComponentType::InitiallyDisable, disable);
+
+
 	m_world->addEntity(entity);
 	return entity;
 }
@@ -515,6 +525,13 @@ Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 	explodeSound->queuedPlayingState = AudioHeader::STOP;
 	explodeSound->volume = 0.5f;
 	soundComponent->addAudioHeader(explodeSound);
+
+	InitiallyDisable* disable = new InitiallyDisable();
+	disable->data.push_back(DisableData(0, true, false));
+	disable->data.push_back(DisableData(1, true, false));
+	disable->data.push_back(DisableData(2, true, false));
+	
+	entity->addComponent(ComponentType::InitiallyDisable, disable);
 	
 	m_world->addEntity( entity );
 	return entity;
@@ -932,7 +949,7 @@ Entity* EntityFactory::createAnomalyBombServer( Transform* p_transform,
 	entity->addComponent(new BodyInitData(p_transform->getTranslation(),
 		p_transform->getRotation(), scale, p_moduleVelocity,
 		AglVector3::zero(), 0, BodyInitData::DYNAMIC, BodyInitData::SINGLE,
-		false, true));
+		false, false));
 	entity->addComponent(new NetworkSynced(entity->getIndex(), -1,
 		EntityType::AnomalyBomb));
 	m_world->addEntity(entity);
@@ -1065,7 +1082,9 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 
 	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
 
-	effect->addComponent( ComponentType::Transform, new Transform());
+	Transform* trans = new Transform();
+	trans->setTranslation(p_packet.position);
+	effect->addComponent( trans );
 
 	//Flares spreading
 	AglParticleSystem flares;
@@ -1177,10 +1196,11 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 	Component* component = NULL;
 
 	string name = "Explosion";
-	AudioHeader* explodeSound = new AudioHeader(AudioHeader::AMBIENT, name);
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
 	explodeSound->file = "bomb-03.wav";
 	explodeSound->path = TESTSOUNDEFFECTPATH;
-	explodeSound->maxFrequencyOffeset = 2.0f;
+	explodeSound->maxRange = 1000.0f;
+	explodeSound->maxFrequencyOffeset = 1.0f;
 	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
 	explodeSound->sourceChannels = 1;
 	explodeSound->queuedPlayingState = AudioHeader::PLAY;

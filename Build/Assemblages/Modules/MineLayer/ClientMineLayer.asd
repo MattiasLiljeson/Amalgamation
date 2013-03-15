@@ -12,7 +12,7 @@ c ShipModule
 
 c SkeletalAnimation
 
-d f m_fps 30
+d f m_fps 24
 
 d s m_name Default
 d i m_startFrame 0
@@ -21,8 +21,16 @@ d i m_endFrame 60
 d s m_name Spawn
 d i m_startFrame 70
 d i m_endFrame 150
-d f m_speed 4.0
+d f m_speed 1.0
 
 d s m_name Death
 d i m_startFrame 160
+d i m_endFrame 180
+
+d s m_name Dead
+d i m_startFrame 180
+d i m_endFrame 180
+
+d s m_name Revive
+d i m_startFrame 180
 d i m_endFrame 200

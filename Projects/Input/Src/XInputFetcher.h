@@ -29,6 +29,9 @@ public:
 	virtual InputHelper::KeyStates getBtnState( int p_btn );
 	virtual short getRawAnalog( int p_analog );
 
+	void setControllerSensitivity( const double p_sensitivity);
+	const double getControllerSensitivity() const;
+
 	///-----------------------------------------------------------------------------------
 	/// Calibrated output. Use calibrate() to set calibration
 	/// \param p_analog which analog stick/trigger to fetch input for
@@ -53,6 +56,7 @@ private:
 	InputHelper::KeyStates m_btns[InputHelper::Xbox360Digitals_CNT];
 	XINPUT_STATE m_currentState;
 
-	 double m_epsilon;
+	double m_epsilon;
+	double m_sensitivity;
 };
 

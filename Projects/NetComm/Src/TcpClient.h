@@ -83,6 +83,10 @@ public:
 
 	float getPingToServer() const;
 	void setPingToServer( float p_ping );
+	void setServerName(const string& p_serverName );
+	string getServerName();
+	void setServerGameTime(int p_gameTime);
+	int getServerGameTime();
 
 private:
 	boost::asio::io_service* m_ioService;
@@ -107,5 +111,6 @@ private:
 
 	float m_serverTimeAhead;
 	float m_pingToServer;
-
+	string m_serverName;
+	int m_serverGameTime;
 };

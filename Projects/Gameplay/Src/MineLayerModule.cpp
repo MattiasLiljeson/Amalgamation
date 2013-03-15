@@ -8,6 +8,7 @@ MineLayerModule::MineLayerModule()
 	m_currentMine = -1;
 	m_mineAge = 0;
 	m_timeSinceSpawnStarted = 0;
+	m_cooldown = 0;
 }
 
 MineLayerModule::~MineLayerModule()

@@ -140,6 +140,26 @@ void ServerPickingSystem::setEnabled(int p_index, bool p_value)
 		}
 	}
 }
+void ServerPickingSystem::setInEditMode(int p_index, bool p_value)
+{
+	PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
+		SystemType::PhysicsSystem));
+
+	for (unsigned int i = 0; i < m_pickComponents.size(); i++)
+	{
+		if (m_pickComponents[i].m_clientIndex == p_index)
+		{
+			m_pickComponents[i].m_inEditMode = p_value;
+			return;
+		}
+	}
+	//Create the ray
+	PickComponent pc;
+	pc.m_rayIndex = physX->getController()->AddRay(AglVector3(0, 0, 100000), AglVector3(0, 0, 1));
+	pc.m_clientIndex = p_index;
+	pc.m_inEditMode = p_value;
+	m_pickComponents.push_back(pc);
+}
 void ServerPickingSystem::setReleased(int p_index)
 {
 	for (unsigned int i = 0; i < m_pickComponents.size(); i++)
@@ -207,84 +227,87 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 	p_pc.m_lastHovered = -1;
 
 
-	PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
+	if (true)//p_pc.m_inEditMode)
+	{
+		PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
 		SystemType::PhysicsSystem));
 
-	vector<LineCollisionData> cols = physX->getPhysicsController()->LineSortedCollisions(p_pc.m_rayIndex);
-	if (cols.size() > 0)
-	{
-		//Find closest module
-		int col = -1;
-		for (unsigned int i = 0; i < cols.size(); i++)
+		vector<LineCollisionData> cols = physX->getPhysicsController()->LineSortedCollisions(p_pc.m_rayIndex);
+		if (cols.size() > 0)
 		{
-			Entity* e = physX->getEntity(cols[i].bodyID);
-			if (e && e->getComponent(ComponentType::ShipModule))
+			//Find closest module
+			int col = -1;
+			for (unsigned int i = 0; i < cols.size(); i++)
 			{
-				col = cols[i].bodyID;
-				break;
-			}
-		}
-
-		if (col >= 0)
-		{
-			for (unsigned int i = 0; i < p_entities.size(); i++)
-			{
-				PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(
-					ComponentType::PhysicsBody));
-				if (pb && pb->m_id == col)
+				Entity* e = physX->getEntity(cols[i].bodyID);
+				if (e && e->getComponent(ComponentType::ShipModule))
 				{
-					//Found a pick
-
-					//Verify that the pick is not already picked
-					bool alreadypicked = false;
-					for (unsigned int pcs = 0; pcs < m_pickComponents.size(); pcs++)
-					{
-						if (m_pickComponents[pcs].getLatestPick() == p_entities[i]->getIndex())
-							alreadypicked = true;
-					}
-					if (alreadypicked)
-						break;
-
-					//Only allow picking a certain distance
-					ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
-					Entity* rayShip = sms->findShip(p_pc.m_clientIndex);
-
-					Transform* t1 = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
-					Transform* t2 = static_cast<Transform*>(rayShip->getComponent(ComponentType::Transform));
-					if ((t1->getTranslation()-t2->getTranslation()).lengthSquared() > 1600)
-						break;
-
-					//Send a message to the client showing the highlight of the object
-					if (p_entities[i]->getIndex() != previous)
-					{
-						HighlightEntityPacket high;
-						high.target = p_entities[i]->getIndex();
-						high.on = true;
-						m_server->unicastPacket(high.pack(), p_pc.m_clientIndex);
-					}
-					p_pc.m_lastHovered = p_entities[i]->getIndex();
-
-					//Do not pick up the module if the ray is not active
-					if (!p_pc.m_active)
-						break;
-
-					p_pc.setLatestPick(p_entities[i]->getIndex());
-
-					//Attempt a detach if the entity is already connected
-					if (attemptDetach(p_pc))
-					{
-						AglVector3 origin;
-						AglVector3 dir;
-						physX->getController()->GetRay(p_pc.m_rayIndex, origin, dir);
-
-						AglVector3 d = physX->getController()->getBody(col)->GetWorld().GetTranslation()-origin;
-						p_pc.m_preferredDistance = d.length();
-					}
-					else
-					{
-						unsetPick(p_pc);
-					}
+					col = cols[i].bodyID;
 					break;
+				}
+			}
+
+			if (col >= 0)
+			{
+				for (unsigned int i = 0; i < p_entities.size(); i++)
+				{
+					PhysicsBody* pb = static_cast<PhysicsBody*>(p_entities[i]->getComponent(
+						ComponentType::PhysicsBody));
+					if (pb && pb->m_id == col)
+					{
+						//Found a pick
+
+						//Verify that the pick is not already picked
+						bool alreadypicked = false;
+						for (unsigned int pcs = 0; pcs < m_pickComponents.size(); pcs++)
+						{
+							if (m_pickComponents[pcs].getLatestPick() == p_entities[i]->getIndex())
+								alreadypicked = true;
+						}
+						if (alreadypicked)
+							break;
+
+						//Only allow picking a certain distance
+						ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+						Entity* rayShip = sms->findShip(p_pc.m_clientIndex);
+
+						Transform* t1 = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
+						Transform* t2 = static_cast<Transform*>(rayShip->getComponent(ComponentType::Transform));
+						if ((t1->getTranslation()-t2->getTranslation()).lengthSquared() > 1600)
+							break;
+
+						//Send a message to the client showing the highlight of the object
+						if (p_entities[i]->getIndex() != previous)
+						{
+							HighlightEntityPacket high;
+							high.target = p_entities[i]->getIndex();
+							high.on = true;
+							m_server->unicastPacket(high.pack(), p_pc.m_clientIndex);
+						}
+						p_pc.m_lastHovered = p_entities[i]->getIndex();
+
+						//Do not pick up the module if the ray is not active
+						if (!p_pc.m_active)
+							break;
+
+						p_pc.setLatestPick(p_entities[i]->getIndex());
+
+						//Attempt a detach if the entity is already connected
+						if (attemptDetach(p_pc))
+						{
+							AglVector3 origin;
+							AglVector3 dir;
+							physX->getController()->GetRay(p_pc.m_rayIndex, origin, dir);
+
+							AglVector3 d = physX->getController()->getBody(col)->GetWorld().GetTranslation()-origin;
+							p_pc.m_preferredDistance = d.length();
+						}
+						else
+						{
+							unsetPick(p_pc);
+						}
+						break;
+					}
 				}
 			}
 		}

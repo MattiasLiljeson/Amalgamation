@@ -19,6 +19,9 @@ public:
 	virtual void processEntities( const vector<Entity*>& p_entities ) final;
 
 private:
+	void enablePhysics(Entity* p_bombEntity);
+
+private:
 	TcpServer* m_server;
 
 };

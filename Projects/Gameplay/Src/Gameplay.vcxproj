@@ -42,6 +42,7 @@
     <ClInclude Include="DamageComponent.h" />
     <ClInclude Include="GlowAnimation.h" />
     <ClInclude Include="GlowAnimationSystem.h" />
+    <ClInclude Include="InitiallyDisable.h" />
     <ClInclude Include="LobbySystem.h" />
     <ClInclude Include="FlareGunModule.h" />
     <ClInclude Include="HighlightEntityPacket.h" />

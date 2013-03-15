@@ -22,6 +22,9 @@ public:
 	virtual ~AudioListenerSystem();
 	void processEntities(const vector<Entity*>& p_entities);
 	SoundOrientation* getListenerOrientation();
+
+	void initialize();
+
 private:
 	AudioBackendSystem* m_audioBackend;
 	SoundOrientation m_listener;

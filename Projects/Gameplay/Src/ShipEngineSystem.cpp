@@ -1,6 +1,8 @@
 #include "ShipEngineSystem.h"
 #include "SoundComponent.h"
 #include "ThrustComponent.h"
+#include <AntTweakBarWrapper.h>
+#include "Transform.h"
 
 ShipEngineSystem::ShipEngineSystem() : EntitySystem(SystemType::ShipEngineSystem, 5,
 													ComponentType::TAG_MyShip,
@@ -29,16 +31,19 @@ void ShipEngineSystem::processEntities( const vector<Entity*>& p_entities )
 			ThrustComponent* thrust = static_cast<ThrustComponent*>
 				(p_entities[i]->getComponent(ComponentType::ThrustComponent));
 
-
-			float factor = thrust->m_thrustPower / (float)thrust->POWERCAP + 1.0f;
-
+			float factor = thrust->m_thrustPower / (float)thrust->POWERCAP ;
+			float soundVolume = factor + 0.3f;
+			if(soundVolume>1.0f){
+				soundVolume = 1.0f;
+			}
+			factor += 1.0f;
+			idle->volume = soundVolume;
 			idle->frequency = factor;
 		}
 	}
 }
 
-void ShipEngineSystem::inserted( Entity* p_entity )
-{
+void ShipEngineSystem::inserted( Entity* p_entity ){
 	SoundComponent* soundComp = static_cast<SoundComponent*>
 		(p_entity->getComponent(ComponentType::SoundComponent));
 

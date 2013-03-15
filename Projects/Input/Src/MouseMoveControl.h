@@ -29,7 +29,7 @@ public:
 	MouseMoveControl( InputHelper::MouseAxes p_axis );
 	virtual ~MouseMoveControl();
 
-	virtual void update( InputManager* p_manager );
+	virtual void update( float p_dt, InputManager* p_manager );
 
 private:
 	InputHelper::MouseAxes m_axis;
