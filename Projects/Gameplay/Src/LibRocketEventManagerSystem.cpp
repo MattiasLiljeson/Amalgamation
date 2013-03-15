@@ -287,12 +287,12 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 
 			m_client->setPlayerName(playerName);
 
-			m_world->requestToHostServer(server_name, gameTime);
-
 			auto sys = static_cast<ClientConnectToServerSystem*>(
 				m_world->getSystem(SystemType::ClientConnectoToServerSystem));
 
-			sys->setAddressAndConnect("127.0.0.1", server_port);
+			if (sys->setAddressAndConnect("127.0.0.1", server_port)) {
+				m_world->requestToHostServer(server_name, gameTime);
+			}
 		}
 		else if(values[0] == "leave_server"){
 			DisconnectPacket dcPacket;
