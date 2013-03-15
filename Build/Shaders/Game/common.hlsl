@@ -1,6 +1,7 @@
 #ifndef COMMON_HLSL
 #define COMMON_HLSL
 static const float g_LIGHT_MULT = 10;
+static const int g_LOW_RES_MULT = 4;
 
 static const float blurFilter3[3][3] = {
 	{0.01f,0.08f,0.01f},
