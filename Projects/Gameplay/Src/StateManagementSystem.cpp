@@ -8,6 +8,7 @@
 #include "HudSystem.h"
 #include "SlotMarkerSystem.h"
 #include "ModuleStatusEffectSystem.h"
+#include <OutputLogger.h>
 
 StateManagementSystem::StateManagementSystem()
 	: EntitySystem(SystemType::StateManagementSystem)

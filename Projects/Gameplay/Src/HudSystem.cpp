@@ -14,10 +14,15 @@
 HudSystem::HudSystem( LibRocketBackendSystem* p_backend, TcpClient* p_client )
 	: EntitySystem( SystemType::HudSystem )
 {
-	m_backend = p_backend;
-	m_hudVisible = false;
-	m_currentState = false;
-	m_client = p_client;
+	m_backend			= p_backend;
+	m_hudVisible		= false;
+	m_currentState		= false;
+	m_client			= p_client;
+	m_hudIndex			= -1;
+	m_leftWing			= NULL;
+	m_rightWing			= NULL;
+	m_timerMonitor		= NULL;
+	m_constructionMode	= NULL;
 }
 
 
