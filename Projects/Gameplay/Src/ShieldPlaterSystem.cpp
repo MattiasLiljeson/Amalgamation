@@ -23,8 +23,10 @@ void ShieldPlaterSystem::processEntities( const vector<Entity*>& p_entities )
 	{
 		ShieldModule* shieldModule = static_cast<ShieldModule*>(
 			p_entities[i]->getComponent(ComponentType::ShieldModule));
-		if(shieldModule->activation > 0.0f)
+		if(shieldModule->activation > 0.0f
+			&& !shieldModule->toggleActive)
 		{
+			shieldModule->toggleActive = true;
 			vector<Entity*>& plates = m_shieldPlates[p_entities[i]];
 			for(unsigned int plateIdx=0; plateIdx<plates.size(); plateIdx++)
 			{
@@ -36,8 +38,10 @@ void ShieldPlaterSystem::processEntities( const vector<Entity*>& p_entities )
 			AudioHeader* header = soundComponent->getSoundHeaderByName(AudioHeader::POSITIONALSOUND, "pusher");
 			header->queuedPlayingState = AudioHeader::PLAY;
 		}
-		else
+		else if(shieldModule->activation == 0.0f &&
+			shieldModule->toggleActive)
 		{
+			shieldModule->toggleActive = false;
 			vector<Entity*>& plates = m_shieldPlates[p_entities[i]];
 			for(unsigned int plateIdx=0; plateIdx<plates.size(); plateIdx++)
 			{
