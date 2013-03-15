@@ -281,15 +281,16 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 						if (alreadypicked)
 							break;
 
-					Transform* t1 = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
-					Transform* t2 = static_cast<Transform*>(rayShip->getComponent(ComponentType::Transform));
-					if ((t1->getTranslation()-t2->getTranslation()).lengthSquared() > 22500)
-						break;
+						//Only allow picking a certain distance
+						ShipManagerSystem* sms = static_cast<ShipManagerSystem*>(m_world->getSystem(SystemType::ShipManagerSystem));
+						Entity* rayShip = sms->findShip(p_pc.m_clientIndex);
 
 						Transform* t1 = static_cast<Transform*>(p_entities[i]->getComponent(ComponentType::Transform));
 						Transform* t2 = static_cast<Transform*>(rayShip->getComponent(ComponentType::Transform));
-						if ((t1->getTranslation()-t2->getTranslation()).lengthSquared() > 1600)
+						if ((t1->getTranslation()-t2->getTranslation()).lengthSquared() > 22500)
 							break;
+
+
 
 						//Send a message to the client showing the highlight of the object
 						if (p_entities[i]->getIndex() != previous)
