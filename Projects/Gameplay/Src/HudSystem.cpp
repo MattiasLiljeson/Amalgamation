@@ -9,13 +9,15 @@
 #include "Transform.h"
 #include "GraphicsBackendSystem.h"
 #include "GameplayTags.h"
+#include <TcpClient.h>
 
-HudSystem::HudSystem( LibRocketBackendSystem* p_backend )
+HudSystem::HudSystem( LibRocketBackendSystem* p_backend, TcpClient* p_client )
 	: EntitySystem( SystemType::HudSystem )
 {
 	m_backend = p_backend;
 	m_hudVisible = false;
 	m_currentState = false;
+	m_client = p_client;
 }
 
 
@@ -40,8 +42,8 @@ void HudSystem::process()
 		m_backend->showDocument(m_hudIndex);
 
 		setHUDData(SCORE,"-1");
-		//setHUDData(MAPPING,"Empty");
 		setHUDData(TIME,"00:00");
+		setHUDData(SERVERNAME, m_client->getServerName().c_str());
 
 		GraphicsBackendSystem* gfx = static_cast<GraphicsBackendSystem*>(m_world->getSystem(SystemType::GraphicsBackendSystem));
 
@@ -69,7 +71,8 @@ void HudSystem::process()
 	}
 	else if (stateSystem->getCurrentState() == GameStates::INGAME)
 	{
-		GraphicsBackendSystem* gfx = static_cast<GraphicsBackendSystem*>(m_world->getSystem(SystemType::GraphicsBackendSystem));
+		GraphicsBackendSystem* gfx = static_cast<GraphicsBackendSystem*>
+			(m_world->getSystem(SystemType::GraphicsBackendSystem));
 
 		AglVector2 newSize = gfx->getWindowSize();
 
@@ -122,7 +125,7 @@ void HudSystem::process()
 	}
 }
 
-void HudSystem::setHUDVisebilty(bool p_setVisibility)
+void HudSystem::setHUDVisibility(bool p_setVisibility)
 {
 	m_hudVisible = p_setVisibility;
 }
@@ -137,8 +140,23 @@ void HudSystem::setHUDData( HUD_TYPES p_type, const char* p_value )
 	case HudSystem::SCORE:
 		m_backend->updateElement(m_hudIndex,SCOREELEMENT,p_value);
 		break;
-	case HudSystem::MAPPING:
-		m_backend->updateElement(m_hudIndex,MAPPINGELEMENT,p_value);
+	case HudSystem::MAPPING_LEFT:
+		m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_LEFT,p_value);
+		break;	
+	case HudSystem:: MAPPING_RIGHT:
+		m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_RIGHT,p_value);
+		break;	
+	case HudSystem::MAPPING_UP:
+		m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_UP,p_value);
+		break;
+	case HudSystem::MAPPING_DOWN:
+		m_backend->updateElement(m_hudIndex,MAPPINGELEMENT_DOWN,p_value);
+		break;	
+	case HudSystem::MASS:
+		m_backend->updateElement(m_hudIndex,MASSELEMENT,p_value);
+		break;
+	case HudSystem::BOOST:
+		m_backend->updateElement(m_hudIndex,BOOSTELEMENT,p_value);
 		break;
 	case HudSystem::PLAYERNAME:
 		m_backend->updateElement(m_hudIndex,PLAYERELEMENT,p_value);

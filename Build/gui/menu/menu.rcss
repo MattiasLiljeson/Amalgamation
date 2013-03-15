@@ -49,7 +49,7 @@ body.Pop-up
 	margin-right: 	5%;
 	margin:		 	auto;
 	width:			350px;
-	height: 		350px;
+	height: 		380px;
 	background: 	rgba(0,60,0,80);
 }
 

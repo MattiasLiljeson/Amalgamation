@@ -18,12 +18,13 @@
 #include <DebugUtil.h>
 #include <ToString.h>
 
-TcpServer::TcpServer()
+TcpServer::TcpServer(const string& p_serverName)
 {
 	m_isListening = false;
 	m_ioService = new boost::asio::io_service();
 	m_listenerProcess = NULL;
 	m_uniqueBroadcastPacketIdentifier = 0;
+	m_serverName = p_serverName;
 }
 
 TcpServer::~TcpServer()
@@ -340,4 +341,9 @@ const unsigned int& TcpServer::totalSentInCommProcess(
 	const unsigned int& p_processIdentity )
 {
 	return m_totalSentInCommProcesses[p_processIdentity];
+}
+
+std::string TcpServer::getServerName()
+{
+	return m_serverName;
 }

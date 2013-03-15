@@ -33,12 +33,13 @@ public:
 						 SlotInputControllerSystem* p_slotInput );
 	~ShipFlyControllerSystem();
 
-	virtual void initialize();
-	virtual void processEntities( const vector<Entity*>& p_entities );
+	void initialize();
+	void processEntities( const vector<Entity*>& p_entities );
 private:
 	void	sendThrustPacketToServer(NetworkSynced* p_syncedInfo, AglVector3& p_thrust,
 		AglVector3& p_angularVec);
 	void handleIngame( const vector<Entity*>& p_entities );
+	void updateThrustComponent(const AglVector3& p_thrust, const AglVector3& p_angular);
 private:
 	PhysicsSystem* m_physics;
 	TcpClient* m_client;

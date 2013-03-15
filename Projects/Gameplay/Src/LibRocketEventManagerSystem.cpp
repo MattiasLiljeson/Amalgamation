@@ -258,14 +258,36 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 			m_client->sendPacket(playerReady.pack());
 		}
 		else if(values[0] == "host_server"){
-			m_world->requestToHostServer();
-
 			string server_port = p_event.GetParameter<Rocket::Core::String>
 				("server_port", "1337").CString();
 
 			string playerName = p_event.GetParameter<Rocket::Core::String>
 				("player_name", "NotFound").CString();
+
+			string server_name = p_event.GetParameter<Rocket::Core::String>
+				("server_name", "monki").CString();
+
+			string server_time = p_event.GetParameter<Rocket::Core::String>
+				("server_time", "-1").CString();
+
+			istringstream buffer(server_time);
+			int gameTime;
+			try{
+				buffer >> gameTime;
+			}
+			catch(exception& e){
+				DEBUGPRINT(("Invalid Round Time address submitted\n"));
+				return;
+			}
+
+			if(gameTime < 0 || gameTime > 65535){
+				DEBUGPRINT(("Invalid Round Time\n"));
+				return;
+			}
+
 			m_client->setPlayerName(playerName);
+
+			m_world->requestToHostServer(server_name, gameTime);
 
 			auto sys = static_cast<ClientConnectToServerSystem*>(
 				m_world->getSystem(SystemType::ClientConnectoToServerSystem));

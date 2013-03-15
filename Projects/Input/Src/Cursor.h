@@ -51,7 +51,7 @@ public:
 	/// \param p_secondaryBtn Control which indicates status of the secondary button
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void addControlSet( double p_xSensitivity, double p_ySensitivity,bool p_useDeltaTime,
+	void addControlSet( double p_xSensitivity, double p_ySensitivity,
 		Control* p_left, Control* p_right, Control* p_down, Control* p_up,
 		Control* p_primaryBtn, Control* p_secondaryBtn );
 

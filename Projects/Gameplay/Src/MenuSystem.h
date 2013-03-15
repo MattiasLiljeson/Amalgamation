@@ -2,6 +2,8 @@
 
 #include <EntitySystem.h>
 
+class TcpClient;
+
 // =======================================================================================
 //                                      MenuSystem
 // =======================================================================================
@@ -17,7 +19,7 @@
 class MenuSystem : public EntitySystem
 {
 public:
-	MenuSystem();
+	MenuSystem(TcpClient* p_tcpClient);
 	~MenuSystem();
 	void initialize();
 	void process( );
@@ -31,5 +33,5 @@ private:
 	int m_lobbyDocIdx;
 	int m_joinIdx;
 	int m_hostIdx;
+	TcpClient* m_tcpClient;
 };
-
