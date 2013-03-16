@@ -33,6 +33,7 @@ class TcpListenerProcess;
 class TcpServer: public ThreadSafeMessaging
 {
 public:
+	TcpServer();
 	TcpServer(const string& p_serverName);
 	~TcpServer();
 

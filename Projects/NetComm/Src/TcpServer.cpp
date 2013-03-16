@@ -27,6 +27,16 @@ TcpServer::TcpServer(const string& p_serverName)
 	m_serverName = p_serverName;
 }
 
+TcpServer::TcpServer()
+{
+	m_isListening = false;
+	m_ioService = new boost::asio::io_service();
+	m_listenerProcess = NULL;
+	m_uniqueBroadcastPacketIdentifier = 0;
+	m_serverName = "NOTSET";
+}
+
+
 TcpServer::~TcpServer()
 {
 	shutdown();
