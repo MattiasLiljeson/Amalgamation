@@ -134,7 +134,7 @@ void GameStatsSystem::process()
 		}
 
 		if(actionInputSystem->getDeltaByAction
-			(InputActionsBackendSystem::Actions_THRUST_FORWARD) > 0.5f){
+			(InputActionsBackendSystem::Actions_SHOW_SCORE) > 0.5f){
 			gameState->setQueuedState(GameStates::MENU);
 		}
 

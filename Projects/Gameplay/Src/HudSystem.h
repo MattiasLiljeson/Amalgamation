@@ -24,6 +24,7 @@ public:
 	void setHUDVisibility(bool p_setVisibility);
 	void setHUDData(HUD_TYPES p_type, const char* p_value);
 
+	void clear();
 private:
 	Entity* createSprite(AglVector3 p_position, string p_texture, AglVector2 p_size);
 	Entity* createConstructionSprite(AglVector3 p_position, string p_texture, AglVector2 p_size);

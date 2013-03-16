@@ -37,7 +37,8 @@ void StateManagementSystem::process()
 
 		if(gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::EXITTHISFRAME
 			|| gameState->getStateDelta(GameStates::FINISHEDLOADING) == EnumGameDelta::EXITTHISFRAME
-			|| gameState->getStateDelta(GameStates::INGAME) == EnumGameDelta::EXITTHISFRAME)
+			|| gameState->getStateDelta(GameStates::INGAME) == EnumGameDelta::EXITTHISFRAME
+			|| gameState->getStateDelta(GameStates::RESULTS) == EnumGameDelta::EXITTHISFRAME)
 		{
 			// Cleanup resources here, that hasn't been cleaned up.
 			// Currently cleaning up:
@@ -65,6 +66,7 @@ void StateManagementSystem::process()
 			auto hudSystem = static_cast<HudSystem*>(
 				m_world->getSystem(SystemType::HudSystem));
 			hudSystem->setHUDVisibility(false);
+			hudSystem->clear();
 
 			auto connectionVisualizer = static_cast<ConnectionVisualizerSystem*>(
 				m_world->getSystem(SystemType::ConnectionVisualizerSystem));

@@ -275,3 +275,27 @@ void HudSystem::reinitSprite(Entity* p_sprite, AglVector3 p_position, AglVector2
 		((*particles)[i]).position = p_position;
 	}
 }
+
+void HudSystem::clear()
+{
+	if (m_leftWing)
+	{
+		m_world->deleteEntity(m_leftWing);
+		m_leftWing = NULL;
+	}
+	if (m_rightWing)
+	{
+		m_world->deleteEntity(m_rightWing);
+		m_rightWing = NULL;
+	}
+	if (m_timerMonitor)
+	{
+		m_world->deleteEntity(m_timerMonitor);
+		m_timerMonitor = NULL;
+	}
+	if (m_constructionMode)
+	{
+		m_world->deleteEntity(m_constructionMode);
+		m_constructionMode = NULL;
+	}
+}
