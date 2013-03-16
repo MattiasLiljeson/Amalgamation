@@ -38,6 +38,22 @@ void TeslaEffectSystem::inserted( Entity* p_entity )
 	}
 }
 
+void TeslaEffectSystem::removed( Entity* p_entity )
+{
+	TeslaCoilEffect* coilEffect = static_cast<TeslaCoilEffect*>(p_entity->getComponent(
+		ComponentType::TeslaCoilEffect));
+
+	for(unsigned int meshIndex=0; meshIndex<coilEffect->possibleMeshes.size(); meshIndex++)
+	{
+		vector<Entity*>& entityPool = m_lightningPool[p_entity->getIndex()][meshIndex];
+		for (unsigned int i = 0; i < entityPool.size(); i++)
+		{
+			m_world->deleteEntity(entityPool[i]);
+		}
+		entityPool.clear();
+	}
+}
+
 void TeslaEffectSystem::animateHits( int p_fromEntity, int* p_identitiesHit,
 	int p_numberOfHits, int* p_identitiesHitFloating, int p_numberOfHitsFloating )
 {

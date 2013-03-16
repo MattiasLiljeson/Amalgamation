@@ -80,6 +80,7 @@ void LibRocketEventManagerSystem::initialize()
 	eventInstancer->RemoveReference();
 
 	m_menuEntity = m_world->createEntity();
+	m_menuEntity->setName("MenuAudio_MenuOK");
 	SoundComponent* soundComp = new SoundComponent();
 	AudioHeader* header = new AudioHeader(AudioHeader::AMBIENT,"MenuOk");
 	header->file = "Mine_Blip_v2.wav";

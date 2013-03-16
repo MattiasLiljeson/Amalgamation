@@ -138,6 +138,7 @@ void MenuBackgroundSceneSystem::sysEnabled()
 
 	m_ship = m_world->createEntity();
 	m_ship->addComponent(new LoadMesh("Ship.agl"));
+	m_ship->setName("MenuShip_Idling");
 	AglVector3 position(-7.5f, -2.0f, 30.0f);
 	AglVector3 toVector(0.0f, -0.2f, -1.0f);
 	AglVector3 axis( 0.0f, 1.0f, -0.2f);
@@ -197,6 +198,7 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_world->addEntity(m_ship);
 
 	Entity* entity = m_world->createEntity();
+	entity->setName("MenuPointLight");
 	initPointLight(entity, position + AglVector3(0.0f, 10.0f, -50.0f), 200.0f);
 	m_world->addEntity(entity);
 	m_lights.push_back(entity);
@@ -239,6 +241,7 @@ void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, Ag
 	for(unsigned int i=0; i<p_numberInstances; i++)
 	{
 		Entity* entity = m_world->createEntity();
+		entity->setName("MenuRocks");
 		AglVector3 randomDirection;
 		RandomUtil::randomEvenlyDistributedSphere(&randomDirection.x, &randomDirection.y,
 			&randomDirection.z);
@@ -291,6 +294,7 @@ void MenuBackgroundSceneSystem::initOrbitingShip( AglVector3 p_center, AglVector
 	float p_radius, float p_speed )
 {
 	m_orbitingShip = m_world->createEntity();
+	m_orbitingShip->setName("MenuShip_Orbiting");
 	m_orbitingShip->addComponent(new LoadMesh("Ship.agl"));
 	AglVector3 position = p_center + AglVector3(0, 0, 1.0f) * p_radius;
 	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), AglVector3::left());

@@ -33,7 +33,6 @@ public:
 	/// \return Entity*
 	///-----------------------------------------------------------------------------------
 	Entity* getEntity( int p_networkIdentity );
-
 private:
 	vector<int> m_networkEntityIndices;
 
