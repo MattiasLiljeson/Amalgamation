@@ -1488,6 +1488,10 @@ void ClientPacketHandlerSystem::handleResults()
 		ChangeStatePacket changeState;
 		changeState.m_gameState = GameStates::RESULTS;
 		m_tcpClient->sendPacket(changeState.pack());
+
+		// If the server hasn't been shut down yet and do exist.
+		// Shut down!
+		m_world->requestToShutDown();
 	}
 //	else
 //	{
@@ -1563,8 +1567,10 @@ void ClientPacketHandlerSystem::resetFromDisconnect()
 
 void ClientPacketHandlerSystem::handleServerDisconnect()
 {
-	if (!m_tcpClient->hasActiveConnection() && m_gameState->getCurrentState() != GameStates::MENU
-		&& m_gameState->getCurrentState() != GameStates::NONE)
+	if (!m_tcpClient->hasActiveConnection() 
+		&& m_gameState->getCurrentState() != GameStates::MENU
+		&& m_gameState->getCurrentState() != GameStates::NONE
+		&& m_gameState->getCurrentState() != GameStates::RESULTS)
 	{
 		static_cast<MenuSystem*>(m_world->getSystem(SystemType::MenuSystem))
 			->displayDisconnectPopup();

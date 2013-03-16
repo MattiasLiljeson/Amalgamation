@@ -40,6 +40,7 @@ void StateManagementSystem::process()
 			|| gameState->getStateDelta(GameStates::INGAME) == EnumGameDelta::EXITTHISFRAME
 			|| gameState->getStateDelta(GameStates::RESULTS) == EnumGameDelta::EXITTHISFRAME)
 		{
+
 			// Cleanup resources here, that hasn't been cleaned up.
 			// Currently cleaning up:
 			// * Level pieces
