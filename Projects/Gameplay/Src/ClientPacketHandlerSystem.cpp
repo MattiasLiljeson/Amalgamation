@@ -1488,10 +1488,6 @@ void ClientPacketHandlerSystem::handleResults()
 		ChangeStatePacket changeState;
 		changeState.m_gameState = GameStates::RESULTS;
 		m_tcpClient->sendPacket(changeState.pack());
-
-		// If the server hasn't been shut down yet and do exist.
-		// Shut down!
-		m_world->requestToShutDown();
 	}
 //	else
 //	{
