@@ -146,7 +146,7 @@ void ConnectionVisualizerSystem::disableAll()
 void ConnectionVisualizerSystem::cleanup()
 {
 	m_effectsToCreate.clear();
-	for (unsigned int i = 0; i < m_effectsToCreate.size(); i++)
+	for (unsigned int i = 0; i < m_createdEffects.size(); i++)
 	{
 		m_world->deleteEntity(m_createdEffects[i].data);
 	}
