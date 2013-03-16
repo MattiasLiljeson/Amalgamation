@@ -96,6 +96,7 @@ void ConnectionVisualizerSystem::addEffect( ConnectionEffectData p_fx )
 Entity* ConnectionVisualizerSystem::createConnectionEffectEntity(ConnectionEffectData& p_data )
 {
 	Entity* effect = m_world->createEntity();
+	effect->setName("Connection Effect");
 
 	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
 
@@ -145,5 +146,9 @@ void ConnectionVisualizerSystem::disableAll()
 void ConnectionVisualizerSystem::cleanup()
 {
 	m_effectsToCreate.clear();
+	for (unsigned int i = 0; i < m_effectsToCreate.size(); i++)
+	{
+		m_world->deleteEntity(m_createdEffects[i].data);
+	}
 	m_createdEffects.clear();
 }

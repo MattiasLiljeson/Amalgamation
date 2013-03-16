@@ -23,6 +23,8 @@ StateManagementSystem::~StateManagementSystem()
 
 void StateManagementSystem::process()
 {
+	EntityManager* entityManager = m_world->getEntityManager();
+
 	ClientStateSystem* gameState = static_cast<ClientStateSystem*>(
 		m_world->getSystem(SystemType::ClientStateSystem));
 

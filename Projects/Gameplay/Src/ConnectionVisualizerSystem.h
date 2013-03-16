@@ -36,6 +36,7 @@ public:
 			offset = p_offset;
 			forward = p_forward;
 			disabled = p_disabled;
+			data = NULL;
 		}
 	};
 

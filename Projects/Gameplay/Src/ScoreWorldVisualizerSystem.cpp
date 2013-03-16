@@ -42,6 +42,7 @@ void ScoreWorldVisualizerSystem::addEffect( ScoreEffectCreationData& p_fx )
 Entity* ScoreWorldVisualizerSystem::createNumberEffectEntity( ScoreEffectCreationData& p_data )
 {
 	Entity* effect = m_world->createEntity();
+	effect->setName("Number Effect");
 
 // 	LoadMesh* lm = new LoadMesh( "P_sphere",true );
 // 	effect->addComponent( ComponentType::LoadMesh, lm );

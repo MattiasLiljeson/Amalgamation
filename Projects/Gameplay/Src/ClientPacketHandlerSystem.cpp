@@ -1214,6 +1214,7 @@ void ClientPacketHandlerSystem::handleLobby()
 
 			//Add entities here and utilize the player component 
 			Entity* newPlayer = m_world->createEntity();
+			newPlayer->setName("Player " + toString(newlyConnected.playerID));
 			PlayerComponent* newPlayerComp = new PlayerComponent();
 			newPlayerComp->m_networkID = newlyConnected.networkID;
 			newPlayerComp->m_playerID = newlyConnected.playerID;

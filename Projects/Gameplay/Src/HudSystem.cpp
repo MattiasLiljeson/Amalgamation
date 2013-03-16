@@ -203,6 +203,7 @@ void HudSystem::setHUDData( HUD_TYPES p_type, const char* p_value )
 Entity* HudSystem::createSprite(AglVector3 p_position, string p_texture, AglVector2 p_size)
 {
 	Entity* sprite = m_world->createEntity();
+	sprite->setName("Hud Sprite");
 
 	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
 
@@ -232,6 +233,7 @@ Entity* HudSystem::createConstructionSprite(AglVector3 p_position, string p_text
 											AglVector2 p_size)
 {
 	Entity* sprite = m_world->createEntity();
+	sprite->setName("Hud Construction Sprite");
 
 	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
 
