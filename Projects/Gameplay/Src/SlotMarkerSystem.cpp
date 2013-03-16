@@ -61,7 +61,7 @@ void SlotMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 		float resRatioX = 1280 / m_screenSize.x;
 		float resRatioY =  720 / m_screenSize.y;
 
-		m_shipMarkerSize = AglVector2(0.15f, 0.15f*gfx->getAspectRatio()*resRatioX);
+		m_shipMarkerSize = AglVector2(0.15f, 0.15f*gfx->getAspectRatio())*resRatioX;
 		m_moduleMarkerSize = m_shipMarkerSize * 0.5f;
 
 		gfx->getGfxWrapper()->
