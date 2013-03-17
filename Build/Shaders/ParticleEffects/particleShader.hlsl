@@ -153,9 +153,7 @@ void GS(point Particle gIn[1],
 
 float4 PS(GS_OUT pIn) : SV_TARGET
 {
-	if( pIn.color.a < 0.01f ) {
-		return float4( 0.0f ,0.0f, 0.0f, 0.0f );
-	}
+	clip(pIn.color.a-0.01f);
 	PixelOut pix_out;
 	pix_out.diffuse = Texture.Sample(g_samplerAnisotropicWrap, pIn.texC);
 	pix_out.diffuse *= pIn.color;

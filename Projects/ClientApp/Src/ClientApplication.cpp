@@ -306,7 +306,6 @@ void ClientApplication::initSystems()
 
 	//---NETWORKHANDLING SYSTEMS
 	m_world->setSystem( new ClientPacketHandlerSystem( m_client ) );
-	m_world->setSystem( new CameraSystem( graphicsBackend ) );
 
 	//---GAMEPLAY AFFECTING SYSTEMS
 	m_world->setSystem( new LookAtSystem(NULL) );
@@ -386,7 +385,8 @@ void ClientApplication::initSystems()
 
 	m_world->setSystem( new ModuleStatusEffectSystem() );
 
-	// || RENDERING SYSTEMS ||
+	// || RENDERING SYSTEMS ||	
+	m_world->setSystem( new CameraSystem( graphicsBackend ) );
 	m_world->setSystem( new SkeletalAnimationSystem() );
 
 	//---CULLING

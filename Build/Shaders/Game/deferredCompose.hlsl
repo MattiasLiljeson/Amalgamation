@@ -53,6 +53,7 @@ float4 PoissonDOF( float2 texCoord, uint3 index )
 
 		SamplerState highSampler = g_samplerPointClamp;
 		float2 coordHigh = texCoord + (gDX_Tex * poisson[i] * discRadius);
+
 		float4 diffBuffHigh  	= g_diffuse.Sample( highSampler, coordHigh );
 		float4 diffLightHigh	= g_diffLight.Sample( highSampler, coordHigh );
 		float4 diffHigh = diffBuffHigh * diffLightHigh * g_LIGHT_MULT;
