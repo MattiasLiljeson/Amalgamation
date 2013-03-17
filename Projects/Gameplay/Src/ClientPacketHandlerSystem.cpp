@@ -1165,7 +1165,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 		}
 		else
 		{
-			DEBUGWARNING(( "Unhandled packet type!" ));
+			DEBUGWARNING(( toString("Unhandled packet type " + toString((int)packetType) + "!\n").c_str()));
 		}
 
 		// Pop packet!
