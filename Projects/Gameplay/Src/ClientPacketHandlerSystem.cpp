@@ -1652,11 +1652,17 @@ void ClientPacketHandlerSystem::handlePlayerDisconnect( const DisconnectPacket& 
 		m_world->getOutputLogger()->write(("Player " + toString(p_dcPacket.playerID) + " has left the game.\n").c_str());
 	}
 
-	// If this player is the host (id = 0) then request to shut down the server.
-	if (p_dcPacket.playerID == 0)
+	// If the current player is hosting the game, then request to shut it down!
+	if (m_world->isHostingServer())
 	{
-		//static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
-		//	setEnabled(true);
-		m_world->requestToQuitServer();
+		m_world->requestToShutDown();
 	}
+
+	// If this player is the host (id = 0) then request to shut down the server.
+	//if (p_dcPacket.playerID == 0)
+	//{
+	//	//static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
+	//	//	setEnabled(true);
+	//	m_world->requestToQuitServer();
+	//}
 }

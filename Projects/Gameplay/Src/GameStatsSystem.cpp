@@ -63,14 +63,14 @@ void GameStatsSystem::updateStats( const UpdateClientStatsPacket* p_packet )
 		m_infoPanel->setActivePlayers(p_packet->activePlayers);
 	}
 
-	vector<PlayerComponent*> playerSys  = static_cast<PlayerSystem*>(
-		m_world->getSystem(SystemType::PlayerSystem))->getPlayerComponents();
+	auto playerSys  = static_cast<PlayerSystem*>(
+		m_world->getSystem(SystemType::PlayerSystem));
 
 	// Update panel with new data.
 	for (int i = 0; i < p_packet->activePlayers; i++)
 	{
 		PlayerStats stats;
-		stats.name	= playerSys.at(i)->m_playerName;
+		stats.name	= playerSys->getPlayerNameFromID(p_packet->playerIdentities[i]);
 		stats.score = p_packet->scores[i];
 		stats.ping	= static_cast<int>(p_packet->ping[i]);
 
