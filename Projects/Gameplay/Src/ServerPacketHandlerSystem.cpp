@@ -336,20 +336,25 @@ void ServerPacketHandlerSystem::handleIngame()
 			float ping = (totalElapsedTime - timeWhenSent)*1000.0f;
 			//m_clients[packet.getSenderId()] = info;
 
-			auto clientInfoSys = static_cast<ServerClientInfoSystem*>(
-				m_world->getSystem(SystemType::ServerClientInfoSystem));
+			auto playerSys = static_cast<PlayerSystem*>(
+				m_world->getSystem(SystemType::PlayerSystem));
+			PlayerComponent* playerComp = playerSys->findPlayerComponentFromNetworkID(packet.getSenderId());
+			if (playerComp)
+				playerComp->m_ping = ping;
+			//auto clientInfoSys = static_cast<ServerClientInfoSystem*>(
+			//	m_world->getSystem(SystemType::ServerClientInfoSystem));
 
-			vector<Entity*> clientInfoEntities = clientInfoSys->getActiveEntities();
-			for (unsigned int i = 0; i < clientInfoEntities.size(); i++)
-			{
-				auto clientInfo = static_cast<ClientInfo*>(
-					clientInfoEntities[i]->getComponent(ComponentType::ClientInfo));
+			//vector<Entity*> clientInfoEntities = clientInfoSys->getActiveEntities();
+			//for (unsigned int i = 0; i < clientInfoEntities.size(); i++)
+			//{
+			//	auto clientInfo = static_cast<ClientInfo*>(
+			//		clientInfoEntities[i]->getComponent(ComponentType::ClientInfo));
 
-				if (clientInfo->id == packet.getSenderId())
-				{
-					clientInfo->ping = ping;
-				}
-			}
+			//	if (clientInfo->id == packet.getSenderId())
+			//	{
+			//		clientInfo->ping = ping;
+			//	}
+			//}
 		}	
 		else if (packetType == (char)PacketType::RayPacket)
 		{
@@ -558,6 +563,46 @@ void ServerPacketHandlerSystem::handleLobby()
 				m_stateSystem->setQueuedState(ServerStates::LOADING);
 				m_server->broadcastPacket(newState.pack());
 			}
+		}
+		else if( packetType == (char)PacketType::Ping )
+		{
+			// =========================================
+			// PINGPACKET
+			// =========================================
+			PingPacket pingPacket;
+			pingPacket.unpack( packet );
+
+			Packet response((char)PacketType::Pong);
+			response << pingPacket.timeStamp;
+
+			m_server->unicastPacket( response, packet.getSenderId() );
+		}
+		else if( packetType == (char)PacketType::Pong)
+		{
+			// =========================================
+			// PONGPACKET
+			// =========================================
+			//auto clientInfo = static_cast<ClientInfo*>(m_world->getEntityManager()->get)
+
+
+			float totalElapsedTime = m_world->getElapsedTime();
+			float timeWhenSent;
+
+			PongPacket pongPacket;
+			pongPacket.unpack( packet );
+			timeWhenSent = pongPacket.timeStamp;
+
+			/************************************************************************/
+			/* Convert from seconds to milliseconds.								*/
+			/************************************************************************/
+			float ping = (totalElapsedTime - timeWhenSent)*1000.0f;
+			//m_clients[packet.getSenderId()] = info;
+
+			auto playerSys = static_cast<PlayerSystem*>(
+				m_world->getSystem(SystemType::PlayerSystem));
+			PlayerComponent* playerComp = playerSys->findPlayerComponentFromNetworkID(packet.getSenderId());
+			if (playerComp)
+				playerComp->m_ping = ping;
 		}
 		else
 		{

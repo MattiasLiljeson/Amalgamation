@@ -186,6 +186,7 @@ void SlotMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 Entity* SlotMarkerSystem::createShipMarkerEntity(AglVector3 p_position, string p_texture, AglVector2 p_size)
 {
 	Entity* effect = m_world->createEntity();
+	effect->setName("Ship Marker Effect");
 
 	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
 
@@ -214,6 +215,7 @@ Entity* SlotMarkerSystem::createShipMarkerEntity(AglVector3 p_position, string p
 Entity* SlotMarkerSystem::createModuleMarkerEntity(AglVector3 p_position, string p_texture, AglVector2 p_size)
 {
 	Entity* effect = m_world->createEntity();
+	effect->setName("Module Marker Effect");
 
 	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
 

@@ -801,24 +801,37 @@ void ClientPacketHandlerSystem::handleIngameState()
 				(m_world->getSystem(SystemType::GameStatsSystem));
 			gameStats->updateStats(&updateClientPacket);
 
-			// Client ping
-			m_currentPing = updateClientPacket.ping[0];
-			float serverTimeAhead = updateClientPacket.currentServerTimestamp -
-				m_world->getElapsedTime() + m_currentPing / 2.0f;
-			m_tcpClient->setServerTimeAhead( serverTimeAhead );
-			m_tcpClient->setPingToServer( m_currentPing );
+			auto playerSys = static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem));
+			for (unsigned int i = 0; i < updateClientPacket.activePlayers; i++)
+			{
+				// Find the right player
+				auto playerComp = playerSys->findPlayerComponentFromPlayerID(updateClientPacket.playerIdentities[i]);
+				if (playerComp)
+				{
+					if (playerComp->m_playerID == m_tcpClient->getPlayerID())
+					{
+						m_currentPing = updateClientPacket.ping[i];
+						float serverTimeAhead = updateClientPacket.currentServerTimestamp -
+							m_world->getElapsedTime() + m_currentPing / 2.0f;
+						m_tcpClient->setServerTimeAhead( serverTimeAhead );
+						m_tcpClient->setPingToServer( m_currentPing );
 
-			// Update score in hud
-			HudSystem* hud = static_cast<HudSystem*>(m_world->getSystem(SystemType::HudSystem));
+						// Update score in hud
+						HudSystem* hud = static_cast<HudSystem*>(m_world->getSystem(SystemType::HudSystem));
 
-			if(hud){
-				hud->setHUDData(HudSystem::SCORE,
-					toString(updateClientPacket.scores[m_tcpClient->getPlayerID()]).c_str());
-				hud->setHUDData(HudSystem::TIME,
-					toString(
-					toString(updateClientPacket.minutesUntilEndOfRound) + ":" +
-					toString(updateClientPacket.secondsUntilEndOfRound)
-					).c_str());
+						if(hud){
+							hud->setHUDData(HudSystem::SCORE,
+								toString(updateClientPacket.scores[i]).c_str());
+							hud->setHUDData(HudSystem::TIME,
+								toString(
+								toString(updateClientPacket.minutesUntilEndOfRound) + ":" +
+								toString(updateClientPacket.secondsUntilEndOfRound)
+								).c_str());
+						}
+
+						break;
+					}
+				}
 			}
 		}
 		else if(packetType == (char)PacketType::PlayerWinLose)
@@ -1279,12 +1292,46 @@ void ClientPacketHandlerSystem::handleLobby()
 				} 
 			}
 		}
+		else if(packetType == (char)PacketType::Ping)
+		{
+			PingPacket pingPacket;
+			pingPacket.unpack( packet );
+
+			PongPacket pongPacket;
+			pongPacket.timeStamp = pingPacket.timeStamp;
+			m_tcpClient->sendPacket( pongPacket.pack() );
+		}
 		else if(packetType == (char)PacketType::ChangeStatePacket){
 			ChangeStatePacket changeState;
 			changeState.unpack(packet);
 
 			if(changeState.m_serverState == ServerStates::LOADING){
 				m_gameState->setQueuedState(GameStates::LOADING);
+			}
+		}
+		else if(packetType == (char)PacketType::UpdateClientStats)
+		{
+			UpdateClientStatsPacket updateClientPacket;
+			updateClientPacket.unpack(packet);
+
+			auto lobbySys = static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem));
+			auto playerSys = static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem));
+
+			for (unsigned int i = 0; i < updateClientPacket.activePlayers; i++)
+			{
+				auto playerComp = playerSys->findPlayerComponentFromPlayerID(updateClientPacket.playerIdentities[i]);
+				if (playerComp)
+				{
+					if (playerComp->m_playerID == m_tcpClient->getPlayerID())
+					{
+						m_currentPing = updateClientPacket.ping[i];
+						float serverTimeAhead = updateClientPacket.currentServerTimestamp -
+							m_world->getElapsedTime() + m_currentPing / 2.0f;
+						m_tcpClient->setServerTimeAhead( serverTimeAhead );
+						m_tcpClient->setPingToServer( m_currentPing );
+					}
+					lobbySys->updatePing(playerComp->m_playerID, updateClientPacket.ping[i]);
+				}
 			}
 		}
 		else if(packetType == (char)PacketType::EntityCreation){

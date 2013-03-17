@@ -124,15 +124,34 @@ int PlayerSystem::findPlayerId( int p_fromNetworkOwnerId )
 }
 PlayerComponent* PlayerSystem::findPlayerComponentFromNetworkID( int p_fromNetworkOwnerId )
 {
+	int id = findPlayerId(p_fromNetworkOwnerId);
+	if (id >= 0)
+		return m_playerComponents[id];
+	else
+		return NULL;
+
+	//for (unsigned int i = 0; i < m_playerComponents.size(); i++)
+	//{
+	//	if (m_playerComponents[i]->m_networkID == p_fromNetworkOwnerId)
+	//	{
+	//		return m_playerComponents[i];
+	//	}
+	//}
+	//return NULL;
+}
+
+PlayerComponent* PlayerSystem::findPlayerComponentFromPlayerID( int p_playerId )
+{
 	for (unsigned int i = 0; i < m_playerComponents.size(); i++)
 	{
-		if (m_playerComponents[i]->m_networkID == p_fromNetworkOwnerId)
+		if (m_playerComponents[i]->m_playerID == p_playerId)
 		{
 			return m_playerComponents[i];
 		}
 	}
 	return NULL;
 }
+
 
 
 //PlayerComponent* PlayerSystem::serverCreatePlayerComponent()

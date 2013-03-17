@@ -23,6 +23,7 @@
 #include "LookAtEntity.h"
 #include "PlayerSystem.h"
 #include "WinningConditionSystem.h"
+#include "PingPacket.h"
 
 ServerUpdateSystem::ServerUpdateSystem( TcpServer* p_server )
 	: EntitySystem( SystemType::NetworkUpdateSystem, 1, ComponentType::NetworkSynced )
@@ -34,6 +35,38 @@ ServerUpdateSystem::~ServerUpdateSystem()
 {
 }
 
+
+void ServerUpdateSystem::sendPlayerStats()
+{
+	auto timerSys = static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem));
+	if( timerSys->checkTimeInterval(TimerIntervals::EverySecond) )
+	{
+		UpdateClientStatsPacket updatedClientInfo;
+
+		PlayerSystem* playerSys  = static_cast<PlayerSystem*>(
+			m_world->getSystem(SystemType::PlayerSystem));
+
+		WinningConditionSystem* winningSys = static_cast<WinningConditionSystem*>
+			(m_world->getSystem(SystemType::WinningConditionSystem));
+
+		vector<PlayerComponent*> players = playerSys->getPlayerComponents();
+		updatedClientInfo.activePlayers = players.size();
+		updatedClientInfo.minutesUntilEndOfRound = winningSys->getRemaningMinutes();
+		updatedClientInfo.secondsUntilEndOfRound = winningSys->getRemaningSeconds();
+
+		for(unsigned int i = 0; i < updatedClientInfo.activePlayers; i++){
+			updatedClientInfo.scores[i] = players[i]->getScore();
+			updatedClientInfo.ping[i] = players[i]->m_ping;
+			updatedClientInfo.playerIdentities[i] = players[i]->m_playerID;
+		}
+
+		updatedClientInfo.currentServerTimestamp = m_world->getElapsedTime();
+
+		m_server->broadcastPacket(updatedClientInfo.pack());
+	}
+}
+
+
 void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	static float timestamp = m_world->getElapsedTime();
@@ -43,6 +76,11 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 	{
 		timestamp = m_world->getElapsedTime();
 		timeStampTime = true;
+
+		// Each second, also send a ping packet!
+		PingPacket pingPacket;
+		pingPacket.timeStamp = timestamp;
+		m_server->broadcastPacket(pingPacket.pack());
 	}
 
 	NetworkSynced* netSync = NULL;
@@ -56,33 +94,12 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 
 	switch (stateSystem->getCurrentState())
 	{
+	case ServerStates::LOBBY:
+		sendPlayerStats();
+		break;
 	case ServerStates::INGAME:
 		{
-			if( timerSys->checkTimeInterval(TimerIntervals::EverySecond) )
-			{
-				UpdateClientStatsPacket updatedClientInfo;
-
-				PlayerSystem* playerSys  = static_cast<PlayerSystem*>(
-					m_world->getSystem(SystemType::PlayerSystem));
-
-				WinningConditionSystem* winningSys = static_cast<WinningConditionSystem*>
-					(m_world->getSystem(SystemType::WinningConditionSystem));
-
-				vector<PlayerComponent*> players = playerSys->getPlayerComponents();
-				updatedClientInfo.activePlayers = players.size();
-				updatedClientInfo.minutesUntilEndOfRound = winningSys->getRemaningMinutes();
-				updatedClientInfo.secondsUntilEndOfRound = winningSys->getRemaningSeconds();
-
-				for(unsigned int i = 0; i < updatedClientInfo.activePlayers; i++){
-					updatedClientInfo.scores[i] = players.at(i)->getScore();
-					updatedClientInfo.ping[i] = players.at(i)->m_ping;
-					updatedClientInfo.playerIdentities[i] = i;
-				}
-
-				updatedClientInfo.currentServerTimestamp = m_world->getElapsedTime();
-
-				m_server->broadcastPacket(updatedClientInfo.pack());
-			}
+			sendPlayerStats();
 			// NOTE: (Johan) This interval check is currently set to be very high delay because
 			// packet handling is too slow when running Debug build otherwise.
 			TimerIntervals::Enum entityupdateInterval = TimerIntervals::Every8Millisecond;

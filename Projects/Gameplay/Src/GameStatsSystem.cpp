@@ -115,8 +115,10 @@ void GameStatsSystem::process()
 		if( delta > 0.5) {
 			rocketBackend->showDocument( m_rocketDocument );
 			m_infoPanel->updateTheVisualInfoPanel();
+			m_infoPanelVisible = true;
 		} else if( delta < -0.5f) {
 			rocketBackend->hideDocument( m_rocketDocument );
+			m_infoPanelVisible = false;
 		}
 	}
 
@@ -135,13 +137,23 @@ void GameStatsSystem::process()
 
 		if(actionInputSystem->getDeltaByAction
 			(InputActionsBackendSystem::Actions_SHOW_SCORE) > 0.5f){
-			m_infoPanelVisible = false;
 			gameState->setQueuedState(GameStates::MENU);
 		}
-		else
+		
+		//Always show the info panel during the results! 
+		m_infoPanelVisible = true;
+	}
+	else if (gameState->getCurrentState() == GameStates::MENU)
+	{
+		if (gameState->getStateDelta(GameStates::RESULTS) == EnumGameDelta::EXITTHISFRAME
+			|| gameState->getStateDelta(GameStates::INGAME) == EnumGameDelta::EXITTHISFRAME)
 		{
-			//Always show the info panel during the results! 
-			m_infoPanelVisible = true;
+			m_infoPanelVisible = false;
+
+			auto rocketBackend = static_cast<LibRocketBackendSystem*>
+				(m_world->getSystem(SystemType::LibRocketBackendSystem));
+			rocketBackend->updateElement(m_rocketDocument, "title", "The Scores!");
+			rocketBackend->hideDocument(m_rocketDocument);
 		}
 	}
 

@@ -30,7 +30,8 @@ public:
 	void initialize();
 
 	virtual void removed( Entity* p_entity );
-
+private:
+	void sendPlayerStats();
 
 private:
 	TcpServer* m_server;

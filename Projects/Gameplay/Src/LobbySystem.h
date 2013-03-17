@@ -45,6 +45,7 @@ public:
 	void setPlayerReady(int p_playerId, bool p_ready);
 	bool isPlayerReady(int p_playerId) const;
 	void setAllPlayersReady(bool p_ready);
+	void updatePing(int p_playerId, int p_ping);
 
 	void addNewPlayer(const NewlyConnectedPlayerPacket& p_packet);
 	void removePlayer(const DisconnectPacket& p_packet);
