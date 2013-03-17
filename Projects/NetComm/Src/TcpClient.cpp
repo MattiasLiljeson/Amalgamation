@@ -38,7 +38,6 @@ TcpClient::TcpClient()
 	m_playerName = "Unknown";
 	m_serverName = "MONKI";
 	m_serverGameTime = -1;
-
 }
 
 TcpClient::~TcpClient()
