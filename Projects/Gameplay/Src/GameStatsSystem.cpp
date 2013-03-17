@@ -135,11 +135,14 @@ void GameStatsSystem::process()
 
 		if(actionInputSystem->getDeltaByAction
 			(InputActionsBackendSystem::Actions_SHOW_SCORE) > 0.5f){
+			m_infoPanelVisible = false;
 			gameState->setQueuedState(GameStates::MENU);
 		}
-
-		//Always show the info panel during the results! 
-		m_infoPanelVisible = true;
+		else
+		{
+			//Always show the info panel during the results! 
+			m_infoPanelVisible = true;
+		}
 	}
 
 	if (m_infoPanelVisible)
