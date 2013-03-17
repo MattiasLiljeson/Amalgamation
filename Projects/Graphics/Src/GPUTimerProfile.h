@@ -17,6 +17,7 @@ struct GPUTimerProfile
 {
 	std::string profile;
 	std::vector<double> renderingTimes;
+	std::vector<double> averageRenderingTimes;
 	double renderingTime;
 	double renderingSpike;
 	double renderingAverage;
@@ -39,8 +40,8 @@ struct GPUTimerProfile
 		for(unsigned int i = 0; i < renderingTimes.size(); i++){
 			renderingAverage += renderingTimes[i];
 		}
-
 		renderingAverage = renderingAverage / static_cast<double>(renderingTimes.size());
+		averageRenderingTimes.push_back(renderingAverage);
 		renderingTimes.clear();
 	}
 };

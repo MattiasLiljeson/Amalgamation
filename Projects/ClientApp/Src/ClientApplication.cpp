@@ -221,7 +221,11 @@ void ClientApplication::run()
 
 			if(m_world->shouldShutDown()) {
 				static_cast<SettingsSystem*>(
-					m_world->getSystem( SystemType::SettingsSystem ) )->writeSettingsFile(SETTINGSPATH);
+					m_world->getSystem( SystemType::SettingsSystem ) )
+					->writeSettingsFile(SETTINGSPATH);
+				static_cast<GraphicsRendererSystem*>
+					(m_world->getSystem(SystemType::GraphicsRendererSystem))
+					->printLogFiles();
 				m_running = false;
 			}
 			

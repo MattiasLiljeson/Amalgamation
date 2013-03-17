@@ -350,3 +350,22 @@ void GraphicsRendererSystem::updateTimers()
 	m_profiles[TOTAL].pushNewTime(total);
 	m_wrapper->getGPUTimer()->tick();
 }
+
+void GraphicsRendererSystem::printLogFiles()
+{
+	for (unsigned int i = 0 ; i < NUMRENDERINGPASSES; i++){
+		ofstream outFile;
+		string filePath = "GFX_"+m_profiles[i].profile+"_Average_Rendering.log";
+		outFile.open( filePath );
+		
+		outFile << "# AveragePerSecond RenderTimePerMillisecond\n";
+
+		for (unsigned int j = 0; j < m_profiles[i].averageRenderingTimes.size(); j++){
+			outFile << j;
+			outFile << " ";
+			outFile << static_cast<float>(m_profiles[i].averageRenderingTimes[j]) << "\n";
+		}
+		outFile.close();
+	}
+	
+}
