@@ -13,6 +13,7 @@ public:
 	virtual void processEntities( const vector<Entity*>& p_entities );
 
 	void setMarkerTarget(int p_target, AglMatrix p_transform);
+	void clear();
 
 private:
 	Entity* m_marker;

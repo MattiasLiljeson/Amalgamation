@@ -31,6 +31,11 @@ int Entity::getIndex()
 	return m_index;
 }
 
+int* Entity::getIndexPtr()
+{
+	return &m_index;
+}
+
 EntityWorld* Entity::getWorld()
 {
 	return m_world;
@@ -146,6 +151,16 @@ void Entity::setEnabled( bool p_enabled )
 const string& Entity::getName() const
 {
 	return m_name;
+}
+
+string Entity::getNameCpy() const
+{
+	return m_name;
+}
+
+string* Entity::getNamePtr()
+{
+	return &m_name;
 }
 
 vector<ComponentType::ComponentTypeIdx> Entity::getComponentEnums()

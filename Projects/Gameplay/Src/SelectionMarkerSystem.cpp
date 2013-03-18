@@ -6,8 +6,8 @@
 
 
 SelectionMarkerSystem::SelectionMarkerSystem() : 
-	EntitySystem( SystemType::SelectionMarkerSystem, 1,
-	ComponentType::SelectionMarker) // HACK: Fix this!
+	EntitySystem( SystemType::SelectionMarkerSystem, 2,
+	ComponentType::SelectionMarker, ComponentType::RenderInfo)
 
 {
 }
@@ -80,5 +80,15 @@ void SelectionMarkerSystem::setMarkerTarget(int p_target, AglMatrix p_transform)
 			m_marker->removeComponent(ComponentType::SkeletalAnimation);
 			m_marker->applyComponentChanges();
 		}
+	}
+}
+
+void SelectionMarkerSystem::clear()
+{
+	for(unsigned int i=0; i<getActiveEntities().size(); i++)
+	{
+		SelectionMarker* marker = static_cast<SelectionMarker*>((
+			getActiveEntities()[i])->getComponent(ComponentType::SelectionMarker));
+		marker->m_targetEntity = -1;
 	}
 }

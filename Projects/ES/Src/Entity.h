@@ -38,6 +38,7 @@ public:
 	 * entity.
 	 */
 	int getIndex();
+	int* getIndexPtr();
 
 	/** The world the Entity has been bound to.
 	 * @return The world the Entity has been bound to.
@@ -106,6 +107,8 @@ public:
 
 	void setName( string p_name ) { m_name = p_name; }
 	const string& getName() const;
+	string* getNamePtr();
+	string getNameCpy() const;
 
 private:
 	// Universal Unique ID. This id is unique in the network and will never be reused. 

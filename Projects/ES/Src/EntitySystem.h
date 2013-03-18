@@ -144,9 +144,9 @@ public:
 	void removeFromSystem( Entity* p_entity );
 	void insertToSystem( Entity* p_entity );
 
-	void added( Entity* p_entity );
+	virtual void added( Entity* p_entity );
 	void changed( Entity* p_entity );
-	void deleted( Entity* p_entity );
+	virtual void deleted( Entity* p_entity );
 	void enabled( Entity* p_entity );
 	void disabled( Entity* p_entity );
 

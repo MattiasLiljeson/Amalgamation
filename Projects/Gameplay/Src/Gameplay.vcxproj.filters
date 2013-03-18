@@ -880,6 +880,9 @@
     <ClInclude Include="StateManagementSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="EntityLoggerSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1517,6 +1520,9 @@
     </ClCompile>
     <ClCompile Include="StateManagementSystem.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityLoggerSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

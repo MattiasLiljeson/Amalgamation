@@ -34,6 +34,7 @@
     <ClInclude Include="EmpRocketLancherModuleSystem.h" />
     <ClInclude Include="EmpRocketLauncherModule.h" />
     <ClInclude Include="EmpModule.h" />
+    <ClInclude Include="EntityLoggerSystem.h" />
     <ClInclude Include="EnvironmentSystem.h" />
     <ClInclude Include="EnvironmentValues.h" />
     <ClInclude Include="AxisRotate.h" />
@@ -293,6 +294,7 @@
     <ClCompile Include="CameraInfo.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="ClientDebugModuleSpawnerSystem.cpp" />
+    <ClCompile Include="EntityLoggerSystem.cpp" />
     <ClCompile Include="GlowAnimation.cpp" />
     <ClCompile Include="GlowAnimationSystem.cpp" />
     <ClCompile Include="ModulesHighlightPacket.cpp" />
