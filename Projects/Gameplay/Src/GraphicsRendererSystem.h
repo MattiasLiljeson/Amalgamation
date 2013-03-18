@@ -35,6 +35,8 @@ public:
 	virtual void initialize();
 	virtual void process();
 
+	void printLogFiles();
+
 private:
 	void renderTheScene();
 	void initShadowPass();

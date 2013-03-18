@@ -24,8 +24,9 @@ XInputFetcher::XInputFetcher()
 	m_epsilon = 0.0;
 	m_sensitivity = 1.0;
 
-	ZeroMemory( &m_analogOffsets, sizeof(m_analogOffsets) );
-	ZeroMemory( &m_currentState, sizeof(XINPUT_STATE) );
+	//ZeroMemory( &m_analogOffsets, sizeof(m_analogOffsets) );
+	//ZeroMemory( &m_currentState, sizeof(XINPUT_STATE) );
+	clearBuffers();
 }
 
 XInputFetcher::~XInputFetcher()
@@ -45,19 +46,23 @@ void XInputFetcher::update()
 			bool pressed = m_currentState.Gamepad.wButtons & s_btnMaskMap[i]?true:false;
 			m_btns[i] = InputHelper::calcState( m_btns[i], pressed );
 		}
-	}
-	//m_currentState = newState;
+		//m_currentState = newState;
 
-	m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_LX_POSITIVE] = m_currentState.Gamepad.sThumbLX;
-	m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_LY_POSITIVE] = m_currentState.Gamepad.sThumbLY;
-	m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_RX_POSITIVE] = m_currentState.Gamepad.sThumbRX;
-	m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_RY_POSITIVE] = m_currentState.Gamepad.sThumbRY;
-	m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_LX_NEGATIVE] = m_currentState.Gamepad.sThumbLX;
-	m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_LY_NEGATIVE] = m_currentState.Gamepad.sThumbLY;
-	m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_RX_NEGATIVE] = m_currentState.Gamepad.sThumbRX;
-	m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_RY_NEGATIVE] = m_currentState.Gamepad.sThumbRY;
-	m_rawAnalogs[InputHelper::Xbox360Analogs_TRIGGER_L] = (short)m_currentState.Gamepad.bLeftTrigger;
-	m_rawAnalogs[InputHelper::Xbox360Analogs_TRIGGER_R] = (short)m_currentState.Gamepad.bRightTrigger;
+		m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_LX_POSITIVE] = m_currentState.Gamepad.sThumbLX;
+		m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_LY_POSITIVE] = m_currentState.Gamepad.sThumbLY;
+		m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_RX_POSITIVE] = m_currentState.Gamepad.sThumbRX;
+		m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_RY_POSITIVE] = m_currentState.Gamepad.sThumbRY;
+		m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_LX_NEGATIVE] = m_currentState.Gamepad.sThumbLX;
+		m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_LY_NEGATIVE] = m_currentState.Gamepad.sThumbLY;
+		m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_RX_NEGATIVE] = m_currentState.Gamepad.sThumbRX;
+		m_rawAnalogs[InputHelper::Xbox360Analogs_THUMB_RY_NEGATIVE] = m_currentState.Gamepad.sThumbRY;
+		m_rawAnalogs[InputHelper::Xbox360Analogs_TRIGGER_L] = (short)m_currentState.Gamepad.bLeftTrigger;
+		m_rawAnalogs[InputHelper::Xbox360Analogs_TRIGGER_R] = (short)m_currentState.Gamepad.bRightTrigger;
+	}
+	else
+	{
+		clearBuffers();
+	}
 }
 
 InputHelper::KeyStates XInputFetcher::getBtnState( int p_btn )
@@ -106,16 +111,17 @@ double XInputFetcher::getCalibratedAnalog( int p_analog )
 
 		// Triggers have a precision of 0-255 instead of 0-65k as the thumb sticks.
 		// Take that into account when calculating 0.0 - 1.0 
-		if(p_analog == InputHelper::Xbox360Analogs_TRIGGER_L || p_analog == InputHelper::Xbox360Analogs_TRIGGER_R)
+		if(p_analog == InputHelper::Xbox360Analogs_TRIGGER_L ||
+			p_analog == InputHelper::Xbox360Analogs_TRIGGER_R) {
 			val =  (double)clampedInput / 255; //BYTE_MAX
-		else
+		} else {
 			val = (double)clampedInput / SHRT_MAX;
+		}
 
 		// Dead zone adjustment
-		if( abs(val) < m_epsilon )
+		if( abs(val) < m_epsilon ) {
 			val = 0.0;
-
-
+		}
 	}
 
 	return val;
@@ -143,4 +149,12 @@ void XInputFetcher::vibrate(float p_leftMotor, float p_rightMotor) const
     vibration.wRightMotorSpeed = (WORD)(min(100.0f,p_rightMotor)*655.35f);
 	// execute
     XInputSetState(0, &vibration);
+}
+
+void XInputFetcher::clearBuffers()
+{
+	ZeroMemory( &m_currentState, sizeof(XINPUT_STATE) );
+	ZeroMemory( &m_rawAnalogs, sizeof(m_rawAnalogs) );
+	ZeroMemory( &m_btns, sizeof(m_btns) );
+
 }

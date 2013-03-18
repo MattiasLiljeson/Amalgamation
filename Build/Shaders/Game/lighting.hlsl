@@ -78,11 +78,11 @@ PixelOut PS( VertexOut p_input ) : SV_TARGET
 	LightOut light;
 	
 	if( p_input.light.type == 0 ) { // Directional light
-		light = parallelLight( p_input.light, gCameraPos.xyz, normalVec, worldPos );
+		light = parallelLight( p_input.light, gCameraPos.xyz, normalVec, worldPos, normalColor.a );
 	} else if ( p_input.light.type == 1 ) { // Point light
-		light = pointLight( p_input.light, gCameraPos.xyz, normalVec, worldPos );
+		light = pointLight( p_input.light, gCameraPos.xyz, normalVec, worldPos, normalColor.a );
 	} else if ( p_input.light.type == 2 ) { // Spot light
-		light = spotLight( p_input.light, gCameraPos.xyz, normalVec, worldPos );
+		light = spotLight( p_input.light, gCameraPos.xyz, normalVec, worldPos, normalColor.a );
 	}
 
 	//float shadowCoeff = 1.0f;
