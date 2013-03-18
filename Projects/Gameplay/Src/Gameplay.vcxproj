@@ -57,6 +57,7 @@
     <ClInclude Include="PlayerReadyPacket.h" />
     <ClInclude Include="PortalCullingSystem.h" />
     <ClInclude Include="PreloaderSystem.h" />
+    <ClInclude Include="RegisteredEntity.h" />
     <ClInclude Include="RootBoundingSpherePacket.h" />
     <ClInclude Include="SettingsSystem.h" />
     <ClInclude Include="ShieldActivationPacket.h" />
@@ -64,6 +65,7 @@
     <ClInclude Include="ShipEngineSystem.h" />
     <ClInclude Include="ShipHighlight.h" />
     <ClInclude Include="ShipHiglightSystem.h" />
+    <ClInclude Include="ShipMassBoosterUpdatePacket.h" />
     <ClInclude Include="SlotHighlightParticleMakerSystem.h" />
     <ClInclude Include="SlotMarker.h" />
     <ClInclude Include="SlotMarkerSystem.h" />
@@ -374,6 +376,7 @@
     <ClCompile Include="ShieldActivationPacket.cpp" />
     <ClCompile Include="ShipEngineSystem.cpp" />
     <ClCompile Include="ShipHighlightSystem.cpp" />
+    <ClCompile Include="ShipMassBoosterUpdatePacket.cpp" />
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp" />
     <ClCompile Include="SlotMarkerSystem.cpp" />
     <ClCompile Include="SoundComponent.cpp" />

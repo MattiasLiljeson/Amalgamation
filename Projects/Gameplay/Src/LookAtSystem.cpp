@@ -74,109 +74,190 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		
 		// Extract look-at entity and its transform
 		Entity* targetEntity = m_world->getEntity(lookAt->getEntityId());
-		Transform* targetTransform = static_cast<Transform*>(
-			targetEntity->getComponent(ComponentType::ComponentTypeIdx::Transform));
-
-		MeshOffsetTransform* meshOffset = static_cast<MeshOffsetTransform*>(
-			targetEntity->getComponent( ComponentType::ComponentTypeIdx::MeshOffsetTransform ) );
-
-		if (meshOffset)
+		Entity* offsetEntity = NULL;
+		if (lookAt->m_offsetEntityId>=0) offsetEntity=m_world->getEntity(lookAt->m_offsetEntityId);
+		if (targetEntity)
 		{
-			AglMatrix mat = meshOffset->offset;
-			targetTransform = new Transform(mat.transpose() * targetTransform->getMatrix());
-		}
-		else
-		{
-			targetTransform = new Transform(targetTransform->getMatrix());
-		}
+			Transform* targetTransform = static_cast<Transform*>(
+				targetEntity->getComponent(ComponentType::ComponentTypeIdx::Transform));
+			Transform* origTransform = targetTransform;
 
-		AglVector3 lookTargetPos;
-		if (targetTransform)
-		{
-			lookTargetPos = targetTransform->getTranslation();
-		}
+			MeshOffsetTransform* meshOffset = static_cast<MeshOffsetTransform*>(
+				targetEntity->getComponent( ComponentType::ComponentTypeIdx::MeshOffsetTransform ) );
 
-		//static AglVector3 m_velocity = AglVector3(0, 0, 0);
-		//float springConstant = 64;
-		//float springDamping = 8;
-
-		// Follow behaviour
-		if (lookAtFollow)
-		{		
-			// Set up look-at vars for the view matrix
-			// Create offset vector from look-at component in the space of the target
-			AglVector3 offset = lookAt->getFollowPositionOffset();
-			offset.transformNormal(targetTransform->getMatrix());
-			// update transform
-
-			// lerp
-			if (false)//lookAt->getMoveSpd()*dt<1.0f)
+			if (meshOffset)
 			{
-				position = AglVector3::lerp(position,lookTargetPos+offset,
-					saturate(lookAt->getMoveSpd()*dt));
+				AglMatrix mat = meshOffset->offset;
+				targetTransform = new Transform(mat.transpose() * targetTransform->getMatrix());
 			}
 			else
 			{
-				position = lookTargetPos+offset;
-
-				/*AglVector3 idealPosition = lookTargetPos+offset;
-				AglVector3 displacement = position - idealPosition;
-				AglVector3 springAcceleration = (displacement*(-springConstant)) - (m_velocity*springDamping);
-
-				m_velocity += springAcceleration * dt;
-				position += m_velocity * dt;*/
+				targetTransform = new Transform(targetTransform->getMatrix());
 			}
 
-			// slerp
-			if (false)//lookAt->getRotationSpeed()*dt<1.0f)
+			AglVector3 lookTargetPos;
+			if (targetTransform)
 			{
-				rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
-					saturate(lookAt->getRotationSpeed()*dt),true);
+				lookTargetPos = targetTransform->getTranslation();
+			}
+
+			//static AglVector3 m_velocity = AglVector3(0, 0, 0);
+			//float springConstant = 64;
+			//float springDamping = 8;
+
+			// Follow behaviour
+			if (lookAtFollow)
+			{		
+				// Set up look-at vars for the view matrix
+				// Create offset vector from look-at component in the space of the target
+				AglVector3 offset = AglVector3::zero();
+				if (offsetEntity==NULL)
+				{
+					offset = lookAt->getFollowPositionOffset();
+					offset.transformNormal(targetTransform->getMatrix());
+				}
+				else
+				{
+					Transform* offTransform = static_cast<Transform*>(
+						offsetEntity->getComponent(ComponentType::ComponentTypeIdx::Transform));
+					if (offTransform)
+					{
+						offset = lookAt->getFollowPositionOffset();
+						offset.transformNormal(targetTransform->getMatrix());
+						offset += offTransform->getTranslation()-lookTargetPos;
+					}
+				}
+
+				// update transform
+
+				// lerp
+				if (lookAt->getSmoothMode()>0 && lookAt->getMoveSpd()*dt<1.0f)
+				{
+					AglVector3 dir = (lookTargetPos+offset)-position;
+					float len = abs(dir.length());
+					if (len>0.0f)
+						dir.normalize();
+					if (lookAt->getSmoothMode()==1)
+					{
+						position = AglVector3::lerp(position,lookTargetPos+offset,
+							saturate( lookAt->getMoveSpd()*dt));
+					}
+					else if (lookAt->getSmoothMode()==2)
+					{
+						position = AglVector3::lerp(position,lookTargetPos+offset,
+							saturate( (lookAt->getMoveSpd()/clamp(len,0.001f,1.0f) )*dt));				
+					}						
+					else if (lookAt->getSmoothMode()==3)
+					{
+						position = AglVector3::lerp(position,lookTargetPos+offset,
+							saturate( lookAt->getMoveSpd()*dt));
+						position += dir*max(0.0f,(AglVector3::length(position-lookTargetPos)-AglVector3::length(offset)));
+					}					
+					else if (lookAt->getSmoothMode()==4)
+					{
+						position = AglVector3::lerp(position,lookTargetPos+offset,
+							saturate( (lookAt->getMoveSpd()/clamp(len,0.001f,1.0f) )*dt));
+						position += dir*max(0.0f,(AglVector3::length(position-lookTargetPos)-AglVector3::length(offset)));
+					}				
+					else if (lookAt->getSmoothMode()==5)
+					{
+						lookAt->m_dir=dir;
+
+						position += dir*lookAt->getMoveSpd()*dt;					
+					}
+					else if (lookAt->getSmoothMode()==6)
+					{
+						AglVector3 localOffset = lookAt->m_planeOffset;
+						// localOffset = AglVector3::minOf(localOffset,offset*2.0f);
+						float xbound = 15.0f;
+						float ybound = 20.0f;
+						float zbound = 10.0f;
+						if (localOffset.x<-xbound) localOffset.x=-xbound;
+						if (localOffset.x>xbound) localOffset.x=xbound;
+						if (localOffset.y<-ybound) localOffset.y=-ybound;
+						if (localOffset.y>ybound) localOffset.y=ybound;
+						if (localOffset.z<-zbound) localOffset.z=-zbound;
+						if (localOffset.z>zbound) localOffset.z=zbound;
+						localOffset.transformNormal(origTransform->getMatrix());
+						position = lookTargetPos+offset+localOffset;		
+						// lookAt->m_planeOffset=AglVector3::lerp(lookAt->m_planeOffset,AglVector3::zero(),saturate(2.0f*dt));
+					}
+					// position += dir*max(0.0f,(AglVector3::length(position-lookTargetPos)-AglVector3::length(offset)));
+				}
+				else
+				{
+					position = lookTargetPos+offset;
+
+					/*AglVector3 idealPosition = lookTargetPos+offset;
+					AglVector3 displacement = position - idealPosition;
+					AglVector3 springAcceleration = (displacement*(-springConstant)) - (m_velocity*springDamping);
+
+					m_velocity += springAcceleration * dt;
+					position += m_velocity * dt;*/
+				}
+
+				// slerp
+// 				if (true || lookAt->getSmoothMode()<6)
+// 				{
+					if (lookAt->isRotationSmoothed() && lookAt->getRotationSpeed()*dt<1.0f)
+					{
+						rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
+							saturate(lookAt->getRotationSpeed()*dt),true);
+						rotation.normalize();
+					}
+					else
+					{
+						rotation = targetTransform->getRotation();
+					}
+// 				}
+// 				else
+// 				{
+// 					AglVector3 angleOffset = lookAt->m_angleOffset;
+// 					angleOffset.transformNormal(origTransform->getMatrix());
+// 					rotation = AglQuaternion::constructFromAngularVelocity(angleOffset);
+// 				}
+
+
+				// update			
+				transform->setRotation( rotation );
+				transform->setTranslation( position );
+
+			}
+			// orbit behaviour
+			else if (lookAtOrbit)
+			{
+				AglQuaternion interRotation = lookAt->getOrbitOffset();
+				AglVector3 move = lookAt->getOrbitMovement()*lookAt->getOrbitRotationSpeed();
+				if (move.length()>0.0f)	
+					interRotation *= AglQuaternion::constructFromAngularVelocity(move*dt);
+				interRotation.normalize();
+				lookAt->setOrbitOffset(interRotation);
+
+				rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation()*interRotation,
+					saturate(lookAt->getRotationSpeed()*0.7f*dt),true);
 				rotation.normalize();
+
+				AglVector3 offset = AglVector3::backward()*lookAt->getOrbitDistance();
+				rotation.transformVector(offset);
+				position = AglVector3::lerp(position, lookTargetPos + offset,
+					saturate(lookAt->getMoveSpd()*3.0f*dt));
+
+
+				// update
+				transform->setTranslation( position );
+				transform->setRotation( rotation );
 			}
-			else
+			// just lookat behaviour
+			else if (!lookAtOrbit && !lookAtFollow)
 			{
-				rotation = targetTransform->getRotation();
+				AglVector3 dir = position-lookTargetPos;
+				AglVector3::normalize(dir);
+				transform->setForwardDirection(dir);
 			}
-			
-
-			// update			
-			transform->setRotation( rotation );
-			transform->setTranslation( position );
+			delete targetTransform;
 		}
-		// orbit behaviour
-		else if (lookAtOrbit)
-		{
-			AglQuaternion interRotation = lookAt->getOrbitOffset();
-			AglVector3 move = lookAt->getOrbitMovement()*lookAt->getOrbitRotationSpeed();
-			if (move.length()>0.0f)	
-				interRotation *= AglQuaternion::constructFromAngularVelocity(move*dt);
-			interRotation.normalize();
-			lookAt->setOrbitOffset(interRotation);
-
-			rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation()*interRotation,
-				saturate(lookAt->getRotationSpeed()*0.7f*dt),true);
-			rotation.normalize();
-
-			AglVector3 offset = AglVector3::backward()*lookAt->getOrbitDistance();
-			rotation.transformVector(offset);
-			position = AglVector3::lerp(position, lookTargetPos + offset,
-				saturate(lookAt->getMoveSpd()*3.0f*dt));
-			
-
-			// update
-			transform->setTranslation( position );
-			transform->setRotation( rotation );
-		}
-		// just lookat behaviour
-		else if (!lookAtOrbit && !lookAtFollow)
-		{
-			AglVector3 dir = position-lookTargetPos;
-			AglVector3::normalize(dir);
-			transform->setForwardDirection(dir);
-		}
-		delete targetTransform;
 	}
+		
 }
 
 void LookAtSystem::adaptDistanceBasedOnModules(Entity* p_entity)

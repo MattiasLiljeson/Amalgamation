@@ -153,6 +153,7 @@ using namespace std;
 #include <PlayerSystem.h>
 #include <SoundSystem.h>
 #include <ShipEngineSystem.h>
+#include <ValueClamp.h>
 
 
 #define FORCE_VS_DBG_OUTPUT
@@ -218,6 +219,8 @@ void ClientApplication::run()
 			dt = (currTimeStamp - m_prevTimeStamp) * secsPerCount;
 
 			m_prevTimeStamp = currTimeStamp;
+
+			dt = clamp(dt,0.0,DTCAP);
 
 			m_world->setDelta((float)dt);
 			m_world->process();
@@ -311,7 +314,6 @@ void ClientApplication::initSystems()
 
 	//---NETWORKHANDLING SYSTEMS
 	m_world->setSystem( new ClientPacketHandlerSystem( m_client ) );
-	m_world->setSystem( new CameraSystem( graphicsBackend ) );
 
 	//---GAMEPLAY AFFECTING SYSTEMS
 	m_world->setSystem( new LookAtSystem(NULL) );
@@ -393,7 +395,8 @@ void ClientApplication::initSystems()
 
 	m_world->setSystem( new ModuleStatusEffectSystem() );
 
-	// || RENDERING SYSTEMS ||
+	// || RENDERING SYSTEMS ||	
+	m_world->setSystem( new CameraSystem( graphicsBackend ) );
 	m_world->setSystem( new SkeletalAnimationSystem() );
 
 	//---CULLING

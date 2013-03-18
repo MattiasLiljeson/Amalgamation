@@ -10,6 +10,7 @@
 #include "ClientStateSystem.h"
 #include "MenuSystem.h"
 #include "TimerSystem.h"
+#include "SettingsSystem.h"
 
 GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphicsBackend,
 											   RenderInterface* p_mesh, 
@@ -42,6 +43,8 @@ GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphics
 	m_profiles.push_back(GPUTimerProfile("GUI"));
 	m_profiles.push_back(GPUTimerProfile("TOTAL"));
 
+	m_measureGPU=false;
+
 	clearShadowStuf();
 }
 GraphicsRendererSystem::~GraphicsRendererSystem(){
@@ -49,6 +52,15 @@ GraphicsRendererSystem::~GraphicsRendererSystem(){
 	delete[] m_activeShadows;
 }
 void GraphicsRendererSystem::initialize(){
+	auto settings = static_cast<SettingsSystem*>(
+		m_world->getSystem(SystemType::ClientStateSystem));
+
+	// m_measureGPU = settings->getSettings().enabledGPUMeasure;
+
+	AntTweakBarWrapper::getInstance()->addWriteVariable(
+		AntTweakBarWrapper::MEASUREMENT,
+		"Enable GPU timers",TwType::TW_TYPE_BOOLCPP,
+		(void*)&m_measureGPU,"group=GPU");
 	for (unsigned int i=0;i < NUMRENDERINGPASSES; i++)
 	{
 
@@ -78,14 +90,18 @@ void GraphicsRendererSystem::process(){
 
 	m_wrapper = m_backend->getGfxWrapper();
 
-	auto timerSystem = static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem));
-	if(timerSystem->checkTimeInterval(TimerIntervals::EverySecond)){
-		for (unsigned int i= 0; i < NUMRENDERINGPASSES; i++)
-		{
-			m_profiles[i].calculateAvarage();
+	if (isMeasuring())
+	{
+		auto timerSystem = static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem));
+		if(timerSystem->checkTimeInterval(TimerIntervals::EverySecond)){
+			for (unsigned int i= 0; i < NUMRENDERINGPASSES; i++)
+			{
+				m_profiles[i].calculateAvarage();
+			}
+
 		}
-		
 	}
+
 
 	auto gameState = static_cast<ClientStateSystem*>(
 		m_world->getSystem(SystemType::ClientStateSystem));
@@ -112,7 +128,7 @@ void GraphicsRendererSystem::renderTheScene()
 {
 	/*
 	//Shadows
-	//m_wrapper->getGPUTimer()->Start(m_profiles[SHADOW].profile);
+	// if (isMeasuring()) m_wrapper->getGPUTimer()->Start(m_profiles[SHADOW].profile);
 	clearShadowStuf();
 	//Fill the shadow view projections
 	for (unsigned int i = 0; i < m_shadowSystem->getNumberOfShadowCameras(); i++){
@@ -132,63 +148,63 @@ void GraphicsRendererSystem::renderTheScene()
 	}
 	endShadowPass();
 	*/
-	//m_wrapper->getGPUTimer()->Stop(m_profiles[SHADOW].profile);
+	// if (isMeasuring()) m_wrapper->getGPUTimer()->Stop(m_profiles[SHADOW].profile);
 	m_wrapper->clearRenderTargets();
 
 	// Meshes
-	m_wrapper->getGPUTimer()->Start(m_profiles[MESH].profile);
+	if (isMeasuring()) m_wrapper->getGPUTimer()->Start(m_profiles[MESH].profile);
 	initMeshPass();
 	m_meshRenderer->render();
 	endMeshPass();
-	m_wrapper->getGPUTimer()->Stop(m_profiles[MESH].profile);
+	if (isMeasuring()) m_wrapper->getGPUTimer()->Stop(m_profiles[MESH].profile);
 
 	// Lights
-	m_wrapper->getGPUTimer()->Start(m_profiles[LIGHT].profile);
+	if (isMeasuring()) m_wrapper->getGPUTimer()->Start(m_profiles[LIGHT].profile);
 	initLightPass();
 	m_lightRenderSystem->render();
 	endLightPass();
-	m_wrapper->getGPUTimer()->Stop(m_profiles[LIGHT].profile);
+	if (isMeasuring()) m_wrapper->getGPUTimer()->Stop(m_profiles[LIGHT].profile);
 
 	if( m_enableEffects ) {
-		m_wrapper->getGPUTimer()->Start(m_profiles[EFFECTS].profile);
+		if (isMeasuring()) m_wrapper->getGPUTimer()->Start(m_profiles[EFFECTS].profile);
 		beginEffects();
 		m_wrapper->generateEffects();
 		endEffects();
-		m_wrapper->getGPUTimer()->Stop(m_profiles[EFFECTS].profile);
+		if (isMeasuring()) m_wrapper->getGPUTimer()->Stop(m_profiles[EFFECTS].profile);
 
 		// DoF generation pass
-		m_wrapper->getGPUTimer()->Start(m_profiles[LOW_RES].profile);
+		if (isMeasuring()) m_wrapper->getGPUTimer()->Start(m_profiles[LOW_RES].profile);
 		beginGenerateLowRes();
 		m_wrapper->generateLowRes();
 		endGenerateLowRes();
-		m_wrapper->getGPUTimer()->Stop(m_profiles[LOW_RES].profile);
+		if (isMeasuring()) m_wrapper->getGPUTimer()->Stop(m_profiles[LOW_RES].profile);
 	}
 
 	//Compose
-	m_wrapper->getGPUTimer()->Start(m_profiles[COMPOSE].profile);
+	if (isMeasuring()) m_wrapper->getGPUTimer()->Start(m_profiles[COMPOSE].profile);
 	initComposePass();
 	m_wrapper->renderComposeStage();
 	endComposePass();
-	m_wrapper->getGPUTimer()->Stop(m_profiles[COMPOSE].profile);
+	if (isMeasuring()) m_wrapper->getGPUTimer()->Stop(m_profiles[COMPOSE].profile);
 
 	//Particles
-	m_wrapper->getGPUTimer()->Start(m_profiles[PARTICLE].profile);
+	if (isMeasuring()) m_wrapper->getGPUTimer()->Start(m_profiles[PARTICLE].profile);
 	initParticlePass();
 	renderParticles();
 	endParticlePass();
-	m_wrapper->getGPUTimer()->Stop(m_profiles[PARTICLE].profile);
+	if (isMeasuring()) m_wrapper->getGPUTimer()->Stop(m_profiles[PARTICLE].profile);
 
 	//GUI
-	m_wrapper->getGPUTimer()->Start(m_profiles[GUI].profile);
+	if (isMeasuring()) m_wrapper->getGPUTimer()->Start(m_profiles[GUI].profile);
 	initGUIPass();
 	m_libRocketRenderSystem->render();
 	m_antTweakBarSystem->render();
 	endGUIPass();
-	m_wrapper->getGPUTimer()->Stop(m_profiles[GUI].profile);
+	if (isMeasuring()) m_wrapper->getGPUTimer()->Stop(m_profiles[GUI].profile);
 
 	flipBackbuffer();
 
-	updateTimers();
+	if (isMeasuring()) updateTimers();
 }
 
 void GraphicsRendererSystem::initShadowPass(){
@@ -367,5 +383,19 @@ void GraphicsRendererSystem::printLogFiles()
 		}
 		outFile.close();
 	}
-	
+}
+
+void GraphicsRendererSystem::enableMeasurement()
+{
+	m_measureGPU=true;
+}
+
+void GraphicsRendererSystem::disableMeasurement()
+{
+	m_measureGPU=false;
+}
+
+bool GraphicsRendererSystem::isMeasuring()
+{
+	return m_measureGPU;
 }

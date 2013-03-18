@@ -880,6 +880,10 @@
     <ClInclude Include="StateManagementSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="ShipMassBoosterUpdatePacket.h" />
+    <ClInclude Include="RegisteredEntity.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1518,5 +1522,6 @@
     <ClCompile Include="StateManagementSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="ShipMassBoosterUpdatePacket.cpp" />
   </ItemGroup>
 </Project>

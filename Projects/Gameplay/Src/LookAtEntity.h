@@ -33,6 +33,10 @@ public:
 		m_rotationSpd = p_rotationSpeed;
 		m_orbitRotationSpd=1.0f;
 		m_orbitDistance = 1.0f;
+		m_smoothingMode=0;
+		m_dir = AglVector3::forward();
+		m_offsetEntityId=-1;
+		m_rotationSmoothing=false;
 	}
 
 	LookAtEntity(int p_entityId,
@@ -48,6 +52,10 @@ public:
 		m_rotationSpd = p_rotationSpeed;
 		m_orbitRotationSpd=1.0f;
 		m_orbitDistance = 1.0f;
+		m_smoothingMode=0;
+		m_dir = AglVector3::forward();
+		m_offsetEntityId=-1;
+		m_rotationSmoothing=false;
 	}
 
 	LookAtEntity(int p_entityId,
@@ -64,6 +72,10 @@ public:
 		m_rotationSpd = p_rotationSpeed;
 		m_orbitDistance = p_orbitDistance;
 		m_orbitRotationSpd=p_orbitRotationSpd;
+		m_smoothingMode=0;
+		m_dir = AglVector3::forward();
+		m_offsetEntityId=-1;
+		m_rotationSmoothing=false;
 	}
 
 	~LookAtEntity() {}
@@ -76,6 +88,8 @@ public:
 	float getOrbitRotationSpeed() {return m_orbitRotationSpd;}
 	AglQuaternion& getOrbitOffset() {return m_orbitOffset;}
 	float getMoveSpd() {return m_moveSpd;}
+	int getSmoothMode() {return m_smoothingMode;}
+	bool isRotationSmoothed() {return m_rotationSmoothing;}
 
 	void setFollowPositionOffset(const AglVector3& p_offset) {m_followPositionOffset=p_offset;}
 	void setOrbitMovement(const AglVector3& p_movement) {m_orbitMovement=p_movement;}
@@ -84,6 +98,12 @@ public:
 	void setOrbitRotationSpeed(float p_val) {m_orbitRotationSpd=p_val;}
 	void setOrbitOffset(AglQuaternion& p_val) {m_orbitOffset=p_val;}
 	void setMoveSpeed(float p_val) {m_moveSpd=p_val;}	
+	void setSmoothing(int p_mode) {m_smoothingMode=p_mode;}
+	void setRotationSmoothing(bool p_mode) {m_rotationSmoothing=p_mode;}
+	AglVector3 m_dir;
+	AglVector3 m_planeOffset;
+	AglVector3 m_angleOffset;
+	int m_offsetEntityId;
 private:
 	int m_entityId;
 	AglVector3 m_followPositionOffset; ///< offset position from target
@@ -93,6 +113,7 @@ private:
 	float m_orbitRotationSpd; ///< Speed of rotation towards goal in orbit
 	float m_moveSpd; ///< Speed of movement towards goal  
 	float m_orbitDistance; ///< distance from target when orbiting
-
+	int m_smoothingMode;
+	bool m_rotationSmoothing;
 };
 

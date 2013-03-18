@@ -42,6 +42,8 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile(string p_path, strin
 		inFile >> m_settings.enableEffects;
 		inFile >> ignore;
 		inFile >> m_settings.enableVSYNC;
+		inFile >> ignore;
+		inFile >> m_settings.enabledGPUMeasure;
 
 		// Sound settings
 		inFile >> ignore;
@@ -109,6 +111,8 @@ SettingsSystem::FileStatus SettingsSystem::writeSettingsFile(string p_path, stri
 		outFile << m_settings.enableEffects		<< "\n";
 		outFile << "EnableVSYNC= ";
 		outFile << m_settings.enableVSYNC		<< "\n";
+		outFile << "EnableGPUMeasure= ";
+		outFile << m_settings.enabledGPUMeasure	<< "\n";
 
 		// Sound settings
 		outFile << "MasterVolume= ";

@@ -15,6 +15,14 @@ using namespace std;
 /// Created on: 14-12-2012 
 ///---------------------------------------------------------------------------------------
 
+/************************************************************************/
+/* DeltaTime cap														*/
+/************************************************************************/
+static const double DTCAP=0.6;
+
+/************************************************************************/
+/* ASSET PATHS!															*/
+/************************************************************************/
 static const string& SOUNDROOTPATH = "Assets/Sound/";
 static const string& SOUNDEFFECTPATH = "Assets/Sound/SoundEffect/";
 static const string& MUSICPATH = "Assets/Sound/Music/";

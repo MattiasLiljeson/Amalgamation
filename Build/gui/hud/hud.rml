@@ -35,10 +35,10 @@
 			</div>			
 		</div>
 		<div id="socket-buttons">
-			<div class="button" id="top-btn">A</div>
+			<div class="button" id="up-btn">A</div>
 			<div class="button" id="right-btn">B</div>
 			<div class="button" id="left-btn">C</div>
-			<div class="button" id="bottom-btn">D</div>
+			<div class="button" id="down-btn">D</div>
 		</div>
 	</body>
 </rml>

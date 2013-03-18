@@ -38,7 +38,7 @@ void DisplayGameStats::GetRow( Rocket::Core::StringList& row,
 			else if (columns[col_index] == "score")
 			{
 				//row.push_back(Rocket::Core::String("score"));
-				row.push_back(toString(m_players[row_index].score).c_str());
+				row.push_back(toString((int)(m_players[row_index].score+0.5f)).c_str());
 			}
 			else if (columns[col_index] == "ping")
 			{

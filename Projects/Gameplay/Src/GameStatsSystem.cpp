@@ -71,7 +71,7 @@ void GameStatsSystem::updateStats( const UpdateClientStatsPacket* p_packet )
 	{
 		PlayerStats stats;
 		stats.name	= playerSys->getPlayerNameFromID(p_packet->playerIdentities[i]);
-		stats.score = p_packet->scores[i];
+		stats.score = (int)(p_packet->scores[i]+0.5f);
 		stats.ping	= static_cast<int>(p_packet->ping[i]);
 
 		m_infoPanel->updateRow(i, stats);
@@ -89,7 +89,7 @@ void GameStatsSystem::updateResults(const PlayersWinLosePacket* p_packet){
 	{
 		PlayerStats stats;
 		stats.name	= system->getPlayerNameFromID(p_packet->playerIdentities[i]);
-		stats.score = p_packet->scores[i];
+		stats.score = (int)(p_packet->scores[i]+0.5f);
 		stats.ping	= 0;
 
 		m_infoPanel->updateRow(i, stats);
