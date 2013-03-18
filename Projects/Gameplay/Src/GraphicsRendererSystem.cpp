@@ -10,6 +10,7 @@
 #include "ClientStateSystem.h"
 #include "MenuSystem.h"
 #include "TimerSystem.h"
+#include "SettingsSystem.h"
 
 GraphicsRendererSystem::GraphicsRendererSystem(GraphicsBackendSystem* p_graphicsBackend,
 											   RenderInterface* p_mesh, 
@@ -51,6 +52,11 @@ GraphicsRendererSystem::~GraphicsRendererSystem(){
 	delete[] m_activeShadows;
 }
 void GraphicsRendererSystem::initialize(){
+	auto settings = static_cast<SettingsSystem*>(
+		m_world->getSystem(SystemType::ClientStateSystem));
+
+	// m_measureGPU = settings->getSettings().enabledGPUMeasure;
+
 	AntTweakBarWrapper::getInstance()->addWriteVariable(
 		AntTweakBarWrapper::MEASUREMENT,
 		"Enable GPU timers",TwType::TW_TYPE_BOOLCPP,

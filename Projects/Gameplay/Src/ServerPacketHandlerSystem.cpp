@@ -169,6 +169,9 @@ void ServerPacketHandlerSystem::handleIngame()
 			ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
 				ship->getComponent(ComponentType::ConnectionPointSet) );
 
+			Transform* transform = static_cast<Transform*>(
+				ship->getComponent(ComponentType::Transform) );
+
 			ShipConnectionPointHighlights* highlights = static_cast<ShipConnectionPointHighlights*>(
 				ship->getComponent(ComponentType::ShipConnectionPointHighlights) );
 
@@ -196,20 +199,68 @@ void ServerPacketHandlerSystem::handleIngame()
 				Entity* camera = m_world->getEntity(ownedCamera->m_entityId);
 				if (camera)
 				{
+					float slowdown=50.0f;
 					LookAtEntity* camLookAt= static_cast<LookAtEntity*>(
 						camera->getComponent( ComponentType::ComponentTypeIdx::LookAtEntity) );
 					if (camLookAt)
 					{
 						AglVector3 tdir = thrustPacket.thrustVector;
-						if (tdir.length()>0.0f)
+						AglVector3 angulareffect = thrustPacket.angularVector;
+						//if (angulareffect.length()>0.0f)
+						{
+							//angulareffect.normalize();
+// 							float ox = angulareffect.x;
+// 							angulareffect.x = angulareffect.y*10.0f;
+// 							angulareffect.y = ox;
+// 							angulareffect.z = 0.0f;
+							//angulareffect*=0.1f;
+						}
+						if (angulareffect.length()>0.0f)
+						{
+							angulareffect.transformNormal(transform->getMatrix().inverse());
+//							angulareffect.normalize();
+// 							float ox = angulareffect.x;
+// 							angulareffect.x = angulareffect.y*10.01f;
+// 							angulareffect.y = ox*100.01f;
+//  							angulareffect.z = 0.0f;
+							camLookAt->m_angleOffset += angulareffect*m_world->getDelta()*10.0f;
+						}
+
+				
+						if (tdir.length()>0.0f) 
 						{
 							tdir.normalize();
-							camLookAt->m_planeOffset -= tdir*m_world->getDelta()*10.0f;
+							tdir.transformNormal(transform->getMatrix().inverse());								
+							tdir.z*0.5f;
+							tdir.y*0.8f;
 						}
-						else
+						tdir.x += angulareffect.z*20.0f;
+						tdir.z -= angulareffect.x*20.0f;
+
+						if (tdir.length()>0.0f) 
 						{
-							camLookAt->m_planeOffset=AglVector3::lerp(camLookAt->m_planeOffset,AglVector3::zero(),
-																	  saturate(2.0f*m_world->getDelta()));
+							camLookAt->m_planeOffset -= tdir*m_world->getDelta()*5.0f;
+						}
+						
+// 						if (tdir.length()<0.0001f)
+// 						{
+// 							camLookAt->m_planeOffset=AglVector3::lerp(camLookAt->m_planeOffset,AglVector3::zero(),
+// 																	  saturate(slowdown*m_world->getDelta()));
+// 						}
+						//else
+						{
+// 							if (abs(tdir.x)<0.00001f)
+// 								camLookAt->m_planeOffset.x=camLookAt->m_planeOffset.x*(saturate(slowdown*m_world->getDelta()));
+// 							if (abs(tdir.y)<0.00001f)
+// 								camLookAt->m_planeOffset.y=camLookAt->m_planeOffset.y*(saturate(slowdown*m_world->getDelta()));
+// 							if (abs(tdir.z)<0.00001f)
+// 								camLookAt->m_planeOffset.z=camLookAt->m_planeOffset.z*(saturate(slowdown*m_world->getDelta()));
+							//if (abs(tdir.x)<0.00001f)
+								camLookAt->m_planeOffset.x=camLookAt->m_planeOffset.x*(1.0f-(m_world->getDelta()));
+							//if (abs(tdir.y)<0.00001f)
+								camLookAt->m_planeOffset.y=camLookAt->m_planeOffset.y*(1.0f-(m_world->getDelta()));
+							//if (abs(tdir.z)<0.00001f)
+								camLookAt->m_planeOffset.z=camLookAt->m_planeOffset.z*(1.0f-(m_world->getDelta()));
 						}
 					}
 				}
@@ -919,7 +970,7 @@ void ServerPacketHandlerSystem::createAndBroadCastShip( int p_clientIdentity, in
 		40.0f);
 	// camLookat->m_offsetEntityId=smoothoffset2->getIndex();
 	camLookat->setSmoothing(6);
-	camLookat->setRotationSmoothing(true);
+	camLookat->setRotationSmoothing(false);
 	playerCam->addComponent( ComponentType::LookAtEntity, camLookat );
 	playerCam->addComponent( ComponentType::Transform, new Transform( 
 		transformComp->getMatrix() ) );

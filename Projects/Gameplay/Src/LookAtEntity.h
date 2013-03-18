@@ -102,6 +102,7 @@ public:
 	void setRotationSmoothing(bool p_mode) {m_rotationSmoothing=p_mode;}
 	AglVector3 m_dir;
 	AglVector3 m_planeOffset;
+	AglVector3 m_angleOffset;
 	int m_offsetEntityId;
 private:
 	int m_entityId;

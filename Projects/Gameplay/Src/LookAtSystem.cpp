@@ -168,7 +168,17 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 					else if (lookAt->getSmoothMode()==6)
 					{
 						AglVector3 localOffset = lookAt->m_planeOffset;
-						// localOffset.transformNormal(origTransform->getMatrix());
+						// localOffset = AglVector3::minOf(localOffset,offset*2.0f);
+						float xbound = 15.0f;
+						float ybound = 20.0f;
+						float zbound = 10.0f;
+						if (localOffset.x<-xbound) localOffset.x=-xbound;
+						if (localOffset.x>xbound) localOffset.x=xbound;
+						if (localOffset.y<-ybound) localOffset.y=-ybound;
+						if (localOffset.y>ybound) localOffset.y=ybound;
+						if (localOffset.z<-zbound) localOffset.z=-zbound;
+						if (localOffset.z>zbound) localOffset.z=zbound;
+						localOffset.transformNormal(origTransform->getMatrix());
 						position = lookTargetPos+offset+localOffset;		
 						// lookAt->m_planeOffset=AglVector3::lerp(lookAt->m_planeOffset,AglVector3::zero(),saturate(2.0f*dt));
 					}
@@ -187,21 +197,31 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 				}
 
 				// slerp
-				if (lookAt->isRotationSmoothed() && lookAt->getRotationSpeed()*dt<1.0f)
-				{
-					rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
-						saturate(lookAt->getRotationSpeed()*dt),true);
-					rotation.normalize();
-				}
-				else
-				{
-					rotation = targetTransform->getRotation();
-				}
+// 				if (true || lookAt->getSmoothMode()<6)
+// 				{
+					if (lookAt->isRotationSmoothed() && lookAt->getRotationSpeed()*dt<1.0f)
+					{
+						rotation = AglQuaternion::slerp(rotation,targetTransform->getRotation(),
+							saturate(lookAt->getRotationSpeed()*dt),true);
+						rotation.normalize();
+					}
+					else
+					{
+						rotation = targetTransform->getRotation();
+					}
+// 				}
+// 				else
+// 				{
+// 					AglVector3 angleOffset = lookAt->m_angleOffset;
+// 					angleOffset.transformNormal(origTransform->getMatrix());
+// 					rotation = AglQuaternion::constructFromAngularVelocity(angleOffset);
+// 				}
 
 
 				// update			
 				transform->setRotation( rotation );
 				transform->setTranslation( position );
+
 			}
 			// orbit behaviour
 			else if (lookAtOrbit)

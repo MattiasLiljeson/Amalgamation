@@ -5,6 +5,7 @@ HDRLights= 1
 EnableTesselation= 0
 EnableEffects= 0
 EnableVSYNC= 0
+EnableGPUMeasure= 0
 MasterVolume= 75
 SoundEffectVolume= 75
 MusicVolume= 75
