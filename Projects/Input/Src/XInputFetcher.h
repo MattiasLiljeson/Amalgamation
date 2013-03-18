@@ -49,6 +49,9 @@ public:
 	void vibrate(float p_leftMotor, float p_rightMotor) const;
 
 private:
+	void clearBuffers();
+
+private:
 	static int s_btnMaskMap[InputHelper::Xbox360Digitals_CNT];
 
 	int m_rawAnalogs[InputHelper::Xbox360Analogs_CNT];
