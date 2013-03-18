@@ -9,6 +9,15 @@ AglStandardParticle::AglStandardParticle(AglVector3 p_position, AglVector3 p_vel
 	angularVelocity = p_angularVelocity;
 	rotation = p_rotation;
 	age = 0;
+	pad = 0;
+}
+
+AglStandardParticle::AglStandardParticle()
+{
+	age				= 0;
+	angularVelocity = 0;
+	rotation		= 0;
+	pad				= 0;
 }
 
 AglParticleSystem::AglParticleSystem()

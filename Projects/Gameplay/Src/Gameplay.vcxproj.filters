@@ -877,6 +877,9 @@
     <ClInclude Include="PreloaderSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="StateManagementSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1510,6 +1513,9 @@
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
     <ClCompile Include="PreloaderSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="StateManagementSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>

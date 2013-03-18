@@ -63,14 +63,14 @@ void GameStatsSystem::updateStats( const UpdateClientStatsPacket* p_packet )
 		m_infoPanel->setActivePlayers(p_packet->activePlayers);
 	}
 
-	vector<PlayerComponent*> playerSys  = static_cast<PlayerSystem*>(
-		m_world->getSystem(SystemType::PlayerSystem))->getPlayerComponents();
+	auto playerSys  = static_cast<PlayerSystem*>(
+		m_world->getSystem(SystemType::PlayerSystem));
 
 	// Update panel with new data.
 	for (int i = 0; i < p_packet->activePlayers; i++)
 	{
 		PlayerStats stats;
-		stats.name	= playerSys.at(i)->m_playerName;
+		stats.name	= playerSys->getPlayerNameFromID(p_packet->playerIdentities[i]);
 		stats.score = p_packet->scores[i];
 		stats.ping	= static_cast<int>(p_packet->ping[i]);
 
@@ -115,8 +115,10 @@ void GameStatsSystem::process()
 		if( delta > 0.5) {
 			rocketBackend->showDocument( m_rocketDocument );
 			m_infoPanel->updateTheVisualInfoPanel();
+			m_infoPanelVisible = true;
 		} else if( delta < -0.5f) {
 			rocketBackend->hideDocument( m_rocketDocument );
+			m_infoPanelVisible = false;
 		}
 	}
 
@@ -134,12 +136,25 @@ void GameStatsSystem::process()
 		}
 
 		if(actionInputSystem->getDeltaByAction
-			(InputActionsBackendSystem::Actions_THRUST_FORWARD) > 0.5f){
+			(InputActionsBackendSystem::Actions_SHOW_SCORE) > 0.5f){
 			gameState->setQueuedState(GameStates::MENU);
 		}
-
+		
 		//Always show the info panel during the results! 
 		m_infoPanelVisible = true;
+	}
+	else if (gameState->getCurrentState() == GameStates::MENU)
+	{
+		if (gameState->getStateDelta(GameStates::RESULTS) == EnumGameDelta::EXITTHISFRAME
+			|| gameState->getStateDelta(GameStates::INGAME) == EnumGameDelta::EXITTHISFRAME)
+		{
+			m_infoPanelVisible = false;
+
+			auto rocketBackend = static_cast<LibRocketBackendSystem*>
+				(m_world->getSystem(SystemType::LibRocketBackendSystem));
+			rocketBackend->updateElement(m_rocketDocument, "title", "The Scores!");
+			rocketBackend->hideDocument(m_rocketDocument);
+		}
 	}
 
 	if (m_infoPanelVisible)

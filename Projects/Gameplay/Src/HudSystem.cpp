@@ -14,10 +14,15 @@
 HudSystem::HudSystem( LibRocketBackendSystem* p_backend, TcpClient* p_client )
 	: EntitySystem( SystemType::HudSystem )
 {
-	m_backend = p_backend;
-	m_hudVisible = false;
-	m_currentState = false;
-	m_client = p_client;
+	m_backend			= p_backend;
+	m_hudVisible		= false;
+	m_currentState		= false;
+	m_client			= p_client;
+	m_hudIndex			= -1;
+	m_leftWing			= NULL;
+	m_rightWing			= NULL;
+	m_timerMonitor		= NULL;
+	m_constructionMode	= NULL;
 }
 
 
@@ -40,6 +45,7 @@ void HudSystem::process()
 	if(stateSystem->getStateDelta(GameStates::INGAME) == EnumGameDelta::ENTEREDTHISFRAME)
 	{
 		m_backend->showDocument(m_hudIndex);
+		m_hudVisible = true;
 
 		setHUDData(SCORE,"-1");
 		setHUDData(TIME,"00:00");
@@ -138,12 +144,21 @@ void HudSystem::process()
 	}
 	else if(stateSystem->getStateDelta(GameStates::RESULTS) == EnumGameDelta::ENTEREDTHISFRAME){
 		m_backend->hideDocument(m_hudIndex);
+		m_hudVisible = false;
 	}
 }
 
 void HudSystem::setHUDVisibility(bool p_setVisibility)
 {
+	if (m_hudVisible == p_setVisibility)
+		return;
+
 	m_hudVisible = p_setVisibility;
+
+	if (m_hudVisible)
+		m_backend->showDocument(m_hudIndex);
+	else
+		m_backend->hideDocument(m_hudIndex);
 }
 
 void HudSystem::setHUDData( HUD_TYPES p_type, const char* p_value )
@@ -188,6 +203,7 @@ void HudSystem::setHUDData( HUD_TYPES p_type, const char* p_value )
 Entity* HudSystem::createSprite(AglVector3 p_position, string p_texture, AglVector2 p_size)
 {
 	Entity* sprite = m_world->createEntity();
+	sprite->setName("Hud Sprite");
 
 	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
 
@@ -217,6 +233,7 @@ Entity* HudSystem::createConstructionSprite(AglVector3 p_position, string p_text
 											AglVector2 p_size)
 {
 	Entity* sprite = m_world->createEntity();
+	sprite->setName("Hud Construction Sprite");
 
 	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
 
@@ -256,5 +273,29 @@ void HudSystem::reinitSprite(Entity* p_sprite, AglVector3 p_position, AglVector2
 	{
 		((*particles)[i]).size = p_size;
 		((*particles)[i]).position = p_position;
+	}
+}
+
+void HudSystem::clear()
+{
+	if (m_leftWing)
+	{
+		m_world->deleteEntity(m_leftWing);
+		m_leftWing = NULL;
+	}
+	if (m_rightWing)
+	{
+		m_world->deleteEntity(m_rightWing);
+		m_rightWing = NULL;
+	}
+	if (m_timerMonitor)
+	{
+		m_world->deleteEntity(m_timerMonitor);
+		m_timerMonitor = NULL;
+	}
+	if (m_constructionMode)
+	{
+		m_world->deleteEntity(m_constructionMode);
+		m_constructionMode = NULL;
 	}
 }

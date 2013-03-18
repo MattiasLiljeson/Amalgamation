@@ -80,6 +80,7 @@ void LibRocketEventManagerSystem::initialize()
 	eventInstancer->RemoveReference();
 
 	m_menuEntity = m_world->createEntity();
+	m_menuEntity->setName("MenuAudio_MenuOK");
 	SoundComponent* soundComp = new SoundComponent();
 	AudioHeader* header = new AudioHeader(AudioHeader::AMBIENT,"MenuOk");
 	header->file = "Mine_Blip_v2.wav";
@@ -287,12 +288,12 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 
 			m_client->setPlayerName(playerName);
 
-			m_world->requestToHostServer(server_name, gameTime);
-
 			auto sys = static_cast<ClientConnectToServerSystem*>(
 				m_world->getSystem(SystemType::ClientConnectoToServerSystem));
 
-			sys->setAddressAndConnect("127.0.0.1", server_port);
+			if (sys->setAddressAndConnect("127.0.0.1", server_port)) {
+				m_world->requestToHostServer(server_name, gameTime);
+			}
 		}
 		else if(values[0] == "leave_server"){
 			DisconnectPacket dcPacket;
@@ -302,9 +303,9 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 		}
 		else if (values[0] == "reset_connection")
 		{
-			auto sys = static_cast<ClientPacketHandlerSystem*>(
-				m_world->getSystem(SystemType::ClientPacketHandlerSystem));
-			sys->resetFromDisconnect();
+			//auto sys = static_cast<ClientPacketHandlerSystem*>(
+			//	m_world->getSystem(SystemType::ClientPacketHandlerSystem));
+			//sys->resetFromDisconnect();
 		}
 
 		else if(values[0] == "play_confirm"){

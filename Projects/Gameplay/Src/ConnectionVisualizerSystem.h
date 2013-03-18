@@ -36,6 +36,7 @@ public:
 			offset = p_offset;
 			forward = p_forward;
 			disabled = p_disabled;
+			data = NULL;
 		}
 	};
 
@@ -48,6 +49,8 @@ public:
 
 	void addEffect(ConnectionEffectData p_fx);
 	void disableAll();
+
+	void cleanup();
 protected:
 private:
 	vector<ConnectionEffectData> m_effectsToCreate;

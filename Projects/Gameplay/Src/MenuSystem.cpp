@@ -8,6 +8,7 @@
 #include "ClientStateSystem.h"
 #include "LobbySystem.h"
 #include "SettingsSystem.h"
+#include "MenuBackgroundSceneSystem.h"
 #include <TcpClient.h>
 
 MenuSystem::MenuSystem(TcpClient* p_tcpClient)
@@ -90,7 +91,14 @@ void MenuSystem::process()
 
 		rocketEventManager->clearDocumentStack();
 		rocketEventManager->loadWindow("main_menu");
+
+		if (gameState->getStateDelta(GameStates::INGAME) == EnumGameDelta::EXITTHISFRAME){
+			auto menuBackgroundSys = static_cast<MenuBackgroundSceneSystem*>(
+				m_world->getSystem(SystemType::MenuBackgroundSceneSystem));
+			menuBackgroundSys->setEnabled(true);
+		}
 	}
+
 }
 
 void MenuSystem::endLoadingState()

@@ -272,28 +272,28 @@ void LibRocketBackendSystem::process()
 		getSystem(SystemType::ClientStateSystem));
 
 	// Rotate ship in the menu. Hide the menu so that the ship can be seen
-	GameStates state = stateSystem->getCurrentState();
-	if( state == GameStates::MENU || state == GameStates::LOBBY ) {
-		double secondaryDelta = m_actionBackend->getDeltaByAction(
-			InputActionsBackendSystem::Actions_CURSOR_SECONDARY );
-		if( secondaryDelta > 0.5) {
-			m_renderGUI = false;
-		} else if( secondaryDelta < -0.5 ) {
-			m_renderGUI = true;
-		}
-	}
+	//GameStates state = stateSystem->getCurrentState();
+	//if( state == GameStates::MENU || state == GameStates::LOBBY ) {
+	//	double secondaryDelta = m_actionBackend->getDeltaByAction(
+	//		InputActionsBackendSystem::Actions_CURSOR_SECONDARY );
+	//	if( secondaryDelta > 0.5) {
+	//		m_renderGUI = false;
+	//	} else if( secondaryDelta < -0.5 ) {
+	//		m_renderGUI = true;
+	//	}
+	//}
 
-	// DEBUG: Turn off GUI during gameplay
-	else if(stateSystem->getCurrentState() == GameStates::INGAME) {
-		if(m_inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys::KeyboardKeys_9) > 0.5f ){
-			m_renderGUI = !m_renderGUI;
-		}
-	}
+	//// DEBUG: Turn off GUI during gameplay
+	//else if(stateSystem->getCurrentState() == GameStates::INGAME) {
+	//	if(m_inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys::KeyboardKeys_9) > 0.5f ){
+	//		m_renderGUI = !m_renderGUI;
+	//	}
+	//}
 
 	//Always shot GUI otherwise
-	else {
-		m_renderGUI = true;
-	}
+	//else {
+	//	m_renderGUI = true;
+	//}
 	
 	processCursorMove();
 	processKeyStates();

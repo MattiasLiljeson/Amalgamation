@@ -19,6 +19,8 @@ class TeslaEffectSystem: public EntitySystem
 public:
 	TeslaEffectSystem();
 	void inserted( Entity* p_entity ) final;
+	void removed( Entity* p_entity ) final;
+
 	void animateHits(int p_fromEntity, int* p_identitiesHit, int p_numberOfHits,
 		int* p_identitiesHitFloating, int p_numberOfHitsFloating);
 

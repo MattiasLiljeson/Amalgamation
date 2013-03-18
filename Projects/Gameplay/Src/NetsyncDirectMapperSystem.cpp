@@ -27,7 +27,7 @@ void NetsyncDirectMapperSystem::removed( Entity* p_entity )
 	NetworkSynced* netSync = static_cast<NetworkSynced*>(p_entity->getComponent(
 		ComponentType::NetworkSynced));
 	int networkIdentity = netSync->getNetworkIdentity();
-	m_networkEntityIndices[networkIdentity] = NULL;
+	m_networkEntityIndices[networkIdentity] = -1;
 }
 
 void NetsyncDirectMapperSystem::processEntities( const vector<Entity*>& p_entities )

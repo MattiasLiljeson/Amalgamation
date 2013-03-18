@@ -13,11 +13,33 @@ SlotMarkerSystem::SlotMarkerSystem() :
 							ComponentType::SlotMarker)
 {
 	m_current = -1;
+	memset(&slots, 0, sizeof(slots));
 }
 
 
 SlotMarkerSystem::~SlotMarkerSystem()
 {
+
+}
+
+void SlotMarkerSystem::clear()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		if (slots[i])
+		{	
+			// Retrieve slot marker component, and remove the ship marker entity
+			auto slotMarker = static_cast<SlotMarker*>(
+				slots[i]->getComponent(ComponentType::SlotMarker));
+			if (slotMarker->shipMarker != -1) {
+				m_world->deleteEntity(m_world->getEntity(slotMarker->shipMarker));
+				slotMarker->shipMarker = -1;
+			}
+			m_world->deleteEntity(slots[i]);
+			slots[i] = NULL;
+		}
+	}
+	m_current = -1;
 }
 
 void SlotMarkerSystem::initialize()
@@ -39,7 +61,7 @@ void SlotMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 		float resRatioX = 1280 / m_screenSize.x;
 		float resRatioY =  720 / m_screenSize.y;
 
-		m_shipMarkerSize = AglVector2(0.15f, 0.15f*gfx->getAspectRatio()*resRatioX);
+		m_shipMarkerSize = AglVector2(0.15f, 0.15f*gfx->getAspectRatio())*resRatioX;
 		m_moduleMarkerSize = m_shipMarkerSize * 0.5f;
 
 		gfx->getGfxWrapper()->
@@ -164,6 +186,7 @@ void SlotMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 Entity* SlotMarkerSystem::createShipMarkerEntity(AglVector3 p_position, string p_texture, AglVector2 p_size)
 {
 	Entity* effect = m_world->createEntity();
+	effect->setName("Ship Marker Effect");
 
 	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
 
@@ -192,6 +215,7 @@ Entity* SlotMarkerSystem::createShipMarkerEntity(AglVector3 p_position, string p
 Entity* SlotMarkerSystem::createModuleMarkerEntity(AglVector3 p_position, string p_texture, AglVector2 p_size)
 {
 	Entity* effect = m_world->createEntity();
+	effect->setName("Module Marker Effect");
 
 	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
 

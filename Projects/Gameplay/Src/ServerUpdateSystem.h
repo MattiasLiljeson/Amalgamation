@@ -30,10 +30,13 @@ public:
 	void initialize();
 
 	virtual void removed( Entity* p_entity );
-
+private:
+	void sendPlayerStats();
 
 private:
-	TcpServer* m_server;
+	TcpServer*	m_server;
+	float		m_timestamp;
+
 	struct TransformRecord {
 		Transform transform;
 		float timestamp;

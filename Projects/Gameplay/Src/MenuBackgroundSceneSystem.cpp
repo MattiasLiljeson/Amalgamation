@@ -14,12 +14,18 @@
 #include <Globals.h>
 #include "ColorTone.h"
 #include "GlowAnimation.h"
+#include "GameplayTags.h"
+#include "Transform.h"
+#include "EnvironmentValues.h"
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	: EntitySystem(SystemType::MenuBackgroundSceneSystem)
 {
 	m_deltaRotation = 0.0f;
 	xPos = -7.5f;
+
+	m_ship = NULL;
+	m_orbitingShip = NULL;
 }
 
 MenuBackgroundSceneSystem::~MenuBackgroundSceneSystem()
@@ -37,7 +43,8 @@ void MenuBackgroundSceneSystem::process()
 	*/
 	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
 		getSystem(SystemType::ClientStateSystem));
-	if(stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::EXITTHISFRAME)
+	if(stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::EXITTHISFRAME
+		&& stateSystem->getStateDelta(GameStates::LOADING) == EnumGameDelta::ENTEREDTHISFRAME)
 	{
 		this->setEnabled(false);
 	}
@@ -123,11 +130,15 @@ void MenuBackgroundSceneSystem::initialize()
 
 void MenuBackgroundSceneSystem::sysEnabled()
 {
+	m_deltaRotation = 0.0f;
+	xPos = -7.5f;
+
 	initInstanceSphereByJohan("RockA.agl", AglVector3(20.0f, 0.0f, 80.0f),
 		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 50);
 
 	m_ship = m_world->createEntity();
 	m_ship->addComponent(new LoadMesh("Ship.agl"));
+	m_ship->setName("MenuShip_Idling");
 	AglVector3 position(-7.5f, -2.0f, 30.0f);
 	AglVector3 toVector(0.0f, -0.2f, -1.0f);
 	AglVector3 axis( 0.0f, 1.0f, -0.2f);
@@ -135,9 +146,12 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_ship->addComponent(new Transform(position, rotation, AglVector3::one()));
 	AxisRotate* axisRotate = new AxisRotate(axis, toVector, rotation, 0.0f);
 	m_ship->addComponent(axisRotate);
+	EnvironmentValues* envValues = new EnvironmentValues();
+	envValues->m_fogColor = AglVector3(0.1f, 0.1f, 0.1f);
+	m_ship->addComponent(envValues);
 
 	initOrbitingShip(AglVector3(20.0f, 0.0f, 80.0f), AglVector3(0, 1.0f, 0), 50.0f, 1.0f);
-
+	repositionCamera();
 	// RM-RT 2013-03-04
 	/*
 	SoundComponent* soundSoure = new SoundComponent( TESTSOUNDEFFECTPATH, 
@@ -184,9 +198,12 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_world->addEntity(m_ship);
 
 	Entity* entity = m_world->createEntity();
+	entity->setName("MenuPointLight");
 	initPointLight(entity, position + AglVector3(0.0f, 10.0f, -50.0f), 200.0f);
 	m_world->addEntity(entity);
 	m_lights.push_back(entity);
+
+
 }
 
 void MenuBackgroundSceneSystem::sysDisabled()
@@ -205,8 +222,16 @@ void MenuBackgroundSceneSystem::sysDisabled()
 			m_world->deleteEntity(m_lights[i]);
 		}
 	}
-	m_world->deleteEntity(m_ship);
-	m_world->deleteEntity(m_orbitingShip);
+	m_lights.clear();
+	m_rocks.clear();
+
+	if (m_ship)
+		m_world->deleteEntity(m_ship);
+	if (m_orbitingShip)
+		m_world->deleteEntity(m_orbitingShip);
+
+	m_ship = NULL;
+	m_orbitingShip = NULL;
 }
 
 void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, AglVector3 p_origin,
@@ -216,6 +241,7 @@ void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, Ag
 	for(unsigned int i=0; i<p_numberInstances; i++)
 	{
 		Entity* entity = m_world->createEntity();
+		entity->setName("MenuRocks");
 		AglVector3 randomDirection;
 		RandomUtil::randomEvenlyDistributedSphere(&randomDirection.x, &randomDirection.y,
 			&randomDirection.z);
@@ -268,6 +294,7 @@ void MenuBackgroundSceneSystem::initOrbitingShip( AglVector3 p_center, AglVector
 	float p_radius, float p_speed )
 {
 	m_orbitingShip = m_world->createEntity();
+	m_orbitingShip->setName("MenuShip_Orbiting");
 	m_orbitingShip->addComponent(new LoadMesh("Ship.agl"));
 	AglVector3 position = p_center + AglVector3(0, 0, 1.0f) * p_radius;
 	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), AglVector3::left());
@@ -279,4 +306,20 @@ void MenuBackgroundSceneSystem::initOrbitingShip( AglVector3 p_center, AglVector
 		-fabs(p_speed)));
 	m_orbitingShip->addComponent(new GlowAnimation(AglVector4(0.0f, 1.0f, 0.0f, 1.0f), true, 2.0f));
 	m_world->addEntity(m_orbitingShip);
+}
+
+void MenuBackgroundSceneSystem::repositionCamera()
+{
+	Entity* camera = m_world->getEntityManager()
+		->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
+
+	if (camera)
+	{
+		auto transform = static_cast<Transform*>(camera->getComponent(ComponentType::Transform));
+		if (transform)
+		{
+			transform->setTranslation(AglVector3::zero());
+			transform->setRotation(AglQuaternion::identity());
+		}
+	}
 }

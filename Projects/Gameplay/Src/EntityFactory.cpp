@@ -1095,6 +1095,7 @@ void EntityFactory::createHighlightParticleEmitter( ParticleSystemsComponent* p_
 void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 {
 	Entity* effect = m_world->createEntity();
+	effect->setName("Explosion Effect");
 
 	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
 

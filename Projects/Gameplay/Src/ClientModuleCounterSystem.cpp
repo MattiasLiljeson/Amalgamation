@@ -18,3 +18,12 @@ void ClientModuleCounterSystem::initialize()
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(AntTweakBarWrapper::NETWORK,
 		"num modules", TwType::TW_TYPE_UINT32, &m_numberOfModules, "");
 }
+
+void ClientModuleCounterSystem::destroyAllModules()
+{
+	const vector<Entity*>& entities = getActiveEntities();
+	for(unsigned int i=0; i<entities.size(); i++)
+	{
+		m_world->deleteEntity(entities[i]);
+	}
+}

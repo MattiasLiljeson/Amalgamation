@@ -20,7 +20,7 @@ SelectionMarkerSystem::~SelectionMarkerSystem()
 void SelectionMarkerSystem::initialize()
 {
 	m_marker = m_world->createEntity();
-
+	m_marker->setName("SelectionMarker");
 	m_marker->addComponent(ComponentType::SelectionMarker, new SelectionMarker());
 	m_marker->addComponent(ComponentType::RenderInfo, new RenderInfo(false));
 	m_marker->addComponent(ComponentType::Transform, new Transform());

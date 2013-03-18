@@ -104,3 +104,12 @@ AglBoundingSphere ShipManagerSystem::findEditSphere(Entity* p_ship)
 
 	return bs;
 }
+
+void ShipManagerSystem::destroyAllShips()
+{
+	const vector<Entity*>& ships = getShips();
+	for (unsigned int i = 0; i < ships.size(); i++)
+	{
+		m_world->deleteEntity(ships[i]);
+	}
+}

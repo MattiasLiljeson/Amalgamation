@@ -801,24 +801,37 @@ void ClientPacketHandlerSystem::handleIngameState()
 				(m_world->getSystem(SystemType::GameStatsSystem));
 			gameStats->updateStats(&updateClientPacket);
 
-			// Client ping
-			m_currentPing = updateClientPacket.ping[0];
-			float serverTimeAhead = updateClientPacket.currentServerTimestamp -
-				m_world->getElapsedTime() + m_currentPing / 2.0f;
-			m_tcpClient->setServerTimeAhead( serverTimeAhead );
-			m_tcpClient->setPingToServer( m_currentPing );
+			auto playerSys = static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem));
+			for (unsigned int i = 0; i < updateClientPacket.activePlayers; i++)
+			{
+				// Find the right player
+				auto playerComp = playerSys->findPlayerComponentFromPlayerID(updateClientPacket.playerIdentities[i]);
+				if (playerComp)
+				{
+					if (playerComp->m_playerID == m_tcpClient->getPlayerID())
+					{
+						m_currentPing = updateClientPacket.ping[i];
+						float serverTimeAhead = updateClientPacket.currentServerTimestamp -
+							m_world->getElapsedTime() + m_currentPing / 2.0f;
+						m_tcpClient->setServerTimeAhead( serverTimeAhead );
+						m_tcpClient->setPingToServer( m_currentPing );
 
-			// Update score in hud
-			HudSystem* hud = static_cast<HudSystem*>(m_world->getSystem(SystemType::HudSystem));
+						// Update score in hud
+						HudSystem* hud = static_cast<HudSystem*>(m_world->getSystem(SystemType::HudSystem));
 
-			if(hud){
-				hud->setHUDData(HudSystem::SCORE,
-					toString(updateClientPacket.scores[m_tcpClient->getPlayerID()]).c_str());
-				hud->setHUDData(HudSystem::TIME,
-					toString(
-					toString(updateClientPacket.minutesUntilEndOfRound) + ":" +
-					toString(updateClientPacket.secondsUntilEndOfRound)
-					).c_str());
+						if(hud){
+							hud->setHUDData(HudSystem::SCORE,
+								toString(updateClientPacket.scores[i]).c_str());
+							hud->setHUDData(HudSystem::TIME,
+								toString(
+								toString(updateClientPacket.minutesUntilEndOfRound) + ":" +
+								toString(updateClientPacket.secondsUntilEndOfRound)
+								).c_str());
+						}
+
+						break;
+					}
+				}
 			}
 		}
 		else if(packetType == (char)PacketType::PlayerWinLose)
@@ -1152,7 +1165,7 @@ void ClientPacketHandlerSystem::handleIngameState()
 		}
 		else
 		{
-			DEBUGWARNING(( "Unhandled packet type!" ));
+			DEBUGWARNING(( toString("Unhandled packet type " + toString((int)packetType) + "!\n").c_str()));
 		}
 
 		// Pop packet!
@@ -1214,6 +1227,7 @@ void ClientPacketHandlerSystem::handleLobby()
 
 			//Add entities here and utilize the player component 
 			Entity* newPlayer = m_world->createEntity();
+			newPlayer->setName("Player " + toString(newlyConnected.playerID));
 			PlayerComponent* newPlayerComp = new PlayerComponent();
 			newPlayerComp->m_networkID = newlyConnected.networkID;
 			newPlayerComp->m_playerID = newlyConnected.playerID;
@@ -1278,12 +1292,46 @@ void ClientPacketHandlerSystem::handleLobby()
 				} 
 			}
 		}
+		else if(packetType == (char)PacketType::Ping)
+		{
+			PingPacket pingPacket;
+			pingPacket.unpack( packet );
+
+			PongPacket pongPacket;
+			pongPacket.timeStamp = pingPacket.timeStamp;
+			m_tcpClient->sendPacket( pongPacket.pack() );
+		}
 		else if(packetType == (char)PacketType::ChangeStatePacket){
 			ChangeStatePacket changeState;
 			changeState.unpack(packet);
 
 			if(changeState.m_serverState == ServerStates::LOADING){
 				m_gameState->setQueuedState(GameStates::LOADING);
+			}
+		}
+		else if(packetType == (char)PacketType::UpdateClientStats)
+		{
+			UpdateClientStatsPacket updateClientPacket;
+			updateClientPacket.unpack(packet);
+
+			auto lobbySys = static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem));
+			auto playerSys = static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem));
+
+			for (unsigned int i = 0; i < updateClientPacket.activePlayers; i++)
+			{
+				auto playerComp = playerSys->findPlayerComponentFromPlayerID(updateClientPacket.playerIdentities[i]);
+				if (playerComp)
+				{
+					if (playerComp->m_playerID == m_tcpClient->getPlayerID())
+					{
+						m_currentPing = updateClientPacket.ping[i];
+						float serverTimeAhead = updateClientPacket.currentServerTimestamp -
+							m_world->getElapsedTime() + m_currentPing / 2.0f;
+						m_tcpClient->setServerTimeAhead( serverTimeAhead );
+						m_tcpClient->setPingToServer( m_currentPing );
+					}
+					lobbySys->updatePing(playerComp->m_playerID, updateClientPacket.ping[i]);
+				}
 			}
 		}
 		else if(packetType == (char)PacketType::EntityCreation){
@@ -1487,6 +1535,16 @@ void ClientPacketHandlerSystem::handleResults()
 		ChangeStatePacket changeState;
 		changeState.m_gameState = GameStates::RESULTS;
 		m_tcpClient->sendPacket(changeState.pack());
+		
+		auto inputBackend = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::InputBackendSystem));
+		if (!inputBackend->getCursor()->isVisible())
+			inputBackend->getCursor()->show();
+
+		// If the current player is hosting the game, then request to shut it down!
+		if (m_world->isHostingServer())
+		{
+			m_world->requestToQuitServer();
+		}
 	}
 //	else
 //	{
@@ -1539,20 +1597,33 @@ void ClientPacketHandlerSystem::resetFromDisconnect()
 	// * Remove all players from the client!
 	// * Clear lobby data!
 	// * Enable the 'connect to server' system!
+	// * Clear components from camera.
 	// * Queue state to menu!
-	static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
-		deleteAllPlayerEntities();
-	static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
-		resetAllPlayers();
-	static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
-		setEnabled(true);
-	m_gameState->setQueuedState(GameStates::MENU);
+	//static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
+	//	deleteAllPlayerEntities();
+	//static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
+	//	resetAllPlayers();
+	//static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
+	//	setEnabled(true);
+	//Entity* camera = m_world->getEntityManager()->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
+	//if (camera)
+	//{
+	//	camera->removeComponent(ComponentType::NetworkSynced);
+	//	camera->removeComponent(ComponentType::PlayerState);
+	//	camera->removeComponent(ComponentType::PickComponent);
+	//	camera->removeComponent(ComponentType::PlayerCameraController);
+	//	camera->applyComponentChanges();
+	//}
+
+	//m_gameState->setQueuedState(GameStates::MENU);
 }
 
 void ClientPacketHandlerSystem::handleServerDisconnect()
 {
-	if (!m_tcpClient->hasActiveConnection() && m_gameState->getCurrentState() != GameStates::MENU
-		&& m_gameState->getCurrentState() != GameStates::NONE)
+	if (!m_tcpClient->hasActiveConnection() 
+		&& m_gameState->getCurrentState() != GameStates::MENU
+		&& m_gameState->getCurrentState() != GameStates::NONE
+		&& m_gameState->getCurrentState() != GameStates::RESULTS)
 	{
 		static_cast<MenuSystem*>(m_world->getSystem(SystemType::MenuSystem))
 			->displayDisconnectPopup();
@@ -1576,8 +1647,9 @@ void ClientPacketHandlerSystem::handlePlayerDisconnect( const DisconnectPacket& 
 	// * Disconnect from server immediately!
 	if (p_dcPacket.clientNetworkIdentity == m_tcpClient->getId())
 	{
-		resetFromDisconnect();
+		//resetFromDisconnect();
 		m_tcpClient->disconnect();
+		m_gameState->setQueuedState(GameStates::MENU);
 	}
 	// Else, the client player should:
 	// * Remove player from lobby.
@@ -1591,11 +1663,17 @@ void ClientPacketHandlerSystem::handlePlayerDisconnect( const DisconnectPacket& 
 		m_world->getOutputLogger()->write(("Player " + toString(p_dcPacket.playerID) + " has left the game.\n").c_str());
 	}
 
-	// If this player is the host (id = 0) then request to shut down the server.
-	if (p_dcPacket.playerID == 0)
+	// If the current player is hosting the game, then request to shut it down!
+	if (m_world->isHostingServer())
 	{
-		//static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
-		//	setEnabled(true);
 		m_world->requestToQuitServer();
 	}
+
+	// If this player is the host (id = 0) then request to shut down the server.
+	//if (p_dcPacket.playerID == 0)
+	//{
+	//	//static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
+	//	//	setEnabled(true);
+	//	m_world->requestToQuitServer();
+	//}
 }

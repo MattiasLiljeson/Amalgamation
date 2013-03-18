@@ -7,6 +7,8 @@ EntitySystem::EntitySystem( SystemType::SystemTypeIdx p_type )
 	m_type = SystemType::getTypeFor(p_type);
 	m_timeUsedPerSecond = 0.0;
 	m_lastExecutionTime = 0.0;
+
+	m_enabled = false;
 }
 
 EntitySystem::EntitySystem( SystemType::SystemTypeIdx p_type, int p_numComponents, ... )
@@ -292,7 +294,11 @@ bool EntitySystem::getEnabled() const
 
 void EntitySystem::setEnabled( bool p_enabled )
 {
+	if (m_enabled == p_enabled)
+		return;
+
 	m_enabled = p_enabled;
+	// Do not double fire the callback, if its state isn't changed
 	if(p_enabled)
 	{
 		sysEnabled();

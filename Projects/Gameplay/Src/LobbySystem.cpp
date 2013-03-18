@@ -115,4 +115,11 @@ void LobbySystem::setAllPlayersReady( bool p_ready )
 	NotifyRowChange(m_tableName,0,MAXPLAYERS);
 }
 
+void LobbySystem::updatePing( int p_playerId, int p_ping )
+{
+	m_players[p_playerId].ping = p_ping;
+	NotifyRowChange(m_tableName, p_playerId, 1);
+}
+
+
 

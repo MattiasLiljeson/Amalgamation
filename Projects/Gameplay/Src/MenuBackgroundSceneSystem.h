@@ -30,9 +30,11 @@ private:
 	void initOrbitingShip(AglVector3 p_center, AglVector3 p_axis, float p_radius,
 		 float p_speed);
 
+	void repositionCamera();
 private:
 	Entity* m_ship;
 	Entity* m_orbitingShip;
+
 	vector<Entity*> m_rocks;
 	vector<Entity*> m_lights;
 	InputActionsBackendSystem* m_actionBackend;

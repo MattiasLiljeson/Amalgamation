@@ -26,4 +26,6 @@ struct AglStandardParticle
 
 	AglStandardParticle(AglVector3 p_position, AglVector3 p_velocity, AglVector2 p_size,
 		float p_angularVelocity, float p_rotation);
+
+	AglStandardParticle();
 };

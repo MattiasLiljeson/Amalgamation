@@ -5,6 +5,8 @@ Entity::Entity( EntityWorld* p_world, int p_index )
 {
 	 m_world = p_world;
 	 m_index = p_index;
+	 m_enabled = true;
+	 m_name = "(unknown)";
 }
 
 
@@ -19,10 +21,10 @@ void Entity::reset()
 	//m_UUID = UUID.randomUUID();
 }
 
-int Entity::getUUID()
-{
-	return m_UUID;
-}
+//int Entity::getUUID()
+//{
+//	return m_UUID;
+//}
 
 int Entity::getIndex()
 {

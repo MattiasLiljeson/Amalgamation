@@ -139,6 +139,7 @@ public:	//Enums
 		ClientDebugModuleSpawnerSystem,
 		GlowAnimationSystem,
 		PreloaderSystem,
+		StateManagementSystem,
 		NUM_SYSTEM_TYPES
 	};
 

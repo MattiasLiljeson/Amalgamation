@@ -8,7 +8,8 @@
 #include "SimpleEventPacket.h"
 #include "Cursor.h"
 #include <Globals.h>
-
+#include <OutputLogger.h>
+#include <ToString.h>
 
 ShipInputProcessingSystem::ShipInputProcessingSystem(InputBackendSystem* p_inputBackend) :
 										EntitySystem( SystemType::ShipInputProcessingSystem )
@@ -168,6 +169,7 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 		InputActionsBackendSystem::Actions_TOGGLE_EDIT_MODE);
 	if(editModeToggle>0.0)
 	{
+		m_world->getOutputLogger()->write("Edit mode toggle\n");
 		input.toggleEditMode = true;
 	}
 
@@ -177,6 +179,8 @@ ShipInputProcessingSystem::RawInputForces ShipInputProcessingSystem::readAllInpu
 		InputActionsBackendSystem::Actions_TRIGGER_EDIT_MODE);
 	if(editModeTrigger != 0.0)
 	{
+		m_world->getOutputLogger()->write(("Edit mode trigger toggle " 
+			+ toString(editModeTrigger) + "\n").c_str());
 		input.toggleEditMode = true;
 	}
 	

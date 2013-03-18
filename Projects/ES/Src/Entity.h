@@ -30,7 +30,7 @@ public:
 	 * This is the ID that shall be used in all game logic as it's unique for every entity
 	 * for this game session. This is also unique across the network.
 	 */
-	int getUUID();
+	//int getUUID();
 
 	/** Returns the Entities world-index. 
 	 * This is the index that is used for storing Components etc. These are reused between
@@ -109,7 +109,7 @@ public:
 
 private:
 	// Universal Unique ID. This id is unique in the network and will never be reused. 
-	int m_UUID; ///<NOT IMPLEMENTED!
+	//int m_UUID; ///<NOT IMPLEMENTED!
 
 	// This id  is used as an index for the components internally. If an entity is deleted
 	// from the world its id will be reused for future created entities.

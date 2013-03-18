@@ -1,22 +1,30 @@
 #pragma once
+
 #include <EntitySystem.h>
-#include "ShipModule.h"
+
 // =======================================================================================
-// ShipModulesTrackerSystem
+//                                      StateManagementSystem
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief Brief...
+/// \brief	Manages how entities and components are created and deleted during states.
 ///        
-/// # ShipModulesTrackerSystem
-/// Detailed description...
-/// Created on: 31-1-2013 
+/// # StateManagementSystem
+/// Detailed description.....
+/// Created on: 14-3-2013 
 ///---------------------------------------------------------------------------------------
-class ShipModulesTrackerSystem: public EntitySystem
+
+class StateManagementSystem : public EntitySystem
 {
 public:
-	ShipModulesTrackerSystem();
-	vector<ShipModule*> getModulesFromParent( int p_entityIndex );
+	StateManagementSystem();
+	
+	virtual ~StateManagementSystem();
 
-	void destroyAllModules();
+	virtual void process();
+
+	virtual void initialize();
+
+protected:
+private:
 };

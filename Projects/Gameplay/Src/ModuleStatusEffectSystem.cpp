@@ -16,6 +16,16 @@ ModuleStatusEffectSystem::~ModuleStatusEffectSystem()
 
 }
 
+void ModuleStatusEffectSystem::clear()
+{
+	m_myship = NULL;
+
+	m_unusedModuleEffects.clear();
+	m_valueEffect.clear();
+	m_healthEffects.clear();
+	m_freefloatEffects.clear();
+}
+
 void ModuleStatusEffectSystem::initialize()
 {
 
