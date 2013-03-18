@@ -303,7 +303,7 @@ void LibRocketBackendSystem::process()
 
 void LibRocketBackendSystem::render()
 {
-	//if(m_renderGUI)
+	if(m_renderGUI)
 	{
 		m_rocketContext->Render();
 	}

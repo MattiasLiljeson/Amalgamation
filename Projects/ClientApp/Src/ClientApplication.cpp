@@ -129,6 +129,7 @@
 #include <AddToParentSystem.h>
 #include <GlowAnimationSystem.h>
 #include <ClientDebugModuleSpawnerSystem.h>
+#include <PreloaderSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -372,6 +373,7 @@ void ClientApplication::initSystems()
 	/* Entity Creation														*/
 	/************************************************************************/
 	m_world->setSystem( new EntityFactory(m_client, NULL) );
+	m_world->setSystem( new PreloaderSystem() );
 
 	/************************************************************************/
 	/* Level handling														*/
