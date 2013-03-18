@@ -56,6 +56,7 @@
     <ClInclude Include="ModuleStatusVisualizationMode.h" />
     <ClInclude Include="PlayerReadyPacket.h" />
     <ClInclude Include="PortalCullingSystem.h" />
+    <ClInclude Include="RegisteredEntity.h" />
     <ClInclude Include="RootBoundingSpherePacket.h" />
     <ClInclude Include="SettingsSystem.h" />
     <ClInclude Include="ShieldActivationPacket.h" />

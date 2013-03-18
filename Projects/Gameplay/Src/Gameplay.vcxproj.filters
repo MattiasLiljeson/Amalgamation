@@ -874,6 +874,10 @@
     <ClInclude Include="ShieldEffectSystem.h">
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClInclude>
+    <ClInclude Include="ShipMassBoosterUpdatePacket.h" />
+    <ClInclude Include="RegisteredEntity.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1506,5 +1510,6 @@
     <ClCompile Include="ShieldEffectSystem.cpp">
       <Filter>Systems\Gameplay\Client Only</Filter>
     </ClCompile>
+    <ClCompile Include="ShipMassBoosterUpdatePacket.cpp" />
   </ItemGroup>
 </Project>
