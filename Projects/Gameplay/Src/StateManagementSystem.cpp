@@ -8,6 +8,9 @@
 #include "HudSystem.h"
 #include "SlotMarkerSystem.h"
 #include "ModuleStatusEffectSystem.h"
+#include "PlayerSystem.h"
+#include "LobbySystem.h"
+#include "ClientConnectToServerSystem.h"
 #include <OutputLogger.h>
 
 StateManagementSystem::StateManagementSystem()
@@ -36,10 +39,33 @@ void StateManagementSystem::process()
 		menuBackgroundSys->setEnabled(true);
 
 		if(gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::EXITTHISFRAME
+			|| gameState->getStateDelta(GameStates::LOBBY) == EnumGameDelta::EXITTHISFRAME
 			|| gameState->getStateDelta(GameStates::FINISHEDLOADING) == EnumGameDelta::EXITTHISFRAME
 			|| gameState->getStateDelta(GameStates::INGAME) == EnumGameDelta::EXITTHISFRAME
 			|| gameState->getStateDelta(GameStates::RESULTS) == EnumGameDelta::EXITTHISFRAME)
 		{
+			// then the following should be done:
+			// * Remove all players from the client!
+			// * Clear lobby data!
+			// * Enable the 'connect to server' system!
+			// * Clear components from camera.
+
+			static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
+				deleteAllPlayerEntities();
+			static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
+				resetAllPlayers();
+			static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
+				setEnabled(true);
+			Entity* camera = m_world->getEntityManager()->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
+			if (camera)
+			{
+				camera->removeComponent(ComponentType::NetworkSynced);
+				camera->removeComponent(ComponentType::PlayerState);
+				camera->removeComponent(ComponentType::PickComponent);
+				camera->removeComponent(ComponentType::PlayerCameraController);
+				camera->applyComponentChanges();
+			}
+
 
 			// Cleanup resources here, that hasn't been cleaned up.
 			// Currently cleaning up:

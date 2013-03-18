@@ -1535,6 +1535,16 @@ void ClientPacketHandlerSystem::handleResults()
 		ChangeStatePacket changeState;
 		changeState.m_gameState = GameStates::RESULTS;
 		m_tcpClient->sendPacket(changeState.pack());
+		
+		auto inputBackend = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::InputBackendSystem));
+		if (!inputBackend->getCursor()->isVisible())
+			inputBackend->getCursor()->show();
+
+		// If the current player is hosting the game, then request to shut it down!
+		if (m_world->isHostingServer())
+		{
+			m_world->requestToQuitServer();
+		}
 	}
 //	else
 //	{
@@ -1589,23 +1599,23 @@ void ClientPacketHandlerSystem::resetFromDisconnect()
 	// * Enable the 'connect to server' system!
 	// * Clear components from camera.
 	// * Queue state to menu!
-	static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
-		deleteAllPlayerEntities();
-	static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
-		resetAllPlayers();
-	static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
-		setEnabled(true);
-	Entity* camera = m_world->getEntityManager()->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
-	if (camera)
-	{
-		camera->removeComponent(ComponentType::NetworkSynced);
-		camera->removeComponent(ComponentType::PlayerState);
-		camera->removeComponent(ComponentType::PickComponent);
-		camera->removeComponent(ComponentType::PlayerCameraController);
-		camera->applyComponentChanges();
-	}
+	//static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
+	//	deleteAllPlayerEntities();
+	//static_cast<LobbySystem*>(m_world->getSystem(SystemType::LobbySystem))->
+	//	resetAllPlayers();
+	//static_cast<ClientConnectToServerSystem*>(m_world->getSystem(SystemType::ClientConnectoToServerSystem))->
+	//	setEnabled(true);
+	//Entity* camera = m_world->getEntityManager()->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
+	//if (camera)
+	//{
+	//	camera->removeComponent(ComponentType::NetworkSynced);
+	//	camera->removeComponent(ComponentType::PlayerState);
+	//	camera->removeComponent(ComponentType::PickComponent);
+	//	camera->removeComponent(ComponentType::PlayerCameraController);
+	//	camera->applyComponentChanges();
+	//}
 
-	m_gameState->setQueuedState(GameStates::MENU);
+	//m_gameState->setQueuedState(GameStates::MENU);
 }
 
 void ClientPacketHandlerSystem::handleServerDisconnect()
@@ -1637,8 +1647,9 @@ void ClientPacketHandlerSystem::handlePlayerDisconnect( const DisconnectPacket& 
 	// * Disconnect from server immediately!
 	if (p_dcPacket.clientNetworkIdentity == m_tcpClient->getId())
 	{
-		resetFromDisconnect();
+		//resetFromDisconnect();
 		m_tcpClient->disconnect();
+		m_gameState->setQueuedState(GameStates::MENU);
 	}
 	// Else, the client player should:
 	// * Remove player from lobby.
@@ -1655,7 +1666,7 @@ void ClientPacketHandlerSystem::handlePlayerDisconnect( const DisconnectPacket& 
 	// If the current player is hosting the game, then request to shut it down!
 	if (m_world->isHostingServer())
 	{
-		m_world->requestToShutDown();
+		m_world->requestToQuitServer();
 	}
 
 	// If this player is the host (id = 0) then request to shut down the server.

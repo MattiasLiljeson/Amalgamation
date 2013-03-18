@@ -33,6 +33,11 @@ ServerUpdateSystem::ServerUpdateSystem( TcpServer* p_server )
 
 ServerUpdateSystem::~ServerUpdateSystem()
 {
+	m_timestamp = m_world->getElapsedTime();
+}
+
+void ServerUpdateSystem::initialize()
+{
 }
 
 
@@ -69,17 +74,17 @@ void ServerUpdateSystem::sendPlayerStats()
 
 void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	static float timestamp = m_world->getElapsedTime();
+	//static float timestamp = m_world->getElapsedTime();
 	bool timeStampTime = false;
 	if(m_world->getElapsedTime() >
-		timestamp + 1.0f)
+		m_timestamp + 1.0f)
 	{
-		timestamp = m_world->getElapsedTime();
+		m_timestamp = m_world->getElapsedTime();
 		timeStampTime = true;
 
 		// Each second, also send a ping packet!
 		PingPacket pingPacket;
-		pingPacket.timeStamp = timestamp;
+		pingPacket.timeStamp = m_timestamp;
 		m_server->broadcastPacket(pingPacket.pack());
 	}
 
@@ -229,10 +234,6 @@ void ServerUpdateSystem::processEntities( const vector<Entity*>& p_entities )
 		break;
 	}
 
-}
-
-void ServerUpdateSystem::initialize()
-{
 }
 
 void ServerUpdateSystem::removed( Entity* p_entity )

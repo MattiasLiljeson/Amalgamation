@@ -303,9 +303,9 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 		}
 		else if (values[0] == "reset_connection")
 		{
-			auto sys = static_cast<ClientPacketHandlerSystem*>(
-				m_world->getSystem(SystemType::ClientPacketHandlerSystem));
-			sys->resetFromDisconnect();
+			//auto sys = static_cast<ClientPacketHandlerSystem*>(
+			//	m_world->getSystem(SystemType::ClientPacketHandlerSystem));
+			//sys->resetFromDisconnect();
 		}
 
 		else if(values[0] == "play_confirm"){

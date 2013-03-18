@@ -34,7 +34,9 @@ private:
 	void sendPlayerStats();
 
 private:
-	TcpServer* m_server;
+	TcpServer*	m_server;
+	float		m_timestamp;
+
 	struct TransformRecord {
 		Transform transform;
 		float timestamp;
