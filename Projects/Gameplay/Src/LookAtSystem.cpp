@@ -208,6 +208,10 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 					else
 					{
 						rotation = targetTransform->getRotation();
+						if (lookAt->getSmoothMode()==6)
+						{
+							rotation *= AglQuaternion::constructFromAngularVelocity(lookAt->m_angleOffset);
+						}
 					}
 // 				}
 // 				else

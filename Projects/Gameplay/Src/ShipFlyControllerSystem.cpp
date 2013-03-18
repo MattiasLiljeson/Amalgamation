@@ -23,6 +23,7 @@
 #include "MeshOffsetTransform.h"
 #include "ClientStateSystem.h"
 #include "ThrustComponent.h"
+#include <ValueClamp.h>
 
 #define FORCE_VS_OUTPUT
 
@@ -83,7 +84,10 @@ void ShipFlyControllerSystem::handleIngame( const vector<Entity*>& p_entities )
 		}
 
 		// Calc rotation from player input
-		AglVector3 inputAngles(input.verticalInput,input.horizontalInput,input.rollInput);
+		float mxt=10.0f;
+		AglVector3 inputAngles(clamp(input.verticalInput,-mxt,mxt),
+			clamp(input.horizontalInput,-mxt,mxt),
+			clamp(input.rollInput,-mxt,mxt));
 
 		// Turning multiplier
 		float  turnSpeed = controller->getTurningSpeed() * dt;
