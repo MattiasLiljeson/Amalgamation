@@ -241,7 +241,7 @@ namespace Srv
 		//WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
 		m_world->setSystem(new WinningConditionSystem(m_server), true);
 		m_world->setSystem(new SpawnPointSystem(), true);
-		m_world->setSystem(new ModuleSpawner(m_server), true);
+		m_world->setSystem(new ModuleSpawner(m_server,moduleeffect), true);
 
 		/************************************************************************/
 		/* Network																*/

@@ -170,6 +170,6 @@ float4 PS( VertexOut input ) : SV_TARGET
 	finalCol = float4( lerp( finalCol.rgb, fog/*+(lightSpec+lightDiff)*0.01f*/, fogDepth), finalCol.a ); 
 	// apply glow
 	finalCol += float4( finalEmissiveValue, 0.0f );
-	
+
 	return float4( finalCol.rgb, 1.0f );
 }
