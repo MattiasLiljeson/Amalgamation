@@ -206,6 +206,11 @@ void ServerPickingSystem::setReleased(int p_index)
 			unsetPick(m_pickComponents[i]);
 
 			m_pickComponents[i].m_active = false;
+			if (shipModule)
+			{
+				shipModule->m_lastShipEntityWhenAttached = -1; // module is now totally detached from parent ship
+				shipModule->m_health = shipModule->getMaxHealth();
+			}
 
 			// set an effect
 			if (moduleTransform && parentShip && shipModule && scoreComponent)
