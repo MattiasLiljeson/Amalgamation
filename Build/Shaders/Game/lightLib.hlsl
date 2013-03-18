@@ -56,7 +56,7 @@ struct PixelOut
 	float4 lightSpecular 	: SV_TARGET1;
 };
 
-LightOut parallelLight( LightInfo light, float3 eyePos, float3 normal, float3 pixelPos )
+LightOut parallelLight( LightInfo light, float3 eyePos, float3 normal, float3 pixelPos, float gloss )
 {
 	
 	// The light vector aims opposite the direction the light rays travel.
@@ -71,7 +71,7 @@ LightOut parallelLight( LightInfo light, float3 eyePos, float3 normal, float3 pi
 	float diffuseFactor = dot( lightVec, normal );
 	[branch]
 	if( diffuseFactor > 0.0f ) {
-		float specPower = max( normal.a*255.0f, 1.0f );
+		float specPower = max( gloss*255.0f, 1.0f );
 		float3 toEye = normalize( eyePos - pixelPos );
 		float3 R = reflect(-lightVec, normal);
 		float specFactor = pow( max( dot(R, toEye), 0.0f ), specPower );
@@ -83,7 +83,7 @@ LightOut parallelLight( LightInfo light, float3 eyePos, float3 normal, float3 pi
 	return lightOut;
 }
 
-LightOut pointLight( LightInfo light, float3 eyePos, float3 normal, float3 pixelPos )
+LightOut pointLight( LightInfo light, float3 eyePos, float3 normal, float3 pixelPos, float gloss  )
 {	
 	// The vector from the surface to the light.
 	float3 lightVec = light.pos - pixelPos;
@@ -107,7 +107,7 @@ LightOut pointLight( LightInfo light, float3 eyePos, float3 normal, float3 pixel
 	[branch]
 	if( diffuseFactor > 0.0f )
 	{
-		float specPower = max( normal.a*255.0f, 1.0f );
+		float specPower = max( gloss*255.0f, 1.0f );
 		float3 toEye = normalize( eyePos - pixelPos );
 		float3 R = reflect( -lightVec, normal );
 		float specFactor = pow( max( dot(R, toEye), 0.0f ), specPower );
@@ -139,9 +139,9 @@ LightOut pointLight( LightInfo light, float3 eyePos, float3 normal, float3 pixel
 	return lightOut;
 }
 
-LightOut spotLight( LightInfo light, float3 eyePos, float3 normal, float3 pixelPos )
+LightOut spotLight( LightInfo light, float3 eyePos, float3 normal, float3 pixelPos, float gloss )
 {
-	LightOut lightOut = pointLight( light, eyePos, normal, pixelPos );
+	LightOut lightOut = pointLight( light, eyePos, normal, pixelPos, gloss );
 
 	// The vector from the surface to the light.
 	float3 lightVec = normalize( light.pos - pixelPos );
