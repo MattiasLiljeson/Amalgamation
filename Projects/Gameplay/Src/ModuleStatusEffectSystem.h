@@ -37,6 +37,12 @@ public:
 		float value;
 	};
 
+	struct ModuleSpawnEffect
+	{
+		int networkId;
+	};
+
+
 	struct ModuleHealthStatEffect
 	{
 		Entity* moduleEntity;
@@ -60,21 +66,38 @@ public:
 	void setValueEffect(ModuleValueStatEffect& p_fx);
 	void setHealthEffect(ModuleHealthStatEffect& p_fx);
 	void setFreefloatEffect(ModuleFreefloatEffect& p_fx);
+	void setSpawnedEffect(ModuleSpawnEffect& p_fx);
 protected:
 private:
 	vector<ModuleUnusedEffect> m_unusedModuleEffects;
 	vector<ModuleValueStatEffect> m_valueEffect;
 	vector<ModuleHealthStatEffect> m_healthEffects;
 	vector<ModuleFreefloatEffect> m_freefloatEffects;
+	vector<ModuleSpawnEffect> m_spawnEffects;
 
-	void activateUpdateUnusedModuleParticleEffect(Entity* p_entity,
+	// Particle effects
+	// For unused modules
+	void activateUpdateUnusedModuleParticleEffect(Entity* p_entity, ParticleSystemsComponent* p_ps,
 		ModuleStatusVisualizationMode* p_visMode);
-	void addAndRegisterUnusedModuleParticleEffect(Entity* p_entity, 
-									  ModuleStatusVisualizationMode* p_visMode);
-	void disableUnusedModuleParticleEffect(Entity* p_entity, 
+	ParticleSystemsComponent* addAndRegisterUnusedModuleParticleEffect(Entity* p_entity, 
 		ModuleStatusVisualizationMode* p_visMode);
+	void disableUnusedModuleParticleEffect(Entity* p_entity, ParticleSystemsComponent* p_ps,
+		ModuleStatusVisualizationMode* p_visMode);
+
+	// For hurt modules
+	void activateUpdateDamagedModuleParticleEffect(Entity* p_entity, ParticleSystemsComponent* p_ps, ModuleStatusVisualizationMode* p_visMode, float p_health);
+	ParticleSystemsComponent* addAndRegisterDamagedModuleParticleEffect(Entity* p_entity, 
+		ModuleStatusVisualizationMode* p_visMode);
+	void disableDamagedParticleEffect(Entity* p_entity, ParticleSystemsComponent* p_ps,
+		ModuleStatusVisualizationMode* p_visMode);
+
+	// For module value
+
 	void updateFreefloatGlowEffect(Entity* p_entity, bool p_mode);
 	float getDistSqBetweenShipAndModule(Entity* p_moduleEntity);
+
+	// spawn
+	bool createSpawnEffect(Entity* p_entity);
 
 	Entity* m_myship;
 	AglVector3 m_moduleColorTone;

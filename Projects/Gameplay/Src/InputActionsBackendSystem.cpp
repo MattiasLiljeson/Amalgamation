@@ -15,7 +15,7 @@ InputActionsBackendSystem::InputActionsBackendSystem( string p_path, string p_fi
 	m_cursorSensitivities[Device_MOUSE]		= 1.0;
 	m_sensitivities[Device_CONTROLLER]		= 1.0;
 	m_cursorSensitivities[Device_CONTROLLER]	= 1.0;
-
+	m_gamepadUsedLast=false;
 }
 
 InputActionsBackendSystem::~InputActionsBackendSystem()
@@ -94,7 +94,23 @@ double InputActionsBackendSystem::getDeltaByAction( Actions p_action )
 	double delta = 0.0;
 	for(unsigned int i=0; i<m_inputControls[p_action].size(); i++)
 	{
-		delta += m_inputControls[p_action][i]->getDelta();
+		Control* currentControl = m_inputControls[p_action][i];
+		double currentDelta = currentControl->getDelta();
+		InputHelper::InputDeviceTypes deviceT = currentControl->getDeviceType();
+		if (deviceT == InputHelper::InputDeviceTypes_XINPUT_DIGITAL ||
+			deviceT == InputHelper::InputDeviceTypes_XINPUT_ANALOG) 
+		{
+			if (currentDelta>0.0) 
+				m_gamepadUsedLast=true;
+		}
+		else
+		{
+			if (currentDelta>0.1 && 
+				deviceT != InputHelper::InputDeviceTypes_MOUSE_AXIS) 
+				m_gamepadUsedLast=false;
+		}
+
+		delta += currentDelta;
 	}
 	return delta;
 }
@@ -104,7 +120,23 @@ double InputActionsBackendSystem::getStatusByAction( Actions p_action )
 	double status = 0.0;
 	for(unsigned int i=0; i<m_inputControls[p_action].size(); i++)
 	{
-		status += m_inputControls[p_action][i]->getStatus();
+		Control* currentControl = m_inputControls[p_action][i];
+		double currentStatus = currentControl->getStatus();
+		InputHelper::InputDeviceTypes deviceT = currentControl->getDeviceType();
+		if (deviceT == InputHelper::InputDeviceTypes_XINPUT_DIGITAL ||
+			deviceT == InputHelper::InputDeviceTypes_XINPUT_ANALOG) 
+		{
+			if (currentStatus>0.0) 
+				m_gamepadUsedLast=true;
+		}
+		else
+		{
+			if (currentStatus>0.1 && 
+				deviceT != InputHelper::InputDeviceTypes_MOUSE_AXIS) 
+				m_gamepadUsedLast=false;
+		}
+
+		status += currentStatus;
 	}
 	return status;
 }
@@ -115,6 +147,20 @@ Control* InputActionsBackendSystem::getControlByAction( Actions p_action, int p_
 		return m_inputControls[p_action][p_index];
 	return NULL;
 }
+
+
+Control* InputActionsBackendSystem::findControlOfDeviceByAction( Actions p_action,
+																 InputHelper::InputDeviceTypes p_deviceType )
+{
+	for (int i=0;i<m_inputControls[p_action].size();i++)
+	{
+		Control* ctrl = m_inputControls[p_action][i];
+		if (ctrl->getDeviceType()==p_deviceType)
+			return ctrl;
+	}
+	return NULL;
+}
+
 
 void InputActionsBackendSystem::initCursor()
 {
@@ -178,4 +224,9 @@ void InputActionsBackendSystem::initControlMap()
 	m_actionMap["Actions_MENU_ACTIVATE_ROTATION"]		= Actions_MENU_ACTIVATE_ROTATION;
 	m_actionMap["Actions_SHOW_SCORE"]					= Actions_SHOW_SCORE;
 	m_actionMap["Actions_GAME_QUIT"]					= Actions_GAME_BACK;
+}
+
+const bool InputActionsBackendSystem::gamepadUsedLast()
+{
+	return m_gamepadUsedLast;
 }

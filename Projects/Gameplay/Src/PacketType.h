@@ -30,6 +30,7 @@ public:
 		EntityDeletion,
 		ClientDisconnect,
 		WelcomePacket,
+		ShipMassBoosterUpdatePacket,
 		NewlyConnectedPlayerPacket,
 		UpdateClientStats,
 		PlayerWinLose,

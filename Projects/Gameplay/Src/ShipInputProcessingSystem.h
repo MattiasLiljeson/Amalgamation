@@ -2,6 +2,7 @@
 
 #include <EntitySystem.h>
 #include "ShipInputProcessingSystem.h"
+#include "HudSystem.h"
 
 class Control;
 class InputActionsBackendSystem;
@@ -132,9 +133,12 @@ public:
 	void resetCursor();
 
 private:
+	static const string keymap[];
+	static const string gamepadmap[];
 
 	float* getControllerEpsilonPointer();
 	RawInputForces readAllInput();
+	void updateHudKeymappings(bool p_useGamepad=false);
 
 	ResultingInputForces m_processedInput;
 
@@ -146,4 +150,7 @@ private:
 	bool m_editSwitchTrigReleased;
 	InputActionsBackendSystem* m_actionBackend;
 	InputBackendSystem* m_inputBackend;
+	HudSystem* m_hudSystem;
+	bool m_hudMappingsInited;
+	bool m_prevDeviceWasGamepad;
 };

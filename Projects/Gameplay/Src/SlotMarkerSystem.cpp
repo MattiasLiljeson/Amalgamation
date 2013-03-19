@@ -113,6 +113,12 @@ void SlotMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 		m_textures[EntityType::TeslaCoilModule - EntityType::ShipModuleStart].second
 			= "tesla_icon_activated.png";
 
+		//Anomalybomb
+		m_textures[EntityType::AnomalyModule - EntityType::ShipModuleStart].first 
+			= gfx->getGfxWrapper()->createTexture("anomaly_icon_activated.png", TEXTUREPATH );
+		m_textures[EntityType::AnomalyModule - EntityType::ShipModuleStart].second
+			= "anomaly_icon_activated.png";
+
 		/*gfx->getGfxWrapper()->
 			createTexture("Icon_Shield.png", GUI_TEXTURE_PATH );
 		gfx->getGfxWrapper()->

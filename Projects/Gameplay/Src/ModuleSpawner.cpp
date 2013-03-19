@@ -13,14 +13,18 @@
 #include <TcpServer.h>
 #include <DebugUtil.h>
 #include <ToString.h>
+#include "ModuleStatusEffectPacket.h"
+#include "ModuleVisualEffectServerBufferSystem.h"
 
-ModuleSpawner::ModuleSpawner(TcpServer* p_server)
-	: EntitySystem(SystemType::TempModuleSpawner, 1, ComponentType::ModuleOnChamberSpawnPoint)
+ModuleSpawner::ModuleSpawner(TcpServer* p_server,
+							 ModuleVisualEffectServerBufferSystem* p_effectBuffer)
+	: EntitySystem(SystemType::ModuleSpawner, 1, ComponentType::ModuleOnChamberSpawnPoint)
 {
 	m_server = p_server;
 
 	m_spawnedModulesCount	= 0;
 	m_spawnedModulesMax		= 10;
+	m_effectBuffer = p_effectBuffer;
 }
 
 ModuleSpawner::~ModuleSpawner()
@@ -76,6 +80,12 @@ void ModuleSpawner::process()
 
 					//pos = m_spawnPointSystem->getRandomFreeModuleSpawnPoint();
 					m_server->broadcastPacket(cp.pack());
+
+					// Spawn effect on client
+					ModuleStatusEffectPacket fxPacket(ModuleStatusEffectPacket::SPAWNED,
+						netSync->getNetworkIdentity());
+					// DEBUGPRINT(("constr"));
+					m_effectBuffer->enqueueEffect(fxPacket);
 				}
 				else
 				{

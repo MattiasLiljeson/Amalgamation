@@ -24,9 +24,11 @@ public:
 	virtual ~ModuleStatusVisualizationMode();
 
 	bool hasPositionHintParticle();
+	bool hasHealthParticles();
 	bool hasUnusedHintParticles();
 
 	int positionHintParticleSysId;
+	vector<int> healthParticlesSysId;
 	vector<int> unusedHintParticleSysId;
 protected:
 private:

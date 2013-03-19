@@ -1,8 +1,10 @@
 #pragma once
 #include <EntitySystem.h>
 #include <Globals.h>
+#include <InputHelper.h>
 class Control;
 class InputBackendSystem;
+
 // =======================================================================================
 // InputActionsBackendSystem
 // =======================================================================================
@@ -66,7 +68,7 @@ public:
 		Actions_SHOW_SCORE,
 		Actions_GAME_BACK,
 
-		Actions_CNT//End Actions enum
+		Actions_CNT //End Actions enum
 	};
 
 	InputActionsBackendSystem( string p_path = SETTINGSPATH, string p_file = "setting.input");
@@ -75,7 +77,10 @@ public:
 	double getDeltaByAction(Actions p_action);
 	double getStatusByAction(Actions p_action);
 	Control* getControlByAction(Actions p_action, int p_index);
+	Control* findControlOfDeviceByAction(Actions p_action, 
+		InputHelper::InputDeviceTypes p_deviceType);
 	void setMouseSensitivity(float p_sensitivity);
+	const bool gamepadUsedLast();
 
 private:
 	void readControlFromString(string p_key, Control** p_control);
@@ -93,4 +98,5 @@ private:
 
 	double m_sensitivities[Device_CNT];
 	double m_cursorSensitivities[Device_CNT];
+	bool m_gamepadUsedLast; ///< True if last input was gamepad
 };

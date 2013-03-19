@@ -35,6 +35,9 @@ public:
 	virtual void initialize();
 	virtual void process();
 
+	void enableMeasurement();
+	void disableMeasurement();
+	bool isMeasuring();
 	void printLogFiles();
 
 private:
@@ -91,4 +94,5 @@ private:
 	bool	m_enteredIngamePreviousFrame;
 	bool	m_shouldRender;
 	bool	m_enableEffects;
+	bool	m_measureGPU;
 };

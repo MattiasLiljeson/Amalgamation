@@ -3,6 +3,7 @@
 #include <EntitySystem.h>
 
 class SpawnPointSystem;
+class ModuleVisualEffectServerBufferSystem;
 class TimerSystem;
 class EntityFactory;
 class TcpServer;
@@ -22,7 +23,8 @@ class TcpServer;
 class ModuleSpawner : public EntitySystem
 {
 public:
-	ModuleSpawner(TcpServer* p_server);
+	ModuleSpawner(TcpServer* p_server,
+				 ModuleVisualEffectServerBufferSystem* p_effectBuffer);
 	virtual ~ModuleSpawner();
 
 	virtual void process();
@@ -44,6 +46,7 @@ private:
 	TimerSystem*		m_timerSystem;
 	EntityFactory*		m_factory;
 
+	ModuleVisualEffectServerBufferSystem* m_effectBuffer ;
 	int m_spawnedModulesCount;
 	int m_spawnedModulesMax;
 };

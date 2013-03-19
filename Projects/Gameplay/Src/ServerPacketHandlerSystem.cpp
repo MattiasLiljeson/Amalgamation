@@ -60,6 +60,8 @@
 #include "DisconnectPacket.h"
 #include "PlayerReadyPacket.h"
 #include "SpawnDebugModulePacket.h"
+#include "RegisteredEntity.h"
+#include <ValueClamp.h>
 
 ServerPacketHandlerSystem::ServerPacketHandlerSystem(TcpServer* p_server , int p_gameTime)
 	: EntitySystem( SystemType::ServerPacketHandlerSystem, 3,
@@ -167,6 +169,9 @@ void ServerPacketHandlerSystem::handleIngame()
 			ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
 				ship->getComponent(ComponentType::ConnectionPointSet) );
 
+			Transform* transform = static_cast<Transform*>(
+				ship->getComponent(ComponentType::Transform) );
+
 			ShipConnectionPointHighlights* highlights = static_cast<ShipConnectionPointHighlights*>(
 				ship->getComponent(ComponentType::ShipConnectionPointHighlights) );
 
@@ -185,6 +190,87 @@ void ServerPacketHandlerSystem::handleIngame()
 					}
 				}
 			}
+
+			// affect camera as well
+			RegisteredEntity* ownedCamera= static_cast<RegisteredEntity*>(
+				ship->getComponent( ComponentType::ComponentTypeIdx::RegisteredEntity) );
+			if (ownedCamera)
+			{
+				Entity* camera = m_world->getEntity(ownedCamera->m_entityId);
+				if (camera)
+				{
+					float spd=1.0f;
+					float rspd=7.0f;
+					LookAtEntity* camLookAt= static_cast<LookAtEntity*>(
+						camera->getComponent( ComponentType::ComponentTypeIdx::LookAtEntity) );
+					if (camLookAt)
+					{
+						AglVector3 tdir = thrustPacket.thrustVector;
+						AglVector3 angulareffect = thrustPacket.angularVector;
+
+						if (angulareffect.length()>0.0f)
+						{
+							//angulareffect.normalize();
+							angulareffect.transformNormal(transform->getMatrix().inverse());
+							//angulareffect.normalize();
+// 							float ox = angulareffect.x;
+// 							angulareffect.x = angulareffect.y*10.01f;
+// 							angulareffect.y = ox*100.01f;
+//  							angulareffect.z = 0.0f;
+							//camLookAt->m_angleOffset += angulareffect*m_world->getDelta()*10.0f;
+						}
+
+				
+						if (tdir.length()>0.0f) 
+						{
+							tdir.normalize();
+							tdir.transformNormal(transform->getMatrix().inverse());	
+							tdir.normalize();	
+							tdir.x+=0.3f; // y
+							tdir.z+=0.4f; // x
+							tdir.y+=0.6f; // z
+							tdir*=3.0f;
+						}
+						tdir.x += angulareffect.z*200.5f; // "y" axis
+						tdir.z -= angulareffect.x*200.0f; // "x" axis
+						camLookAt->m_angleOffset.z += angulareffect.y*15.0f*m_world->getDelta();
+
+						if (tdir.length()>0.0f) 
+						{
+							camLookAt->m_planeOffset -= tdir*m_world->getDelta();
+						}
+						
+// 						if (tdir.length()<0.0001f)
+// 						{
+// 							camLookAt->m_planeOffset=AglVector3::lerp(camLookAt->m_planeOffset,AglVector3::zero(),
+// 																	  saturate(slowdown*m_world->getDelta()));
+// 						}
+						//else
+						{
+// 							if (abs(tdir.x)<0.00001f)
+// 								camLookAt->m_planeOffset.x=camLookAt->m_planeOffset.x*(saturate(slowdown*m_world->getDelta()));
+// 							if (abs(tdir.y)<0.00001f)
+// 								camLookAt->m_planeOffset.y=camLookAt->m_planeOffset.y*(saturate(slowdown*m_world->getDelta()));
+// 							if (abs(tdir.z)<0.00001f)
+// 								camLookAt->m_planeOffset.z=camLookAt->m_planeOffset.z*(saturate(slowdown*m_world->getDelta()));
+							//if (abs(tdir.x)<0.00001f)
+							//camLookAt->m_planeOffset.x=camLookAt->m_planeOffset.x*( 1.0f-m_world->getDelta() );
+							//if (abs(tdir.y)<0.00001f)
+							//camLookAt->m_planeOffset.y=camLookAt->m_planeOffset.y*( 1.0f-m_world->getDelta() );
+							//if (abs(tdir.z)<0.00001f)
+							//camLookAt->m_planeOffset.z=camLookAt->m_planeOffset.z*( 1.0f-m_world->getDelta() );
+
+							camLookAt->m_planeOffset=AglVector3::lerp(camLookAt->m_planeOffset,AglVector3::zero(),
+																		saturate(spd*m_world->getDelta()));
+							camLookAt->m_angleOffset=AglVector3::lerp(camLookAt->m_angleOffset,AglVector3::zero(),
+																		saturate(rspd*m_world->getDelta()));
+						}
+					}
+				}
+			}
+
+
+			//
 
 			m_physics->applyImpulse( physicsBody->m_id, (thrustPacket.thrustVector+boostVector),
 				thrustPacket.angularVector );
@@ -867,14 +953,73 @@ void ServerPacketHandlerSystem::createAndBroadCastShip( int p_clientIdentity, in
 	}
 
 	// also create a camera
+	// smoothed target for camera to look at
+// 	Entity* smoothoffset = m_world->createEntity();
+// 	LookAtEntity* offsetSmoother = new LookAtEntity(newShip->getIndex(),
+// 		AglVector3(0.0f,0.0f,-30.0f),
+// 		160.0f,
+// 		250.0f);
+// 	offsetSmoother->setSmoothing(1);
+// 	smoothoffset->addComponent( ComponentType::LookAtEntity, offsetSmoother );
+// 	smoothoffset->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+// 	smoothoffset->addComponent(ComponentType::Transform, new Transform(transformComp->getMatrix()) );
+// 	m_world->addEntity(smoothoffset);
+	// second
+// 	Entity* smoothoffset2 = m_world->createEntity();
+// 	LookAtEntity* offsetSmoother2 = new LookAtEntity(smoothoffset->getIndex(),
+// 		AglVector3(0.0f,0.0f,-4.0f),
+// 		15.0f,
+// 		10.0f);
+// 	offsetSmoother2->setSmoothing(1);
+// 	smoothoffset2->addComponent( ComponentType::LookAtEntity, offsetSmoother2 );
+// 	smoothoffset2->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+// 	smoothoffset2->addComponent(ComponentType::Transform, new Transform(transformComp->getMatrix()) );
+// 	m_world->addEntity(smoothoffset2);
+// 	// and smoothtarget
+// 	Entity* smoothtarget = m_world->createEntity();
+// 	LookAtEntity* targetSmoother = new LookAtEntity(newShip->getIndex(),
+// 		AglVector3(0.0f,0.0f,-20.0f),
+// 		80.0f,
+// 		250.0f);
+// 	targetSmoother->setSmoothing(1);
+// 	smoothtarget->addComponent( ComponentType::LookAtEntity, targetSmoother );
+// 	smoothtarget->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+// 	smoothtarget->addComponent(ComponentType::Transform, new Transform(transformComp->getMatrix()) );
+// 	m_world->addEntity(smoothtarget);
+	// and another one
+//   	Entity* smoothtarget2 = m_world->createEntity();
+//   	LookAtEntity* targetSmoother2 = new LookAtEntity(smoothtarget->getIndex(),
+//   		AglVector3(0,0,0.0f),
+//   		2.0f,
+//   		2.0f);
+//   	targetSmoother2->setSmoothing(1);
+//   	smoothtarget2->addComponent( ComponentType::LookAtEntity, targetSmoother2 );
+//   	smoothtarget2->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+//   	smoothtarget2->addComponent(ComponentType::Transform, new Transform(transformComp->getMatrix()) );
+//   	m_world->addEntity(smoothtarget2);
+// 	// and another one
+// 	Entity* smoothtarget3 = m_world->createEntity();
+// 	LookAtEntity* targetSmoother3 = new LookAtEntity(smoothtarget2->getIndex(),
+// 		AglVector3(0,0,-25.0f),
+// 		50.0f,
+// 		50.0f);
+// 	targetSmoother3->setSmoothing(1);
+// 	smoothtarget3->addComponent( ComponentType::LookAtEntity, targetSmoother3 );
+// 	smoothtarget3->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
+// 	smoothtarget3->addComponent(ComponentType::Transform, new Transform(transformComp->getMatrix()) );
+// 	m_world->addEntity(smoothtarget3);
+	// camera
 	Entity* playerCam = m_world->createEntity();
-	Component* component = new LookAtEntity(newShip->getIndex(),
-		AglVector3(0,7,-38),
+	LookAtEntity* camLookat = new LookAtEntity(newShip->getIndex(),
+		AglVector3(0.0f,7.0f,-38.0f),
 		13.0f,
 		10.0f,
 		3.0f,
 		40.0f);
-	playerCam->addComponent( ComponentType::LookAtEntity, component );
+	// camLookat->m_offsetEntityId=smoothoffset2->getIndex();
+	camLookat->setSmoothing(6);
+	camLookat->setRotationSmoothing(false);
+	playerCam->addComponent( ComponentType::LookAtEntity, camLookat );
 	playerCam->addComponent( ComponentType::Transform, new Transform( 
 		transformComp->getMatrix() ) );
 	// default tag is follow
@@ -882,6 +1027,9 @@ void ServerPacketHandlerSystem::createAndBroadCastShip( int p_clientIdentity, in
 	playerCam->addComponent( ComponentType::NetworkSynced, 
 		new NetworkSynced( playerCam->getIndex(), p_clientIdentity, EntityType::PlayerCamera ));
 	m_world->addEntity(playerCam);
+
+	// register camera on ship
+	newShip->addComponent(ComponentType::RegisteredEntity,new RegisteredEntity(playerCam->getIndex()));
 
 	/************************************************************************/
 	/* Send the information about the new clients ship to all other players */

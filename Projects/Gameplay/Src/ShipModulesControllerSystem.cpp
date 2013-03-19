@@ -21,14 +21,19 @@
 #include <DebugUtil.h>
 #include <ToString.h>
 #include "ModulesHighlightPacket.h"
+#include "ShipMassBoosterUpdatePacket.h"
+#include "SpeedBoosterModule.h"
+#include "TimerSystem.h"
 
 ShipModulesControllerSystem::ShipModulesControllerSystem(TcpServer* p_server,
-														 ModuleVisualEffectServerBufferSystem* p_effectBuffer)
+														 ModuleVisualEffectServerBufferSystem* p_effectBuffer,
+														 PhysicsSystem* p_physicsSystem)
 	: EntitySystem(SystemType::ShipModulesControllerSystem, 2, 
 	ComponentType::TAG_Ship, ComponentType::ShipConnectionPointHighlights)
 {
 	m_server = p_server;
 	m_effectbuffer = p_effectBuffer;
+	m_physicsSystem=p_physicsSystem;
 	m_editMode = false;
 }
 void ShipModulesControllerSystem::setEditMode(bool p_editMode)
@@ -87,7 +92,22 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 		}	
 
 		//Check to see if modules should be dropped
-		checkDrop_ApplyScoreAndDamage(p_entities[i]);
+		pair<float,int> massBoosters(0.0f,0);
+		checkDrop_ApplyScoreAndDamage(p_entities[i],massBoosters);
+
+		// send mass and booster count to client
+		if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
+			checkTimeInterval(TimerIntervals::EverySecond))
+		{
+			// add ship mass too!
+			float shipmass=0.0f;
+			PhysicsBody* body = static_cast<PhysicsBody*>(
+				p_entities[i]->getComponent(ComponentType::PhysicsBody));
+			shipmass = m_physicsSystem->getController()->getBody(body->m_id)->GetMass();
+			//
+			sendMassBoostersTotal(netSync->getNetworkOwner(),
+				50.0f*(1.5f*shipmass+0.4f*massBoosters.first),massBoosters.second);
+		}
 
 		//Check if the player has recieved enough damage score for it to be applied
 		PlayerSystem* playerSys = static_cast<PlayerSystem*>
@@ -107,9 +127,9 @@ void ShipModulesControllerSystem::processEntities(const vector<Entity*>& p_entit
 		}
 	}
 }
-void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent)
+void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage( Entity* p_parent,
+																 pair<float,int>& p_outMassBoosters )
 {
-
 	ConnectionPointSet* connected = static_cast<ConnectionPointSet*>(
 		p_parent->getComponent(ComponentType::ConnectionPointSet) );
 
@@ -180,7 +200,7 @@ void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent
 										float score = ScoreRuleHelper::scoreFromHittingOpponent(m->m_value);
 										// add score and send effect
 										perpScoreComponent->addRelativeScore(score);
-										setScoreEffect( perpId, moduleTransform, (int)score);
+										setScoreEffect( perpId, moduleTransform, (int)(score+0.5f));
 									}
 
 								}
@@ -189,7 +209,7 @@ void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent
 								if(scoreComponent)
 								{
 									scoreComponent->addRelativeScore(score);
-									setScoreEffect(me, moduleTransform, (int)score);
+									setScoreEffect(me, moduleTransform, (int)(score+0.5f));
 								}
 							}
 						}
@@ -197,7 +217,17 @@ void ShipModulesControllerSystem::checkDrop_ApplyScoreAndDamage(Entity* p_parent
 					}
 					else
 					{
-						checkDrop_ApplyScoreAndDamage(entity);
+						// add mass
+						PhysicsBody* body = static_cast<PhysicsBody*>(
+							entity->getComponent(ComponentType::PhysicsBody));
+						float mass = m_physicsSystem->getController()->getBody(body->m_id)->GetMass();
+						p_outMassBoosters.first += mass;
+						// add booster count
+						auto booster = static_cast<SpeedBoosterModule*>(
+							entity->getComponent(ComponentType::SpeedBoosterModule));
+						if(booster!=NULL) p_outMassBoosters.second++;
+						// bubble
+						checkDrop_ApplyScoreAndDamage(entity,p_outMassBoosters);
 					}
 
 				}
@@ -628,4 +658,13 @@ void ShipModulesControllerSystem::updateModuleValueEffect( int p_moduleNetworkOw
 		p_valuePercent,
 		p_moduleNetworkOwner);
 	m_effectbuffer->enqueueEffect(fxPacket);
+}
+
+void ShipModulesControllerSystem::sendMassBoostersTotal( int p_moduleNetworkOwner, 
+														float p_massValue, int p_boosters )
+{
+	ShipMassBoosterUpdatePacket masspacket;
+	masspacket.mass=p_massValue;
+	masspacket.boosters=p_boosters;
+	m_server->unicastPacket(masspacket.pack(),p_moduleNetworkOwner);
 }

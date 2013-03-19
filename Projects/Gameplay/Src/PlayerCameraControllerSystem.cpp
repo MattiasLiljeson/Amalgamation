@@ -70,13 +70,10 @@ void PlayerCameraControllerSystem::processEntities( const vector<Entity*>& p_ent
 						state->state=PlayerStates::steeringState;
 				}
 
-				// packet handling
+				// packet handling			
 				if(static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem))->
 					checkTimeInterval(TimerIntervals::Every8Millisecond))
 				{
-					/************************************************************************/
-					/* Send the control packet to the server!								*/
-					/************************************************************************/
 					if (controller->accumulatedCameraMovement.length()>0.0f &&
 						controller->accumulatedCameraMovement.length()<1.0f)
 						AglVector3::normalize(controller->accumulatedCameraMovement);
@@ -88,6 +85,7 @@ void PlayerCameraControllerSystem::processEntities( const vector<Entity*>& p_ent
 
 					controller->accumulatedCameraMovement = AglVector3();
 				}
+				
 			}
 		}
 	}

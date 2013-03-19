@@ -206,13 +206,18 @@ void ServerPickingSystem::setReleased(int p_index)
 			unsetPick(m_pickComponents[i]);
 
 			m_pickComponents[i].m_active = false;
+			if (shipModule)
+			{
+				shipModule->m_lastShipEntityWhenAttached = -1; // module is now totally detached from parent ship
+				shipModule->m_health = shipModule->getMaxHealth();
+			}
 
 			// set an effect
 			if (moduleTransform && parentShip && shipModule && scoreComponent)
 			{
 				float score = ScoreRuleHelper::scoreFromLoseModuleOnDetach(shipModule->m_value);
 				scoreComponent->addRelativeScore(score);
-				setScoreEffect( parentShip, moduleTransform, (int)score);
+				setScoreEffect( parentShip, moduleTransform, (int)(score+0.5f));
 			}
 
 			// set value and health on module

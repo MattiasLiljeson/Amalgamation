@@ -53,6 +53,7 @@ float4 PoissonDOF( float2 texCoord, uint3 index )
 
 		SamplerState highSampler = g_samplerPointClamp;
 		float2 coordHigh = texCoord + (gDX_Tex * poisson[i] * discRadius);
+
 		float4 diffBuffHigh  	= g_diffuse.Sample( highSampler, coordHigh );
 		float4 diffLightHigh	= g_diffLight.Sample( highSampler, coordHigh );
 		float4 diffHigh = diffBuffHigh * diffLightHigh * g_LIGHT_MULT;
@@ -127,8 +128,8 @@ float4 PS( VertexOut input ) : SV_TARGET
 
 			finalAO += g_diffLight.Load( idx ).a * blurFactor;
 
-			sampledCoc = g_specLight.Load( idx ).a;
-			sampledDepth = g_depth.Load( idx ).r;
+			// sampledCoc = g_specLight.Load( idx ).a;
+			// sampledDepth = g_depth.Load( idx ).r;
 			//if( sampledDepth < depth ) {
 				// If not protruding
 				//coc +=  centerCoc * blurFactor;
@@ -147,8 +148,8 @@ float4 PS( VertexOut input ) : SV_TARGET
 			uint3 lightBloomIdx = index+uint3(x,y,0)*lightBloom;
 			
 			// some bloom from highlights
-			float3 light = 10.0f * ( g_specular.Load( lightBloomIdx ) * g_specLight.Load( lightBloomIdx ));
-			light += 10.0f * (g_diffuse.Load( lightBloomIdx ) * g_diffLight.Load( lightBloomIdx ));
+			float3 light = 5.0f * ( g_specular.Load( lightBloomIdx ) * g_specLight.Load( lightBloomIdx ));
+			light += 5.0f * (g_diffuse.Load( lightBloomIdx ) * g_diffLight.Load( lightBloomIdx ));
 			float str = max( 0.0f, length(light)-1.0f );
 
 			float glowBloom = 1.8f;
@@ -170,6 +171,6 @@ float4 PS( VertexOut input ) : SV_TARGET
 	finalCol = float4( lerp( finalCol.rgb, fog/*+(lightSpec+lightDiff)*0.01f*/, fogDepth), finalCol.a ); 
 	// apply glow
 	finalCol += float4( finalEmissiveValue, 0.0f );
-	
+
 	return float4( finalCol.rgb, 1.0f );
 }

@@ -23,7 +23,7 @@ public:
 	void process();
 	void setHUDVisibility(bool p_setVisibility);
 	void setHUDData(HUD_TYPES p_type, const char* p_value);
-
+	bool isInited();
 	void clear();
 private:
 	Entity* createSprite(AglVector3 p_position, string p_texture, AglVector2 p_size);
@@ -35,6 +35,7 @@ private:
 	bool m_hudVisible;
 	bool m_currentState; //Checks if the current status has changed last frame
 	int m_hudIndex;
+	bool m_isInited;
 
 	AglVector2 m_screenSize;
 

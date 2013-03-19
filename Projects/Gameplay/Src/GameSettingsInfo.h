@@ -14,6 +14,7 @@ struct GameSettingsInfo
 	int enableTesselation;	// Treated as bool
 	int enableEffects;			// Treated as bool
 	int enableVSYNC;		// Treated as bool
+	int enabledGPUMeasure;
 
 	// Sound settings
 	int masterVolume;
@@ -41,6 +42,7 @@ struct GameSettingsInfo
 		enableTesselation	= false;
 		enableEffects			= true;
 		enableVSYNC			= false;
+		enabledGPUMeasure	= false;
 
 		defaultGameTime		= 600; 
 

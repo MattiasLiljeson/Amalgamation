@@ -60,6 +60,7 @@
 #include <AnomalyAcceleratorModuleControllerSystem.h>
 #include <ShipModuleStatsSystem.h>
 #include <PlayerSystem.h>
+#include <ValueClamp.h>
 
 
 namespace Srv
@@ -110,6 +111,8 @@ namespace Srv
 			dt = (currTimeStamp - m_prevTimeStamp) * secsPerCount;
 
 			m_prevTimeStamp = currTimeStamp;
+
+			dt = clamp(dt,0.0,DTCAP);
 
 			step( static_cast<float>(dt * dtFactor) );
 
@@ -233,7 +236,7 @@ namespace Srv
 		m_world->setSystem(new SpeedBoostModuleControllerSystem(m_server), true);
 		m_world->setSystem(new ShieldModuleControllerSystem(m_server), true);
 		// Important for any module-damaging logic to happen before this.
-		m_world->setSystem(new ShipModulesControllerSystem(m_server,moduleeffect), true);
+		m_world->setSystem(new ShipModulesControllerSystem(m_server,moduleeffect,physics), true);
 		m_world->setSystem(new ShipModulesTrackerSystem(), true);
 
 		m_world->setSystem(new PlayerSystem(), true);
@@ -241,7 +244,7 @@ namespace Srv
 		//WinningConditionSystem* winningCondition = new WinningConditionSystem(m_server);
 		m_world->setSystem(new WinningConditionSystem(m_server), true);
 		m_world->setSystem(new SpawnPointSystem(), true);
-		m_world->setSystem(new ModuleSpawner(m_server), true);
+		m_world->setSystem(new ModuleSpawner(m_server,moduleeffect), true);
 
 		/************************************************************************/
 		/* Network																*/

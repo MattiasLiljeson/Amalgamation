@@ -224,7 +224,7 @@ div#socket-buttons .button{
 	/*background: rgba(0,10,0,40);*/
 }
 
-div#socket-buttons div#top-btn{
+div#socket-buttons div#up-btn{
 	margin-left:-11px;
 	left: 50%;
 	top: 76px;
@@ -242,7 +242,7 @@ div#socket-buttons div#right-btn{
   top: 50%;
 }
 
-div#socket-buttons div#bottom-btn{
+div#socket-buttons div#down-btn{
 	margin-left:-11px;
 	bottom:36px;
 	left: 50%;

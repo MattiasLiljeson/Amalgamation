@@ -3,6 +3,9 @@
 #include "ClientStateSystem.h"
 #include <ValueClamp.h>
 #include "ColorTone.h"
+#include "DestroyOnParticlesDeath.h"
+#include <DebugUtil.h>
+#include "NetsyncDirectMapperSystem.h"
 
 ModuleStatusEffectSystem::ModuleStatusEffectSystem() : 
 	EntitySystem( SystemType::ModuleStatusEffectSystem)
@@ -58,13 +61,15 @@ void ModuleStatusEffectSystem::process()
 				// add particle effects for vismode
 				// if there are existing particle effect components, they'll be appended
 				// vismode keeps track of the new ones
-				addAndRegisterUnusedModuleParticleEffect(data.moduleEntity, visMode);
 			}
+			if (!visMode->hasPositionHintParticle() && !visMode->hasUnusedHintParticles())
+				ps = addAndRegisterUnusedModuleParticleEffect(data.moduleEntity, visMode);
+			
 			// update or activate effect based on new data
 			// and the registered data in vismode
 			if (ps)
 			{
-				activateUpdateUnusedModuleParticleEffect(data.moduleEntity, visMode);
+				activateUpdateUnusedModuleParticleEffect(data.moduleEntity, ps, visMode);
 			}
 		}
 		else
@@ -73,7 +78,9 @@ void ModuleStatusEffectSystem::process()
 			// and has existing particles
 			if (visMode && visMode->hasUnusedHintParticles() && 
 				visMode->hasPositionHintParticle())
-				disableUnusedModuleParticleEffect(data.moduleEntity,visMode);
+			{
+				disableUnusedModuleParticleEffect(data.moduleEntity,ps,visMode);
+			}
 		}
 
 
@@ -92,10 +99,54 @@ void ModuleStatusEffectSystem::process()
 		ModuleValueStatEffect data = m_valueEffect.back();
 		m_valueEffect.pop_back();
 	}
+	// module spawn effect
+	NetsyncDirectMapperSystem* directMapper = NULL;
+	if (!m_spawnEffects.empty())
+	{
+		directMapper = static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(
+			SystemType::NetsyncDirectMapperSystem));
+		//
+		while (!m_spawnEffects.empty())
+		{
+			ModuleSpawnEffect data = m_spawnEffects.back();
+			Entity* moduleEntity = directMapper->getEntity(data.networkId);
+			if (moduleEntity && createSpawnEffect(moduleEntity))
+				m_spawnEffects.pop_back();
+			else
+				break;
+		}
+	}
 	// module health effect
 	while(!m_healthEffects.empty())
 	{
 		ModuleHealthStatEffect data = m_healthEffects.back();
+		auto ps = static_cast<ParticleSystemsComponent*>(
+			data.moduleEntity->getComponent(ComponentType::ParticleSystemsComponent));
+		auto visMode = static_cast<ModuleStatusVisualizationMode*>(
+			data.moduleEntity->getComponent(ComponentType::ModuleStatusVisualizationMode));
+
+		if (data.health<=0.8f)
+		{
+			if (!visMode)
+			{
+				visMode=new ModuleStatusVisualizationMode();
+				data.moduleEntity->addComponent( ComponentType::ModuleStatusVisualizationMode, visMode );
+				data.moduleEntity->applyComponentChanges();		
+				// add particle effects for vismode
+			}
+			if (!visMode->hasHealthParticles())
+				ps = addAndRegisterDamagedModuleParticleEffect(data.moduleEntity,visMode);
+			if (ps)
+			{
+				activateUpdateDamagedModuleParticleEffect(data.moduleEntity,ps,visMode,data.health);
+			}
+		}
+		else
+		{
+			if (visMode && visMode->hasHealthParticles())
+				disableDamagedParticleEffect(data.moduleEntity,ps,visMode);
+		}
+
 		m_healthEffects.pop_back();
 	}
 }
@@ -115,7 +166,15 @@ void ModuleStatusEffectSystem::setHealthEffect( ModuleHealthStatEffect& p_fx )
 	m_healthEffects.push_back(p_fx);
 }
 
+
+void ModuleStatusEffectSystem::setSpawnedEffect( ModuleSpawnEffect& p_fx )
+{
+	m_spawnEffects.push_back(p_fx);
+}
+
+
 void ModuleStatusEffectSystem::activateUpdateUnusedModuleParticleEffect(Entity* p_entity,
+																		ParticleSystemsComponent* p_ps,
 															ModuleStatusVisualizationMode* p_visMode)
 {
 	// Do updating here,
@@ -129,26 +188,27 @@ void ModuleStatusEffectSystem::activateUpdateUnusedModuleParticleEffect(Entity* 
 	}
 	if (m_myship)
 	{
-		auto particleEmitters = static_cast<ParticleSystemsComponent*>(
-			p_entity->getComponent(ComponentType::ParticleSystemsComponent));
-
-		if (particleEmitters)
+		if (p_ps)
 		{
 			float distSq = getDistSqBetweenShipAndModule(p_entity);
 			// update positionhint
-			AglParticleSystem* posHint = particleEmitters->getParticleSystemPtr(p_visMode->positionHintParticleSysId);
+			AglParticleSystem* posHint = p_ps->getParticleSystemPtr(p_visMode->positionHintParticleSysId);
 			if (posHint)
 			{
 				float tint = saturate(distSq/1000000.0f);
 				posHint->setColor(AglVector4(tint,tint,tint,1.0f));
+				if (tint<0.01f)
+					posHint->setSpawnType(AglParticleSystemHeader::ONCE);
 			}
 			for (unsigned int i=0;i<p_visMode->unusedHintParticleSysId.size();i++)
 			{
-				AglParticleSystem* unusedHint = particleEmitters->getParticleSystemPtr(p_visMode->unusedHintParticleSysId[i]);
+				AglParticleSystem* unusedHint = p_ps->getParticleSystemPtr(p_visMode->unusedHintParticleSysId[i]);
 				if (unusedHint)
 				{				
 					float tint = saturate(distSq/50000.0f);
 					unusedHint->setColor(AglVector4(tint,tint,tint,1.0f));
+					if (tint<0.01f)
+						unusedHint->setSpawnType(AglParticleSystemHeader::ONCE);
 					if (distSq>1000000.0f)
 						unusedHint->setSpawnType(AglParticleSystemHeader::ONCE);
 					else if (unusedHint->getHeaderPtr()->spawnType == AglParticleSystemHeader::ONCE)
@@ -162,8 +222,7 @@ void ModuleStatusEffectSystem::activateUpdateUnusedModuleParticleEffect(Entity* 
 	}
 }
 
-void ModuleStatusEffectSystem::addAndRegisterUnusedModuleParticleEffect(Entity* p_entity, 
-								  ModuleStatusVisualizationMode* p_visMode)
+ParticleSystemsComponent* ModuleStatusEffectSystem::addAndRegisterUnusedModuleParticleEffect( Entity* p_entity, ModuleStatusVisualizationMode* p_visMode )
 {
 	// Pure beauty below.
 	// Enjoy!
@@ -407,18 +466,17 @@ void ModuleStatusEffectSystem::addAndRegisterUnusedModuleParticleEffect(Entity* 
 
 	p_entity->applyComponentChanges();
 
-	
+	return particleEmitters;
 }
 
 void ModuleStatusEffectSystem::disableUnusedModuleParticleEffect( Entity* p_entity, 
+													 ParticleSystemsComponent* p_ps,
 													 ModuleStatusVisualizationMode* p_visMode)
 {
-	auto particleEmitters = static_cast<ParticleSystemsComponent*>(
-		p_entity->getComponent(ComponentType::ParticleSystemsComponent));
-	if (particleEmitters!=NULL)
+	if (p_ps!=NULL)
 	{
 		// let the particles have one last run and "die" silently by setting spawn type to once
-		AglParticleSystem* posHint = particleEmitters->getParticleSystemPtr(p_visMode->positionHintParticleSysId);
+		AglParticleSystem* posHint = p_ps->getParticleSystemPtr(p_visMode->positionHintParticleSysId);
 		if (posHint) 
 		{
 			posHint->setSpawnType(AglParticleSystemHeader::ONCE);
@@ -426,7 +484,7 @@ void ModuleStatusEffectSystem::disableUnusedModuleParticleEffect( Entity* p_enti
 		}
 		for (unsigned int i=0;i<p_visMode->unusedHintParticleSysId.size();i++)
 		{
-			AglParticleSystem* unusedHint = particleEmitters->getParticleSystemPtr(p_visMode->unusedHintParticleSysId[i]);
+			AglParticleSystem* unusedHint = p_ps->getParticleSystemPtr(p_visMode->unusedHintParticleSysId[i]);
 			if (unusedHint) 
 			{
 				unusedHint->setSpawnType(AglParticleSystemHeader::ONCE);
@@ -486,4 +544,203 @@ float ModuleStatusEffectSystem::getDistSqBetweenShipAndModule(Entity* p_moduleEn
 void ModuleStatusEffectSystem::setFreefloatEffect( ModuleFreefloatEffect& p_fx )
 {
 	m_freefloatEffects.push_back(p_fx);
+}
+
+void ModuleStatusEffectSystem::activateUpdateDamagedModuleParticleEffect( Entity* p_entity, 
+																		 ParticleSystemsComponent* p_ps, 
+																		 ModuleStatusVisualizationMode* p_visMode, 
+																		 float p_health )
+{
+	if (p_ps!=NULL)
+	{
+		// let the particles have one last run and "die" silently by setting spawn type to once
+		AglParticleSystem* dmg = p_ps->getParticleSystemPtr(p_visMode->healthParticlesSysId[0]);
+		if (dmg)
+		{
+			dmg->setSpawnType(AglParticleSystemHeader::CONTINUOUSLY);
+			dmg->setParticlesPerSpawn(2+(int)((1.0f-p_health)*10.0f));
+			dmg->setSpawnOffset(2+(int)(1.0f-p_health));
+		}
+		/*
+		dmg = p_ps->getParticleSystemPtr(p_visMode->healthParticlesSysId[1]);
+		if (dmg)
+		{
+			dmg->setSpawnType(AglParticleSystemHeader::CONTINUOUSLY);
+		}*/
+	}
+}
+
+ParticleSystemsComponent* ModuleStatusEffectSystem::addAndRegisterDamagedModuleParticleEffect( Entity* p_entity, 
+																		  ModuleStatusVisualizationMode* p_visMode )
+{
+	bool createNewParticleSystem=false;
+	auto particleEmitters = static_cast<ParticleSystemsComponent*>(
+		p_entity->getComponent(ComponentType::ParticleSystemsComponent));
+
+	if (particleEmitters==NULL)
+		createNewParticleSystem=true;
+
+	if (createNewParticleSystem)
+		particleEmitters = new ParticleSystemsComponent();
+
+	float globalscale=1.0f;
+	// fire
+	// =============================================
+	AglParticleSystem particleSystem1;
+	AglVector3 offset = AglVector3( 0.0f,0.0f,0.0f);
+	particleSystem1.setParticleSize(AglVector2(5.0f,5.0f)*globalscale);
+	particleSystem1.setColor(AglVector4(0.63f,0.2f,0.0353f,1.0f));
+	particleSystem1.setMaxOpacity(0.7f);
+	//
+	particleSystem1.setSpawnPoint(offset);
+	particleSystem1.setSpawnDirection(AglVector3::up());
+	particleSystem1.setSpawnFrequency(10.0f);
+	particleSystem1.setAlignmentType(AglParticleSystemHeader::SCREEN);
+	particleSystem1.setParticlesPerSpawn(2);
+	//
+	particleSystem1.setSpawnSpace(AglParticleSystemHeader::AglSpace_LOCAL);
+	particleSystem1.setParticleSpace( AglParticleSystemHeader::AglSpace_LOCAL );
+	particleSystem1.setParticleAge(1.0f);
+	particleSystem1.setSpawnSpeed(0.1f);
+	particleSystem1.setSpawnAngularVelocity(0.4f);
+	particleSystem1.setFadeInStop(0.5f);
+	particleSystem1.setFadeOutStart(0.5f);
+	particleSystem1.setSpawnOffset(2.0f);
+	particleSystem1.setSpread(1.0f);
+	particleSystem1.setSpreadType(AglParticleSystemHeader::INSPACE);
+	particleSystem1.setOffsetType(AglParticleSystemHeader::INSPHERE);
+	particleSystem1.setSpawnType(AglParticleSystemHeader::CONTINUOUSLY);
+	particleSystem1.getHeaderPtr()->blendMode=AglParticleSystemHeader::AglBlendMode_ADDITIVE;
+	particleSystem1.getHeaderPtr()->rasterizerMode=AglParticleSystemHeader::AglRasterizerMode_Z_CULLED;
+	// Create an instruction for creation
+	ParticleSystemInstruction particleInstruction1;
+	particleInstruction1.textureFileName = "additive_flame.png";
+	particleInstruction1.particleSystem = particleSystem1;
+	// add instruction
+	p_visMode->healthParticlesSysId.push_back(particleEmitters->addParticleSystemInstruction(particleInstruction1));
+	// smoke
+	// =============================================
+	// World highlight, always on top
+	// =============================================
+	/*
+	AglParticleSystem particleSystem2;
+	particleSystem2.setParticleSize(AglVector2(8.0f,8.0f)*globalscale);
+	particleSystem2.setColor(AglVector4(0.4f,0.4f,0.4f,1.0f));
+	particleSystem2.setMaxOpacity(1.0f);
+	//			  2
+	particleSystem2.setSpawnPoint(offset);
+	particleSystem2.setSpawnDirection(AglVector3::up());
+	particleSystem2.setSpawnFrequency(10.0f);
+	particleSystem2.setAlignmentType(AglParticleSystemHeader::SCREEN);
+	particleSystem2.setParticlesPerSpawn(3);
+	//			  2
+	particleSystem2.setSpawnSpace(AglParticleSystemHeader::AglSpace_LOCAL);
+	particleSystem2.setParticleSpace( AglParticleSystemHeader::AglSpace_GLOBAL );
+	particleSystem2.setParticleAge(0.2f);
+	particleSystem2.setSpawnSpeed(0.2f);
+	particleSystem2.setSpawnAngularVelocity(0.2f);
+	particleSystem2.setFadeInStop(0.05f);
+	particleSystem2.setFadeOutStart(0.1f);
+	particleSystem2.setSpawnOffset(0.0f);
+	particleSystem2.setSpread(1.0f);
+	particleSystem2.setSpreadType(AglParticleSystemHeader::INSPACE);
+	particleSystem2.setOffsetType(AglParticleSystemHeader::ONSPHERE);
+	particleSystem2.setSpawnType(AglParticleSystemHeader::CONTINUOUSLY);
+	particleSystem2.getHeaderPtr()->blendMode=AglParticleSystemHeader::AglBlendMode_ALPHA;
+	particleSystem2.getHeaderPtr()->rasterizerMode=AglParticleSystemHeader::AglRasterizerMode_Z_CULLED;
+	// Create an instruction for creation
+	ParticleSystemInstruction particleInstruction2;
+	particleInstruction2.textureFileName = "smoke.png";
+	particleInstruction2.particleSystem = particleSystem2;
+	// add instruction
+	p_visMode->healthParticlesSysId.push_back(particleEmitters->addParticleSystemInstruction(particleInstruction2));
+	*/
+	// add it
+	if (createNewParticleSystem)
+		p_entity->addComponent( ComponentType::ParticleSystemsComponent, particleEmitters );
+
+	p_entity->applyComponentChanges();
+
+	return particleEmitters;
+}
+
+void ModuleStatusEffectSystem::disableDamagedParticleEffect( Entity* p_entity, 
+															ParticleSystemsComponent* p_ps,
+															ModuleStatusVisualizationMode* p_visMode )
+{
+	if (p_ps!=NULL)
+	{
+		// let the particles have one last run and "die" silently by setting spawn type to once
+		AglParticleSystem* dmg = p_ps->getParticleSystemPtr(p_visMode->healthParticlesSysId[0]);
+		if (dmg)
+		{
+			dmg->setSpawnType(AglParticleSystemHeader::ONCE);
+			dmg->setParticlesPerSpawn(2);
+			dmg->setSpawnOffset(2.0f);
+		}/*
+		dmg = p_ps->getParticleSystemPtr(p_visMode->healthParticlesSysId[1]);
+		if (dmg)
+		{
+			dmg->setSpawnType(AglParticleSystemHeader::ONCE);
+		}*/
+	}
+}
+
+bool ModuleStatusEffectSystem::createSpawnEffect( Entity* p_entity )
+{
+	Entity* effect = m_world->createEntity();
+
+	auto othertransform = static_cast<Transform*>(
+		p_entity->getComponent(ComponentType::Transform));
+
+	if (othertransform)
+	{
+		Transform* transform = new Transform(othertransform->getTranslation(), 
+			AglQuaternion::identity(),AglVector3::one());
+		effect->addComponent( ComponentType::Transform, transform );
+
+
+		ParticleSystemsComponent* particleEmitters = new ParticleSystemsComponent();
+
+		effect->addComponent(ComponentType::DestroyOnParticlesDeath,
+			new DestroyOnParticlesDeath());
+
+		float size=4.0f;
+		for (unsigned int i=0;i<(unsigned int)size;i++)
+		{
+			AglParticleSystem particleSystem;
+			particleSystem.getHeaderPtr()->rasterizerMode = AglParticleSystemHeader::AglRasterizerMode_ALWAYS_ON_TOP;
+			particleSystem.getHeaderPtr()->blendMode=AglParticleSystemHeader::AglBlendMode_ADDITIVE;
+			AglVector3 offset = AglVector3::zero();
+			particleSystem.setParticleSize(AglVector2(20.0f,20.0f)*5.0f*(1.0f+(float)i));
+			// offset.transform(cameraRot);
+			particleSystem.setSpawnPoint(offset);
+			particleSystem.setSpawnDirection(AglVector3::up());
+			particleSystem.setSpawnFrequency(10.0f-(float)i);
+			particleSystem.setAlignmentType(AglParticleSystemHeader::SCREEN);
+			// particleSystem.set
+			particleSystem.setSpawnSpace(AglParticleSystemHeader::AglSpace_LOCAL);
+			particleSystem.setParticleSpace( AglParticleSystemHeader::AglSpace_GLOBAL );
+			particleSystem.setSpawnType(AglParticleSystemHeader::ONCE);
+			particleSystem.setParticleAge(4.0f+i*2.0f);
+			particleSystem.setSpawnSpeed(0.0f);
+			particleSystem.setFadeInStop(1.0f+i*2.0f);
+			particleSystem.setFadeOutStart(3.0f+i*2.0f);
+			// Create an instruction for creation
+			ParticleSystemInstruction particleInstruction;
+			particleInstruction.textureFileName = "decoparticle6.png";
+			particleInstruction.particleSystem = particleSystem;
+			// add instruction
+			particleEmitters->addParticleSystemInstruction(particleInstruction);
+		}
+
+		effect->addComponent( ComponentType::ParticleSystemsComponent, particleEmitters );
+	
+		m_world->addEntity(effect);
+		return true;
+	}
+
+	return false;
+
+	// return effect;
 }
