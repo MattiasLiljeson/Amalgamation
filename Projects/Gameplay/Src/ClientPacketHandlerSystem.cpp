@@ -1041,7 +1041,12 @@ void ClientPacketHandlerSystem::handleIngameState()
 			data.unpack(packet);
 			EntityFactory* factory = static_cast<EntityFactory*>
 				(m_world->getSystem(SystemType::EntityFactory));
-			factory->createExplosion(data);
+			if(data.source == ANOMALYBOMB) {
+				factory->createAnomalyExplosion(data);
+			}
+			else if(data.source == ROCKET || data.source == MINE) {
+				factory->createExplosion(data);
+			}
 		}
 		else if (packetType == (char)PacketType::AnimationUpdatePacket)
 		{

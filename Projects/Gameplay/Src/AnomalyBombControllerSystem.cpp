@@ -6,6 +6,8 @@
 #include <PhysicsController.h>
 #include <TcpServer.h>
 #include "BombActivationPacket.h"
+#include "SpawnExplosionPacket.h"
+#include "NetworkSynced.h"
 
 AnomalyBombControllerSystem::AnomalyBombControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::AnomalyBombControllerSystem, 4, ComponentType::AnomalyBomb,
@@ -48,6 +50,10 @@ void AnomalyBombControllerSystem::processEntities( const vector<Entity*>& p_enti
 				BombActivationPacket packet;
 				packet.netsyncId = p_entities[i]->getIndex();
 				m_server->broadcastPacket(packet.pack());
+				SpawnExplosionPacket spawnExplosion;
+				spawnExplosion.position = bombTransform->getTranslation();
+				spawnExplosion.source = ANOMALYBOMB;
+				m_server->broadcastPacket(spawnExplosion.pack());
 			}
 			for(unsigned int netsyncIndex=0; netsyncIndex<dynamicEntities.size(); netsyncIndex++)
 			{

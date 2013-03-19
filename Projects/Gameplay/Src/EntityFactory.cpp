@@ -1241,6 +1241,118 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 	m_world->addEntity(effect);
 }
 
+void EntityFactory::createAnomalyExplosion(const SpawnExplosionPacket& p_packet)
+{
+	Entity* effect = m_world->createEntity();
+	effect->setName("Anomaly Explosion Effect");
+
+	ParticleSystemsComponent* particleEmitter = new ParticleSystemsComponent();
+
+	Transform* trans = new Transform();
+	trans->setTranslation(p_packet.position);
+	effect->addComponent( trans );
+
+	//Flares spreading
+	AglParticleSystem flares;
+	flares.setSpawnPoint(p_packet.position);
+	flares.setSpawnDirection(AglVector3(0, 1, 0));
+	flares.setSpread(1.0f);
+	flares.setSpawnType(AglParticleSystemHeader::ONCE);
+	flares.setParticlesPerSpawn(2000);
+	flares.setSpawnFrequency(3.0f);
+	flares.setAlignmentType(AglParticleSystemHeader::VELOCITY);
+	flares.getHeaderPtr()->blendMode = AglParticleSystemHeader::AglBlendMode_ADDITIVE;
+	flares.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
+	flares.setSpawnSpeed(20.0f);
+	flares.setParticleSize(AglVector2(3.0f, 0.5f));
+	flares.setParticleAge(3.0f);
+	flares.setFadeOutStart(0.0f);
+	flares.setSpawnOffset(1.0f);
+	if (p_packet.source == ExplosionSource::MINE)
+		flares.setColor(AglVector4(1, 0, 0, 1));
+	//flares.setColor(AglVector4(1, 0, 0, 1));
+
+	ParticleSystemInstruction particleInstructionFlares;
+	particleInstructionFlares.textureFileName = "anomaly-spot.png";
+	particleInstructionFlares.particleSystem = flares;
+	particleEmitter->addParticleSystemInstruction(particleInstructionFlares);
+
+	//Smoke
+	AglParticleSystem Smoke;
+	Smoke.setSpawnPoint(p_packet.position);
+	Smoke.setParticleAge(1.0f);
+	Smoke.setSpawnSpeed(10.0f);
+	Smoke.setSpawnDirection(AglVector3(0, 1, 0));
+	Smoke.setSpread(1.0f);
+	Smoke.setSpawnFrequency(3.0f);
+
+	Smoke.setFadeInStop(0.25f);
+	Smoke.setFadeOutStart(0.25f);
+	Smoke.setSpawnOffset(3.0f);
+	Smoke.setMaxOpacity(0.25f);
+	Smoke.setSpawnType(AglParticleSystemHeader::ONCE);
+	Smoke.setParticlesPerSpawn(100);
+	Smoke.setAlignmentType(AglParticleSystemHeader::VELOCITY);
+	Smoke.getHeaderPtr()->blendMode = AglParticleSystemHeader::AglBlendMode_ALPHA;
+	Smoke.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
+	Smoke.setParticleSize(AglVector2(5.0f, 5.0f));
+
+	ParticleSystemInstruction particleInstructionSmoke;
+	particleInstructionSmoke.textureFileName = "Test/smoke.png";
+	particleInstructionSmoke.particleSystem = Smoke;
+	particleEmitter->addParticleSystemInstruction(particleInstructionSmoke);
+
+	//Flash
+	AglParticleSystem Flash;
+	Flash.setSpawnPoint(p_packet.position);
+	Flash.setParticleAge(0.5f);
+	Flash.setSpawnSpeed(2.0f);
+	Flash.setSpawnDirection(AglVector3(0, 1, 0));
+	Flash.setSpread(1.0f);
+	Flash.setSpawnFrequency(3.0f);
+
+	Flash.setFadeInStop(0.25f);
+	Flash.setFadeOutStart(0.25f);
+	Flash.setSpawnOffset(2.0f);
+	Flash.setMaxOpacity(0.25f);
+	Flash.setSpawnType(AglParticleSystemHeader::ONCE);
+	Flash.setParticlesPerSpawn(100);
+	Flash.setAlignmentType(AglParticleSystemHeader::OBSERVER);
+	Flash.getHeaderPtr()->blendMode = AglParticleSystemHeader::AglBlendMode_ADDITIVE;
+	Flash.setSpawnSpace(AglParticleSystemHeader::AglSpace_GLOBAL);
+	Flash.setParticleSize(AglVector2(20.0f, 20.0f));
+	if (p_packet.source == ExplosionSource::MINE)
+		Flash.setColor(AglVector4(1, 0, 0, 1));
+	//Flash.setColor(AglVector4(1, 0, 0, 1));
+
+	ParticleSystemInstruction particleInstructionFlash;
+	particleInstructionFlash.textureFileName = "anomaly-spot.png";
+	particleInstructionFlash.particleSystem = Flash;
+	particleEmitter->addParticleSystemInstruction(particleInstructionFlash);
+
+	effect->addComponent( ComponentType::ParticleSystemsComponent, particleEmitter);
+
+	SoundComponent* soundComponent = new SoundComponent();
+	effect->addComponent(soundComponent);
+
+	Component* component = NULL;
+
+	string name = "Explosion";
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
+	explodeSound->file = "bomb-03.wav";
+	explodeSound->path = TESTSOUNDEFFECTPATH;
+	explodeSound->maxRange = 1000.0f;
+	explodeSound->maxFrequencyOffeset = 1.0f;
+	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
+	explodeSound->sourceChannels = 1;
+	explodeSound->queuedPlayingState = AudioHeader::PLAY;
+	explodeSound->volume = 0.5f;
+	soundComponent->addAudioHeader(explodeSound);
+
+
+	m_world->addEntity(effect);
+}
+
 AglVector4 EntityFactory::getPlayersFirstGradientLevel( ) const{
 	return m_gradientColors[m_client->getPlayerID()].layerOne;
 }

@@ -76,6 +76,7 @@ public:
 	Entity* entityFromPacket(EntityCreationPacket p_packet, AglMatrix* p_spawnPoint = NULL);
 
 	void createExplosion(const SpawnExplosionPacket& p_packet);
+	void createAnomalyExplosion(const SpawnExplosionPacket& p_packet);
 
 public:
 	// Tesla coil
