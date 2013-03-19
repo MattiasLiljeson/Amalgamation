@@ -95,16 +95,17 @@ double InputActionsBackendSystem::getDeltaByAction( Actions p_action )
 	for(unsigned int i=0; i<m_inputControls[p_action].size(); i++)
 	{
 		Control* currentControl = m_inputControls[p_action][i];
-		float currentDelta = currentControl->getDelta();
+		double currentDelta = currentControl->getDelta();
 		InputHelper::InputDeviceTypes deviceT = currentControl->getDeviceType();
 		if (deviceT == InputHelper::InputDeviceTypes_XINPUT_DIGITAL ||
 			deviceT == InputHelper::InputDeviceTypes_XINPUT_ANALOG) 
 		{
-			if (currentDelta>0.0f) m_gamepadUsedLast=true;
+			if (currentDelta>0.0) 
+				m_gamepadUsedLast=true;
 		}
 		else
 		{
-			if (currentDelta>0.1f && 
+			if (currentDelta>0.1 && 
 				deviceT != InputHelper::InputDeviceTypes_MOUSE_AXIS) 
 				m_gamepadUsedLast=false;
 		}
@@ -120,16 +121,17 @@ double InputActionsBackendSystem::getStatusByAction( Actions p_action )
 	for(unsigned int i=0; i<m_inputControls[p_action].size(); i++)
 	{
 		Control* currentControl = m_inputControls[p_action][i];
-		float currentStatus = currentControl->getStatus();
+		double currentStatus = currentControl->getStatus();
 		InputHelper::InputDeviceTypes deviceT = currentControl->getDeviceType();
 		if (deviceT == InputHelper::InputDeviceTypes_XINPUT_DIGITAL ||
 			deviceT == InputHelper::InputDeviceTypes_XINPUT_ANALOG) 
 		{
-			if (currentStatus>0.0f) m_gamepadUsedLast=true;
+			if (currentStatus>0.0) 
+				m_gamepadUsedLast=true;
 		}
 		else
 		{
-			if (currentStatus>0.1f && 
+			if (currentStatus>0.1 && 
 				deviceT != InputHelper::InputDeviceTypes_MOUSE_AXIS) 
 				m_gamepadUsedLast=false;
 		}
