@@ -18,8 +18,8 @@
     <ClInclude Include="LightDataCollection.h" />
     <ClInclude Include="MeshLoadException.h" />
     <ClInclude Include="MeshNameScriptParser.h" />
-    <ClInclude Include="ModelResource.h" />
     <ClInclude Include="ModelBaseFactory.h" />
+    <ClInclude Include="ModelResource.h" />
     <ClInclude Include="ParticleSystemInstructionCollection.h" />
     <ClInclude Include="ParticleSystemInstruction.h" />
     <ClInclude Include="ResourceManager.h" />
@@ -28,6 +28,7 @@
   <ItemGroup>
     <ClCompile Include="MeshNameScriptParser.cpp" />
     <ClCompile Include="ModelBaseFactory.cpp" />
+    <ClCompile Include="ModelResource.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
