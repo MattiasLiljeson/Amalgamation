@@ -12,6 +12,7 @@
 #include "LobbySystem.h"
 #include "ClientConnectToServerSystem.h"
 #include <OutputLogger.h>
+#include "SelectionMarkerSystem.h"
 
 StateManagementSystem::StateManagementSystem()
 	: EntitySystem(SystemType::StateManagementSystem)
@@ -107,6 +108,9 @@ void StateManagementSystem::process()
 				m_world->getSystem(SystemType::ModuleStatusEffectSystem));
 			moduleStatusEffectSys->clear();
 			
+			auto selectionMarker = static_cast<SelectionMarkerSystem*>(
+				m_world->getSystem(SystemType::SelectionMarkerSystem));
+			selectionMarker->clear();
 		}
 	}
 }
