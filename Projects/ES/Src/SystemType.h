@@ -141,6 +141,7 @@ public:	//Enums
 		PreloaderSystem,
 		EntityLoggerSystem,
 		StateManagementSystem,
+		ModuleCleaningService,
 		NUM_SYSTEM_TYPES
 	};
 

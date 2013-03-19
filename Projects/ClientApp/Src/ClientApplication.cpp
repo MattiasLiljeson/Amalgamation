@@ -131,6 +131,7 @@
 #include <ClientDebugModuleSpawnerSystem.h>
 #include <PreloaderSystem.h>
 #include <EntityLoggerSystem.h>
+#include <ModuleCleaningService.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -347,6 +348,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new TeslaEffectSystem() );
 	m_world->setSystem( new TeslaLightningSystem() );
 	m_world->setSystem( new GlowAnimationSystem() );
+	m_world->setSystem( new ModuleCleaningService() );
 
 	//---STATESYSTEM
 	m_world->setSystem( new ClientStateSystem( GameStates::MENU ) );

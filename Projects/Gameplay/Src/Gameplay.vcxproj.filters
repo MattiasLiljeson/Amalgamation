@@ -883,6 +883,9 @@
     <ClInclude Include="EntityLoggerSystem.h">
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleCleaningService.h">
+      <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1523,6 +1526,9 @@
     </ClCompile>
     <ClCompile Include="EntityLoggerSystem.cpp">
       <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleCleaningService.cpp">
+      <Filter>Systems\Gameplay\Server Only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
