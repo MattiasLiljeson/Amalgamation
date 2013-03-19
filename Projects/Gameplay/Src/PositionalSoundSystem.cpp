@@ -62,7 +62,9 @@ void PositionalSoundSystem::processSoundComponent(Entity* p_entity,
 		
 		AudioHeader* header = ambientRange->at(i);
 		AglVector3 posw = header->pos;
-		posw.transform(trans->getMatrix()); // fix: local to world space (Jarl 11-03-2013)
+		AglMatrix soundTransform= AglMatrix::createTranslationMatrix(posw);
+		soundTransform*=trans->getMatrix(); // fix: local to world space (Jarl 11-03-2013)
+		posw = soundTransform.GetTranslation();
 
 		AglVector3 distanceVec = listener->listenerPos - posw;
 		float length = AglVector3::length(distanceVec);

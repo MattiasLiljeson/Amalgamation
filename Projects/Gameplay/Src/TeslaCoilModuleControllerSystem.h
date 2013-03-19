@@ -31,6 +31,9 @@ private:
 	float calculateHitChance( float p_distance, float p_optimalRange, float p_range );
 	bool canTarget(ShipModule* p_teslaModule, ShipModule* p_otherModule) const;
 
+	void playFireAnimation(Entity* p_tesla);
+	void playDeathAnimation(Entity* p_tesla);
+
 private:
 	TcpServer* m_server;
 

@@ -91,16 +91,16 @@ double InputHelper::statusDeltaFromState( const InputHelper::KeyStates p_state )
 	double delta = 0.0;
 	switch( p_state )
 	{
+	case InputHelper::KeyStates_KEY_UP:
+		delta = 0.0;
+		break;
+
 	case InputHelper::KeyStates_KEY_DOWN:
 		delta = 0.0;
 		break;
 
 	case InputHelper::KeyStates_KEY_PRESSED:
 		delta = 1.0;
-		break;
-
-	case InputHelper::KeyStates_KEY_UP:
-		delta = 0.0;
 		break;
 
 	case InputHelper::KeyStates_KEY_RELEASED:
@@ -116,16 +116,16 @@ double InputHelper::statusFromState( const InputHelper::KeyStates p_state )
 	double status = 0.0;
 	switch( p_state )
 	{
+	case InputHelper::KeyStates_KEY_UP:
+		status = 0.0;
+		break;
+
 	case InputHelper::KeyStates_KEY_DOWN:
 		status = 1.0;
 		break;
 
 	case InputHelper::KeyStates_KEY_PRESSED:
 		status = 1.0;
-		break;
-
-	case InputHelper::KeyStates_KEY_UP:
-		status = 0.0;
 		break;
 
 	case InputHelper::KeyStates_KEY_RELEASED:

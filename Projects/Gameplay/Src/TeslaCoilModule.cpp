@@ -10,6 +10,7 @@ TeslaCoilModule::TeslaCoilModule()
 	damage = 0.0f;
 	cooldownTime = 10.0f;
 	cooldown = 0.0f;
+	active = false;
 }
 
 TeslaCoilModule::TeslaCoilModule( float p_range, float p_optimalRange,
@@ -21,6 +22,7 @@ TeslaCoilModule::TeslaCoilModule( float p_range, float p_optimalRange,
 	cooldownTime = p_cooldownTime;
 	damage = p_damage;
 	cooldown = 0.0f;
+	active = false;
 }
 
 void TeslaCoilModule::init( vector<ComponentData> p_initData )

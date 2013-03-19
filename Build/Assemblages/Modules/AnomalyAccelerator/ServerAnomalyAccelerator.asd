@@ -1,7 +1,7 @@
 e ServerAnomalyAccelerator
 
 c LoadMesh
-d s m_filename shield_module.agl
+d s m_filename anomaly_launcher.agl
 
 c Transform
 d f m_translationX 0.0

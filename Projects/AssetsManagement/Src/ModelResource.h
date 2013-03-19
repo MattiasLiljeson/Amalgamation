@@ -28,26 +28,12 @@
 struct ModelResource
 {
 public:
-    ModelResource() {meshId=-1; name="noname"; 
-					 looseBspTree = NULL; transform=AglMatrix::identityMatrix(); scene = NULL;}
+    ModelResource();
 
-    ModelResource(const ModelResource& p_copy)
-    {
-        meshId = p_copy.meshId;
-        name = p_copy.name;
-        meshHeader = p_copy.meshHeader;
-        connectionPoints = p_copy.connectionPoints;
-		spawnPoints = p_copy.spawnPoints;
-		lightCollection = p_copy.lightCollection;
-        particleSystems = p_copy.particleSystems;
-        transform = p_copy.transform;
-		instances = p_copy.instances;
-		looseBspTree = p_copy.looseBspTree;
-		scene = p_copy.scene;
-    }	
+    ModelResource(const ModelResource& p_copy);
 
-    ModelResource(const string& p_name) {transform=AglMatrix::identityMatrix(); 
-										 meshId=-1; name=p_name; looseBspTree = NULL; scene = NULL;}
+    ModelResource(const string& p_name);
+
     virtual ~ModelResource()
 	{
 	}

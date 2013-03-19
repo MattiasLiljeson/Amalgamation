@@ -1071,7 +1071,10 @@ void ClientPacketHandlerSystem::handleIngameState()
 			else
 			{
 				anim->m_currentTake = take;
-				anim->m_time = anim->m_takes[anim->m_currentTake].startFrame / anim->m_fps;
+				if (anim->m_takes[anim->m_currentTake].backwards)
+					anim->m_time = anim->m_takes[anim->m_currentTake].endFrame / anim->m_fps;
+				else
+					anim->m_time = anim->m_takes[anim->m_currentTake].startFrame / anim->m_fps;
 			}
 
 		}
