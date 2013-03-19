@@ -37,8 +37,8 @@ XInputFetcher::~XInputFetcher()
 void XInputFetcher::update()
 {
 	//XINPUT_STATE newState;
-	// ZeroMemory( &m_currentState, sizeof(XINPUT_STATE) );
-	clearBuffers();
+	ZeroMemory( &m_currentState, sizeof(XINPUT_STATE) );
+	// clearBuffers();
 	unsigned long result = XInputGetState( 0, &m_currentState );
 	if( result == ERROR_SUCCESS )
 	{

@@ -884,6 +884,9 @@
     <ClInclude Include="RegisteredEntity.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="EntityLoggerSystem.h">
+      <Filter>Systems\Debugging</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1523,5 +1526,8 @@
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="ShipMassBoosterUpdatePacket.cpp" />
+    <ClCompile Include="EntityLoggerSystem.cpp">
+      <Filter>Systems\Debugging</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
