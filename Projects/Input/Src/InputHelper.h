@@ -46,9 +46,9 @@ public:
 	{
 		KeyStates_NON_EXISTING = -1,
 
+		KeyStates_KEY_UP,
 		KeyStates_KEY_DOWN,
 		KeyStates_KEY_PRESSED,
-		KeyStates_KEY_UP,
 		KeyStates_KEY_RELEASED,
 
 		KeyStates_CNT
