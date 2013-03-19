@@ -50,8 +50,6 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 			m_world->getComponentManager()->getComponent(p_entities[i],
 			ComponentType::getTypeFor(ComponentType::MinigunModule)));
 
-		gun->timeSinceSound += dt;
-
 		ShipModule* module = static_cast<ShipModule*>(
 			p_entities[i]->getComponent(ComponentType::ShipModule));
 
@@ -256,7 +254,7 @@ void MinigunModuleControllerSystem::startAnimation(Entity* p_gun)
 	//Start playing the minigun fire sound
 	SoundPacket sp;
 	sp.target = p_gun->getIndex();
-	sp.soundType = AudioHeader::AMBIENT;
+	sp.soundType = AudioHeader::POSITIONALSOUND;
 	sp.targetSlot = 0;
 	sp.queuedPlayingState = AudioHeader::PLAY;
 	m_server->broadcastPacket( sp.pack() );
@@ -272,7 +270,7 @@ void MinigunModuleControllerSystem::stopAnimation(Entity* p_gun)
 	//Stop playing the minigun fire sound
 	SoundPacket sp;
 	sp.target = p_gun->getIndex();
-	sp.soundType = AudioHeader::AMBIENT;
+	sp.soundType = AudioHeader::POSITIONALSOUND;
 	sp.targetSlot = 0;
 	sp.queuedPlayingState = AudioHeader::STOP;
 	m_server->broadcastPacket( sp.pack() );

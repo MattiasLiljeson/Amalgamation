@@ -528,15 +528,14 @@ Entity* EntityFactory::createMinigunClient(EntityCreationPacket p_packet)
 	Component* component = NULL;
 
 	string name = "minigunFire";
-	AudioHeader* explodeSound = new AudioHeader(AudioHeader::AMBIENT, name);
+	AudioHeader* explodeSound = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
 	explodeSound->file = "minigunFreesound.wav";//machinegunsoundsnap.wav";//"Spaceship_Weapon_-_Fighter Blaster or Laser-Shot-Mid.wav";
 	explodeSound->path = TESTSOUNDEFFECTPATH;
-	explodeSound->maxFrequencyOffeset = 2.0f;
-	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::TIMERBASED;
-	explodeSound->timerInterval = 0.1f;
-	explodeSound->sourceChannels = 1;
+	explodeSound->maxFrequencyOffeset = 1.0f;
+	explodeSound->playInterval	= AudioHeader::FOREVER;
 	explodeSound->queuedPlayingState = AudioHeader::STOP;
 	explodeSound->volume = 0.5f;
+	explodeSound->maxRange = 100.0f;
 	soundComponent->addAudioHeader(explodeSound);
 
 	InitiallyDisable* disable = new InitiallyDisable();
