@@ -18,4 +18,5 @@ d i m_startFrame 0
 d i m_endFrame 0
 d s m_name Shooting
 d i m_startFrame 10
-d i m_endFrame 160
+d i m_endFrame 360
+d f m_speed 10.0

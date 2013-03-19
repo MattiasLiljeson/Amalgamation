@@ -17,6 +17,7 @@
 #include "SpawnPointSet.h"
 #include "ScoreRuleHelper.h"
 #include "PlayerComponent.h"
+#include "AnimationUpdatePacket.h"
 
 TeslaCoilModuleControllerSystem::TeslaCoilModuleControllerSystem(TcpServer* p_server)
 	: EntitySystem(SystemType::TeslaCoilModuleControllerSystem, 7,
@@ -34,13 +35,19 @@ void TeslaCoilModuleControllerSystem::processEntities( const vector<Entity*>& p_
 	{
 		ShipModule* module = static_cast<ShipModule*>(p_entities[i]->getComponent(
 			ComponentType::ShipModule));
+		TeslaCoilModule* teslaCoil = static_cast<TeslaCoilModule*>(
+			p_entities[i]->getComponent(ComponentType::TeslaCoilModule));
 		if(module->isOwned())
 		{
-			TeslaCoilModule* teslaCoil = static_cast<TeslaCoilModule*>(
-				p_entities[i]->getComponent(ComponentType::TeslaCoilModule));
 			teslaCoil->cooldown -= dt;
 			if(teslaCoil->cooldown <= 0.0f && module->getActive())
 			{
+				if (!teslaCoil->active)
+				{
+					//Start playing fire animation
+					playFireAnimation(p_entities[i]);
+				}
+				teslaCoil->active = true;
 				teslaCoil->cooldown = teslaCoil->cooldownTime;
 				Transform* teslaTransform = static_cast<Transform*>(p_entities[i]->
 					getComponent(ComponentType::Transform));
@@ -51,6 +58,18 @@ void TeslaCoilModuleControllerSystem::processEntities( const vector<Entity*>& p_
 				fireTeslaCoil(p_entities[i], teslaCoil, teslaTransform, teslaNetsync,
 					teslaShipModule);
 			}
+			else if (!module->getActive())
+			{
+				if (teslaCoil->active)
+					playDeathAnimation(p_entities[i]);
+				teslaCoil->active = false;
+			}
+		}
+		else
+		{
+			if (teslaCoil->active)
+				playDeathAnimation(p_entities[i]);
+			teslaCoil->active = false;
 		}
 	}
 }
@@ -193,4 +212,32 @@ bool TeslaCoilModuleControllerSystem::canTarget( ShipModule* p_teslaModule,
 		target = true;
 	}
 	return target;
+}
+
+void TeslaCoilModuleControllerSystem::playFireAnimation(Entity* p_tesla)
+{
+	AnimationUpdatePacket packet;
+	packet.networkIdentity = p_tesla->getIndex();
+	packet.shouldPlay = true;
+	packet.playSpeed = 15.0f;
+	packet.take = "Start";
+	m_server->broadcastPacket( packet.pack() );
+
+
+	packet.shouldQueue = true;
+	packet.take = "Active";
+	m_server->broadcastPacket( packet.pack() );
+}
+void TeslaCoilModuleControllerSystem::playDeathAnimation(Entity* p_tesla)
+{
+	AnimationUpdatePacket packet;
+	packet.networkIdentity = p_tesla->getIndex();
+	packet.shouldPlay = true;
+	packet.shouldQueue = true;
+	packet.playSpeed = 15.0f;
+	packet.take = "Stop";
+	m_server->broadcastPacket( packet.pack() );
+
+	packet.take = "Default";
+	m_server->broadcastPacket( packet.pack() );
 }

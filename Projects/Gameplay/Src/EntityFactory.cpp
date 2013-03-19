@@ -959,6 +959,9 @@ Entity* EntityFactory::createAnomalyBombClient( EntityCreationPacket p_packet )
 		"Assemblages/Modules/AnomalyAccelerator/ClientAnomalyBomb.asd" );
 	entity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
+
+	entity->addComponent(ComponentType::ShineSpawn, new ShineSpawn(m_world->getElapsedTime(), 3.5f));
+
 	m_world->addEntity(entity);
 	return entity;
 }

@@ -52,6 +52,12 @@ void SkeletalAnimation::init( vector<ComponentData> p_initData )
 		{
 			p_initData[i].getData<float>(&m_takes.back().speed);
 		}
+		else if (name == "m_backwards")
+		{
+			int backwards;
+			p_initData[i].getData<int>(&backwards);
+			m_takes.back().backwards = backwards;
+		}
 	}
 	m_time = 0;
 	m_isPlaying = false;

@@ -9,6 +9,9 @@ AnomalyAcceleratorModule::AnomalyAcceleratorModule()
 	cooldown = 0.0f;
 	cooldownTime = 1.0f;
 	launchSpeed = 0.0f;
+	owned = false;
+	currentBomb = -1;
+	timeSinceLaunchStart = 0;
 }
 
 void AnomalyAcceleratorModule::init( vector<ComponentData> p_initData )

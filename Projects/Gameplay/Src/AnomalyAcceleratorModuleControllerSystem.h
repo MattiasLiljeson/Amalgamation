@@ -20,8 +20,13 @@ class AnomalyAcceleratorModuleControllerSystem: public EntitySystem
 public:
 	AnomalyAcceleratorModuleControllerSystem(TcpServer* p_server);
 	virtual void processEntities( const vector<Entity*>& p_entities ) final;
-	void spawnAnomalyBomb( Transform* p_transform, AglVector3 p_moduleVelocity, 
-		ShipModule* p_module );
+	void spawnAnomalyBomb(Entity* p_entity);
+	void updateBomb(Entity* p_entity, float p_age);
+
+private:
+	void playReleaseAnimation(Entity* p_accelerator);
+	void playOpenAnimation(Entity* p_accelerator);
+	void launchBomb(Entity* p_entity);
 
 private:
 	TcpServer* m_server;

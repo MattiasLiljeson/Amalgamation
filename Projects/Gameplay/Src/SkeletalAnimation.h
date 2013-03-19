@@ -26,6 +26,7 @@ struct AnimationTake
 	int startFrame;
 	int endFrame;
 	float speed;
+	bool backwards;
 
 	AnimationTake()
 	{
@@ -33,6 +34,7 @@ struct AnimationTake
 		startFrame = 0;
 		endFrame = 0;
 		speed = 1.0f;
+		backwards = false;
 	}
 };
 

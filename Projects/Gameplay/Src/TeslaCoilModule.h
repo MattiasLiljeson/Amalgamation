@@ -26,6 +26,7 @@ public:
 	float cooldown;
 	float cooldownTime;
 	float damage;
+	bool active;
 
 public:
 	static ComponentRegister<TeslaCoilModule> s_reg;

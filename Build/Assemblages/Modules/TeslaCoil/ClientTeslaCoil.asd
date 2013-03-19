@@ -38,6 +38,11 @@ d s m_name Active
 d i m_startFrame 80
 d i m_endFrame 91
 
+d s m_name Stop
+d i m_startFrame 1
+d i m_endFrame 71
+d i m_backwards 1
+
 d s m_name Death
 d i m_startFrame 180
 d i m_endFrame 220
