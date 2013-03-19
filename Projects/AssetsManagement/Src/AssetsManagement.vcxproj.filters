@@ -27,9 +27,6 @@
     <ClInclude Include="ConnectionPointCollection.h">
       <Filter>Mesh resource\Resource data</Filter>
     </ClInclude>
-    <ClInclude Include="ModelResource.h">
-      <Filter>Mesh resource\Resource data</Filter>
-    </ClInclude>
     <ClInclude Include="InstanceInstruction.h">
       <Filter>Mesh resource\Resource data</Filter>
     </ClInclude>
@@ -54,6 +51,9 @@
     <ClInclude Include="AmbientRangeSoundDataCollection.h">
       <Filter>Mesh resource\Resource data</Filter>
     </ClInclude>
+    <ClInclude Include="ModelResource.h">
+      <Filter>Mesh resource\Resource data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
@@ -64,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="MeshNameScriptParser.cpp">
       <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelResource.cpp">
+      <Filter>Mesh resource\Resource data</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

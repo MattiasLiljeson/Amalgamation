@@ -396,7 +396,7 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 				{
 					LightCreationData ld = parsedAction.first.lightSpec;
 					FixTransform(cp->transform);
-					ld.transform = cp->transform*p_offset;
+					ld.transform = cp->transform/*p_offset*/;
 					p_model->lightCollection.m_collection.push_back(ld);
 				}
 
@@ -416,7 +416,7 @@ void ModelBaseFactory::readAndStoreEmpties( SourceData& p_source,
 					AglMatrix mat = AglMatrix::identityMatrix();
 					mat.SetTranslation(cp->transform.GetTranslation());
 					FixTransform(mat);
-					sd.transform = mat*p_offset;
+					sd.transform = mat/*p_offset*/;
 					sd.filename = parsedAction.first.name;
 					sd.minRange = parsedAction.first.minrange;
 					sd.maxRange = parsedAction.first.maxrange;
