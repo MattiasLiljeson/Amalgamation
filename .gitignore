@@ -131,6 +131,8 @@ External/*
 /Build/log_server.txt
 /Build/log_client.txt
 /Build/*.log
+*.etl
+*.krn
 
 # DONT REMOVE LINES BELOW! /ML
 settings.settings

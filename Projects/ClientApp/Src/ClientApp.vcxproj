@@ -119,6 +119,7 @@
       <AdditionalDependencies>AgilePhysics_x86_$(Configuration).lib;Audio_x86_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <Profile>true</Profile>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>

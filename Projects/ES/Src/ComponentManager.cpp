@@ -82,7 +82,9 @@ void ComponentManager::addComponent( Entity* p_entity, ComponentType p_type,
 
 		auto componentEnums = p_entity->getComponentEnums();
 		//m_world->getOutputLogger()->write(err.c_str(), WRITETYPE_WARNING);
-		DEBUGWARNING(("Component already existing!\n"));
+		#ifdef _DEBUG
+		//DEBUGWARNING(("Component already existing!\n"));
+		#endif
 	}
 
 	p_entity->setComponentBit( typeIndex, true );
