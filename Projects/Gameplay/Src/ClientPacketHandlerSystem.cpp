@@ -771,7 +771,10 @@ void ClientPacketHandlerSystem::handleIngameState()
 						bombEntity->getIndex());
 					AudioHeader* header = soundComponent->getSoundHeaderByName(
 						AudioHeader::POSITIONALSOUND, "AnomalyActiveSound");
-					header->volume = 1.0f;
+					if(header)
+					{
+						header->volume = 1.0f;
+					}
 				}
 			}
 		}

@@ -8,6 +8,7 @@
 #include "SpawnPointSet.h"
 #include "MeshOffsetTransform.h"
 #include "TeslaCoilEffect.h"
+#include "SoundComponent.h"
 
 TeslaEffectSystem::TeslaEffectSystem()
 	: EntitySystem(SystemType::TeslaEffectSystem, 6, ComponentType::Transform,
@@ -63,6 +64,7 @@ void TeslaEffectSystem::animateHits( int p_fromEntity, int* p_identitiesHit,
 	Entity* entitySource = netsyncMapper->getEntity(p_fromEntity);
 	if(entityInSystem(entitySource))
 	{
+		playZapSound(entitySource);
 		for(int i=0; i<p_numberOfHits; i++)
 		{
 			Entity* target = netsyncMapper->getEntity(p_identitiesHit[i]);
@@ -177,4 +179,20 @@ bool TeslaEffectSystem::entityInSystem( Entity* p_checkEntity ) const
 		}
 	}
 	return false;
+}
+
+void TeslaEffectSystem::playZapSound( Entity* p_teslacoilModule )
+{
+	SoundComponent* soundComponent = static_cast<SoundComponent*>(
+		p_teslacoilModule->getComponent(ComponentType::SoundComponent));
+	if(soundComponent)
+	{
+		AudioHeader* header = soundComponent->getSoundHeaderByName(
+			AudioHeader::POSITIONALSOUND, "TeslaZap");
+		if(header)
+		{
+			header->queuedPlayingState = AudioHeader::RESTART;
+			header->frequency = RandomUtil::randomInterval(1.0f, 10.0f);
+		}
+	}
 }

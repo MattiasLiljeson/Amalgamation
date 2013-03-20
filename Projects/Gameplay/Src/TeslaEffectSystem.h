@@ -30,6 +30,7 @@ private:
 //	void animate(const AglVector3& p_sourcePosition, const AglVector3& p_targetPosition,
 //		const AglVector3 p_geometricMean, string p_meshName);
 	bool entityInSystem(Entity* p_checkEntity) const;
+	void playZapSound(Entity* p_teslacoilModule);
 
 private:
 	map<int, vector< vector<Entity*> > > m_lightningPool;
