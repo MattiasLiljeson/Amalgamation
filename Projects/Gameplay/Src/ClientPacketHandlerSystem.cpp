@@ -1684,6 +1684,12 @@ void ClientPacketHandlerSystem::handlePlayerDisconnect( const DisconnectPacket& 
 		//resetFromDisconnect();
 		m_tcpClient->disconnect();
 		m_gameState->setQueuedState(GameStates::MENU);
+
+		// If the current player is hosting the game, then request to shut it down!
+		if (m_world->isHostingServer())
+		{
+			m_world->requestToQuitServer();
+		}
 	}
 	// Else, the client player should:
 	// * Remove player from lobby.
@@ -1695,12 +1701,6 @@ void ClientPacketHandlerSystem::handlePlayerDisconnect( const DisconnectPacket& 
 		static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
 			deletePlayerEntity(p_dcPacket.playerID);
 		m_world->getOutputLogger()->write(("Player " + toString(p_dcPacket.playerID) + " has left the game.\n").c_str());
-	}
-
-	// If the current player is hosting the game, then request to shut it down!
-	if (m_world->isHostingServer())
-	{
-		m_world->requestToQuitServer();
 	}
 
 	// If this player is the host (id = 0) then request to shut down the server.
