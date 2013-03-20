@@ -47,31 +47,31 @@ c LevelInfo
 	d s piece begin
 	d s m_pieceAssemblageFileName 	prisonChamberServer.asd
 	d s m_pieceModelName 			WorldPrison_FinalWork_9_exporting.agl
-	d i m_pieceWeight 				3
+	d i m_pieceWeight 				2
 	d s piece end
 	# Piece 1
 	d s piece begin
 	d s m_pieceAssemblageFileName 	vegetationChamberServer.asd
 	d s m_pieceModelName 			vegetationchamber.agl
-	d i m_pieceWeight 				3
+	d i m_pieceWeight 				0
 	d s piece end
 	# Piece 2
 	d s piece begin
 	d s m_pieceAssemblageFileName 	alienChamberServer.asd
 	d s m_pieceModelName 			BlueAlienChamber2.agl
-	d i m_pieceWeight 				3
+	d i m_pieceWeight 				2
 	d s piece end
 	# Piece 3
 	d s piece begin
 	d s m_pieceAssemblageFileName 	mineChamberServer.asd
 	d s m_pieceModelName 			World_Mine.agl
-	d i m_pieceWeight 				3
+	d i m_pieceWeight 				2
 	d s piece end
 	# Piece 4
 	d s piece begin
 	d s m_pieceAssemblageFileName 	ancientChamberServer.asd
 	d s m_pieceModelName 			ancientchamber.agl
-	d i m_pieceWeight				1
+	d i m_pieceWeight				0
 	d s piece end
 	# Piece 5
 	d s piece begin
@@ -83,25 +83,25 @@ c LevelInfo
 	d s piece begin
 	d s m_pieceAssemblageFileName 	smallchamber1Server.asd
 	d s m_pieceModelName 			small_chamber1.agl
-	d i m_pieceWeight 				3
+	d i m_pieceWeight 				0
 	d s piece end
 	# Piece 7
 	d s piece begin
 	d s m_pieceAssemblageFileName 	smallchamber2Server.asd
 	d s m_pieceModelName 			small_chamber2.agl
-	d i m_pieceWeight 				1
+	d i m_pieceWeight 				0
 	d s piece end
 	# Piece 8
 	d s piece begin
 	d s m_pieceAssemblageFileName 	smallchamber3Server.asd
 	d s m_pieceModelName 			small_chamber3.agl
-	d i m_pieceWeight 				3
+	d i m_pieceWeight 				2
 	d s piece end
 	# Piece 9
 	d s piece begin
 	d s m_pieceAssemblageFileName 	smallchamber4Server.asd
 	d s m_pieceModelName 			small_chamber4.agl
-	d i m_pieceWeight 				3
+	d i m_pieceWeight 				0
 	d s piece end
 	# Piece X
 
