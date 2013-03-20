@@ -21,4 +21,5 @@ public:
 public:
 	AglVector3 position;
 	int		   source;
+	int		   sourceEntity;
 };

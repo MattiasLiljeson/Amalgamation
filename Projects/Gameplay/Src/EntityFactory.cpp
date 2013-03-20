@@ -61,6 +61,7 @@
 #include <ToString.h>
 #include <OutputLogger.h>
 #include "InitiallyDisable.h"
+#include "NetsyncDirectMapperSystem.h"
 
 #define FORCE_VS_DBG_OUTPUT
 
@@ -1351,6 +1352,15 @@ void EntityFactory::createAnomalyExplosion(const SpawnExplosionPacket& p_packet)
 	explodeSound->volume = 0.5f;
 	soundComponent->addAudioHeader(explodeSound);
 
+	NetsyncDirectMapperSystem* mapper = static_cast<NetsyncDirectMapperSystem*>(m_world->getSystem(SystemType::NetsyncDirectMapperSystem));
+	
+	Entity* bomb = mapper->getEntity(p_packet.sourceEntity);
+
+	if (bomb->getComponent(ComponentType::RenderInfo))
+	{
+		bomb->removeComponent(ComponentType::RenderInfo);
+		bomb->applyComponentChanges();
+	}
 
 	m_world->addEntity(effect);
 }

@@ -46,6 +46,9 @@ void AnomalyBombControllerSystem::processEntities( const vector<Entity*>& p_enti
 		{
 			if(bombBomb->activated == false)
 			{
+				//Make the bomb invisible
+				//bombTransform->setScale(AglVector3(0, 0, 0));
+
 				bombBomb->activated = true;
 				BombActivationPacket packet;
 				packet.netsyncId = p_entities[i]->getIndex();
@@ -53,6 +56,7 @@ void AnomalyBombControllerSystem::processEntities( const vector<Entity*>& p_enti
 				SpawnExplosionPacket spawnExplosion;
 				spawnExplosion.position = bombTransform->getTranslation();
 				spawnExplosion.source = ANOMALYBOMB;
+				spawnExplosion.sourceEntity = p_entities[i]->getIndex();
 				m_server->broadcastPacket(spawnExplosion.pack());
 			}
 			for(unsigned int netsyncIndex=0; netsyncIndex<dynamicEntities.size(); netsyncIndex++)
