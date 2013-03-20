@@ -905,6 +905,22 @@ Entity* EntityFactory::createTeslaCoilModuleClient(EntityCreationPacket p_packet
 		"Assemblages/Modules/TeslaCoil/ClientTeslaCoil.asd" );
 	entity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
+
+	AudioHeader* teslaZap = new AudioHeader(AudioHeader::POSITIONALSOUND,
+		"TeslaZap");
+	teslaZap->file = "tesla_coil_zap.wav";
+	teslaZap->path = SOUNDEFFECTPATH;
+	teslaZap->maxFrequencyOffeset = 10.0f;
+	teslaZap->playInterval	= AudioHeader::ONCE;
+	teslaZap->sourceChannels = 1;
+	teslaZap->queuedPlayingState = AudioHeader::PLAY;
+	teslaZap->volume = 1.0f;
+	teslaZap->maxRange = 400.0f;
+	teslaZap->pos = p_packet.translation;
+	SoundComponent* soundComponent = new SoundComponent();
+	soundComponent->addAudioHeader(teslaZap);
+	entity->addComponent(soundComponent);
+
 	m_world->addEntity(entity);
 	return entity;
 }
