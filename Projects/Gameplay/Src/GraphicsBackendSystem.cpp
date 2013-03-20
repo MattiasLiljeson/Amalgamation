@@ -11,6 +11,7 @@
 #include <RendererSceneInfo.h>
 #include "Transform.h"
 #include "ShipHiglightSystem.h"
+#include "SettingsSystem.h"
 
 GraphicsBackendSystem* GraphicsBackendSystem::m_selfPointer = NULL;
 
@@ -75,6 +76,8 @@ void GraphicsBackendSystem::initialize()
 
 	TextureParser::init();
 
+	auto settings = static_cast<SettingsSystem*>(m_world->getSystem(SystemType::SettingsSystem));
+
 	m_window = new Window( m_hInstance, m_scrWidth, m_scrHeight, 1);
 	m_graphicsWrapper = new GraphicsWrapper( 
 		m_window->getWindowRef(), 
@@ -82,7 +85,8 @@ void GraphicsBackendSystem::initialize()
 		m_scrHeight, 
 		m_windowed,
 		m_enableHdr,
-		m_enableEffects );
+		m_enableEffects,
+		settings->getSettings().enableVSYNC);
 
 	AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice());
 

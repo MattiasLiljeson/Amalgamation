@@ -41,7 +41,7 @@ struct GameSettingsInfo
 		enableHdr				= false;
 		enableTesselation	= false;
 		enableEffects			= true;
-		enableVSYNC			= false;
+		enableVSYNC			= 0;
 		enabledGPUMeasure	= false;
 
 		defaultGameTime		= 600; 

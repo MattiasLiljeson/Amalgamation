@@ -32,7 +32,7 @@
 #include "ParticleSystemAndTexture.h"
 
 GraphicsWrapper::GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p_windowed,
-								 bool p_enableHdr, bool p_enableEffects )
+								 bool p_enableHdr, bool p_enableEffects, int p_vsync )
 {
 	m_device		= NULL;
 	m_deviceContext = NULL;
@@ -48,6 +48,7 @@ GraphicsWrapper::GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p
 	m_enableEffects = p_enableEffects;
 	m_wireframeMode = false;
 	m_renderingShadows = false;
+	m_vsync = p_vsync;
 
 	initSwapChain(p_hWnd);
 	initHardware();
@@ -480,7 +481,7 @@ void GraphicsWrapper::renderGUIMeshList( unsigned int p_meshId,
 
 void GraphicsWrapper::flipBackBuffer()
 {
-	m_swapChain->Present( 0, 0);
+	m_swapChain->Present( m_vsync, 0);
 }
 
 void GraphicsWrapper::mapRandomVecTexture()
