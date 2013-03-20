@@ -12,6 +12,7 @@
 #include "..\..\NetComm\Src\Packet.h"
 #include "PacketType.h"
 #include "NetworkSynced.h"
+#include "ServerStateSystem.h"
 
 LookAtSystem::LookAtSystem(TcpServer* p_server) : 
 EntitySystem( SystemType::LookAtSystem, 2,
@@ -40,9 +41,15 @@ void LookAtSystem::processEntities( const vector<Entity*>& p_entities )
 		LookAtMainCamera_TAG* lookAtMainCamera = static_cast<LookAtMainCamera_TAG*>(
 			p_entities[i]->getComponent( ComponentType::TAG_LookAtMainCamera) );
 
-		if (lookAtMainCamera)
+		auto stateSystem = static_cast<ServerStateSystem*>(
+			m_world->getSystem(SystemType::ServerStateSystem));
+
+		ServerStates state = ServerStates::NONE;
+		if (stateSystem) state=stateSystem->getCurrentState();
+
+		if (lookAtMainCamera && state==ServerStates::INGAME)
 		{
-			//adaptDistanceBasedOnModules(p_entities[i]);
+			adaptDistanceBasedOnModules(p_entities[i]);
 		}
 
 

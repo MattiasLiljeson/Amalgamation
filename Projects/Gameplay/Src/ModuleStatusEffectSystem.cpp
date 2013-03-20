@@ -712,7 +712,7 @@ bool ModuleStatusEffectSystem::createSpawnEffect( Entity* p_entity )
 			particleSystem.getHeaderPtr()->rasterizerMode = AglParticleSystemHeader::AglRasterizerMode_ALWAYS_ON_TOP;
 			particleSystem.getHeaderPtr()->blendMode=AglParticleSystemHeader::AglBlendMode_ADDITIVE;
 			AglVector3 offset = AglVector3::zero();
-			particleSystem.setParticleSize(AglVector2(20.0f,20.0f)*5.0f*(1.0f+(float)i));
+			particleSystem.setParticleSize(AglVector2(10.0f,10.0f)*5.0f*(1.0f+(float)i));
 			// offset.transform(cameraRot);
 			particleSystem.setSpawnPoint(offset);
 			particleSystem.setSpawnDirection(AglVector3::up());
@@ -722,10 +722,10 @@ bool ModuleStatusEffectSystem::createSpawnEffect( Entity* p_entity )
 			particleSystem.setSpawnSpace(AglParticleSystemHeader::AglSpace_LOCAL);
 			particleSystem.setParticleSpace( AglParticleSystemHeader::AglSpace_GLOBAL );
 			particleSystem.setSpawnType(AglParticleSystemHeader::ONCE);
-			particleSystem.setParticleAge(4.0f+i*2.0f);
+			particleSystem.setParticleAge(2.0f+i*0.5f);
 			particleSystem.setSpawnSpeed(0.0f);
-			particleSystem.setFadeInStop(1.0f+i*2.0f);
-			particleSystem.setFadeOutStart(3.0f+i*2.0f);
+			particleSystem.setFadeInStop(0.5f+i*0.5f);
+			particleSystem.setFadeOutStart(1.5f+i*0.5);
 			// Create an instruction for creation
 			ParticleSystemInstruction particleInstruction;
 			particleInstruction.textureFileName = "decoparticle6.png";

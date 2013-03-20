@@ -316,7 +316,9 @@ void ServerPacketHandlerSystem::handleIngame()
 					if (lookAtFollow && !lookAtOrbit &&
 						cameraControlPacket.state==PlayerStates::editState)
 					{
-						lookAt->setOrbitOffset(AglQuaternion::identity());
+						AglQuaternion offset = AglQuaternion::constructFromAngularVelocity(AglVector3(0.2f,0.0f,0.0f));
+						
+						lookAt->setOrbitOffset(offset);
 						entity->removeComponent(ComponentType::TAG_LookAtFollowMode); // Disable this state...
 						entity->addComponent(ComponentType::TAG_LookAtOrbitMode, new LookAtOrbitMode_TAG());  // ...and switch to orbit state.
 						entity->applyComponentChanges();
@@ -1026,6 +1028,7 @@ void ServerPacketHandlerSystem::createAndBroadCastShip( int p_clientIdentity, in
 	playerCam->addTag(ComponentType::TAG_LookAtFollowMode, new LookAtFollowMode_TAG() );
 	playerCam->addComponent( ComponentType::NetworkSynced, 
 		new NetworkSynced( playerCam->getIndex(), p_clientIdentity, EntityType::PlayerCamera ));
+	playerCam->addTag(ComponentType::TAG_LookAtMainCamera,new LookAtMainCamera_TAG());
 	m_world->addEntity(playerCam);
 
 	// register camera on ship
