@@ -870,9 +870,8 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 	//for detail 2 days or so before release then at least talk to Anton first.
 	string name = "pusher";
 	AudioHeader* explodeSound = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
-	explodeSound->file = "pusherFreesound.wav";
-	explodeSound->path = TESTSOUNDEFFECTPATH;
-	explodeSound->maxFrequencyOffeset = 1.0f;
+	explodeSound->file = "pusher_effect.wav";
+	explodeSound->path = SOUNDEFFECTPATH;
 	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
 	explodeSound->volume = 1.0f;
 	explodeSound->maxRange = 200;
