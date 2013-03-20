@@ -1,6 +1,6 @@
 <rml>
 	<head>
-		<title>Amalgamation</title>
+		<!--<title>Amalgamation</title>-->
 		<link type="text/template" href="window.rml" />
 	</head>
 	<body id="main_menu" template="window" onshow="modal">
