@@ -83,9 +83,9 @@ void LibRocketEventManagerSystem::initialize()
 	m_menuEntity->setName("MenuAudio_MenuOK");
 	SoundComponent* soundComp = new SoundComponent();
 	AudioHeader* header = new AudioHeader(AudioHeader::AMBIENT,"MenuOk");
-	header->file = "Mine_Blip_v2.wav";
+	header->file = "menu3.wav";
 	header->volume = 0.3f;
-	header->path = TESTSOUNDEFFECTPATH;
+	header->path = SOUNDEFFECTPATH;
 	soundComp->addAudioHeader(header);
 
 	m_menuEntity->addComponent(soundComp);
