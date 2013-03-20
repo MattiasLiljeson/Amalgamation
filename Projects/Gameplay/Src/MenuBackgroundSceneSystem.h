@@ -32,7 +32,7 @@ private:
 
 	void repositionCamera();
 private:
-	Entity* m_ship;
+	//Entity* m_ship;
 	Entity* m_orbitingShip;
 
 	vector<Entity*> m_rocks;

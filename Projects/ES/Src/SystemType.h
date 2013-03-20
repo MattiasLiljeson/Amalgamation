@@ -102,7 +102,7 @@ public:	//Enums
 		CullingSystem,
 		ConnectionVisualizerSystem,
 		SpeedFovAdjustSystem,
-		ShipParticleSystem,
+		ShipParticleSystemUpdater,
 		SpeedBufferUpdaterSystem,
 		EditSphereSystem,
 		SelectionMarkerSystem,

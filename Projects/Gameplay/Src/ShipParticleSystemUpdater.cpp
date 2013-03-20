@@ -7,7 +7,7 @@
 
 
 ShipParticleSystemUpdater::ShipParticleSystemUpdater()
-	: EntitySystem( SystemType::ShipParticleSystem, 3,
+	: EntitySystem( SystemType::ShipParticleSystemUpdater, 3,
 	ComponentType::TAG_MyShip,
 	ComponentType::ParticleSystemsComponent,
 	ComponentType::SpeedBuffer )
@@ -72,28 +72,36 @@ void ShipParticleSystemUpdater::processEntities( const vector<Entity*>& p_entiti
 						m_world->getSystem( SystemType::ShipInputProcessingSystem ) );
 					if( input != NULL )
 					{
-						float enginePower = input->getProcessedInput().thrustInput;
-						float spawnFreq = psAndTex->psOriginalSettings.spawnFrequency;
-						float particlesPerSpawn = psAndTex->psOriginalSettings.particlesPerSpawn;
-						float spawnSpeed = psAndTex->psOriginalSettings.spawnSpeed;
-						float size = psAndTex->psOriginalSettings.particleSize.x;
-						
-						float freqMult = 5.0f;
-						header->spawnFrequency = spawnFreq * max<float>( 1.0, enginePower * freqMult );
-
-						float spawnMult = 5.0f;
-						header->particlesPerSpawn = particlesPerSpawn * max<float>( 1.0, enginePower * spawnMult );
-
-						float sizeMult = 1.5f;
-						header->particleSize.x = size * max<float>( 1.0, enginePower * sizeMult );
-						header->particleSize.y = size * max<float>( 1.0, enginePower * sizeMult );
-
-						float speedMult = 1.5f;
-						header->spawnSpeed = spawnSpeed * max<float>( 1.0, enginePower * speedMult );
+						calculateThrustParticle(input->getProcessedInput().thrustInput,
+							psAndTex, header);
 					} 
 				}
 			}
 		}
 
 	}
+}
+
+void ShipParticleSystemUpdater::calculateThrustParticle(float p_thrust, 
+														ParticleSystemAndTexture* p_psAndTex, 
+														AglParticleSystemHeader* p_header)
+{
+	float enginePower = p_thrust;
+	float spawnFreq = p_psAndTex->psOriginalSettings.spawnFrequency;
+	float particlesPerSpawn = p_psAndTex->psOriginalSettings.particlesPerSpawn;
+	float spawnSpeed = p_psAndTex->psOriginalSettings.spawnSpeed;
+	float size = p_psAndTex->psOriginalSettings.particleSize.x;
+
+	float freqMult = 5.0f;
+	p_header->spawnFrequency = spawnFreq * max<float>( 1.0, enginePower * freqMult );
+
+	float spawnMult = 5.0f;
+	p_header->particlesPerSpawn = particlesPerSpawn * max<float>( 1.0, enginePower * spawnMult );
+
+	float sizeMult = 1.5f;
+	p_header->particleSize.x = size * max<float>( 1.0, enginePower * sizeMult );
+	p_header->particleSize.y = size * max<float>( 1.0, enginePower * sizeMult );
+
+	float speedMult = 1.5f;
+	p_header->spawnSpeed = spawnSpeed * max<float>( 1.0, enginePower * speedMult );
 }

@@ -4,6 +4,9 @@
 
 using namespace std;
 
+struct ParticleSystemAndTexture;
+struct AglParticleSystemHeader;
+
 class ShipParticleSystemUpdater : public EntitySystem
 {
 public:
@@ -13,7 +16,11 @@ public:
 	virtual void initialize();
 	virtual void processEntities( const vector<Entity*>& p_entities );
 
+	void calculateThrustParticle(float p_thrust, 
+		ParticleSystemAndTexture* p_psAndTex,
+		AglParticleSystemHeader* p_header);
 private:
 	NumericBuffer<float,10> m_speedBuffer;
+	bool m_maxiumSpeed;
 };
 

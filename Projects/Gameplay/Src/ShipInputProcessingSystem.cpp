@@ -386,4 +386,3 @@ void ShipInputProcessingSystem::updateHudKeymappings(bool p_useGamepad)
 	}
 
 }
-

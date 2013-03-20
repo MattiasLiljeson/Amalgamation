@@ -17,6 +17,9 @@
 #include "GameplayTags.h"
 #include "Transform.h"
 #include "EnvironmentValues.h"
+#include "ThrustComponent.h"
+#include "ShipParticleSystemUpdater.h"
+#include <ParticleSystemAndTexture.h>
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	: EntitySystem(SystemType::MenuBackgroundSceneSystem)
@@ -24,7 +27,7 @@ MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	m_deltaRotation = 0.0f;
 	xPos = -7.5f;
 
-	m_ship = NULL;
+	//m_ship = NULL;
 	m_orbitingShip = NULL;
 }
 
@@ -36,7 +39,7 @@ void MenuBackgroundSceneSystem::process()
 {
 	/*
 	SoundComponent* soundSource = static_cast<SoundComponent*>
-		(m_ship->getComponent(ComponentType::SoundComponent));
+	(m_ship->getComponent(ComponentType::SoundComponent));
 
 	//soundSource->m_front = worldTransform.GetBackward();
 	//soundSource->m_top = worldTransform.GetUp();
@@ -46,56 +49,44 @@ void MenuBackgroundSceneSystem::process()
 	if(stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::EXITTHISFRAME
 		&& stateSystem->getStateDelta(GameStates::LOADING) == EnumGameDelta::ENTEREDTHISFRAME)
 	{
+		ShipParticleSystemUpdater* part = static_cast<ShipParticleSystemUpdater*>
+			(m_world->getSystem(SystemType::ShipParticleSystemUpdater));
+		//part->setMaxiumSpeed(false);
 		this->setEnabled(false);
 	}
 	else if(stateSystem->getStateDelta(GameStates::LOBBY) == EnumGameDelta::ENTEREDTHISFRAME){
 		auto* entityFactory = static_cast<EntityFactory*>
 			(m_world->getSystem(SystemType::EntityFactory));
-		
+
 		GradientComponent* gradient = static_cast<GradientComponent*>
-			(m_ship->getComponent(ComponentType::Gradient));
+			(m_orbitingShip->getComponent(ComponentType::Gradient));
 		gradient->m_color.layerOne = entityFactory->getPlayersFirstGradientLevel();
 		gradient->m_color.layerTwo = entityFactory->getPlayersSecondGradientLevel();
 	}
-	else{
-		m_deltaRotation = 0.0f;
-		if(m_actionBackend->getStatusByAction(InputActionsBackendSystem::
-			Actions_MENU_ACTIVATE_ROTATION) != 0.0)
-		{
-			double deltaPositive = m_actionBackend->getStatusByAction(
-				InputActionsBackendSystem::Actions_MENU_RIGHT);
-			double deltaNegative = m_actionBackend->getStatusByAction(
-				InputActionsBackendSystem::Actions_MENU_LEFT);
+	if(stateSystem->getCurrentState() == GameStates::LOBBY 
+		|| stateSystem->getCurrentState() == GameStates::MENU){
 
-			if(deltaPositive > 0.0)
+			ShipParticleSystemUpdater* part = static_cast<ShipParticleSystemUpdater*>
+				(m_world->getSystem(SystemType::ShipParticleSystemUpdater));
+
+			ParticleSystemsComponent* shipPs = static_cast<ParticleSystemsComponent*>(
+				m_orbitingShip->getComponent( ComponentType::ParticleSystemsComponent ) );
+
+			vector< pair<ParticleSystemInstruction*, ParticleSystemAndTexture*> >* pairs =
+				shipPs->getParticleSystemsPtr();
+
+			for( unsigned int i=0; i<shipPs->getParticleSystemsPtr()->size(); i++ )
 			{
-				m_deltaRotation -= (float)deltaPositive;
+				ParticleSystemAndTexture* psAndTex = (*pairs)[i].second;
+				if( psAndTex != NULL )
+				{
+					AglParticleSystemHeader* header = psAndTex->particleSystem.getHeaderPtr();
+
+					if( header->particleSpace == AglParticleSystemHeader::AglSpace_LOCAL ){
+						part->calculateThrustParticle(0.5f,psAndTex,header);
+					}
+				}
 			}
-			if(deltaNegative > 0.0)
-			{
-				m_deltaRotation += (float)deltaNegative;
-			}
-
-			/*
-			MeshOffsetTransform* offsetTrans = static_cast<MeshOffsetTransform*>(m_ship->getComponent(ComponentType::MeshOffsetTransform));
-			Transform* transform = static_cast<Transform*>(m_ship->getComponent(ComponentType::Transform));
-			AglMatrix worldTransform = offsetTrans->offset.inverse()*transform->getMatrix();
-
-			xPos = transform->getTranslation().x;
-
-			xPos += m_world->getDelta() * 20 * m_deltaRotation;
-
-			transform->setTranslation( AglVector3(xPos,transform->getTranslation().y,
-				transform->getTranslation().z) );
-			*/
-
-		}
-		AxisRotate* rotate = static_cast<AxisRotate*>(m_ship->getComponent(ComponentType::AxisRotate));
-		if(rotate != NULL)
-		{
-			rotate->angularVelocity = m_deltaRotation * 5.0f - 0.1f;
-			m_deltaRotation = 0.0f;
-		}
 	}
 
 	// Update orbiting ship's axis.
@@ -132,14 +123,15 @@ void MenuBackgroundSceneSystem::sysEnabled()
 {
 	m_deltaRotation = 0.0f;
 	xPos = -7.5f;
-
-	initInstanceSphereByJohan("RockA.agl", AglVector3(20.0f, 0.0f, 80.0f),
+	AglVector3 center = AglVector3(20,0,90);
+	initInstanceSphereByJohan("RockA.agl", center,
 		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 50);
 
+	AglVector3 position(-7.5f, -2.0f, 30.0f);
+	/*
 	m_ship = m_world->createEntity();
 	m_ship->addComponent(new LoadMesh("Ship.agl"));
 	m_ship->setName("MenuShip_Idling");
-	AglVector3 position(-7.5f, -2.0f, 30.0f);
 	AglVector3 toVector(0.0f, -0.2f, -1.0f);
 	AglVector3 axis( 0.0f, 1.0f, -0.2f);
 	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3::up(), toVector);
@@ -149,13 +141,14 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	EnvironmentValues* envValues = new EnvironmentValues();
 	envValues->m_fogColor = AglVector3(0.1f, 0.1f, 0.1f);
 	m_ship->addComponent(envValues);
-
-	initOrbitingShip(AglVector3(20.0f, 0.0f, 80.0f), AglVector3(0, 1.0f, 0), 50.0f, 1.0f);
+	m_world->addEntity(m_ship);
+	*/
+	initOrbitingShip(center, AglVector3(0, 1.0f, 0), 60.0f, 1.0f);
 	repositionCamera();
 	// RM-RT 2013-03-04
 	/*
 	SoundComponent* soundSoure = new SoundComponent( TESTSOUNDEFFECTPATH, 
-		"space_ship_engine_idle.wav");
+	"space_ship_engine_idle.wav");
 	m_ship->addComponent(soundSoure);
 	*/
 
@@ -169,7 +162,7 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	audioHeader->playInterval = AudioHeader::FOREVER;
 	soundComp->addAudioHeader(audioHeader);
 
-	
+
 	audioHeader = new AudioHeader(AudioHeader::SoundType::AMBIENT);
 	audioHeader->file = "Shield_Active_v2.wav";
 	audioHeader->path = TESTSOUNDEFFECTPATH;
@@ -177,7 +170,7 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	audioHeader->playInterval = AudioHeader::FOREVER;
 	audioHeader->timerInterval = 2.0f;
 	soundComp->addAudioHeader(audioHeader);
-	
+
 
 	audioHeader = new AudioHeader(AudioHeader::SoundType::POSITIONALSOUND);
 	audioHeader->file = "Mine_Blip_v2.wav";
@@ -191,11 +184,7 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_ship->addComponent(soundComp);
 	*/
 
-	m_ship->addComponent(ComponentType::Gradient, new GradientComponent(
-		AglVector4(47.0f/255.0f,208.0f/255.0f,172.0f/255.0f,1),
-		AglVector4(47.0f/255.0f,176.0f/255.0f,208.0f/255.0f,1)));
 
-	m_world->addEntity(m_ship);
 
 	Entity* entity = m_world->createEntity();
 	entity->setName("MenuPointLight");
@@ -225,17 +214,17 @@ void MenuBackgroundSceneSystem::sysDisabled()
 	m_lights.clear();
 	m_rocks.clear();
 
-	if (m_ship)
-		m_world->deleteEntity(m_ship);
+	//if (m_ship)
+	//	m_world->deleteEntity(m_ship);
 	if (m_orbitingShip)
 		m_world->deleteEntity(m_orbitingShip);
 
-	m_ship = NULL;
+	//m_ship = NULL;
 	m_orbitingShip = NULL;
 }
 
 void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, AglVector3 p_origin,
-	AglVector3 p_axis, float p_radius, unsigned int p_numberInstances )
+														  AglVector3 p_axis, float p_radius, unsigned int p_numberInstances )
 {
 	m_rocks.resize(p_numberInstances);
 	for(unsigned int i=0; i<p_numberInstances; i++)
@@ -262,7 +251,7 @@ void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, Ag
 }
 
 void MenuBackgroundSceneSystem::initPointLight( Entity* p_entity, AglVector3 p_position,
-	float p_range )
+											   float p_range )
 {
 	LightsComponent* lights = new LightsComponent();
 	Light light;
@@ -291,7 +280,7 @@ void MenuBackgroundSceneSystem::initPointLight( Entity* p_entity, AglVector3 p_p
 }
 
 void MenuBackgroundSceneSystem::initOrbitingShip( AglVector3 p_center, AglVector3 p_axis,
-	float p_radius, float p_speed )
+												 float p_radius, float p_speed )
 {
 	m_orbitingShip = m_world->createEntity();
 	m_orbitingShip->setName("MenuShip_Orbiting");
@@ -304,7 +293,14 @@ void MenuBackgroundSceneSystem::initOrbitingShip( AglVector3 p_center, AglVector
 		p_axis, position - p_center, -fabs(p_speed)));
 	m_orbitingShip->addComponent(new AxisRotate(p_axis, AglVector3(0, 0, 1.0f), rotation,
 		-fabs(p_speed)));
-	m_orbitingShip->addComponent(new GlowAnimation(AglVector4(0.0f, 1.0f, 0.0f, 1.0f), true, 2.0f));
+	//m_orbitingShip->addComponent(new GlowAnimation(AglVector4(0.0f, 1.0f, 0.0f, 1.0f), true, 2.0f));
+	ThrustComponent* thrust = new ThrustComponent();
+	thrust->addThrustVector(AglVector3(50,50,50),1.0f);
+	m_orbitingShip->addComponent( thrust );
+	m_orbitingShip->addComponent(ComponentType::Gradient, new GradientComponent(
+		AglVector4(47.0f/255.0f,208.0f/255.0f,172.0f/255.0f,1),
+		AglVector4(47.0f/255.0f,176.0f/255.0f,208.0f/255.0f,1)));
+
 	m_world->addEntity(m_orbitingShip);
 }
 

@@ -199,7 +199,7 @@ void ServerPacketHandlerSystem::handleIngame()
 				Entity* camera = m_world->getEntity(ownedCamera->m_entityId);
 				if (camera)
 				{
-					float spd=1.0f;
+					float spd=4.0f;
 					float rspd=7.0f;
 					LookAtEntity* camLookAt= static_cast<LookAtEntity*>(
 						camera->getComponent( ComponentType::ComponentTypeIdx::LookAtEntity) );
