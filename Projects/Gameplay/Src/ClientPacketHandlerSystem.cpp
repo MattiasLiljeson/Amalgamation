@@ -761,12 +761,17 @@ void ClientPacketHandlerSystem::handleIngameState()
 			{
 				AnomalyBomb* anomalyBomb = static_cast<AnomalyBomb*>(
 					bombEntity->getComponent(ComponentType::AnomalyBomb));
-				if(anomalyBomb != NULL)
+				SoundComponent* soundComponent = static_cast<SoundComponent*>(
+					bombEntity->getComponent(ComponentType::SoundComponent));
+				if(anomalyBomb && soundComponent)
 				{
 					anomalyBomb->activated = true;
 					static_cast<EntityFactory*>(m_world->getSystem(
 						SystemType::EntityFactory))->createAnomalyPieces(
 						bombEntity->getIndex());
+					AudioHeader* header = soundComponent->getSoundHeaderByName(
+						AudioHeader::POSITIONALSOUND, "AnomalyActiveSound");
+					header->volume = 1.0f;
 				}
 			}
 		}

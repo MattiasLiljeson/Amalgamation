@@ -962,6 +962,21 @@ Entity* EntityFactory::createAnomalyBombClient( EntityCreationPacket p_packet )
 
 	entity->addComponent(ComponentType::ShineSpawn, new ShineSpawn(m_world->getElapsedTime(), 3.5f));
 
+	AudioHeader* anomalyActive = new AudioHeader(AudioHeader::POSITIONALSOUND,
+		"AnomalyActiveSound");
+	anomalyActive->file = "anomaly_active.wav";
+	anomalyActive->path = SOUNDEFFECTPATH;
+	anomalyActive->maxFrequencyOffeset = 1.0f;
+	anomalyActive->playInterval	= AudioHeader::FOREVER;
+	anomalyActive->sourceChannels = 1;
+	anomalyActive->queuedPlayingState = AudioHeader::PLAY;
+	anomalyActive->volume = 0.5f;
+	anomalyActive->maxRange = 400.0f;
+	anomalyActive->pos = p_packet.translation;
+	SoundComponent* soundComponent = new SoundComponent();
+	soundComponent->addAudioHeader(anomalyActive);
+	entity->addComponent(soundComponent);
+
 	m_world->addEntity(entity);
 	return entity;
 }
