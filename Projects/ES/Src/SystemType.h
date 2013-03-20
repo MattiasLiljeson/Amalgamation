@@ -141,6 +141,7 @@ public:	//Enums
 		PreloaderSystem,
 		EntityLoggerSystem,
 		StateManagementSystem,
+		SineMovementSystem,
 		NUM_SYSTEM_TYPES
 	};
 

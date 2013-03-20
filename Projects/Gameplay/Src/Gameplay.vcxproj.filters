@@ -887,6 +887,12 @@
     <ClInclude Include="EntityLoggerSystem.h">
       <Filter>Systems\Debugging</Filter>
     </ClInclude>
+    <ClInclude Include="SineMovement.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SineMovementSystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1528,6 +1534,12 @@
     <ClCompile Include="ShipMassBoosterUpdatePacket.cpp" />
     <ClCompile Include="EntityLoggerSystem.cpp">
       <Filter>Systems\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="SineMovement.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SineMovementSystem.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

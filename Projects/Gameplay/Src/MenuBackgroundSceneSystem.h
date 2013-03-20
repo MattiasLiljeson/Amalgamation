@@ -29,11 +29,15 @@ private:
 	void initPointLight(Entity* p_entity, AglVector3 p_position, float p_range);
 	void initOrbitingShip(AglVector3 p_center, AglVector3 p_axis, float p_radius,
 		 float p_speed);
+	void initLogo(AglVector3 p_center, float p_size);
 
 	void repositionCamera();
 private:
+	AglVector3 m_center;
 	//Entity* m_ship;
 	Entity* m_orbitingShip;
+	Entity* m_logo;
+	bool m_logoInit;
 
 	vector<Entity*> m_rocks;
 	vector<Entity*> m_lights;

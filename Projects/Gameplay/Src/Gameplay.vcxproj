@@ -67,6 +67,8 @@
     <ClInclude Include="ShipHighlight.h" />
     <ClInclude Include="ShipHiglightSystem.h" />
     <ClInclude Include="ShipMassBoosterUpdatePacket.h" />
+    <ClInclude Include="SineMovement.h" />
+    <ClInclude Include="SineMovementSystem.h" />
     <ClInclude Include="SlotHighlightParticleMakerSystem.h" />
     <ClInclude Include="SlotMarker.h" />
     <ClInclude Include="SlotMarkerSystem.h" />
@@ -379,6 +381,8 @@
     <ClCompile Include="ShipEngineSystem.cpp" />
     <ClCompile Include="ShipHighlightSystem.cpp" />
     <ClCompile Include="ShipMassBoosterUpdatePacket.cpp" />
+    <ClCompile Include="SineMovement.cpp" />
+    <ClCompile Include="SineMovementSystem.cpp" />
     <ClCompile Include="SlotHighlightParticleMakerSystem.cpp" />
     <ClCompile Include="SlotMarkerSystem.cpp" />
     <ClCompile Include="SoundComponent.cpp" />

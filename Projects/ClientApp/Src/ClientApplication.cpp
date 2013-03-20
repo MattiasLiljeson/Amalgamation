@@ -131,6 +131,7 @@
 #include <ClientDebugModuleSpawnerSystem.h>
 #include <PreloaderSystem.h>
 #include <EntityLoggerSystem.h>
+#include <SineMovementSystem.h>
 
 // Helpers
 #include <ConnectionPointCollection.h>
@@ -427,9 +428,10 @@ void ClientApplication::initSystems()
 	/* Debugging															*/
 	/************************************************************************/
 	m_world->setSystem( new DebugMovementSystem(), false );
-	m_world->setSystem( new MenuBackgroundSceneSystem()); // NOTE: Used for menu background!
+	m_world->setSystem( new MenuBackgroundSceneSystem()); // NOTE: Used for menu background! // NOTE: As the name implies! :D
 	m_world->setSystem( new OrbitalMovementSystem() );
 	m_world->setSystem( new AxisRotationSystem() );
+	m_world->setSystem( new SineMovementSystem() );
 	m_world->setSystem( new MoveShipLightsSystem() );
 	m_world->setSystem( new ClientMeasurementSystem() );
 	m_world->setSystem( new ClientEntityCountSystem() );

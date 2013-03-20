@@ -131,6 +131,7 @@ public:	//Enums
 		ShineSpawn,
 		GlowAnimation,
 		InitiallyDisable,
+		SineMovement,
 		NUM_COMPONENT_TYPES
 	};
 

@@ -20,6 +20,7 @@
 #include "ThrustComponent.h"
 #include "ShipParticleSystemUpdater.h"
 #include <ParticleSystemAndTexture.h>
+#include "SineMovement.h"
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	: EntitySystem(SystemType::MenuBackgroundSceneSystem)
@@ -29,6 +30,8 @@ MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 
 	//m_ship = NULL;
 	m_orbitingShip = NULL;
+	m_logo = NULL;
+	m_logoInit = false;
 }
 
 MenuBackgroundSceneSystem::~MenuBackgroundSceneSystem()
@@ -101,7 +104,7 @@ void MenuBackgroundSceneSystem::process()
 
 		if(orbit && axisRotate && transform)
 		{
-			AglQuaternion rotation = AglQuaternion::constructFromAxisAndAngle(AglVector3(0, 0, 1.0f), 0.25f * m_world->getDelta());
+			AglQuaternion rotation = AglQuaternion::constructFromAxisAndAngle(AglVector3(0, 0, 1.0f), 0.1f * m_world->getDelta());
 			axisRotate->originRotation *= rotation;
 			AglVector3 newAxis = orbit->axis;
 			rotation.transformVector(newAxis);
@@ -109,6 +112,22 @@ void MenuBackgroundSceneSystem::process()
 			//	AglVector3(0, 0, 1.0f), 0.1f * m_world->getDelta());
 			orbit->axis = newAxis;
 			axisRotate->axis = newAxis;
+		}
+	}
+
+	if(m_logo)
+	{
+		SineMovement* sine = static_cast<SineMovement*>(m_logo->getComponent(
+			ComponentType::SineMovement));
+		Transform* transform = static_cast<Transform*>(m_logo->getComponent(
+			ComponentType::Transform));
+		if(!m_logoInit && sine->radian > 3.14159285f / 2.0f)
+		{
+			m_logoInit = true;
+			sine->radian = 0.0f;
+			sine->vector = AglVector3(0, 1.0f, 0);
+			sine->cycleTime = 0.5f;
+			sine->originTranslation = m_center;
 		}
 	}
 }
@@ -123,9 +142,9 @@ void MenuBackgroundSceneSystem::sysEnabled()
 {
 	m_deltaRotation = 0.0f;
 	xPos = -7.5f;
-	AglVector3 center = AglVector3(20,0,90);
-	initInstanceSphereByJohan("RockA.agl", center,
-		AglVector3(1.0f, 1.0f, 0.0f),  50.0f, 50);
+	m_center = AglVector3(0,0,100);
+	initInstanceSphereByJohan("RockA.agl", m_center + AglVector3(0, 0, 100.0f),
+		AglVector3(1.0f, 1.0f, 0.0f),  90.0f, 550);
 
 	AglVector3 position(-7.5f, -2.0f, 30.0f);
 	/*
@@ -143,7 +162,8 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_ship->addComponent(envValues);
 	m_world->addEntity(m_ship);
 	*/
-	initOrbitingShip(center, AglVector3(0, 1.0f, 0), 60.0f, 1.0f);
+	initOrbitingShip(m_center + AglVector3(0, 0, 30.0f), AglVector3(0, 1.0f, 0), 70.0f, 1.0f);
+	initLogo(m_center, 10.0f);
 	repositionCamera();
 	// RM-RT 2013-03-04
 	/*
@@ -218,9 +238,12 @@ void MenuBackgroundSceneSystem::sysDisabled()
 	//	m_world->deleteEntity(m_ship);
 	if (m_orbitingShip)
 		m_world->deleteEntity(m_orbitingShip);
+	if(m_logo)
+		m_world->deleteEntity(m_logo);
 
 	//m_ship = NULL;
 	m_orbitingShip = NULL;
+	m_logo = NULL;
 }
 
 void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, AglVector3 p_origin,
@@ -302,6 +325,19 @@ void MenuBackgroundSceneSystem::initOrbitingShip( AglVector3 p_center, AglVector
 		AglVector4(47.0f/255.0f,176.0f/255.0f,208.0f/255.0f,1)));
 
 	m_world->addEntity(m_orbitingShip);
+}
+
+void MenuBackgroundSceneSystem::initLogo(AglVector3 p_center, float p_size)
+{
+	m_logo = m_world->createEntity();
+	AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3(0, 0, 1.0f),
+		AglVector3(0, 1.0f, 0));
+	Transform* transform = new Transform(AglVector3::zero(), rotation,
+		AglVector3::one() * p_size);
+	m_logo->addComponent(transform);
+	m_logo->addComponent(new LoadMesh("Logo.agl"));
+	m_logo->addComponent(new SineMovement(p_center, 0, 1.0f));
+	m_world->addEntity(m_logo);
 }
 
 void MenuBackgroundSceneSystem::repositionCamera()
