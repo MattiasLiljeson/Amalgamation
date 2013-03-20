@@ -562,7 +562,10 @@ void ClientPacketHandlerSystem::handleEntitySounds(const SoundPacket& p_data)
 	Entity* entity = directMapper->getEntity( p_data.target );
 
 	SoundComponent* sound = static_cast<SoundComponent*>(entity->getComponent(ComponentType::SoundComponent));
-	sound->getSoundHeaderByIndex((AudioHeader::SoundType)p_data.soundType, p_data.targetSlot)->queuedPlayingState = (AudioHeader::PlayState)p_data.queuedPlayingState;
+
+	AudioHeader* header = sound->getSoundHeaderByIndex((AudioHeader::SoundType)p_data.soundType, p_data.targetSlot);
+
+	header->queuedPlayingState = (AudioHeader::PlayState)p_data.queuedPlayingState;
 }
 
 void ClientPacketHandlerSystem::handleParticleSystemCreation( const ParticleSystemCreationInfo& p_creationInfo )
@@ -1041,7 +1044,12 @@ void ClientPacketHandlerSystem::handleIngameState()
 			data.unpack(packet);
 			EntityFactory* factory = static_cast<EntityFactory*>
 				(m_world->getSystem(SystemType::EntityFactory));
-			factory->createExplosion(data);
+			if(data.source == ANOMALYBOMB) {
+				factory->createAnomalyExplosion(data);
+			}
+			else if(data.source == ROCKET || data.source == MINE) {
+				factory->createExplosion(data);
+			}
 		}
 		else if (packetType == (char)PacketType::AnimationUpdatePacket)
 		{

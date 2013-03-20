@@ -6,7 +6,7 @@
 
 enum ExplosionSource
 {
-	MINE, ROCKET
+	MINE, ROCKET, ANOMALYBOMB,
 };
 
 struct SpawnExplosionPacket : public Packetizer
