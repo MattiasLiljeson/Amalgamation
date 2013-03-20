@@ -84,8 +84,8 @@ void PreloaderSystem::initMeshes()
 
 void PreloaderSystem::loadModuleMeshes()
 {
-//	m_gfxBackend->getGfxWrapper()->createModelsFromFile("shield_module.agl", &MODELPATH, false);	// NOTE: Anomaly should be here.
-	m_gfxBackend->getGfxWrapper()->createModelsFromFile("AnomalyBomb_placeholder.agl", &MODELPATH, false);
+	m_gfxBackend->getGfxWrapper()->createModelsFromFile("anomaly_launcher.agl", &MODELPATH, false);
+	m_gfxBackend->getGfxWrapper()->createModelsFromFile("anomaly_bomb.agl", &MODELPATH, false);
 	m_gfxBackend->getGfxWrapper()->createModelsFromFile("MineWeaponFinal.agl", &MODELPATH, false);
 	m_gfxBackend->getGfxWrapper()->createModelsFromFile("MinigunAnim.agl", &MODELPATH, false);
 	m_gfxBackend->getGfxWrapper()->createModelsFromFile("rocket_launcher.agl", &MODELPATH, false);

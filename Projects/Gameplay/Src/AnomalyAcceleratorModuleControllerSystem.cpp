@@ -78,6 +78,12 @@ void AnomalyAcceleratorModuleControllerSystem::processEntities(
 		else
 		{
 			anomalyAccelerator->owned = false;
+			if (anomalyAccelerator->currentBomb >= 0)
+			{
+				Entity* bomb = m_world->getEntity(anomalyAccelerator->currentBomb);
+				m_world->deleteEntity(bomb);
+				anomalyAccelerator->currentBomb = -1;
+			}
 		}
 	}
 }

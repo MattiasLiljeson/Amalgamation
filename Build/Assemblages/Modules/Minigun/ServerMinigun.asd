@@ -22,7 +22,7 @@ d i m_type 3
 d i m_static 0
 d i m_collisionEnabled 1
 d i m_compound 0
-d i m_impulseEnabled 0
+d i m_impulseEnabled 1
 d i m_copyToChildren 0
 d f m_mass 0.25
 

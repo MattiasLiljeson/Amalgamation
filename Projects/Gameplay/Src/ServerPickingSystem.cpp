@@ -210,6 +210,18 @@ void ServerPickingSystem::setReleased(int p_index)
 			{
 				shipModule->m_lastShipEntityWhenAttached = -1; // module is now totally detached from parent ship
 				shipModule->m_health = shipModule->getMaxHealth();
+
+				///HERE
+				PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
+					SystemType::PhysicsSystem));
+
+				PhysicsBody* moduleBody = static_cast<PhysicsBody*>(shipModuleEntity->getComponent(
+					ComponentType::PhysicsBody));
+
+				Body* physicalmoduleBody = physX->getController()->getBody(moduleBody->m_id);
+				RigidBody* rigid = (RigidBody*)physicalmoduleBody;
+				rigid->SetImpulseEnabled(true);
+
 			}
 
 			// set an effect
@@ -322,6 +334,17 @@ void ServerPickingSystem::handleRay(PickComponent& p_pc, const vector<Entity*>& 
 
 							AglVector3 d = physX->getController()->getBody(col)->GetWorld().GetTranslation()-origin;
 							p_pc.m_preferredDistance = d.length();
+
+							///HERE
+							PhysicsSystem* physX = static_cast<PhysicsSystem*>(m_world->getSystem(
+								SystemType::PhysicsSystem));
+
+							PhysicsBody* moduleBody = static_cast<PhysicsBody*>(p_entities[i]->getComponent(
+								ComponentType::PhysicsBody));
+
+							Body* physicalmoduleBody = physX->getController()->getBody(moduleBody->m_id);
+							RigidBody* rigid = (RigidBody*)physicalmoduleBody;
+							rigid->SetImpulseEnabled(false);
 						}
 						else
 						{
