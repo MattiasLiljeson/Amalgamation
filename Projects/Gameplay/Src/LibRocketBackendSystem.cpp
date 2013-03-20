@@ -72,8 +72,10 @@ void LibRocketBackendSystem::initialize()
 		Rocket::Core::String( m_rocketContextName.c_str() ),
 		Rocket::Core::Vector2i( m_wndWidth, m_wndHeight) );
 
+#ifdef _DEBUG
 	Rocket::Debugger::Initialise( m_rocketContext );
 	Rocket::Debugger::SetVisible( m_renderDebug );
+#endif
 	
 	m_cursor = m_inputBackend->getCursor();
 
@@ -263,11 +265,11 @@ void LibRocketBackendSystem::process()
 		m_rocketContext->SetDimensions(Rocket::Core::Vector2i(m_wndWidth,m_wndHeight));
 	}
 
-	// Show libRocket visual debugger
-	if(m_inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys::KeyboardKeys_0) > 0.5f){
-		m_renderDebug = !m_renderDebug;
-		Rocket::Debugger::SetVisible( m_renderDebug );
-	}
+	//// Show libRocket visual debugger
+	//if(m_inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys::KeyboardKeys_0) > 0.5f){
+	//	m_renderDebug = !m_renderDebug;
+	//	Rocket::Debugger::SetVisible( m_renderDebug );
+	//}
 	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->
 		getSystem(SystemType::ClientStateSystem));
 
