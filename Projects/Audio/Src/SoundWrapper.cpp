@@ -73,8 +73,10 @@ void SoundWrapper::initSoundEngine()
 	if ( FAILED( hr = m_soundDevice->GetDeviceDetails( 0, &m_details ) ) )
 		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
 
-	m_destChannels	= m_details.OutputFormat.Format.nChannels;
-	m_channelMask	= m_details.OutputFormat.dwChannelMask; 
+	//m_destChannels	= m_details.OutputFormat.Format.nChannels;
+	//m_channelMask	= m_details.OutputFormat.dwChannelMask; 
+	m_destChannels	= 2;
+	m_channelMask	= 3;
 	m_channelVolumes = new float[m_destChannels];
 	init3DSoundSettings();
 	initListener();
