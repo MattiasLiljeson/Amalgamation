@@ -1083,28 +1083,32 @@ void ClientPacketHandlerSystem::handleIngameState()
 				m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
 				data.networkIdentity);
 
-			SkeletalAnimation* anim = static_cast<SkeletalAnimation*>(entity->getComponent(ComponentType::SkeletalAnimation));
-			if (anim)
+			if (entity)
 			{
-				anim->m_isPlaying = data.shouldPlay;
+				SkeletalAnimation* anim = static_cast<SkeletalAnimation*>(entity->getComponent(ComponentType::SkeletalAnimation));
+				if (anim)
+				{
+					anim->m_isPlaying = data.shouldPlay;
 
-				int take = -1;
-				for (unsigned int i = 0; i < anim->m_takes.size(); i++)
-				{
-					if (data.take == anim->m_takes[i].name)
-						take = i;
-				}
-				if (data.shouldQueue)
-					anim->queuedTakes.push_back(take);
-				else
-				{
-					anim->m_currentTake = take;
-					if (anim->m_takes[anim->m_currentTake].backwards)
-						anim->m_time = anim->m_takes[anim->m_currentTake].endFrame / anim->m_fps;
+					int take = -1;
+					for (unsigned int i = 0; i < anim->m_takes.size(); i++)
+					{
+						if (data.take == anim->m_takes[i].name)
+							take = i;
+					}
+					if (data.shouldQueue)
+						anim->queuedTakes.push_back(take);
 					else
-						anim->m_time = anim->m_takes[anim->m_currentTake].startFrame / anim->m_fps;
+					{
+						anim->m_currentTake = take;
+						if (anim->m_takes[anim->m_currentTake].backwards)
+							anim->m_time = anim->m_takes[anim->m_currentTake].endFrame / anim->m_fps;
+						else
+							anim->m_time = anim->m_takes[anim->m_currentTake].startFrame / anim->m_fps;
+					}
 				}
 			}
+
 		}
 		else if (packetType == (char)PacketType::EditSphereUpdatePacket)
 		{
