@@ -9,6 +9,7 @@
 #include "NetworkSynced.h"
 #include "ModuleOnChamberStartPoint.h"
 #include <OutputLogger.h>
+#include "PlayerSystem.h"
 
 #include <TcpServer.h>
 #include <DebugUtil.h>
@@ -23,7 +24,12 @@ ModuleSpawner::ModuleSpawner(TcpServer* p_server,
 	m_server = p_server;
 
 	m_spawnedModulesCount	= 0;
-	m_spawnedModulesMax		= 10;
+	
+	m_spawnedModulesMaxBase					= 10;
+	m_spawnedModulesMaxIncrementPerPlayer	= 2;
+	// Computed from player count, base and incr.
+	m_spawnedModulesMax						= computeSpawnedModulesMax(0);
+
 	m_effectBuffer = p_effectBuffer;
 }
 
@@ -37,9 +43,20 @@ void ModuleSpawner::process()
 	auto stateSystem = static_cast<ServerStateSystem*>(
 		m_world->getSystem(SystemType::ServerStateSystem));
 
+	
 	if (stateSystem->getCurrentState() == ServerStates::INGAME &&
 		m_timerSystem->checkTimeInterval(TimerIntervals::EverySecond))
 	{
+		auto playerSys = static_cast<PlayerSystem*>(
+			m_world->getSystem(SystemType::PlayerSystem));
+		int newSpawnedModulesMax = computeSpawnedModulesMax(playerSys->getActiveEntities().size());
+		if (m_spawnedModulesMax != newSpawnedModulesMax)
+		{
+			m_spawnedModulesMax = newSpawnedModulesMax;
+			m_world->getOutputLogger()
+				->write(("A new module spawn max has been calculated: " + toString(newSpawnedModulesMax) + "\n").c_str());
+		}
+
 		//DEBUGPRINT(("Request spawning a module at a random position.\n"));
 		if (m_spawnPointSystem->isSpawnPointsReady())
 		{
@@ -137,6 +154,12 @@ void ModuleSpawner::removed( Entity* p_entity )
 	m_spawnedModulesCount--;
 	m_spawnPointSystem->applyResetCooldown(spawnPointInfo->atChamber, spawnPointInfo->atSpawnPoint);
 }
+
+int ModuleSpawner::computeSpawnedModulesMax( int p_nrOfPlayers )
+{
+	return m_spawnedModulesMaxBase + p_nrOfPlayers * m_spawnedModulesMaxIncrementPerPlayer;
+}
+
 
 
 
