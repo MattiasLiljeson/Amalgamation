@@ -463,7 +463,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new OutputLogger("log_client.txt"));
 	m_world->setSystem( new ClientModuleCounterSystem() ); // NOTE: Used to be able to remove modules!
 	m_world->setSystem( new ClientDebugModuleSpawnerSystem(m_client) );
-	m_world->setSystem( new EntityLoggerSystem() );
+	m_world->setSystem( new EntityLoggerSystem(), false );
 
 
 	m_world->initialize();
