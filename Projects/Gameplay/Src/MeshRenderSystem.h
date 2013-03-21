@@ -42,5 +42,7 @@ private:
 
 	vector< vector<AglMatrix> > m_boneMatrices;
 	GraphicsBackendSystem* m_gfxBackend;
+
+	float timeInGame;
 };
 

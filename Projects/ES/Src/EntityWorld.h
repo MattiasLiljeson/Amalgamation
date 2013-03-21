@@ -264,7 +264,10 @@ public:
 
 	void requestToShutDown();
 
+	void requestToRestart();
+
 	bool shouldShutDown();
+	bool shouldRestart();
 
 	void requestToHostServer(const string& p_serverName, int p_serverGameTime);
 	string getServerName();
@@ -301,5 +304,7 @@ private:
 	bool m_hostServer;
 	string m_serverName;
 	int m_serverGameTime;
+
+	bool m_requestedRestart;
 };
 

@@ -306,6 +306,15 @@ void LibRocketEventManagerSystem::processEvent(Rocket::Core::Event& p_event,
 			//auto sys = static_cast<ClientPacketHandlerSystem*>(
 			//	m_world->getSystem(SystemType::ClientPacketHandlerSystem));
 			//sys->resetFromDisconnect();
+
+			ClientStateSystem* css = static_cast<ClientStateSystem*>(m_world->getSystem(SystemType::ClientStateSystem));
+
+			if (css->getCurrentState() == GameStates::INGAME)
+				m_world->requestToRestart();
+			else
+			{
+				css->setQueuedState(GameStates::MENU);
+			}
 		}
 
 		else if(values[0] == "play_confirm"){

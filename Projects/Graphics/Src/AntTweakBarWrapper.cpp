@@ -52,6 +52,7 @@ void AntTweakBarWrapper::destroy()
 {
 	if (sInstance)	
 		delete sInstance;
+	sInstance = NULL;
 }
 
 void AntTweakBarWrapper::handleMessage( HWND hWnd, UINT message, WPARAM wParam, 

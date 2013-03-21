@@ -87,5 +87,7 @@ private:
 	int maxDrawnPS;
 
 	AglVector4 m_cameraPlanes[6];
+
+	float timeInGame;
 };
 

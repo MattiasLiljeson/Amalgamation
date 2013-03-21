@@ -1056,9 +1056,9 @@ void ClientPacketHandlerSystem::handleIngameState()
 					}
 				}
 			}
-			else{
-				DEBUGWARNING(( "Unhandled module has changed!" ));
-			}
+			//else{
+			//	DEBUGWARNING(( "Unhandled module has changed!" ));
+			//}
 
 		}
 		else if (packetType == (char)PacketType::SpawnExplosionPacket)

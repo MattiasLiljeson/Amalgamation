@@ -13,6 +13,8 @@
 #include "ShipHiglightSystem.h"
 #include "SettingsSystem.h"
 
+Window* GraphicsBackendSystem::m_window = NULL;
+
 GraphicsBackendSystem* GraphicsBackendSystem::m_selfPointer = NULL;
 
 GraphicsBackendSystem::GraphicsBackendSystem( 
@@ -35,7 +37,7 @@ GraphicsBackendSystem::GraphicsBackendSystem(
 
 GraphicsBackendSystem::~GraphicsBackendSystem(void)
 {
-	delete m_window;
+	//delete m_window;
 	delete m_graphicsWrapper;
 	AntTweakBarWrapper::destroy();
 }
@@ -78,7 +80,8 @@ void GraphicsBackendSystem::initialize()
 
 	auto settings = static_cast<SettingsSystem*>(m_world->getSystem(SystemType::SettingsSystem));
 
-	m_window = new Window( m_hInstance, m_scrWidth, m_scrHeight, 1);
+	if (!m_window)
+		m_window = new Window( m_hInstance, m_scrWidth, m_scrHeight, 1);
 	m_graphicsWrapper = new GraphicsWrapper( 
 		m_window->getWindowRef(), 
 		m_scrWidth, 
