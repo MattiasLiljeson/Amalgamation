@@ -2,12 +2,12 @@ body{
 	font-family: Armorhide;
 	font-charset: U+00??;
 	font-style: normal;
-	font-size: 15;
+	font-size: 20;
 	font-weight: normal;
 	color: white;
 	
-	width: 400px;
-	height: 300px;
+	width: 640px;
+	height: 450px;
 	
 	margin: auto;
 	border-style: solid;
@@ -17,13 +17,22 @@ body{
 	
 	padding: 5px;
 }
+div#proceed_bar
+{
+	text-align: center;
+}
+
+datagridrow{
+	margin-top: 10px;
+	color: rgb(230,230,230);
+}
 
 datagrid datagridrow:nth-child(even)
 {
-	background: rgba(20,20,20,40);
+	background: rgba(0,0,0,255);
 }
 
 datagrid datagridrow:nth-child(odd)
 {
-	background: rgba(40,40,40,40);
+	background: rgba(23,23,23,255);
 }

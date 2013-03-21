@@ -37,9 +37,16 @@ void SelectionMarkerSystem::processEntities( const vector<Entity*>& p_entities )
 		if (marker->m_targetEntity >= 0)
 		{
 			Entity* target = m_world->getEntity(marker->m_targetEntity);
-			RenderInfo* targetRenderInfo = static_cast<RenderInfo*>(target->getComponent(ComponentType::RenderInfo));
-			markerRenderInfo->m_meshId = targetRenderInfo->m_meshId;
-			markerRenderInfo->m_shouldBeRendered = true;
+			if(target)
+			{
+				RenderInfo* targetRenderInfo = static_cast<RenderInfo*>(target->getComponent(ComponentType::RenderInfo));
+				markerRenderInfo->m_meshId = targetRenderInfo->m_meshId;
+				markerRenderInfo->m_shouldBeRendered = true;
+			}
+			else
+			{
+				marker->m_targetEntity = -1;
+			}
 		}
 		else
 		{

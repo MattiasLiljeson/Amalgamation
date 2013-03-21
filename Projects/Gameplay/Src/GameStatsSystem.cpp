@@ -132,6 +132,7 @@ void GameStatsSystem::process()
 
 		if(gameState->getStateDelta(GameStates::RESULTS) == EnumGameDelta::ENTEREDTHISFRAME){
 			rocketBackend->updateElement(m_rocketDocument, "title", "The Final Results!");
+			rocketBackend->updateElement(m_rocketDocument, "ok", "Press TAB to proceed!");
 			rocketBackend->showDocument(m_rocketDocument);
 		}
 
