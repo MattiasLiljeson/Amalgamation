@@ -49,4 +49,6 @@ private:
 	// client side fix for remembering slot highlighting
 	bool m_previousModeWasEditMode;
 	int m_previousHighlight;
+
+	Entity* m_slotActivationSound;
 };

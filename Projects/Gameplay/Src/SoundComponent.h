@@ -29,6 +29,9 @@ public:
 		const char* p_name);
 	AudioHeader* getSoundHeaderByIndex(AudioHeader::SoundType p_soundType, 
 		unsigned int p_index);
+
+	void setSoundHeadersPlayingState(AudioHeader::PlayState p_playState,
+		AudioHeader::SoundType p_soundType, const char* p_name);
 	unsigned int getSoundIndexByName(AudioHeader::SoundType p_soundType, const char* p_name);
 public:
 	vector<vector<AudioHeader*>> m_sounds;

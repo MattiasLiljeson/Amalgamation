@@ -142,8 +142,8 @@ void MenuBackgroundSceneSystem::sysEnabled()
 {
 	m_deltaRotation = 0.0f;
 	xPos = -7.5f;
-	m_center = AglVector3(0,0,100);
-	initInstanceSphereByJohan("RockA.agl", m_center + AglVector3(0, 0, 100.0f),
+	m_center = AglVector3(0,20,80);
+	initInstanceSphereByJohan("RockA.agl", m_center + AglVector3(0, 0, 0),
 		AglVector3(1.0f, 1.0f, 0.0f),  90.0f, 550);
 
 	AglVector3 position(-7.5f, -2.0f, 30.0f);

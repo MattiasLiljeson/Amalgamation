@@ -11,6 +11,7 @@
 #include "ParticleSystemAndTexture.h"
 #include <AglParticleSystem.h>
 #include "SlotMarkerSystem.h"
+#include "SoundComponent.h"
 
 SlotInputControllerSystem::SlotInputControllerSystem(InputBackendSystem* p_inputBackend,
 										 TcpClient* p_client)
@@ -87,19 +88,16 @@ void SlotInputControllerSystem::handleSlotSelection(bool p_editMode)
 			highlight=3;
 		}
 
-
 		if (highlight >= 0)
 		{
 			m_previousHighlight=highlight;
 			//Highlight slot
 
+			static_cast<SoundComponent*>(m_slotActivationSound->
+				getComponent(ComponentType::SoundComponent))->
+				setSoundHeadersPlayingState(AudioHeader::PLAY,AudioHeader::AMBIENT,"SlotActivation");
+
 			sendModuleSlotHighlight(highlight);
-
-
-			AudioBackendSystem* audioBackend = static_cast<AudioBackendSystem*>(
-				m_world->getSystem(SystemType::AudioBackendSystem));
-			//audioBackend->playSoundEffect(TESTSOUNDEFFECTPATH,
-			//	"WARFARE M-16 RELOAD RELOAD FULL CLIP MAGAZINE 01.wav");
 		}
 	
 		if (m_actionBackend->getDeltaByAction(InputActionsBackendSystem::Actions_ACTIVATE_MODULE) > 0)
@@ -123,6 +121,18 @@ void SlotInputControllerSystem::initialize()
 {
 	m_actionBackend = static_cast<InputActionsBackendSystem*>(m_world->getSystem(
 		SystemType::InputActionsBackendSystem));
+
+	m_slotActivationSound = m_world->createEntity();
+
+	SoundComponent* soundComp = new SoundComponent();
+	AudioHeader* audioHeader = new AudioHeader(AudioHeader::AMBIENT,"SlotActivation");
+	audioHeader->file = "Slot_selected.wav";
+	audioHeader->path = SOUNDEFFECTPATH;
+	audioHeader->playInterval = AudioHeader::ONCE;
+	soundComp->addAudioHeader(audioHeader);
+
+	m_slotActivationSound->addComponent(soundComp);
+	m_world->addEntity(m_slotActivationSound);
 }
 
 void SlotInputControllerSystem::sendModuleSlotHighlight(int p_slot)

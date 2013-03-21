@@ -53,3 +53,10 @@ AudioHeader* SoundComponent::getSoundHeaderByIndex( AudioHeader::SoundType p_sou
 {
 	return m_sounds[p_soundType][p_index];
 }
+
+void SoundComponent::setSoundHeadersPlayingState(AudioHeader::PlayState p_playState, 
+												 AudioHeader::SoundType p_soundType, 
+												 const char* p_name)
+{
+	getSoundHeaderByName(p_soundType,p_name)->queuedPlayingState = p_playState;
+}
