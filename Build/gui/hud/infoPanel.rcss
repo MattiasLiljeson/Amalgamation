@@ -19,6 +19,7 @@ body{
 }
 div#proceed_bar
 {
+	margin-top: auto;
 	text-align: center;
 }
 

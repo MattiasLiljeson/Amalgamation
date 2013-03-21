@@ -83,6 +83,11 @@ void MenuSystem::process()
 
 		rocketEventManager->clearDocumentStack();
 		rocketEventManager->loadWindow("lobby");
+
+		SettingsSystem* settings = static_cast<SettingsSystem*>
+			(m_world->getSystem(SystemType::SettingsSystem));
+		settings->writeSettingsFile();
+
 	}
 	else if(gameState->getStateDelta(GameStates::MENU) == EnumGameDelta::ENTEREDTHISFRAME){
 		auto rocketEventManager = static_cast<LibRocketEventManagerSystem*>(
