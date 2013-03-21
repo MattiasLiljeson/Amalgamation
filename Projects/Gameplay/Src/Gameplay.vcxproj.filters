@@ -893,6 +893,9 @@
     <ClInclude Include="SineMovementSystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleCleaningService.h">
+      <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1540,6 +1543,9 @@
     </ClCompile>
     <ClCompile Include="SineMovementSystem.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleCleaningService.cpp">
+      <Filter>Systems\Gameplay\Server Only</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

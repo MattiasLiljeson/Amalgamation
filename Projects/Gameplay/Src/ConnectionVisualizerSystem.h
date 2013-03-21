@@ -46,6 +46,7 @@ public:
 
 	virtual void initialize();
 	virtual void process();
+	void removed( Entity* p_entity );
 
 	void addEffect(ConnectionEffectData p_fx);
 	void disableAll();

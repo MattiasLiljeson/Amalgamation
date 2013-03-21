@@ -42,6 +42,7 @@
 #include <TeslaCoilModuleControllerSystem.h>
 #include <TimerSystem.h>
 #include <WinningConditionSystem.h>
+#include <ModuleCleaningService.h>
 
 //Modules
 #include <MineLayerModule.h>
@@ -238,6 +239,7 @@ namespace Srv
 		// Important for any module-damaging logic to happen before this.
 		m_world->setSystem(new ShipModulesControllerSystem(m_server,moduleeffect,physics), true);
 		m_world->setSystem(new ShipModulesTrackerSystem(), true);
+		m_world->setSystem( new ModuleCleaningService(), false );
 
 		m_world->setSystem(new PlayerSystem(), true);
 
