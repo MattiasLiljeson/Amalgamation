@@ -69,6 +69,27 @@ void ShieldModuleControllerSystem::processEntities(const vector<Entity*>& p_enti
 					data.shieldActivationState = true;
 					data.entityIndex = p_entities[i]->getIndex();
 					m_server->broadcastPacket(data.pack());
+
+					//Play the push animation
+					AnimationUpdatePacket anim;
+					anim.networkIdentity = p_entities[i]->getIndex();
+					anim.shouldPlay = true;
+					anim.take = "Start";
+					m_server->broadcastPacket(anim.pack());
+
+					//Queue Active animation
+					anim.shouldQueue = true;
+					anim.take = "Active";
+					m_server->broadcastPacket(anim.pack());
+
+					//Queue Stop animation
+					anim.take = "Stop";
+					m_server->broadcastPacket(anim.pack());
+
+					//Queue Default animation
+					anim.take = "Default";
+					m_server->broadcastPacket(anim.pack());
+
 				}
 				pushEntitiesBack(p_entities[i], m_dynamicSystem->getActiveEntities());
 			}
