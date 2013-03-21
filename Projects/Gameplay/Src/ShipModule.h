@@ -53,7 +53,8 @@ public:
 
 	float m_rotation; ///< Current Rotation of the module
 	int	  m_rotationDirection; ///< Current Rotation direction of the module {-1 = Negative, 0 = None, 1 = Positive }
-
+	float m_lifetime;
+	float m_maxLifetime;
 private:
 	float m_maxhealth; ///< Max health for this module
 	float m_maxvalue; ///< Max value

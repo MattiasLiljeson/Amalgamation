@@ -15,7 +15,7 @@ ShipModule::ShipModule()
 	m_rotationDirection = 0;
 	m_rotation = 0;
 	m_unused = true;
-
+	m_lifetime = m_maxLifetime = 10.0f;
 }
 
 ShipModule::ShipModule(float p_maxhealth, float p_maxvalue)
@@ -31,6 +31,7 @@ ShipModule::ShipModule(float p_maxhealth, float p_maxvalue)
 	m_rotationDirection = 0;
 	m_rotation = 0;
 	m_unused = true;
+	m_lifetime = m_maxLifetime = 10.0f;
 }
 
 

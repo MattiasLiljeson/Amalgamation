@@ -7,7 +7,7 @@
 #include "MeshOffsetTransform.h"
 
 ConnectionVisualizerSystem::ConnectionVisualizerSystem() : 
-	EntitySystem( SystemType::ConnectionVisualizerSystem)
+	EntitySystem( SystemType::ConnectionVisualizerSystem, 1, ComponentType::ShipModule)
 {
 
 }
@@ -151,4 +151,15 @@ void ConnectionVisualizerSystem::cleanup()
 		m_world->deleteEntity(m_createdEffects[i].data);
 	}
 	m_createdEffects.clear();
+}
+
+void ConnectionVisualizerSystem::removed( Entity* p_entity )
+{
+	for(unsigned int i=0; i<m_createdEffects.size(); i++)
+	{
+		if(m_createdEffects[i].parent == p_entity)
+		{
+			m_createdEffects.erase(m_createdEffects.begin() + i);
+		}
+	}
 }

@@ -142,6 +142,7 @@ public:	//Enums
 		EntityLoggerSystem,
 		StateManagementSystem,
 		SineMovementSystem,
+		ModuleCleaningService,
 		NUM_SYSTEM_TYPES
 	};
 

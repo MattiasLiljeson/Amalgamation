@@ -27,6 +27,8 @@ class LookAtOrbitMode_TAG : public Tag{ public: LookAtOrbitMode_TAG() : Tag( Com
 ///
 class Ship_TAG : public Tag{ public: Ship_TAG() : Tag( ComponentType::TAG_Ship ){}};
 
+class ModuleDragging_TAG : public Tag{ public: ModuleDragging_TAG() : Tag( ComponentType::TAG_ModuleDragging ){}};
+
 ///
 /// MyShip_TAG for client
 ///
