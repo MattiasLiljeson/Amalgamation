@@ -53,6 +53,8 @@ GraphicsWrapper::GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p
 	initSwapChain(p_hWnd);
 	initHardware();
 	initBackBuffer();
+	
+	changeToWindowed(m_windowed);
 
 	m_shaderFactory		= new ShaderFactory(m_device, m_deviceContext, 
 		m_device->GetFeatureLevel());
@@ -122,7 +124,7 @@ void GraphicsWrapper::initSwapChain(HWND p_hWnd)
 	m_swapChainDesc.OutputWindow = p_hWnd;
 	m_swapChainDesc.SampleDesc.Count = 1;
 	m_swapChainDesc.SampleDesc.Quality = 0;
-	m_swapChainDesc.Windowed = m_windowed;
+	m_swapChainDesc.Windowed = false;
 }
 
 void GraphicsWrapper::initHardware()

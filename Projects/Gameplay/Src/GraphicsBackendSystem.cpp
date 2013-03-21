@@ -35,9 +35,9 @@ GraphicsBackendSystem::GraphicsBackendSystem(
 }
 
 
-GraphicsBackendSystem::~GraphicsBackendSystem(void)
+GraphicsBackendSystem::~GraphicsBackendSystem()
 {
-	//delete m_window;
+	m_graphicsWrapper->changeToWindowed(true);
 	delete m_graphicsWrapper;
 	AntTweakBarWrapper::destroy();
 }
