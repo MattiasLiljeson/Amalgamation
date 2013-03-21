@@ -12,5 +12,8 @@
 			<col fields="score" width="30%">Score:</col>
 			<col fields="ping" width="10%">Ping:</col>
 		</datagrid>
+		<div id="proceed_bar">
+			<span id="ok"></span>
+		</div>
 	</body>
 </rml>
