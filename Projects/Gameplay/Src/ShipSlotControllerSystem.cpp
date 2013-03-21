@@ -133,6 +133,19 @@ void SlotInputControllerSystem::initialize()
 
 	m_slotActivationSound->addComponent(soundComp);
 	m_world->addEntity(m_slotActivationSound);
+
+
+	m_attachModuleSound = m_world->createEntity();
+
+	SoundComponent* soundComp2 = new SoundComponent();
+	AudioHeader* audioHeader2 = new AudioHeader(AudioHeader::AMBIENT,"SlotActivation");
+	audioHeader2->file = "magnet.wav";
+	audioHeader2->path = SOUNDEFFECTPATH;
+	audioHeader2->playInterval = AudioHeader::ONCE;
+	soundComp2->addAudioHeader(audioHeader2);
+
+	m_attachModuleSound->addComponent(soundComp2);
+	m_world->addEntity(m_attachModuleSound);
 }
 
 void SlotInputControllerSystem::sendModuleSlotHighlight(int p_slot)
@@ -217,4 +230,10 @@ void SlotInputControllerSystem::sendPreferredSlotToggle()
 	packet.type = SimpleEventType::TOGGLE_PREFERRED_SLOT;
 
 	m_client->sendPacket( packet.pack() );
+}
+
+void SlotInputControllerSystem::playAttachSound()
+{
+	SoundComponent* soundComp = static_cast<SoundComponent*>(m_attachModuleSound->getComponent(ComponentType::SoundComponent));
+	soundComp->getSoundHeaderByIndex(AudioHeader::SoundType::AMBIENT,0)->queuedPlayingState = AudioHeader::PLAY;
 }

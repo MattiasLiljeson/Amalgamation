@@ -23,6 +23,9 @@ public:
 	~SlotInputControllerSystem();
 	void sendModuleSlotHighlightDeactivateAll();
 	void handleSlotSelection(bool p_editMode = false);
+
+	void playAttachSound();
+
 private:
 	void initialize();
 	void process();
@@ -51,4 +54,6 @@ private:
 	int m_previousHighlight;
 
 	Entity* m_slotActivationSound;
+
+	Entity* m_attachModuleSound;
 };
