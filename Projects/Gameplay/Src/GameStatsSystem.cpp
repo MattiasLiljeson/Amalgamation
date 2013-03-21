@@ -139,7 +139,7 @@ void GameStatsSystem::process()
 			(InputActionsBackendSystem::Actions_SHOW_SCORE) > 0.5f)
 		{
 			m_world->requestToRestart();
-			//gameState->setQueuedState(GameStates::MENU);
+			//gameState->setQueuedState(GameStates::LOADING);
 		}
 		
 		//Always show the info panel during the results! 
