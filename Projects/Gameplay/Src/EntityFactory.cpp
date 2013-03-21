@@ -870,9 +870,8 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 	//for detail 2 days or so before release then at least talk to Anton first.
 	string name = "pusher";
 	AudioHeader* explodeSound = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
-	explodeSound->file = "pusherFreesound.wav";
-	explodeSound->path = TESTSOUNDEFFECTPATH;
-	explodeSound->maxFrequencyOffeset = 1.0f;
+	explodeSound->file = "pusher_effect.wav";
+	explodeSound->path = SOUNDEFFECTPATH;
 	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
 	explodeSound->volume = 1.0f;
 	explodeSound->maxRange = 200;
@@ -913,9 +912,9 @@ Entity* EntityFactory::createTeslaCoilModuleClient(EntityCreationPacket p_packet
 	teslaZap->maxFrequencyOffeset = 10.0f;
 	teslaZap->playInterval	= AudioHeader::ONCE;
 	teslaZap->sourceChannels = 1;
-	teslaZap->queuedPlayingState = AudioHeader::PLAY;
+	//teslaZap->queuedPlayingState = AudioHeader::PLAY;
 	teslaZap->volume = 1.0f;
-	teslaZap->maxRange = 400.0f;
+	teslaZap->maxRange = 200.0f;
 	teslaZap->pos = p_packet.translation;
 	SoundComponent* soundComponent = new SoundComponent();
 	soundComponent->addAudioHeader(teslaZap);
@@ -987,7 +986,7 @@ Entity* EntityFactory::createAnomalyBombClient( EntityCreationPacket p_packet )
 	anomalyActive->sourceChannels = 1;
 	anomalyActive->queuedPlayingState = AudioHeader::PLAY;
 	anomalyActive->volume = 0.5f;
-	anomalyActive->maxRange = 400.0f;
+	anomalyActive->maxRange = 200.0f;
 	anomalyActive->pos = p_packet.translation;
 	SoundComponent* soundComponent = new SoundComponent();
 	soundComponent->addAudioHeader(anomalyActive);

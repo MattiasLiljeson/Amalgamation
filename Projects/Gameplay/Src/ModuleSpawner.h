@@ -37,9 +37,8 @@ public:
 
 	virtual void removed( Entity* p_entity );
 
-
-
-protected:
+private:
+	int computeSpawnedModulesMax(int p_nrOfPlayers);
 private:
 	TcpServer*			m_server;
 	SpawnPointSystem*	m_spawnPointSystem;
@@ -49,4 +48,6 @@ private:
 	ModuleVisualEffectServerBufferSystem* m_effectBuffer ;
 	int m_spawnedModulesCount;
 	int m_spawnedModulesMax;
+	int m_spawnedModulesMaxBase;
+	int m_spawnedModulesMaxIncrementPerPlayer;
 };

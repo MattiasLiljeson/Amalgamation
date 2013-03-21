@@ -119,6 +119,7 @@
 #include "GlowAnimation.h"
 #include "SettingsSystem.h"
 #include "ShipMassBoosterUpdatePacket.h"
+#include "ShipSlotControllerSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -1021,6 +1022,8 @@ void ClientPacketHandlerSystem::handleIngameState()
 				ShipModule* shipModule = static_cast<ShipModule*>(
 					affectedModule->getComponent(ComponentType::ShipModule));
 
+				Entity* ship = m_world->getEntityManager()->getFirstEntityByComponentType(ComponentType::TAG_MyShip);
+
 				if (shipModule)
 				{
 					if(affectedModule)
@@ -1032,10 +1035,22 @@ void ClientPacketHandlerSystem::handleIngameState()
 								data.currentParrent);
 
 							if (parrentObjec)
+							{
 								shipModule->m_parentEntity = parrentObjec->getIndex();
+								if (parrentObjec == ship)
+								{
+									SlotInputControllerSystem* slotSystem = static_cast<SlotInputControllerSystem*>(m_world->getSystem(SystemType::SlotInputController));
+									slotSystem->playAttachSound();
+								}
+							}
 						}
 						else
 						{
+							if (shipModule->m_parentEntity == ship->getIndex())
+							{
+								SlotInputControllerSystem* slotSystem = static_cast<SlotInputControllerSystem*>(m_world->getSystem(SystemType::SlotInputController));
+								slotSystem->playAttachSound();
+							}
 							shipModule->m_parentEntity = -1;
 						}
 					}

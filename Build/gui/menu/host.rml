@@ -22,8 +22,8 @@
 				<Input id="6" name="player_name" type="text" size="15"
 				maxlength="10" value="" />
 			</div>
-			<input type="submit" value="accept">Create</input>
 			<button onclick="goto previous">Cancel</button>
+			<input type="submit" value="accept">Create</input>
 		</form>
 	</body>
 </rml>
