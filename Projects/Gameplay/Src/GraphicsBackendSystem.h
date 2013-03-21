@@ -49,11 +49,16 @@ public:
 	void renderParticleSystem( ParticleSystemAndTexture* p_system,
 		const InstanceData& p_worldTransform );
 	void applySettings(GameSettingsInfo& p_settings);
+
+	static Window* getWindow()
+	{
+		return m_window;
+	}
 private:
 	GraphicsWrapper* m_graphicsWrapper;
 
 	HINSTANCE m_hInstance;
-	Window* m_window;
+	static Window* m_window;
 
 	int m_scrWidth;
 	int m_scrHeight;

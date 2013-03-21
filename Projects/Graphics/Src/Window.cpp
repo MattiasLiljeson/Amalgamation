@@ -22,7 +22,9 @@ Window::Window(HINSTANCE p_hInstance, int p_width, int p_height, int p_showWindo
 	wcex.hIconSm        = 0;
 
 	if( !RegisterClassEx(&wcex) )
+	{
 		throw WindowException();
+	}
 
 	// Create window
 	RECT rc = { 0, 0, p_width, p_height};
@@ -49,7 +51,8 @@ Window::Window(HINSTANCE p_hInstance, int p_width, int p_height, int p_showWindo
 
 Window::~Window()
 {
-
+	DestroyWindow(m_hWnd);
+	//UnregisterClass("Amalgamation", m_hInstance);
 }
 
 HWND Window::getWindowRef()
