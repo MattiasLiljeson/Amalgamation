@@ -1386,12 +1386,14 @@ void EntityFactory::createAnomalyExplosion(const SpawnExplosionPacket& p_packet)
 	
 	Entity* bomb = mapper->getEntity(p_packet.sourceEntity);
 
-	if (bomb->getComponent(ComponentType::RenderInfo))
+	if (bomb)
 	{
-		bomb->removeComponent(ComponentType::RenderInfo);
-		bomb->applyComponentChanges();
+		if (bomb->getComponent(ComponentType::RenderInfo))
+		{
+			bomb->removeComponent(ComponentType::RenderInfo);
+			bomb->applyComponentChanges();
+		}
 	}
-
 	m_world->addEntity(effect);
 }
 
