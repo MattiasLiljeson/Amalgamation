@@ -236,6 +236,29 @@ void ClientApplication::run()
 					->printLogFiles();
 				m_running = false;
 			}
+			else if (m_world->shouldRestart()) {
+				static_cast<SettingsSystem*>(
+					m_world->getSystem( SystemType::SettingsSystem ) )
+					->writeSettingsFile(SETTINGSPATH);
+				static_cast<GraphicsRendererSystem*>
+					(m_world->getSystem(SystemType::GraphicsRendererSystem))
+					->printLogFiles();
+
+				delete m_world;
+				delete m_client;
+
+				m_client = new TcpClient();
+				m_world = new EntityWorld();
+
+				m_serverApp = NULL;
+
+				// Systems first!
+				initSystems();
+
+				// Test entities later!
+				initEntities();
+				//m_running = false;
+			}
 			
 			if(m_world->isHostingServer() && m_serverApp == NULL){
 				auto clientConnectToServerSystem =  static_cast<ClientConnectToServerSystem*>
@@ -256,6 +279,7 @@ void ClientApplication::run()
 		}
 
 	}
+	delete GraphicsBackendSystem::getWindow();
 }
 
 void ClientApplication::initSystems()

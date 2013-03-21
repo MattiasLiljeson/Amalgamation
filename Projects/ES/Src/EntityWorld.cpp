@@ -7,6 +7,7 @@ EntityWorld::EntityWorld()
 	m_delta = 0.01f;
 	m_shutdown = false;
 	m_hostServer = false;
+	m_requestedRestart = false;
 	m_serverName = "monki";
 	m_serverGameTime = -1;
 	
@@ -313,10 +314,18 @@ void EntityWorld::requestToShutDown()
 {
 	m_shutdown = true;
 }
+void EntityWorld::requestToRestart()
+{
+	m_requestedRestart = true;
+}
 
 bool EntityWorld::shouldShutDown()
 {
 	return m_shutdown;
+}
+bool EntityWorld::shouldRestart()
+{
+	return m_requestedRestart;
 }
 
 void EntityWorld::requestToHostServer(const string& p_serverName, int p_serverGameTime)

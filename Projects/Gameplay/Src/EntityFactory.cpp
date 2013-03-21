@@ -870,9 +870,8 @@ Entity* EntityFactory::createShieldClient(EntityCreationPacket p_packet)
 	//for detail 2 days or so before release then at least talk to Anton first.
 	string name = "pusher";
 	AudioHeader* explodeSound = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
-	explodeSound->file = "pusherFreesound.wav";
-	explodeSound->path = TESTSOUNDEFFECTPATH;
-	explodeSound->maxFrequencyOffeset = 1.0f;
+	explodeSound->file = "pusher_effect.wav";
+	explodeSound->path = SOUNDEFFECTPATH;
 	explodeSound->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
 	explodeSound->volume = 1.0f;
 	explodeSound->maxRange = 200;
@@ -905,6 +904,22 @@ Entity* EntityFactory::createTeslaCoilModuleClient(EntityCreationPacket p_packet
 		"Assemblages/Modules/TeslaCoil/ClientTeslaCoil.asd" );
 	entity->addComponent(new NetworkSynced(p_packet.networkIdentity, p_packet.owner,
 		(EntityType::EntityEnums)p_packet.entityType));
+
+	AudioHeader* teslaZap = new AudioHeader(AudioHeader::POSITIONALSOUND,
+		"TeslaZap");
+	teslaZap->file = "tesla_coil_zap.wav";
+	teslaZap->path = SOUNDEFFECTPATH;
+	teslaZap->maxFrequencyOffeset = 10.0f;
+	teslaZap->playInterval	= AudioHeader::ONCE;
+	teslaZap->sourceChannels = 1;
+	//teslaZap->queuedPlayingState = AudioHeader::PLAY;
+	teslaZap->volume = 1.0f;
+	teslaZap->maxRange = 200.0f;
+	teslaZap->pos = p_packet.translation;
+	SoundComponent* soundComponent = new SoundComponent();
+	soundComponent->addAudioHeader(teslaZap);
+	entity->addComponent(soundComponent);
+
 	m_world->addEntity(entity);
 	return entity;
 }
@@ -961,6 +976,21 @@ Entity* EntityFactory::createAnomalyBombClient( EntityCreationPacket p_packet )
 		(EntityType::EntityEnums)p_packet.entityType));
 
 	entity->addComponent(ComponentType::ShineSpawn, new ShineSpawn(m_world->getElapsedTime(), 3.5f));
+
+	AudioHeader* anomalyActive = new AudioHeader(AudioHeader::POSITIONALSOUND,
+		"AnomalyActiveSound");
+	anomalyActive->file = "anomaly_active.wav";
+	anomalyActive->path = SOUNDEFFECTPATH;
+	anomalyActive->maxFrequencyOffeset = 1.0f;
+	anomalyActive->playInterval	= AudioHeader::FOREVER;
+	anomalyActive->sourceChannels = 1;
+	anomalyActive->queuedPlayingState = AudioHeader::PLAY;
+	anomalyActive->volume = 0.5f;
+	anomalyActive->maxRange = 200.0f;
+	anomalyActive->pos = p_packet.translation;
+	SoundComponent* soundComponent = new SoundComponent();
+	soundComponent->addAudioHeader(anomalyActive);
+	entity->addComponent(soundComponent);
 
 	m_world->addEntity(entity);
 	return entity;

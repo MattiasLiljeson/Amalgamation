@@ -25,12 +25,14 @@
 #include "ShineSpawn.h"
 #include "GlowAnimation.h"
 #include "SoundComponent.h"
+#include "ClientStateSystem.h"
 
 MeshRenderSystem::MeshRenderSystem(  GraphicsBackendSystem* p_gfxBackend )
 	: EntitySystem( SystemType::RenderPrepSystem, 1,
 		ComponentType::ComponentTypeIdx::RenderInfo )
 {	
 	m_gfxBackend = p_gfxBackend;
+	timeInGame = 0;
 }
 
 MeshRenderSystem::~MeshRenderSystem()
@@ -44,6 +46,15 @@ void MeshRenderSystem::initialize()
 
 void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->getSystem(SystemType::ClientStateSystem));
+
+	if (stateSystem->getCurrentState() == GameStates::INGAME)
+	{
+		timeInGame += m_world->getDelta();
+		if (timeInGame < 2.0f)
+			return;
+	}
+
 	// Cleanup
 	for(unsigned int i=0; i<m_instanceLists.size(); i++ ){
 		m_instanceLists[i].clear();

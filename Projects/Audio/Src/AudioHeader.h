@@ -64,7 +64,7 @@ public:
 		volume = 1.0f;
 		dopplerScalar = 1.0f;
 		dopplerFactor = 1.0f;
-		sourceChannels = 1.0f;
+		sourceChannels = 1;
 		soundIndex = -1;
 		pos = AglVector3::zero();
 		front = AglVector3::forward();

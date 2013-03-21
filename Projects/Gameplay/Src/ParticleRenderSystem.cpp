@@ -9,6 +9,7 @@
 #include <ParticleSystemAndTexture.h>
 #include "MeshOffsetTransform.h"
 #include "CameraInfo.h"
+#include "ClientStateSystem.h"
 
 PsRenderInfo::PsRenderInfo( ParticleSystemAndTexture* p_psAndTex, InstanceData p_transform )
 {
@@ -28,6 +29,7 @@ ParticleRenderSystem::ParticleRenderSystem( GraphicsBackendSystem* p_gfxBackend 
 	m_gfxBackend = p_gfxBackend;
 	drawnPS = 0;
 	maxDrawnPS = 0;
+	timeInGame = 0;
 }
 
 
@@ -38,6 +40,15 @@ ParticleRenderSystem::~ParticleRenderSystem()
 
 void ParticleRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
+	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->getSystem(SystemType::ClientStateSystem));
+
+	if (stateSystem->getCurrentState() == GameStates::INGAME)
+	{
+		timeInGame += m_world->getDelta();
+		if (timeInGame < 2.0f)
+			return;
+	}
+
 	clearRenderQues();
 	drawnPS = 0;
 	calcCameraPlanes();

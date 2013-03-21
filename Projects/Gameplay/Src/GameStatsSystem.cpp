@@ -136,8 +136,10 @@ void GameStatsSystem::process()
 		}
 
 		if(actionInputSystem->getDeltaByAction
-			(InputActionsBackendSystem::Actions_SHOW_SCORE) > 0.5f){
-			gameState->setQueuedState(GameStates::MENU);
+			(InputActionsBackendSystem::Actions_SHOW_SCORE) > 0.5f)
+		{
+			m_world->requestToRestart();
+			//gameState->setQueuedState(GameStates::LOADING);
 		}
 		
 		//Always show the info panel during the results! 

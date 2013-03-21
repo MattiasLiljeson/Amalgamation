@@ -18,8 +18,8 @@
 				<Input id="3" name="player_name" type="text" size="15"
 				maxlength="10" value="" />
 			</div>
-			<input type="submit" value="accept">Connect</input>
 			<button onclick="goto previous">Cancel</button>
+			<input type="submit" value="accept">Connect</input>
 		</form>
 	</body>
 </rml>

@@ -23,6 +23,9 @@ public:
 	~SlotInputControllerSystem();
 	void sendModuleSlotHighlightDeactivateAll();
 	void handleSlotSelection(bool p_editMode = false);
+
+	void playAttachSound();
+
 private:
 	void initialize();
 	void process();
@@ -49,4 +52,8 @@ private:
 	// client side fix for remembering slot highlighting
 	bool m_previousModeWasEditMode;
 	int m_previousHighlight;
+
+	Entity* m_slotActivationSound;
+
+	Entity* m_attachModuleSound;
 };

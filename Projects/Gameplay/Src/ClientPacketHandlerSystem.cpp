@@ -119,6 +119,7 @@
 #include "GlowAnimation.h"
 #include "SettingsSystem.h"
 #include "ShipMassBoosterUpdatePacket.h"
+#include "ShipSlotControllerSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -761,12 +762,20 @@ void ClientPacketHandlerSystem::handleIngameState()
 			{
 				AnomalyBomb* anomalyBomb = static_cast<AnomalyBomb*>(
 					bombEntity->getComponent(ComponentType::AnomalyBomb));
-				if(anomalyBomb != NULL)
+				SoundComponent* soundComponent = static_cast<SoundComponent*>(
+					bombEntity->getComponent(ComponentType::SoundComponent));
+				if(anomalyBomb && soundComponent)
 				{
 					anomalyBomb->activated = true;
 					static_cast<EntityFactory*>(m_world->getSystem(
 						SystemType::EntityFactory))->createAnomalyPieces(
 						bombEntity->getIndex());
+					AudioHeader* header = soundComponent->getSoundHeaderByName(
+						AudioHeader::POSITIONALSOUND, "AnomalyActiveSound");
+					if(header)
+					{
+						header->volume = 1.0f;
+					}
 				}
 			}
 		}
@@ -1013,6 +1022,8 @@ void ClientPacketHandlerSystem::handleIngameState()
 				ShipModule* shipModule = static_cast<ShipModule*>(
 					affectedModule->getComponent(ComponentType::ShipModule));
 
+				Entity* ship = m_world->getEntityManager()->getFirstEntityByComponentType(ComponentType::TAG_MyShip);
+
 				if (shipModule)
 				{
 					if(affectedModule)
@@ -1024,18 +1035,30 @@ void ClientPacketHandlerSystem::handleIngameState()
 								data.currentParrent);
 
 							if (parrentObjec)
+							{
 								shipModule->m_parentEntity = parrentObjec->getIndex();
+								if (parrentObjec == ship)
+								{
+									SlotInputControllerSystem* slotSystem = static_cast<SlotInputControllerSystem*>(m_world->getSystem(SystemType::SlotInputController));
+									slotSystem->playAttachSound();
+								}
+							}
 						}
 						else
 						{
+							if (shipModule->m_parentEntity == ship->getIndex())
+							{
+								SlotInputControllerSystem* slotSystem = static_cast<SlotInputControllerSystem*>(m_world->getSystem(SystemType::SlotInputController));
+								slotSystem->playAttachSound();
+							}
 							shipModule->m_parentEntity = -1;
 						}
 					}
 				}
 			}
-			else{
-				DEBUGWARNING(( "Unhandled module has changed!" ));
-			}
+			//else{
+			//	DEBUGWARNING(( "Unhandled module has changed!" ));
+			//}
 
 		}
 		else if (packetType == (char)PacketType::SpawnExplosionPacket)
