@@ -589,8 +589,6 @@ scrollbarvertical sliderarrowinc
 	icon-image: ../../Assets/gui/texture/invader.tga 28px 152px 55px 176px;*/
 }
 
-
-
 scrollbarhorizontal
 {
 	width: 0px;
@@ -604,4 +602,6 @@ scrollbarhorizontal
 	margin: auto;
 	height: 500px;
 	max-height: 720px;
+	
+	background: rgba(90,90,90,200);
 }

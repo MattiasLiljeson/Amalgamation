@@ -63,6 +63,7 @@ void DisplayGameStats::updateRow( int p_row, const PlayerStats& p_stats )
 	m_players[p_row].name	= p_stats.name;
 	m_players[p_row].ping	= p_stats.ping;
 	m_players[p_row].score	= p_stats.score;
+
 	m_dirty = true;
 }
 
