@@ -50,7 +50,6 @@ void MenuSystem::initialize()
 	m_loadingWindowIdx = rocketBackend->loadDocument(GUI_MENU_PATH.c_str(),"loading");
 
 	rocketEventManager->loadWindow("main_menu");
-
 }
 
 void MenuSystem::process()
