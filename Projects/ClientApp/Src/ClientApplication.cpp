@@ -156,6 +156,7 @@ using namespace std;
 #include <SoundSystem.h>
 #include <ShipEngineSystem.h>
 #include <ValueClamp.h>
+#include <FadeInSystem.h>
 
 
 #define FORCE_VS_DBG_OUTPUT
@@ -396,6 +397,7 @@ void ClientApplication::initSystems()
 	m_world->setSystem( new EntityParentHandlerSystem() );
 
 	//---AUDIO SYSTEMS
+	m_world->setSystem( new FadeInSystem() );
 	m_world->setSystem( new AudioListenerSystem(audioBackend) );
 	m_world->setSystem( new PositionalSoundSystem() );
 	m_world->setSystem( new SoundSystem(audioBackend) );

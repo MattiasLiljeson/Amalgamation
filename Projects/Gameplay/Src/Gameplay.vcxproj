@@ -39,6 +39,7 @@
     <ClInclude Include="EnvironmentValues.h" />
     <ClInclude Include="AxisRotate.h" />
     <ClInclude Include="AxisRotationSystem.h" />
+    <ClInclude Include="FadeInSystem.h" />
     <ClInclude Include="GameSettingsInfo.h" />
     <ClInclude Include="DamageComponent.h" />
     <ClInclude Include="GlowAnimation.h" />
@@ -300,6 +301,7 @@
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="ClientDebugModuleSpawnerSystem.cpp" />
     <ClCompile Include="EntityLoggerSystem.cpp" />
+    <ClCompile Include="FadeInSystem.cpp" />
     <ClCompile Include="GlowAnimation.cpp" />
     <ClCompile Include="GlowAnimationSystem.cpp" />
     <ClCompile Include="ModuleCleaningService.cpp" />

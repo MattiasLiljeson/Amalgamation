@@ -24,6 +24,7 @@ public:
 	SoundOrientation* getListenerOrientation();
 
 	void initialize();
+	void inserted( Entity* p_entity );
 
 private:
 	AudioBackendSystem* m_audioBackend;
