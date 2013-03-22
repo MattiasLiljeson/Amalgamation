@@ -36,7 +36,7 @@ void FadeInSystem::processEntities( const vector<Entity*>& p_entities )
 		}
 
 		if(m_fading){
-			audioListener->setListenerVolume( m_world->getDelta()*m_world->getDelta()
+			audioListener->setListenerVolume( m_world->getDelta()*m_world->getDelta()*m_world->getDelta()
 				+ audioListener->getListenerVolume() );
 			AudioBackendSystem* backEnd = static_cast<AudioBackendSystem*>
 				(m_world->getSystem(SystemType::AudioBackendSystem));
@@ -46,5 +46,4 @@ void FadeInSystem::processEntities( const vector<Entity*>& p_entities )
 			}
 		}
 	}
-
 }
