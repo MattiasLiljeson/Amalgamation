@@ -69,3 +69,13 @@ void AudioListenerSystem::initialize()
 	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(AntTweakBarWrapper::OVERALL,
 		"ListenerPosZ", TwType::TW_TYPE_FLOAT, &m_listener.listenerPos.z, "group=Ship");
 }
+
+void AudioListenerSystem::inserted( Entity* p_entity )
+{
+	AudioListener* audioListener = static_cast<AudioListener*>(
+		p_entity->getComponent( ComponentType::AudioListener));
+	AntTweakBarWrapper::getInstance()->modifyTheRefreshRate(AntTweakBarWrapper::SOUND,0.1f);
+	AntTweakBarWrapper::getInstance()->addWriteVariable(AntTweakBarWrapper::SOUND,
+		"MasterVolume", TwType::TW_TYPE_FLOAT, audioListener->getMasterVolumeRef(), 
+		"step=0.01f min=0 max=1");
+}

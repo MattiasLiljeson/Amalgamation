@@ -387,10 +387,10 @@ Entity* EntityFactory::createShipEntityClient(EntityCreationPacket p_packet)
 		// the camera
 		Entity* entity = m_world->getEntityManager()->getFirstEntityByComponentType(
 			ComponentType::TAG_MainCamera);
-		if(entity->getComponent(ComponentType::AudioListener))
-		{
-			entity->removeComponent(ComponentType::AudioListener); // This is "moved" from the camera to the ship.
-		}
+		//if(entity->getComponent(ComponentType::AudioListener))
+		//{
+		//	entity->removeComponent(ComponentType::AudioListener); // This is "moved" from the camera to the ship.
+		//}
 		entity->addComponent( new PlayerCameraController(90.0f) );
 		// entity->addComponent( ComponentType::InterpolationComponent2, new InterpolationComponent2());
 		/*
