@@ -58,7 +58,7 @@ public:
 	void setOffsetType(AglParticleSystemHeader::AglSpawnOffsetType p_type);
 	void setParticlesPerSpawn(unsigned int p_particlesPerSpawn);
 	void setSpreadType(AglParticleSystemHeader::AglSpreadType p_type);
-	void setParticleSize(AglVector2 p_size);
+	void setParticleSize(AglVector2 p_size, bool p_setOnExisting = false);
 	void setSpawnAngularVelocity(float p_angularVelocity);
 	void setColor(AglVector4 p_color);
 	void setFadeOutStart(float p_fadeOutStart);
