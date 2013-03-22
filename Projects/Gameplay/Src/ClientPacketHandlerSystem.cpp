@@ -120,6 +120,7 @@
 #include "SettingsSystem.h"
 #include "ShipMassBoosterUpdatePacket.h"
 #include "ShipSlotControllerSystem.h"
+#include "GraphicsBackendSystem.h"
 
 ClientPacketHandlerSystem::ClientPacketHandlerSystem( TcpClient* p_tcpClient )
 	: EntitySystem( SystemType::ClientPacketHandlerSystem, 1, 
@@ -526,6 +527,17 @@ void ClientPacketHandlerSystem::handleParticleSystemUpdate( const ParticleUpdate
 						pos4d.transform(view*info->m_projMat);
 						pos4d /= pos4d.w;
 						pos = AglVector3(pos4d.x, pos4d.y, 0);
+
+						if (particleComp->getParticleSystemAndTexturePtr(idx)->originalSize.x < 0)
+							particleComp->getParticleSystemAndTexturePtr(idx)->originalSize = particleSys->getHeader().particleSize;
+
+						AglVector2 size = particleComp->getParticleSystemAndTexturePtr(idx)->originalSize;
+
+						GraphicsBackendSystem* gfx = static_cast<GraphicsBackendSystem*>(m_world->getSystem(SystemType::GraphicsBackendSystem));
+
+						size.y *= gfx->getAspectRatio();
+
+						particleSys->setParticleSize(size, true);
 					}
 
 
