@@ -37,9 +37,8 @@ GraphicsBackendSystem::GraphicsBackendSystem(
 
 GraphicsBackendSystem::~GraphicsBackendSystem()
 {
-	m_graphicsWrapper->changeToWindowed(true);
-	delete m_graphicsWrapper;
 	AntTweakBarWrapper::destroy();
+	delete m_graphicsWrapper;
 }
 
 void GraphicsBackendSystem::changeResolution( int p_scrWidth, int p_scrHeight )
