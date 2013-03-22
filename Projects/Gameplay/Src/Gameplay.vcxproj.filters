@@ -896,6 +896,9 @@
     <ClInclude Include="ModuleCleaningService.h">
       <Filter>Systems\Gameplay\Server Only</Filter>
     </ClInclude>
+    <ClInclude Include="FadeInSystem.h">
+      <Filter>Systems\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
@@ -1546,6 +1549,9 @@
     </ClCompile>
     <ClCompile Include="ModuleCleaningService.cpp">
       <Filter>Systems\Gameplay\Server Only</Filter>
+    </ClCompile>
+    <ClCompile Include="FadeInSystem.cpp">
+      <Filter>Systems\Audio</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
