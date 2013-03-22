@@ -48,12 +48,14 @@ void MeshRenderSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	ClientStateSystem* stateSystem = static_cast<ClientStateSystem*>(m_world->getSystem(SystemType::ClientStateSystem));
 
+	/*
 	if (stateSystem->getCurrentState() == GameStates::INGAME)
 	{
 		timeInGame += m_world->getDelta();
 		if (timeInGame < 2.0f)
 			return;
 	}
+	*/
 
 	// Cleanup
 	for(unsigned int i=0; i<m_instanceLists.size(); i++ ){

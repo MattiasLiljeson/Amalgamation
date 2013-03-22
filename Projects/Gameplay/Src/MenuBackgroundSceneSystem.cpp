@@ -324,6 +324,28 @@ void MenuBackgroundSceneSystem::initOrbitingShip( AglVector3 p_center, AglVector
 		AglVector4(47.0f/255.0f,208.0f/255.0f,172.0f/255.0f,1),
 		AglVector4(47.0f/255.0f,176.0f/255.0f,208.0f/255.0f,1)));
 
+	SoundComponent* soundComp = new SoundComponent();
+	// Engine Sound
+	AudioHeader* header = new AudioHeader(AudioHeader::POSITIONALSOUND,"EngineSound");
+	header->maxRange = 200;
+	header->playInterval = AudioHeader::FOREVER;
+	header->queuedPlayingState = AudioHeader::PLAY;
+	header->file = "space_ship_engine_idle.wav";
+	header->frequency = 1.2f;
+	header->maxFrequencyOffeset = 2.0f;
+	header->path = TESTSOUNDEFFECTPATH;
+	soundComp->addAudioHeader(header);
+
+	// Menu Sound
+	header = new AudioHeader(AudioHeader::AMBIENT, "Music");
+	header->file = "DanseMorialta.wav";
+	header->path = MUSICPATH;
+	header->playInterval = AudioHeader::FOREVER;
+	header->queuedPlayingState = AudioHeader::PLAY;
+	soundComp->addAudioHeader(header);
+
+	m_orbitingShip->addComponent(soundComp);
+
 	m_world->addEntity(m_orbitingShip);
 }
 
