@@ -4,6 +4,9 @@
 #include <ParticleSystemAndTexture.h>
 #include "ShipInputProcessingSystem.h"
 #include <xutility>
+#include "ClientStateSystem.h"
+#include "SettingsSystem.h"
+#include "InputBackendSystem.h"
 
 
 ShipParticleSystemUpdater::ShipParticleSystemUpdater()
@@ -12,6 +15,7 @@ ShipParticleSystemUpdater::ShipParticleSystemUpdater()
 	ComponentType::ParticleSystemsComponent,
 	ComponentType::SpeedBuffer )
 {
+	m_visible = true;
 }
 
 ShipParticleSystemUpdater::~ShipParticleSystemUpdater()
@@ -26,6 +30,21 @@ void ShipParticleSystemUpdater::initialize()
 
 void ShipParticleSystemUpdater::processEntities( const vector<Entity*>& p_entities )
 {
+	ClientStateSystem* gameState = static_cast<ClientStateSystem*>(
+		m_world->getSystem(SystemType::ClientStateSystem));
+	SettingsSystem* settings = static_cast<SettingsSystem*>(
+		m_world->getSystem(SystemType::SettingsSystem));
+	if(gameState->getCurrentState() == GameStates::INGAME &&
+		settings->getSettings().enableCheats)
+	{
+		if(static_cast<InputBackendSystem*>(m_world->getSystem(
+			SystemType::InputBackendSystem))->getDeltaByEnum(
+			InputHelper::KeyboardKeys_NUMPAD_1) > 0.0)
+		{
+			m_visible = !m_visible;
+		}
+	}
+
 	if( !p_entities.empty() )
 	{
 		SpeedBuffer* shipSpeedBuffer = static_cast<SpeedBuffer*>(
@@ -48,7 +67,7 @@ void ShipParticleSystemUpdater::processEntities( const vector<Entity*>& p_entiti
 				{
 					//float speedMult = 0.1f;
 					float speed = shipSpeedBuffer->m_buffer.getAvg();
-        			//speed = max<float>( speed, 1.0f );
+					//speed = max<float>( speed, 1.0f );
 
 					float particlesPerSpawn = psAndTex->psOriginalSettings.particlesPerSpawn;
 					float spawnFreq = psAndTex->psOriginalSettings.spawnFrequency;
@@ -74,6 +93,10 @@ void ShipParticleSystemUpdater::processEntities( const vector<Entity*>& p_entiti
 					{
 						calculateThrustParticle(input->getProcessedInput().thrustInput,
 							psAndTex, header);
+
+						// Disables particle drawing for main ship.
+						if(!m_visible)
+							header->spawnFrequency = 0.0f;
 					} 
 				}
 			}

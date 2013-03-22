@@ -22,5 +22,6 @@ public:
 private:
 	NumericBuffer<float,10> m_speedBuffer;
 	bool m_maxiumSpeed;
+	bool m_visible;
 };
 
