@@ -55,7 +55,7 @@ void GraphicsRendererSystem::initialize(){
 	auto settings = static_cast<SettingsSystem*>(
 		m_world->getSystem(SystemType::ClientStateSystem));
 
-	// m_measureGPU = settings->getSettings().enabledGPUMeasure;
+	m_measureGPU = settings->getSettingsRef()->enabledGPUMeasure;
 
 	AntTweakBarWrapper::getInstance()->addWriteVariable(
 		AntTweakBarWrapper::MEASUREMENT,

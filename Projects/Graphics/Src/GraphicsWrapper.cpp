@@ -53,8 +53,6 @@ GraphicsWrapper::GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p
 	initSwapChain(p_hWnd);
 	initHardware();
 	initBackBuffer();
-	
-	changeToWindowed(m_windowed);
 
 	m_shaderFactory		= new ShaderFactory(m_device, m_deviceContext, 
 		m_device->GetFeatureLevel());
@@ -87,11 +85,6 @@ GraphicsWrapper::GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p
 
 GraphicsWrapper::~GraphicsWrapper()
 {
-	SAFE_RELEASE(m_device);
-	SAFE_RELEASE(m_deviceContext);
-	SAFE_RELEASE(m_swapChain);
-	releaseBackBuffer();
-	
 	delete m_guiShader;
 	delete m_shadowShader;
 	delete m_deferredRenderer;
@@ -109,6 +102,14 @@ GraphicsWrapper::~GraphicsWrapper()
 	delete m_gpuTimer;
 	SAFE_RELEASE(m_boneMatrixResource);
 	delete m_boneMatrixTexture;
+
+	changeToWindowed(true);
+
+	SAFE_RELEASE(m_device);
+	SAFE_RELEASE(m_deviceContext);
+	SAFE_RELEASE(m_swapChain);
+	releaseBackBuffer();
+	
 }
 
 void GraphicsWrapper::initSwapChain(HWND p_hWnd)
@@ -124,7 +125,7 @@ void GraphicsWrapper::initSwapChain(HWND p_hWnd)
 	m_swapChainDesc.OutputWindow = p_hWnd;
 	m_swapChainDesc.SampleDesc.Count = 1;
 	m_swapChainDesc.SampleDesc.Quality = 0;
-	m_swapChainDesc.Windowed = false;
+	m_swapChainDesc.Windowed = m_windowed;
 }
 
 void GraphicsWrapper::initHardware()
