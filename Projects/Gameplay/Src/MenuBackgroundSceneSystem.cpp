@@ -21,6 +21,7 @@
 #include "ShipParticleSystemUpdater.h"
 #include <ParticleSystemAndTexture.h>
 #include "SineMovement.h"
+#include "LevelPieceRoot.h"
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	: EntitySystem(SystemType::MenuBackgroundSceneSystem)
@@ -31,6 +32,7 @@ MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	//m_ship = NULL;
 	m_orbitingShip = NULL;
 	m_logo = NULL;
+	m_chamber = NULL;
 	m_logoInit = false;
 }
 
@@ -212,7 +214,10 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_world->addEntity(entity);
 	m_lights.push_back(entity);
 
-
+	m_chamber = static_cast<EntityFactory*>(m_world->getSystem(
+		SystemType::EntityFactory))->entityFromRecipeOrFile(
+		"ancientChamberClient", "Assemblages/Level Pieces/ancientChamberClient.asd");
+	m_world->addEntity(m_chamber);
 }
 
 void MenuBackgroundSceneSystem::sysDisabled()
@@ -240,10 +245,13 @@ void MenuBackgroundSceneSystem::sysDisabled()
 		m_world->deleteEntity(m_orbitingShip);
 	if(m_logo)
 		m_world->deleteEntity(m_logo);
+	if(m_chamber)
+		m_world->deleteEntity(m_chamber);
 
 	//m_ship = NULL;
 	m_orbitingShip = NULL;
 	m_logo = NULL;
+	m_chamber = NULL;
 }
 
 void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, AglVector3 p_origin,
