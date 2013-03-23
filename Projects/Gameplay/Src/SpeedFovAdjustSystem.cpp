@@ -21,8 +21,8 @@ SpeedFovAdjustSystem::~SpeedFovAdjustSystem()
 void SpeedFovAdjustSystem::initialize()
 {
 	m_fieldOfViewFactor = 2.0f;
-	m_offest = 1.10f;
-	m_maxAdjustment = 1.85f;
+	m_offest = 1.18f;
+	m_maxAdjustment = 1.77f;
 
 	AntTweakBarWrapper::getInstance()->addWriteVariable( AntTweakBarWrapper::OVERALL,
 		"Factor", TwType::TW_TYPE_FLOAT, &m_fieldOfViewFactor, "group=FOV step=0.01f" );
