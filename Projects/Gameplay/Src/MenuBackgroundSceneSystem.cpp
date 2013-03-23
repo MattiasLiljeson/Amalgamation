@@ -366,7 +366,7 @@ void MenuBackgroundSceneSystem::initLogo(AglVector3 p_center, float p_size)
 		AglVector3::one() * p_size);
 	m_logo->addComponent(transform);
 	m_logo->addComponent(new LoadMesh("Logo.agl"));
-	m_logo->addComponent(new SineMovement(p_center, 0, 1.0f));
+	m_logo->addComponent(new SineMovement(p_center, -0.3f, 1.0f));
 	m_world->addEntity(m_logo);
 }
 

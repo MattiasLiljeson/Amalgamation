@@ -95,21 +95,28 @@ void MinigunModuleControllerSystem::processEntities(const vector<Entity*>& p_ent
 
 							if (colModule && colModule->m_parentEntity >= 0)
 							{
-								float damage = 200*dt;
-								colModule->addDamageThisTick(damage, ownerId);
-
-								//Give the attacker some score
-								PlayerComponent* scoreComponent;
-								ModuleHelper::FindScoreComponent(m_world, module, &scoreComponent);
-								if (scoreComponent)
+								Entity* sourceParent = NULL;
+								ModuleHelper::FindParentShip(m_world, &sourceParent, module);
+								Entity* colParent = NULL;
+								ModuleHelper::FindParentShip(m_world, &colParent, colModule);
+								if(sourceParent != colParent)
 								{
-									scoreComponent->addRelativeDamageScore(ScoreRuleHelper::scoreFromDamagingOpponent(damage));
-								}
+									float damage = 200*dt;
+									colModule->addDamageThisTick(damage, ownerId);
 
-								AglVector3 o;
-								AglVector3 d;
-								physics->getController()->GetRay(gun->rayIndex, o, d);
-								physics->getController()->ApplyExternalImpulse(col, d*dt*3.0f, AglVector3(0, 0, 0));
+									//Give the attacker some score
+									PlayerComponent* scoreComponent;
+									ModuleHelper::FindScoreComponent(m_world, module, &scoreComponent);
+									if (scoreComponent)
+									{
+										scoreComponent->addRelativeDamageScore(ScoreRuleHelper::scoreFromDamagingOpponent(damage));
+									}
+
+									AglVector3 o;
+									AglVector3 d;
+									physics->getController()->GetRay(gun->rayIndex, o, d);
+									physics->getController()->ApplyExternalImpulse(col, d*dt*3.0f, AglVector3(0, 0, 0));
+								}
 							}
 						}
 					}
