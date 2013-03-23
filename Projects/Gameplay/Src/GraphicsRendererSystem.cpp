@@ -253,11 +253,21 @@ void GraphicsRendererSystem::beginEffects()
 	Entity* ship = m_world->getEntityManager()->
 		getFirstEntityByComponentType(ComponentType::TAG_ShipEditMode);
 
-	if(ship != NULL){
-		m_wrapper->isInEditMode(true);
+	auto gameState = static_cast<ClientStateSystem*>(
+		m_world->getSystem(SystemType::ClientStateSystem));
+	if(gameState->getCurrentState() == GameStates::MENU
+		|| gameState->getCurrentState() == GameStates::LOBBY)
+	{
+		m_wrapper->setDeferredDofValues(10.0f, 20.0f, 100.0f, 200.0f);
 	}
-	else{
-		m_wrapper->isInEditMode(false);
+	else
+	{
+		if(ship != NULL){
+			m_wrapper->isInEditMode(true);
+		}
+		else{
+			m_wrapper->isInEditMode(false);
+		}
 	}
 	m_wrapper->setPrimitiveTopology( PrimitiveTopology::TRIANGLESTRIP );
 	m_wrapper->setBlendStateSettings( BlendState::SSAO );

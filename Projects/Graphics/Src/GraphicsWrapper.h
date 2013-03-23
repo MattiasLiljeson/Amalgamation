@@ -176,6 +176,8 @@ public:
 	{
 		return m_textureManager;
 	}
+	void setDeferredDofValues(float p_startNear, float p_stopNear, float p_startFar,
+		float p_stopFar);
 
 private:
 	void renderSingleGUIMesh(Mesh* p_mesh, Texture* p_texture);
