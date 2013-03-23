@@ -106,8 +106,8 @@ float4 PS( VertexOut input ) : SV_TARGET
 	// calc linear depths
 	float pixelDepthW = length(position-gCameraPos.xyz);
 	float linDepth = pixelDepthW / (gFarPlane-gNearPlane);
-	fogNearFarPercentage.y=0.4f;
-	float fogDepth = saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.x-gNearPlane*(2.0f-fogNearFarPercentage.y)));
+	fogNearFarPercentage.y=0.9f;
+	float fogDepth = saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.y-gNearPlane));
 	//saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.y-gNearPlane));
 	// saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.x-gNearPlane*(2.0f-fogNearFarPercentage.y)));
 	
@@ -169,7 +169,7 @@ float4 PS( VertexOut input ) : SV_TARGET
 	finalCol *= float4( finalAO, finalAO, finalAO, 1.0f );
 	finalCol += float4 (ambient,0.0f );	
 	// apply fog
-	finalCol = float4( lerp( finalCol.rgb, fog/*+(lightSpec+lightDiff)*0.01f*/, fogDepth), finalCol.a ); 
+	finalCol = float4( lerp( finalCol.rgb, fog, fogDepth), finalCol.a ); 
 	// apply glow
 	finalCol += float4( finalEmissiveValue, 0.0f );
 

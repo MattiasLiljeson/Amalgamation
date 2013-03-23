@@ -43,8 +43,8 @@ float4 PS(VertexOut input) : SV_TARGET
 	// calc linear depths
 	float pixelDepthW = length(position-gCameraPos.xyz);
 	//float linDepth = pixelDepthW / (gFarPlane-gNearPlane);
-	fogNearFarPercentage.y=0.4f;
-	float fogDepth = saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.x-gNearPlane*(2.0f-fogNearFarPercentage.y)));
+	fogNearFarPercentage.y=0.9f;
+	float fogDepth = saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.y-gNearPlane));
 	// saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.y-gNearPlane));
 	// saturate(pixelDepthW / (gFarPlane*fogNearFarPercentage.x-gNearPlane*(2.0f-fogNearFarPercentage.y)));
 	

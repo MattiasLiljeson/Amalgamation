@@ -35,6 +35,7 @@ struct RendererSceneInfo
 
 	RendererSceneInfo()
 	{
+		nearPlane=1.2f;
 		lowResDivider = 4;
 	}
 };
