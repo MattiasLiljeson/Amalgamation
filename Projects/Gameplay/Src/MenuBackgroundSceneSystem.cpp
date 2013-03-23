@@ -132,6 +132,22 @@ void MenuBackgroundSceneSystem::process()
 			sine->originTranslation = m_center;
 		}
 	}
+
+	for(unsigned int i=0; i<m_modules.size(); i++)
+	{
+		ParticleSystemsComponent* particles = static_cast<ParticleSystemsComponent*>(
+			m_modules[i]->getComponent(ComponentType::ParticleSystemsComponent));
+		if(particles)
+		{
+			for(unsigned int particleIdx=0;
+				particleIdx<particles->getParticleSystemCnt(); particleIdx++)
+			{
+				ParticleSystemAndTexture* particle =
+					particles->getParticleSystemAndTexturePtr(particleIdx);
+				particle->particleSystem.setSpawnFrequency(0.0f);
+			}
+		}
+	}
 }
 
 void MenuBackgroundSceneSystem::initialize()
@@ -146,7 +162,9 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	xPos = -7.5f;
 	m_center = AglVector3(0,20,80);
 	initInstanceSphereByJohan("RockA.agl", m_center + AglVector3(0, 0, 0),
-		AglVector3(1.0f, 1.0f, 0.0f),  90.0f, 550);
+		AglVector3(1.0f, 1.0f, 0.0f),  90.0f, 0);
+	initRandomModulesSphere(m_center + AglVector3(0, -100.0f, 50.0f),
+		AglVector3(1.0f, 0, 0), 90.0f, 100);
 
 	AglVector3 position(-7.5f, -2.0f, 30.0f);
 	/*
@@ -236,8 +254,16 @@ void MenuBackgroundSceneSystem::sysDisabled()
 			m_world->deleteEntity(m_lights[i]);
 		}
 	}
+	for(unsigned int i=0; i<m_modules.size(); i++)
+	{
+		if(m_modules[i] != NULL)
+		{
+			m_world->deleteEntity(m_modules[i]);
+		}
+	}
 	m_lights.clear();
 	m_rocks.clear();
+	m_modules.clear();
 
 	//if (m_ship)
 	//	m_world->deleteEntity(m_ship);
@@ -278,6 +304,48 @@ void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, Ag
 			AglQuaternion::identity(), RandomUtil::randomInterval(0.05, 0.2f)));
 		m_world->addEntity(entity);
 		m_rocks[i] = entity;
+	}
+}
+
+void MenuBackgroundSceneSystem::initRandomModulesSphere(AglVector3 p_origin,
+	AglVector3 p_axis, float p_radius, unsigned int p_numberInstances)
+{
+	vector<string> possibleMeshes;
+	possibleMeshes.push_back("anomaly_launcher.agl");
+	possibleMeshes.push_back("MineWeaponFinal.agl");
+	possibleMeshes.push_back("MinigunAnim.agl");
+	possibleMeshes.push_back("rocket_launcher.agl");
+	possibleMeshes.push_back("shield_module.agl");
+	possibleMeshes.push_back("speed_booster.agl");
+	possibleMeshes.push_back("TeslaCoil.agl");
+
+	m_modules.resize(p_numberInstances);
+	for(unsigned int i=0; i<p_numberInstances; i++)
+	{
+		Entity* entity = m_world->createEntity();
+		entity->setName("MenuModul");
+
+		AglVector3 randomDirection;
+		RandomUtil::randomEvenlyDistributedSphere(&randomDirection.x, &randomDirection.y,
+			&randomDirection.z);
+		AglVector3 position = p_origin + randomDirection * p_radius;
+		AglQuaternion rotation = AglQuaternion::rotateToFrom(AglVector3(0.0f, 1.0f, 0.0f), p_origin-position);
+		AglVector3 scale(1.0f, 1.0f, 1.0f);
+		entity->addComponent(new Transform(position, rotation, scale));
+
+		//int randomMesh = RandomUtil::randomIntegerInterval(0, (int)possibleMeshes.size()-1);
+		//entity->addComponent(new LoadMesh(possibleMeshes[randomMesh]));
+		entity->addComponent(new LoadMesh(possibleMeshes[i%(int)possibleMeshes.size()]));
+
+		entity->addComponent(new OrbitalMovement(p_origin, p_axis, randomDirection * p_radius, 0.042f));
+		AglVector3 randomAxis;
+		RandomUtil::randomEvenlyDistributedSphere(&randomAxis.x, &randomAxis.y,
+			&randomAxis.z);
+		entity->addComponent(new AxisRotate(randomAxis, randomDirection * p_radius,
+			AglQuaternion::identity(), RandomUtil::randomInterval(0.05, 0.2f)));
+		m_world->addEntity(entity);
+
+		m_modules[i] = entity;
 	}
 }
 
