@@ -232,16 +232,23 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_world->addEntity(entity);
 	m_lights.push_back(entity);
 
+	int i = RandomUtil::randomIntegerInterval(0,2);
+
+	if(i == 0 ){
 	m_chamber = static_cast<EntityFactory*>(m_world->getSystem(
 		SystemType::EntityFactory))->entityFromRecipeOrFile(
 		"ancientChamberClient", "Assemblages/Level Pieces/ancientChamberClient.asd");
-//	m_chamber = static_cast<EntityFactory*>(m_world->getSystem(
-//		SystemType::EntityFactory))->entityFromRecipeOrFile(
-//		"prisonChamberClient", "Assemblages/Level Pieces/prisonChamberClient.asd");
-//	m_chamber = static_cast<EntityFactory*>(m_world->getSystem(
-//		SystemType::EntityFactory))->entityFromRecipeOrFile(
-//		"alienChamberClient", "Assemblages/Level Pieces/alienChamberClient.asd");
-
+	}
+	else if( i == 1 ){
+		m_chamber = static_cast<EntityFactory*>(m_world->getSystem(
+			SystemType::EntityFactory))->entityFromRecipeOrFile(
+			"prisonChamberClient", "Assemblages/Level Pieces/prisonChamberClient.asd");
+	} 
+	else if( i == 2){
+		m_chamber = static_cast<EntityFactory*>(m_world->getSystem(
+			SystemType::EntityFactory))->entityFromRecipeOrFile(
+			"alienChamberClient", "Assemblages/Level Pieces/alienChamberClient.asd");
+	}
 	m_world->addEntity(m_chamber);
 }
 
