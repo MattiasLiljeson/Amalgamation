@@ -120,6 +120,8 @@ public:
 	void hookUpAntTweakBar();
 
 	void toggleEditMode(bool p_isInEditMode);
+	void setDofValues(float p_startNear, float p_stopNear, float p_startFar,
+		float p_stopFar);
 
 private:
 	void initDepthStencil();

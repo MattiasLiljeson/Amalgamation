@@ -25,7 +25,7 @@ c LevelInfo
 	#d s m_levelSize 1:1500
 	d s m_levelSize 1:6000
 	d s m_levelSize 2:1500
-	d s m_levelSize 3:2000
+	d s m_levelSize 3:6000
 	d s m_levelSize 4:3000
 	d s m_levelSize 5:5000
 	d s m_levelSize 6:6000

@@ -1,6 +1,7 @@
 #include "RandomUtil.h"
 #include <stdlib.h>
 #include <math.h>
+#include <ctime>
 
 float RandomUtil::randomSingle()
 {
@@ -29,4 +30,9 @@ void RandomUtil::randomEvenlyDistributedSphere( float* out_x, float* out_y, floa
 	*out_x = cosf(theta)*sqrtf(1.0f - u * u);
 	*out_y = sinf(theta)*sqrtf(1.0f - u * u);
 	*out_z = u;
+}
+
+void RandomUtil::seed()
+{
+	srand(static_cast<int>(time(NULL)));
 }

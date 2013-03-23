@@ -938,3 +938,9 @@ void GraphicsWrapper::isInEditMode(bool p_isInEditMode)
 {
 	m_deferredRenderer->toggleEditMode(p_isInEditMode);
 }
+
+void GraphicsWrapper::setDeferredDofValues(float p_startNear, float p_stopNear,
+	float p_startFar, float p_stopFar)
+{
+	m_deferredRenderer->setDofValues(p_startNear, p_stopNear, p_startFar, p_stopFar);
+}

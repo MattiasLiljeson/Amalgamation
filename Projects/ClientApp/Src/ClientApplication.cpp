@@ -164,6 +164,8 @@ using namespace std;
 
 ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
+
+	RandomUtil::seed();
 		m_running = false;
 		m_hInstance = p_hInstance;
 		m_client = new TcpClient();
