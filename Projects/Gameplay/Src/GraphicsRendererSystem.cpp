@@ -52,8 +52,8 @@ GraphicsRendererSystem::~GraphicsRendererSystem(){
 	delete[] m_activeShadows;
 }
 void GraphicsRendererSystem::initialize(){
-	auto settings = static_cast<SettingsSystem*>(
-		m_world->getSystem(SystemType::ClientStateSystem));
+	SettingsSystem* settings = static_cast<SettingsSystem*>(
+		m_world->getSystem(SystemType::SettingsSystem));
 
 	m_measureGPU = settings->getSettingsRef()->enabledGPUMeasure;
 

@@ -37,6 +37,7 @@ private:
 	//Entity* m_ship;
 	Entity* m_orbitingShip;
 	Entity* m_logo;
+	Entity* m_chamber;
 	bool m_logoInit;
 
 	vector<Entity*> m_rocks;

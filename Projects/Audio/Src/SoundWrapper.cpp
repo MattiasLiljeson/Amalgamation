@@ -236,7 +236,12 @@ void SoundWrapper::setMasterVolume( const float p_value )
 }
 
 void SoundWrapper::updateMasterVolume(){
-	m_masterVoice->SetVolume(m_masterVolume,0);
+	HRESULT hr = S_OK;
+	hr = m_masterVoice->SetVolume(m_masterVolume,0);
+	m_soundDevice->CommitChanges(0);
+	if(hr != S_OK){
+		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
+	}
 }
 
 bool SoundWrapper::isPlaying( const int soundIndex ){

@@ -147,9 +147,16 @@ void AglParticleSystem::setSpawnType(AglParticleSystemHeader::AglSpawnType p_typ
 {
 	m_header.spawnType = p_type;
 }
-void AglParticleSystem::setParticleSize(AglVector2 p_size)
+void AglParticleSystem::setParticleSize(AglVector2 p_size, bool p_setOnExisting)
 {
 	m_header.particleSize = p_size;
+	if (p_setOnExisting)
+	{
+		for (unsigned int i = 0; i < m_particles.size(); i++)
+		{
+			m_particles[i].size = p_size;
+		}
+	}
 }
 void AglParticleSystem::setSpawnAngularVelocity(float p_angularVelocity)
 {

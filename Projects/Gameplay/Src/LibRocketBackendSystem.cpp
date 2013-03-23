@@ -17,6 +17,11 @@
 #include <Globals.h>
 #include <GraphicsWrapper.h>
 #include <Rocket/Controls.h>
+#include "SettingsSystem.h"
+#include "HudSystem.h"
+#include "SlotMarkerSystem.h"
+#include "RenderInfo.h"
+#include "ParticleSystemsComponent.h"
 
 LibRocketBackendSystem::LibRocketBackendSystem( GraphicsBackendSystem* p_graphicsBackend,
 	InputBackendSystem* p_inputBackend, InputActionsBackendSystem* p_actionBackend )
@@ -263,6 +268,29 @@ void LibRocketBackendSystem::process()
 		m_wndHeight = gfx->getWindowHeight();
 		m_renderInterface->updateOnWindowResize();
 		m_rocketContext->SetDimensions(Rocket::Core::Vector2i(m_wndWidth,m_wndHeight));
+	}
+	ClientStateSystem* gameState = static_cast<ClientStateSystem*>(
+		m_world->getSystem(SystemType::ClientStateSystem));
+	SettingsSystem* settings = static_cast<SettingsSystem*>(
+		m_world->getSystem(SystemType::SettingsSystem));
+	if(gameState->getCurrentState() == GameStates::INGAME &&
+		settings->getSettings().enableCheats)
+	{
+		if(m_inputBackend->getDeltaByEnum(InputHelper::KeyboardKeys_NUMPAD_1) > 0.0)
+		{
+			m_renderGUI = !m_renderGUI;
+			Entity* myShip = m_world->getEntityManager()->getFirstEntityByComponentType(
+				ComponentType::TAG_MyShip);
+			if(myShip)
+			{
+				RenderInfo* render = static_cast<RenderInfo*>(myShip->getComponent(
+					ComponentType::RenderInfo));
+				if(render)
+				{
+					render->m_shouldBeRendered = m_renderGUI;
+				}
+			}
+		}
 	}
 
 	//// Show libRocket visual debugger

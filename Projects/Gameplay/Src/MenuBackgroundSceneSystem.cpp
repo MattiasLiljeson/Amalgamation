@@ -21,6 +21,7 @@
 #include "ShipParticleSystemUpdater.h"
 #include <ParticleSystemAndTexture.h>
 #include "SineMovement.h"
+#include "LevelPieceRoot.h"
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	: EntitySystem(SystemType::MenuBackgroundSceneSystem)
@@ -31,6 +32,7 @@ MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
 	//m_ship = NULL;
 	m_orbitingShip = NULL;
 	m_logo = NULL;
+	m_chamber = NULL;
 	m_logoInit = false;
 }
 
@@ -212,7 +214,10 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_world->addEntity(entity);
 	m_lights.push_back(entity);
 
-
+	m_chamber = static_cast<EntityFactory*>(m_world->getSystem(
+		SystemType::EntityFactory))->entityFromRecipeOrFile(
+		"ancientChamberClient", "Assemblages/Level Pieces/ancientChamberClient.asd");
+	m_world->addEntity(m_chamber);
 }
 
 void MenuBackgroundSceneSystem::sysDisabled()
@@ -240,10 +245,13 @@ void MenuBackgroundSceneSystem::sysDisabled()
 		m_world->deleteEntity(m_orbitingShip);
 	if(m_logo)
 		m_world->deleteEntity(m_logo);
+	if(m_chamber)
+		m_world->deleteEntity(m_chamber);
 
 	//m_ship = NULL;
 	m_orbitingShip = NULL;
 	m_logo = NULL;
+	m_chamber = NULL;
 }
 
 void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, AglVector3 p_origin,
@@ -324,6 +332,28 @@ void MenuBackgroundSceneSystem::initOrbitingShip( AglVector3 p_center, AglVector
 		AglVector4(47.0f/255.0f,208.0f/255.0f,172.0f/255.0f,1),
 		AglVector4(47.0f/255.0f,176.0f/255.0f,208.0f/255.0f,1)));
 
+	SoundComponent* soundComp = new SoundComponent();
+	// Engine Sound
+	AudioHeader* header = new AudioHeader(AudioHeader::POSITIONALSOUND,"EngineSound");
+	header->maxRange = 200;
+	header->playInterval = AudioHeader::FOREVER;
+	header->queuedPlayingState = AudioHeader::PLAY;
+	header->file = "space_ship_engine_idle.wav";
+	header->frequency = 1.2f;
+	header->maxFrequencyOffeset = 2.0f;
+	header->path = TESTSOUNDEFFECTPATH;
+	soundComp->addAudioHeader(header);
+
+	// Menu Sound
+	header = new AudioHeader(AudioHeader::AMBIENT, "Music");
+	header->file = "DanseMorialta.wav";
+	header->path = MUSICPATH;
+	header->playInterval = AudioHeader::FOREVER;
+	header->queuedPlayingState = AudioHeader::PLAY;
+	soundComp->addAudioHeader(header);
+
+	m_orbitingShip->addComponent(soundComp);
+
 	m_world->addEntity(m_orbitingShip);
 }
 
@@ -336,7 +366,7 @@ void MenuBackgroundSceneSystem::initLogo(AglVector3 p_center, float p_size)
 		AglVector3::one() * p_size);
 	m_logo->addComponent(transform);
 	m_logo->addComponent(new LoadMesh("Logo.agl"));
-	m_logo->addComponent(new SineMovement(p_center, 0, 1.0f));
+	m_logo->addComponent(new SineMovement(p_center, -0.3f, 1.0f));
 	m_world->addEntity(m_logo);
 }
 

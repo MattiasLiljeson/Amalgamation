@@ -100,8 +100,8 @@ GraphicsWrapper::~GraphicsWrapper()
 	delete m_renderSceneInfoBuffer;
 	delete m_perShadowBuffer;
 	delete m_gpuTimer;
-	SAFE_RELEASE(m_boneMatrixResource);
 	delete m_boneMatrixTexture;
+	SAFE_RELEASE(m_boneMatrixResource);
 
 	changeToWindowed(true);
 

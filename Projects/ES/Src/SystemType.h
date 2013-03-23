@@ -143,6 +143,7 @@ public:	//Enums
 		StateManagementSystem,
 		SineMovementSystem,
 		ModuleCleaningService,
+		FadeInSystem,
 		NUM_SYSTEM_TYPES
 	};
 
