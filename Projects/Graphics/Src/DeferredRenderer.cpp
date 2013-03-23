@@ -581,6 +581,15 @@ void DeferredRenderer::toggleEditMode(bool p_isInEditMode)
 	}
 }
 
+void DeferredRenderer::setDofValues(float p_startNear, float p_stopNear, float p_startFar,
+	float p_stopFar)
+{
+	m_postProcessingData.startNear	= p_startNear;
+	m_postProcessingData.stopNear	= p_stopNear;
+	m_postProcessingData.startFar	= p_startFar;
+	m_postProcessingData.stopFar	= p_stopFar;
+}
+
 void DeferredRenderer::initPostProcessingPass()
 {
 	m_postProcessingData.scale			= 4.0f;

@@ -24,7 +24,8 @@
 #include "LevelPieceRoot.h"
 
 MenuBackgroundSceneSystem::MenuBackgroundSceneSystem()
-	: EntitySystem(SystemType::MenuBackgroundSceneSystem)
+	: EntitySystem(SystemType::MenuBackgroundSceneSystem, 2, ComponentType::Transform,
+	ComponentType::TAG_MainCamera)
 {
 	m_deltaRotation = 0.0f;
 	xPos = -7.5f;
@@ -163,8 +164,8 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_center = AglVector3(0,20,80);
 	initInstanceSphereByJohan("RockA.agl", m_center + AglVector3(0, 0, 0),
 		AglVector3(1.0f, 1.0f, 0.0f),  90.0f, 0);
-	initRandomModulesSphere(m_center + AglVector3(0, -100.0f, 50.0f),
-		AglVector3(1.0f, 0, 0), 90.0f, 100);
+	initRandomModulesSphere(m_center + AglVector3(0, -100.0f, 130.0f),
+		AglVector3(1.0f, 0, 0), 150.0f, 100);
 
 	AglVector3 position(-7.5f, -2.0f, 30.0f);
 	/*
@@ -184,7 +185,6 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	*/
 	initOrbitingShip(m_center + AglVector3(0, 0, 30.0f), AglVector3(0, 1.0f, 0), 70.0f, 1.0f);
 	initLogo(m_center, 10.0f);
-	repositionCamera();
 	// RM-RT 2013-03-04
 	/*
 	SoundComponent* soundSoure = new SoundComponent( TESTSOUNDEFFECTPATH, 
@@ -235,6 +235,13 @@ void MenuBackgroundSceneSystem::sysEnabled()
 	m_chamber = static_cast<EntityFactory*>(m_world->getSystem(
 		SystemType::EntityFactory))->entityFromRecipeOrFile(
 		"ancientChamberClient", "Assemblages/Level Pieces/ancientChamberClient.asd");
+//	m_chamber = static_cast<EntityFactory*>(m_world->getSystem(
+//		SystemType::EntityFactory))->entityFromRecipeOrFile(
+//		"prisonChamberClient", "Assemblages/Level Pieces/prisonChamberClient.asd");
+//	m_chamber = static_cast<EntityFactory*>(m_world->getSystem(
+//		SystemType::EntityFactory))->entityFromRecipeOrFile(
+//		"alienChamberClient", "Assemblages/Level Pieces/alienChamberClient.asd");
+
 	m_world->addEntity(m_chamber);
 }
 
@@ -278,6 +285,17 @@ void MenuBackgroundSceneSystem::sysDisabled()
 	m_orbitingShip = NULL;
 	m_logo = NULL;
 	m_chamber = NULL;
+
+	m_mainCamera->removeComponent(ComponentType::OrbitalMovement);
+	m_mainCamera->applyComponentChanges();
+}
+
+void MenuBackgroundSceneSystem::inserted( Entity* p_entity )
+{
+	m_mainCamera = p_entity;
+	m_mainCamera->addComponent(new OrbitalMovement(AglVector3(0, 0, 0),
+		AglVector3(0, 0, 1.0f), AglVector3(0, 2.0f, 0), 0.5f));
+	m_mainCamera->applyComponentChanges();
 }
 
 void MenuBackgroundSceneSystem::initInstanceSphereByJohan( string p_meshName, AglVector3 p_origin,
@@ -436,20 +454,4 @@ void MenuBackgroundSceneSystem::initLogo(AglVector3 p_center, float p_size)
 	m_logo->addComponent(new LoadMesh("Logo.agl"));
 	m_logo->addComponent(new SineMovement(p_center, -0.3f, 1.0f));
 	m_world->addEntity(m_logo);
-}
-
-void MenuBackgroundSceneSystem::repositionCamera()
-{
-	Entity* camera = m_world->getEntityManager()
-		->getFirstEntityByComponentType(ComponentType::TAG_MainCamera);
-
-	if (camera)
-	{
-		auto transform = static_cast<Transform*>(camera->getComponent(ComponentType::Transform));
-		if (transform)
-		{
-			transform->setTranslation(AglVector3::zero());
-			transform->setRotation(AglQuaternion::identity());
-		}
-	}
 }

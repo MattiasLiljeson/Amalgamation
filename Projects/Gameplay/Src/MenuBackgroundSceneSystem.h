@@ -22,6 +22,7 @@ public:
 	virtual void initialize() final;
 	virtual void sysEnabled() final;
 	virtual void sysDisabled() final;
+	virtual void inserted( Entity* p_entity ) final;
 
 private:
 	void initInstanceSphereByJohan(string p_meshName, AglVector3 p_origin,
@@ -33,13 +34,13 @@ private:
 		 float p_speed);
 	void initLogo(AglVector3 p_center, float p_size);
 
-	void repositionCamera();
 private:
 	AglVector3 m_center;
 	//Entity* m_ship;
 	Entity* m_orbitingShip;
 	Entity* m_logo;
 	Entity* m_chamber;
+	Entity* m_mainCamera;
 	bool m_logoInit;
 
 	vector<Entity*> m_rocks;
