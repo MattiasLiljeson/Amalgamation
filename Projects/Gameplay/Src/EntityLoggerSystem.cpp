@@ -13,13 +13,19 @@ EntityLoggerSystem::~EntityLoggerSystem()
 
 void EntityLoggerSystem::added( Entity* p_entity )
 {
-	AntTweakBarWrapper::getInstance()->addReadOnlyVariable(AntTweakBarWrapper::OVERALL,
-		(toString(p_entity->getIndex()) + ": " + p_entity->getName()).c_str(), TwType::TW_TYPE_INT32,
-		p_entity->getIndexPtr(), "group='entities'");
+	if(this->getEnabled())
+	{
+		AntTweakBarWrapper::getInstance()->addReadOnlyVariable(AntTweakBarWrapper::OVERALL,
+			(toString(p_entity->getIndex()) + ": " + p_entity->getName()).c_str(), TwType::TW_TYPE_INT32,
+			p_entity->getIndexPtr(), "group='entities'");
+	}
 }
 
 void EntityLoggerSystem::deleted( Entity* p_entity )
 {
-	TwRemoveVar(AntTweakBarWrapper::getInstance()->getAntBar(AntTweakBarWrapper::OVERALL),
-		(toString(p_entity->getIndex()) + ": " + p_entity->getName()).c_str());
+	if(this->getEnabled())
+	{
+		TwRemoveVar(AntTweakBarWrapper::getInstance()->getAntBar(AntTweakBarWrapper::OVERALL),
+			(toString(p_entity->getIndex()) + ": " + p_entity->getName()).c_str());
+	}
 }
