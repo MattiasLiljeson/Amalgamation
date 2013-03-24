@@ -24,13 +24,13 @@ c LevelInfo
 	# The size in the game is calculated by adding all chambers' radiuses together.
 	#d s m_levelSize 1:1500
 	d s m_levelSize 1:6000
-	d s m_levelSize 2:1500
-	d s m_levelSize 3:6000
-	d s m_levelSize 4:3000
-	d s m_levelSize 5:5000
-	d s m_levelSize 6:6000
-	d s m_levelSize 7:8000
-	d s m_levelSize 8:10000
+	d s m_levelSize 2:7000
+	d s m_levelSize 3:8000
+	d s m_levelSize 4:9000
+	d s m_levelSize 5:10000
+	d s m_levelSize 6:11000
+	d s m_levelSize 7:12000
+	d s m_levelSize 8:13000
 
 	# Level size precision specified how accurate the size should be. For instance,
 	# if the desired size is 2000, and the level genererated becomes 2400, this is
