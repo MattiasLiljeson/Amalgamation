@@ -56,9 +56,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>ResourceManager</Filter>
-    </ClCompile>
     <ClCompile Include="ModelBaseFactory.cpp">
       <Filter>Mesh resource</Filter>
     </ClCompile>

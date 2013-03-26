@@ -132,6 +132,8 @@ public:
 		int p_numVertices, PNTTBVertex* p_vertices, 
 		int p_numIndices, DIndex* p_indices,
 		int p_textureId);
+	void releaseMesh(int p_meshId);
+	void releaseMesh(const string& p_name);
 	unsigned int createTexture(const string& p_name,
 							   const string& p_path);
 	unsigned int createTexture( const byte* p_source, int p_width, int p_height,

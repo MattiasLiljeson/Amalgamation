@@ -14,11 +14,22 @@ SystemManager::SystemManager( EntityWorld* p_world )
 
 SystemManager::~SystemManager()
 {
-	map<SystemType::SystemTypeIdx, EntitySystem*>::iterator it;
-	for( it=m_systems.begin(); it != m_systems.end(); it++ )
+	// old way
+// 	map<SystemType::SystemTypeIdx, EntitySystem*>::iterator it;
+// 	for( it=m_systems.begin(); it != m_systems.end(); it++ )
+// 	{
+// 		delete it->second;
+// 		it->second = NULL;
+// 	}
+
+	// new way using list, deleting in reverse order of allocation
+	for( int i=m_systemList.size()-1; i>=0; i-- )
 	{
-		delete it->second;
-		it->second = NULL;
+		auto system = m_systemList[i];
+		m_systems[system->getSystemTypeIdx()]=NULL; // remove from map
+		delete system; // remove from list
+
+		m_systemList[i] = NULL;
 	}
 	delete m_executionTimer;
 }

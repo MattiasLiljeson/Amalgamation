@@ -226,7 +226,9 @@ void LibRocketBackendSystem::updateElement(int p_docId, string p_element, string
 	Rocket::Core::Element* element;
 	element = m_documents[p_docId]->GetElementById( p_element.c_str() );
 	if (element)
+	{
 		element->SetInnerRML( p_value.c_str() );
+	}
 }
 
 void LibRocketBackendSystem::changeValue( int p_docId, string p_element, string p_value )

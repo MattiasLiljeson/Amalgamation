@@ -259,5 +259,5 @@ unsigned int SoundWrapper::createSoundFromHeader( const AudioHeader* p_audioHead
 void SoundWrapper::destroySound( unsigned int p_index )
 {
 	delete m_sounds.at(p_index);
-	m_sounds.removeAt(p_index);
+	m_sounds.freeIndexAt(p_index);
 }

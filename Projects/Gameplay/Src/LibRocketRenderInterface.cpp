@@ -123,7 +123,6 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 		indices[i].index = p_indices[i];
 	}
 
-	
 	// Make sure to use the std tex if no texture is defined
 	if( p_texture == 0){
 		p_texture = m_wrapper->getEmptyTexture();
@@ -135,6 +134,7 @@ Rocket::Core::CompiledGeometryHandle LibRocketRenderInterface :: CompileGeometry
 											 p_numVertices,&vertices[0], 
 											 p_numIndices, &indices[0],
 											 static_cast<int>(p_texture));
+
 
 	m_compiledGeometries.push_back( geometry );
 
@@ -173,6 +173,7 @@ void LibRocketRenderInterface :: ReleaseCompiledGeometry(Rocket::Core::CompiledG
 	{
 		if( (*it) == geometry )
 		{
+			m_wrapper->releaseMesh(geometry->meshId);
 			m_compiledGeometries.erase(it);
 			break;
 		}
@@ -262,6 +263,7 @@ bool LibRocketRenderInterface :: GenerateTexture(Rocket::Core::TextureHandle& te
 void LibRocketRenderInterface :: ReleaseTexture(Rocket::Core::TextureHandle texture_handle)
 {
 	// Texture are not allocated here but just function as indices to the graphics wrapper.
+	int i=0;
 }
 
 // Returns the native horizontal texel offset for the renderer.

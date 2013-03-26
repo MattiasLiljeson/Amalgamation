@@ -85,22 +85,22 @@ GraphicsWrapper::GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p
 
 GraphicsWrapper::~GraphicsWrapper()
 {
-	delete m_guiShader;
-	delete m_shadowShader;
-	delete m_deferredRenderer;
-	delete m_particleRenderer;
-	delete m_shadowMapRenderer;
-	delete m_deferredBaseShader;
-	delete m_shaderFactory;
-	delete m_bufferFactory;
-	delete m_meshManager;
-	delete m_textureManager;
-	delete m_textureFactory;
-	delete m_modelFactory;
-	delete m_renderSceneInfoBuffer;
-	delete m_perShadowBuffer;
-	delete m_gpuTimer;
-	delete m_boneMatrixTexture;
+	SAFE_DELETE(m_guiShader);
+	SAFE_DELETE(m_shadowShader);
+	SAFE_DELETE(m_deferredRenderer);
+	SAFE_DELETE(m_particleRenderer);
+	SAFE_DELETE(m_shadowMapRenderer);
+	SAFE_DELETE(m_deferredBaseShader);
+	SAFE_DELETE(m_shaderFactory);
+	SAFE_DELETE(m_bufferFactory);
+	SAFE_DELETE(m_meshManager);
+	SAFE_DELETE(m_textureManager);
+	SAFE_DELETE(m_textureFactory);
+	SAFE_DELETE(m_modelFactory);
+	SAFE_DELETE(m_renderSceneInfoBuffer);
+	SAFE_DELETE(m_perShadowBuffer);
+	SAFE_DELETE(m_gpuTimer);
+	SAFE_DELETE(m_boneMatrixTexture);
 	SAFE_RELEASE(m_boneMatrixResource);
 
 	changeToWindowed(true);
@@ -536,6 +536,19 @@ unsigned int GraphicsWrapper::createMeshFromRaw( const string& p_name,
 }
 
 
+void GraphicsWrapper::releaseMesh( int p_meshId )
+{
+	if (m_meshManager)
+		m_meshManager->removeResource(p_meshId);
+}
+
+void GraphicsWrapper::releaseMesh( const string& p_name )
+{
+	if (m_meshManager)
+		m_meshManager->removeResource(p_name);
+}
+
+
 unsigned int GraphicsWrapper::createTexture( const string& p_name, 
 											 const string& p_path)
 {
@@ -944,3 +957,4 @@ void GraphicsWrapper::setDeferredDofValues(float p_startNear, float p_stopNear,
 {
 	m_deferredRenderer->setDofValues(p_startNear, p_stopNear, p_startFar, p_stopFar);
 }
+

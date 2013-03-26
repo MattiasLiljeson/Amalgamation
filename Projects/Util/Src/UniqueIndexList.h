@@ -21,7 +21,7 @@ class UniqueIndexList
 public:
 	unsigned int add(T p_valueRef);
 
-	bool		 removeAt(unsigned int p_index);
+	bool		 freeIndexAt(unsigned int p_index);
 
 	T			 at(unsigned int p_index);
 	T			 operator[](unsigned int p_index);
@@ -56,7 +56,7 @@ unsigned int UniqueIndexList<T>::add(T p_valueRef)
 }
 
 template<class T>
-bool UniqueIndexList<T>::removeAt(unsigned int p_index)
+bool UniqueIndexList<T>::freeIndexAt(unsigned int p_index)
 {
 	if (p_index<m_list.size())
 	{

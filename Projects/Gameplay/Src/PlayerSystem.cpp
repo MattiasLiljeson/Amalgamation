@@ -84,7 +84,7 @@ int PlayerSystem::createPlayerId( int p_fromNetworkOwnerId )
 void PlayerSystem::recyclePlayerId( int p_playerId )
 {
 	if (m_playerIds.hasValue(p_playerId))
-		m_playerIds.removeAt(p_playerId);
+		m_playerIds.freeIndexAt(p_playerId);
 }
 
 void PlayerSystem::deletePlayerEntity( int p_playerId )

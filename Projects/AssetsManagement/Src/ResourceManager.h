@@ -21,6 +21,7 @@ template <class T>
 class ResourceManager
 {
 public:
+	ResourceManager() {m_invalidName="##INVALID_RESOURCE##";}
 	~ResourceManager() {clear();}
 
 	///-----------------------------------------------------------------------------------
@@ -104,6 +105,7 @@ private:
 	///---------------------------------------------------------------------------------------
 	typedef struct ResourceDataContainer
 	{
+		ResourceDataContainer() {data=NULL;uniqueId=-1;}
 		~ResourceDataContainer() {delete data;}
 		T* data;
 		string uniqueName;
@@ -139,7 +141,7 @@ private:
 	///
 	UniqueIndexList<ResourceDataContainer*> m_resourceList;
 
-	static const string s_invalidName;
+	string m_invalidName;
 };
 
 
@@ -208,7 +210,7 @@ const string& ResourceManager<T>::getResourceName(unsigned int p_uniqueId)
 	if (m_resourceList[p_uniqueId]!=NULL)
 		return m_resourceList[p_uniqueId]->uniqueName;
 	else
-		return s_invalidName;
+		return m_invalidName;
 };
 
 template <class T>
@@ -250,7 +252,8 @@ bool ResourceManager<T>::removeResource(const string& p_uniqueName)
 	int result = m_resourceMap.erase(p_uniqueName);
 	if (result==1)
 	{
-		m_resourceList.removeAt(id);
+		delete m_resourceList[id];
+		m_resourceList.freeIndexAt(id);
 		return true;
 	}
 	else
@@ -261,10 +264,11 @@ template <class T>
 bool ResourceManager<T>::removeResource(unsigned int p_uniqueId)
 {
 	string name = getResourceName(p_uniqueId);
-	int result = m_resourceMap.erase(p_uniqueName);
+	int result = m_resourceMap.erase(name);
 	if (result==1)
 	{
-		m_resourceList.removeAt(p_uniqueId);
+		delete m_resourceList[p_uniqueId];
+		m_resourceList.freeIndexAt(p_uniqueId);
 		return true;
 	}
 	else
