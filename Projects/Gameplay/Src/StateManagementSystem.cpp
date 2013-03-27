@@ -13,11 +13,13 @@
 #include "ClientConnectToServerSystem.h"
 #include <OutputLogger.h>
 #include "SelectionMarkerSystem.h"
+#include "InputActionsBackendSystem.h"
+#include <TcpClient.h>
 
-StateManagementSystem::StateManagementSystem()
+StateManagementSystem::StateManagementSystem(TcpClient* p_client)
 	: EntitySystem(SystemType::StateManagementSystem)
 {
-
+	m_client = p_client;
 }
 
 StateManagementSystem::~StateManagementSystem()
@@ -31,6 +33,36 @@ void StateManagementSystem::process()
 
 	ClientStateSystem* gameState = static_cast<ClientStateSystem*>(
 		m_world->getSystem(SystemType::ClientStateSystem));
+
+	
+	auto inputActions = static_cast<InputActionsBackendSystem*>(m_world->getSystem(SystemType::InputActionsBackendSystem));
+	float backDelta = inputActions->getDeltaByAction(InputActionsBackendSystem::Actions_GAME_BACK);
+	bool backPressed = backDelta > 0.0f;
+
+	if (backPressed)
+	{	
+		if ( gameState->getCurrentState() == GameStates::MENU )
+		{
+			m_world->requestToShutDown();
+		} else if( gameState->getCurrentState() == GameStates::LOBBY) {
+			DisconnectPacket dcPacket;
+			dcPacket.playerID = m_client->getPlayerID();
+			dcPacket.clientNetworkIdentity = m_client->getId();
+			m_client->sendPacket(dcPacket.pack());
+		}
+		else if (gameState->getCurrentState() == GameStates::INGAME)
+		{
+			m_world->requestToRestart();
+		}
+	}
+
+	if (gameState->getStateDelta(GameStates::LOBBY) == EnumGameDelta::ENTEREDTHISFRAME
+		&& gameState->getStateDelta(GameStates::LOADING) == EnumGameDelta::EXITTHISFRAME)
+	{
+		auto levelHandler = static_cast<LevelHandlerSystem*>(
+			m_world->getSystem(SystemType::LevelHandlerSystem));
+		levelHandler->destroyLevel();
+	}
 
 	if(gameState->getStateDelta(GameStates::MENU) == EnumGameDelta::ENTEREDTHISFRAME){
 		// Disable the menu background system. Note currently, that this system will disable
@@ -50,6 +82,8 @@ void StateManagementSystem::process()
 			// * Clear lobby data!
 			// * Enable the 'connect to server' system!
 			// * Clear components from camera.
+			m_client->setId(-1);
+			m_client->setPlayerID(-1);
 
 			static_cast<PlayerSystem*>(m_world->getSystem(SystemType::PlayerSystem))->
 				deleteAllPlayerEntities();
@@ -79,9 +113,13 @@ void StateManagementSystem::process()
 			// * Slot marker
 			// * Module status effects
 
-			auto levelHandler = static_cast<LevelHandlerSystem*>(
+			// HACK: Since the level also exists in the menu now, level shouldn't be destroyed if going from lobby to menu.
+			if (gameState->getStateDelta(GameStates::LOBBY) != EnumGameDelta::EXITTHISFRAME)
+			{
+				auto levelHandler = static_cast<LevelHandlerSystem*>(
 				m_world->getSystem(SystemType::LevelHandlerSystem));
-			levelHandler->destroyLevel();
+				levelHandler->destroyLevel();
+			}
 
 			auto moduleCounter = static_cast<ClientModuleCounterSystem*>(
 				m_world->getSystem(SystemType::ClientModuleCounterSystem));
@@ -111,6 +149,7 @@ void StateManagementSystem::process()
 			auto selectionMarker = static_cast<SelectionMarkerSystem*>(
 				m_world->getSystem(SystemType::SelectionMarkerSystem));
 			selectionMarker->clear();
+
 		}
 	}
 }

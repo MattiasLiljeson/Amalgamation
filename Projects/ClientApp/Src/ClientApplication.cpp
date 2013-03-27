@@ -253,7 +253,7 @@ void ClientApplication::run()
 				m_client = new TcpClient();
 				m_world = new EntityWorld();
 
-				m_serverApp = NULL;
+				//m_serverApp = NULL;
 
 				// Systems first!
 				initSystems();
@@ -381,7 +381,7 @@ void ClientApplication::initSystems()
 	//---STATESYSTEM
 	m_world->setSystem( new ClientStateSystem( GameStates::MENU ) );
 	m_world->setSystem( new ClientConnectToServerSystem( m_client, false ) );
-	m_world->setSystem( new StateManagementSystem());
+	m_world->setSystem( new StateManagementSystem(m_client));
 
 	//---GUI UPDATE SYSTEMS
 	m_world->setSystem( new LobbySystem() );

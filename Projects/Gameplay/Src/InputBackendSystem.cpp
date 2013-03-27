@@ -189,7 +189,7 @@ void InputBackendSystem::initialize()
 	// esc
 	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_ESC,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_ESC),
-		"KeyboardKeys_ESCAPE" );
+		"KeyboardKeys_ESC" );
 	// f4
 	saveControl( InputHelper::InputDeviceTypes_KEYBOARD, InputHelper::KeyboardKeys_F4,
 		factory.createKeyboardKey(InputHelper::KeyboardKeys_F4),
@@ -235,9 +235,9 @@ void InputBackendSystem::process()
 		m_cursor->overridePosition(newNdcPos.first, newNdcPos.second);
 		m_cursor->setScreenSize(currentWidth,currentHeight);
 	}
-	Control* kb_control = getControlByEnum( InputHelper::KeyboardKeys_ESC);
-	if( kb_control && kb_control->getDelta()>0.5f )
-		m_world->requestToShutDown();
+	//Control* kb_control = getControlByEnum( InputHelper::KeyboardKeys_ESC);
+	//if( kb_control && kb_control->getDelta()>0.5f )
+	//	m_world->requestToShutDown();
 
 
 	m_cursor->update(dt);
@@ -250,7 +250,11 @@ Cursor* InputBackendSystem::getCursor()
 
 Control* InputBackendSystem::getInputControl( const string& p_name )
 {
-	return m_inputManager->getControl(m_controlIdxs[p_name]);
+	auto it = m_controlIdxs.find(p_name);
+	if( it != m_controlIdxs.end() ) {
+		return m_inputManager->getControl(m_controlIdxs[p_name]);
+	}
+	return NULL;
 }
 
 Control* InputBackendSystem::getControlByEnum( InputHelper::KeyboardKeys p_key )

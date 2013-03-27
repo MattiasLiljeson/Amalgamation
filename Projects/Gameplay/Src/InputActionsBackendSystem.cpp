@@ -80,9 +80,17 @@ void InputActionsBackendSystem::initialize()
 	m_inputBackend->setMouseSensitivity( m_sensitivities[Device_MOUSE] );
 	initCursor();
 }
+
+void InputActionsBackendSystem::process()
+{
+}
+
 void InputActionsBackendSystem::readControlFromString(string p_key, Control** p_control)
 {
 	if(p_key != "NULL") {
+		if (p_key == "KeyboardKeys_ESC")
+			int i = 9;
+
 		*p_control = m_inputBackend->getInputControl( p_key );
 	} else {
 		*p_control = NULL;
@@ -223,7 +231,7 @@ void InputActionsBackendSystem::initControlMap()
 	m_actionMap["Actions_MENU_LEFT"]					= Actions_MENU_LEFT;
 	m_actionMap["Actions_MENU_ACTIVATE_ROTATION"]		= Actions_MENU_ACTIVATE_ROTATION;
 	m_actionMap["Actions_SHOW_SCORE"]					= Actions_SHOW_SCORE;
-	m_actionMap["Actions_GAME_QUIT"]					= Actions_GAME_BACK;
+	m_actionMap["Actions_GAME_BACK"]					= Actions_GAME_BACK;
 }
 
 const bool InputActionsBackendSystem::gamepadUsedLast()

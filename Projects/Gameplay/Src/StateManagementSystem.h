@@ -2,6 +2,7 @@
 
 #include <EntitySystem.h>
 
+class TcpClient;
 // =======================================================================================
 //                                      StateManagementSystem
 // =======================================================================================
@@ -17,7 +18,7 @@
 class StateManagementSystem : public EntitySystem
 {
 public:
-	StateManagementSystem();
+	StateManagementSystem(TcpClient* p_client);
 	
 	virtual ~StateManagementSystem();
 
@@ -27,4 +28,5 @@ public:
 
 protected:
 private:
+	TcpClient* m_client;
 };

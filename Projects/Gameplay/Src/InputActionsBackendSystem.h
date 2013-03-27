@@ -74,6 +74,8 @@ public:
 	InputActionsBackendSystem( string p_path = SETTINGSPATH, string p_file = "setting.input");
 	~InputActionsBackendSystem();
 	void initialize();
+	void process();
+
 	double getDeltaByAction(Actions p_action);
 	double getStatusByAction(Actions p_action);
 	Control* getControlByAction(Actions p_action, int p_index);

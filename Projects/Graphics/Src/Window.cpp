@@ -47,6 +47,7 @@ Window::Window(HINSTANCE p_hInstance, int p_width, int p_height, int p_showWindo
 	}
 
 	ShowWindow( m_hWnd, p_showWindowFlag );
+	ShowCursor(true);
 }
 
 Window::~Window()
@@ -88,7 +89,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 		switch(wParam)
 		{
 		case VK_ESCAPE:
-			PostQuitMessage(0);
+			//PostQuitMessage(0);
 			break;
 		}
 		break;
