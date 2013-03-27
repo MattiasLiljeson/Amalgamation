@@ -1156,15 +1156,18 @@ void ClientPacketHandlerSystem::handleIngameState()
 				Entity* entity = static_cast<NetsyncDirectMapperSystem*>(
 					m_world->getSystem(SystemType::NetsyncDirectMapperSystem))->getEntity(
 					highlight.target);
-				if (highlight.on)
+				if(entity != NULL)
 				{
-					if (!entity->getComponent(ComponentType::TAG_Highlight))
-						entity->addComponent(ComponentType::TAG_Highlight, new Highlight_TAG());
-				}
-				else
-				{
-					entity->removeComponent(ComponentType::TAG_Highlight);
-					entity->applyComponentChanges();
+					if (highlight.on)
+					{
+						if (!entity->getComponent(ComponentType::TAG_Highlight))
+							entity->addComponent(ComponentType::TAG_Highlight, new Highlight_TAG());
+					}
+					else
+					{
+						entity->removeComponent(ComponentType::TAG_Highlight);
+						entity->applyComponentChanges();
+					}
 				}
 			}
 		}

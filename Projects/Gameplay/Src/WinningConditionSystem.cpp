@@ -65,10 +65,13 @@ vector< pair<float, int> > WinningConditionSystem::createSortedScoreEntityMappin
 	vector< pair<float, int> > scoreEntityMapping;
 	vector<PlayerComponent*> scoreEntities = static_cast<PlayerSystem*>(
 		m_world->getSystem(SystemType::PlayerSystem))->getPlayerComponents();
-	for(unsigned int i=0; i<scoreEntities.size(); i++)
-	{
-		scoreEntityMapping.push_back(pair<float, int>(scoreEntities[i]->getScore(),
-			scoreEntities[i]->m_playerID));
+	for( unsigned int i=0; i<scoreEntities.size(); i++ ) {
+		PlayerComponent* player = scoreEntities[i];
+		if( player != NULL ) {
+			float playerScore = player->getScore();
+			int playerId = player->m_playerID;
+			scoreEntityMapping.push_back(pair<float, int>( playerScore, playerId ));
+		}
 	}
 	// Sort score with the highest first.
 	std::sort(scoreEntityMapping.begin(), scoreEntityMapping.end(),
