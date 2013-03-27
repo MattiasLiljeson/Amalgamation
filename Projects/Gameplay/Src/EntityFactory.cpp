@@ -1270,6 +1270,32 @@ void EntityFactory::createExplosion(const SpawnExplosionPacket& p_packet)
 	explodeSound->volume = 0.5f;
 	soundComponent->addAudioHeader(explodeSound);
 
+	// Last minute light effect
+	//Light light;
+	//light.instanceData.type = LightTypes::E_LightTypes_POINT;
+	//light.instanceData.enabled = true;
+	//light.instanceData.color[0] = 1.0f;
+	//light.instanceData.color[1] = 1.0f;
+	//light.instanceData.color[2] = 0.8f;
+	//light.instanceData.attenuation[0] = 0.0f;
+	//light.instanceData.attenuation[1] = 0.0f;
+	//light.instanceData.attenuation[2] = 0.0001f;
+	//float range = 500.0f;
+	//light.instanceData.range = range;
+	//light.instanceData.spotLightConeSizeAsPow = 1.0f;
+	//light.instanceData.lightEnergy = 200000.0f;
+
+	//TransformComponents transformComp;
+	//transformComp.translation = p_packet.position;
+	//transformComp.scale = AglVector3( range, range, range );
+	//transformComp.rotation = AglQuaternion::identity();
+
+	//light.instanceData.setWorldTransform( transformComp.toMatrix() );
+	//light.offsetMat = transformComp.toMatrix();
+
+	//LightsComponent* lights = new LightsComponent();
+	//lights->addLight(light);
+	//effect->addComponent( lights );
 
 	m_world->addEntity(effect);
 }
