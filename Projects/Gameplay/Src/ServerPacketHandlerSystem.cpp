@@ -831,11 +831,16 @@ void ServerPacketHandlerSystem::handleLoading()
 			/************************************************************************/
 			/* Create and send the ship entities.									*/
 			/************************************************************************/
-			for(unsigned int i=0; i<m_server->getActiveConnections().size(); i++)
+			//for(unsigned int i=0; i<m_server->getActiveConnections().size(); i++)
+			//{
+			//	createAndBroadCastShip(m_server->getActiveConnections().at(i), (int)i);
+			//}
+			auto playerComps = playerSys->getPlayerComponents();
+			for (unsigned int i = 0; i < playerComps.size(); i++)
 			{
-				createAndBroadCastShip(m_server->getActiveConnections().at(i), (int)i);
+				if (playerComps[i])
+					createAndBroadCastShip(playerComps[i]->m_networkID, playerComps[i]->m_playerID);
 			}
-
 			// Reset the level state. This sets "ready" to true, and "level generated" to
 			// false.
 			levelGen->resetState();

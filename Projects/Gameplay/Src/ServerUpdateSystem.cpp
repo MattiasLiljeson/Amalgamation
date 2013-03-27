@@ -55,15 +55,19 @@ void ServerUpdateSystem::sendPlayerStats()
 			(m_world->getSystem(SystemType::WinningConditionSystem));
 
 		vector<PlayerComponent*> players = playerSys->getPlayerComponents();
-		updatedClientInfo.activePlayers = players.size();
+		for (unsigned int pId = 0; pId < players.size(); pId++)
+		{
+			if (players[pId])
+			{
+				updatedClientInfo.scores[updatedClientInfo.activePlayers]			= players[pId]->getScore();
+				updatedClientInfo.ping[updatedClientInfo.activePlayers]				= players[pId]->m_ping;
+				updatedClientInfo.playerIdentities[updatedClientInfo.activePlayers] = players[pId]->m_playerID;
+				updatedClientInfo.activePlayers++;
+			}
+		}
+
 		updatedClientInfo.minutesUntilEndOfRound = winningSys->getRemaningMinutes();
 		updatedClientInfo.secondsUntilEndOfRound = winningSys->getRemaningSeconds();
-
-		for(unsigned int i = 0; i < updatedClientInfo.activePlayers; i++){
-			updatedClientInfo.scores[i] = players[i]->getScore();
-			updatedClientInfo.ping[i] = players[i]->m_ping;
-			updatedClientInfo.playerIdentities[i] = players[i]->m_playerID;
-		}
 
 		updatedClientInfo.currentServerTimestamp = m_world->getElapsedTime();
 
