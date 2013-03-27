@@ -40,7 +40,7 @@ public:
 	PlayerComponent* findPlayerComponentFromPlayerID( int p_playerId );
 	void recyclePlayerId(int p_playerId);
 private:
-	vector<PlayerComponent*> m_playerComponents;
+	vector<PlayerComponent*> m_playerComponents; // Fixed with the size MAXPLAYERS.
 
 	UniqueIndexList<int> m_playerIds;
 };

@@ -1,13 +1,13 @@
 #include "PlayerSystem.h"
 #include "PlayerComponent.h"
-//#include <Globals.h>
+#include <Globals.h>
 #include <string>
 using namespace std;
 
 PlayerSystem::PlayerSystem() : EntitySystem( SystemType::PlayerSystem, 1, 
 											ComponentType::PlayerComponent)
 {
-	//m_playerComponents.resize(MAXPLAYERS, NULL);
+	m_playerComponents.resize(MAXPLAYERS, NULL);
 }
 
 PlayerSystem::~PlayerSystem()
@@ -19,7 +19,7 @@ PlayerComponent* PlayerSystem::getPlayerCompFromNetworkComp(NetworkSynced* p_net
 {
 	for (unsigned int i = 0; i < m_playerComponents.size(); i++)
 	{
-		if (p_netComponent->getPlayerID() == m_playerComponents[i]->m_playerID)
+		if (m_playerComponents[i] && p_netComponent->getPlayerID() == m_playerComponents[i]->m_playerID)
 			return m_playerComponents[i];
 	}
 	return NULL;
@@ -41,7 +41,8 @@ void PlayerSystem::inserted( Entity* p_entity )
 	PlayerComponent* playerComponent = static_cast<PlayerComponent*>
 		(p_entity->getComponent(ComponentType::PlayerComponent));
 
-	m_playerComponents.push_back(playerComponent);
+	m_playerComponents[playerComponent->m_playerID] = playerComponent;
+	//m_playerComponents.push_back(playerComponent);
 }
 
 std::string PlayerSystem::getPlayerNameFromID( int p_playerID )
@@ -49,7 +50,7 @@ std::string PlayerSystem::getPlayerNameFromID( int p_playerID )
 	if(p_playerID <= m_playerComponents.size()){
 		for (unsigned int i = 0; i < m_playerComponents.size(); i++)
 		{
-			if(m_playerComponents[i]->m_playerID == p_playerID){
+			if(m_playerComponents[i] && m_playerComponents[i]->m_playerID == p_playerID){
 				return m_playerComponents[i]->m_playerName;
 			}
 		}
@@ -62,15 +63,17 @@ void PlayerSystem::removed( Entity* p_entity )
 	auto playerComponent = static_cast<PlayerComponent*>(
 		p_entity->getComponent(ComponentType::PlayerComponent) );
 
-	for (unsigned int i = 0; i < m_playerComponents.size(); i++)
-	{
-		if (playerComponent->m_playerID == m_playerComponents[i]->m_playerID)
-		{
-			m_playerComponents[i] = m_playerComponents.back();
-			m_playerComponents.pop_back();
-			break;
-		}
-	}
+	m_playerComponents[playerComponent->m_playerID] = NULL;
+	//for (unsigned int i = 0; i < m_playerComponents.size(); i++)
+	//{
+	//	if (playerComponent->m_playerID == m_playerComponents[i]->m_playerID)
+	//	{
+	//		m_playerComponents[i] = NULL;
+	//		//m_playerComponents[i] = m_playerComponents.back();
+	//		//m_playerComponents.pop_back();
+	//		break;
+	//	}
+	//}
 
 	// Recycles the id. Note, this is only useful on the server.
 	recyclePlayerId(playerComponent->m_playerID);
@@ -115,7 +118,7 @@ int PlayerSystem::findPlayerId( int p_fromNetworkOwnerId )
 {
 	for (unsigned int i = 0; i < m_playerComponents.size(); i++)
 	{
-		if (m_playerComponents[i]->m_networkID == p_fromNetworkOwnerId)
+		if (m_playerComponents[i] && m_playerComponents[i]->m_networkID == p_fromNetworkOwnerId)
 		{
 			return m_playerComponents[i]->m_playerID;
 		}
@@ -142,14 +145,15 @@ PlayerComponent* PlayerSystem::findPlayerComponentFromNetworkID( int p_fromNetwo
 
 PlayerComponent* PlayerSystem::findPlayerComponentFromPlayerID( int p_playerId )
 {
-	for (unsigned int i = 0; i < m_playerComponents.size(); i++)
-	{
-		if (m_playerComponents[i]->m_playerID == p_playerId)
-		{
-			return m_playerComponents[i];
-		}
-	}
-	return NULL;
+	//for (unsigned int i = 0; i < m_playerComponents.size(); i++)
+	//{
+	//	if (m_playerComponents[i]->m_playerID == p_playerId)
+	//	{
+	//		return m_playerComponents[i];
+	//	}
+	//}
+	//return NULL;
+	return m_playerComponents[p_playerId];
 }
 
 
