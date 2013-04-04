@@ -10,17 +10,15 @@ TimerSystem::TimerSystem()
 	m_timerIntervals[TimerIntervals::EveryTwoSeconds] = 2.0f;
 	m_timerIntervals[TimerIntervals::EverySecond] = 1.0f;
 	m_timerIntervals[TimerIntervals::HalfSecond] = 0.5f;
-	m_timerIntervals[TimerIntervals::Every32Millisecond] = 0.064f;
+	m_timerIntervals[TimerIntervals::Every64Millisecond] = 0.064f;
 	m_timerIntervals[TimerIntervals::Every32Millisecond] = 0.032f;
 	m_timerIntervals[TimerIntervals::Every16Millisecond] = 0.016f;
 	m_timerIntervals[TimerIntervals::Every8Millisecond] = 0.008f;
 
-
 	for(int i=0; i<TimerIntervals::NUM_TIMERINTERVALS; i++ )
 	{
-		m_timers[i] = 0;
+		m_timers[i] = m_timerIntervals[i];
 	}
-
 }
 
 TimerSystem::~TimerSystem()
@@ -39,6 +37,9 @@ void TimerSystem::process()
 
 bool TimerSystem::checkTimeInterval( TimerIntervals::Enum p_timerInterval )
 {
+	if(p_timerInterval == TimerIntervals::Every64Millisecond)
+		return m_timerIntervalReached[p_timerInterval];
+
 	return m_timerIntervalReached[p_timerInterval];
 }
 
@@ -57,3 +58,4 @@ void TimerSystem::checkIfIntervalReached( TimerIntervals::Enum p_timerInterval )
 		m_timerIntervalReached[p_timerInterval] = false;
 	}
 }
+

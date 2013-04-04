@@ -132,6 +132,8 @@ public:
 	///-----------------------------------------------------------------------------------
 	bool isPlaying(const int soundIndex);
 
+	bool checkIfAnyErrorHasOccured();
+
 private:
 	///-----------------------------------------------------------------------------------
 	/// Initialize the XAudio2 parts of the sound engine. If debug is used when compiling

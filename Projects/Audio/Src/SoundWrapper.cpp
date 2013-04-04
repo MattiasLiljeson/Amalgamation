@@ -261,3 +261,13 @@ void SoundWrapper::destroySound( unsigned int p_index )
 	delete m_sounds.at(p_index);
 	m_sounds.freeIndexAt(p_index);
 }
+
+bool SoundWrapper::checkIfAnyErrorHasOccured()
+{
+	XAUDIO2_PERFORMANCE_DATA data;
+	m_soundDevice->GetPerformanceData(&data);
+	if(data.GlitchesSinceEngineStarted>0){
+		return true;
+	}
+	return false;
+}

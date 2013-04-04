@@ -2,6 +2,9 @@
 #include "ClientStateSystem.h"
 #include "AudioBackendSystem.h"
 #include "AudioListener.h"
+#include <ValueClamp.h>
+
+float FadeInSystem::FADINGSPEED = 10.0f;
 
 FadeInSystem::FadeInSystem() : EntitySystem(SystemType::FadeInSystem, 1, 
 											ComponentType::AudioListener)
@@ -33,14 +36,14 @@ void FadeInSystem::processEntities( const vector<Entity*>& p_entities )
 
 		if(gameState->getStateDelta(GameStates::INGAME) == EnumGameDelta::ENTEREDTHISFRAME){
 			m_fading = true;
+			m_fadingTime = 0.0f;
 		}
 
 		if(m_fading){
-			audioListener->setListenerVolume( m_world->getDelta()*m_world->getDelta()*m_world->getDelta()
-				+ audioListener->getListenerVolume() );
-			AudioBackendSystem* backEnd = static_cast<AudioBackendSystem*>
-				(m_world->getSystem(SystemType::AudioBackendSystem));
-			if(audioListener->getListenerVolume()>m_previousVolume){
+			m_fadingTime += (m_world->getDelta());
+			float newMasterVolume = m_fadingTime/FADINGSPEED;
+			audioListener->setListenerVolume(newMasterVolume);
+			if(m_fadingTime>=FADINGSPEED){
 				audioListener->setListenerVolume(m_previousVolume);
 				m_fading = false;
 			}

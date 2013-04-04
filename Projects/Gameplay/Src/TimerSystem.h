@@ -41,14 +41,10 @@ public:
 	void process();
 
 	bool checkTimeInterval( TimerIntervals::Enum p_timerInterval );
-
 private:
 	void checkIfIntervalReached( TimerIntervals::Enum p_timerInterval );
-
 private:
 	float m_timers[TimerIntervals::NUM_TIMERINTERVALS];
 	float m_timerIntervals[TimerIntervals::NUM_TIMERINTERVALS];
 	bool m_timerIntervalReached[TimerIntervals::NUM_TIMERINTERVALS];
-	
-
 };

@@ -38,20 +38,19 @@ Sound* SoundFactory::createSoundFromHeader( const AudioHeader* p_audioHeader )
 			return NULL;
 		}
 	}
-
 	switch (p_audioHeader->soundType)
 	{
 	case AudioHeader::AMBIENT:
 		{
 			IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
-				*bufferAndHeader->waveFormatEx, p_audioHeader->maxFrequencyOffeset);
+				*bufferAndHeader->waveFormatEx, p_audioHeader);
 			newSound = new Sound(soundVoice, bufferAndHeader->buffer);
 			break;
 		}
 	case AudioHeader::AMBIENTRANGE:
 		{
 			IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
-				*bufferAndHeader->waveFormatEx, p_audioHeader->maxFrequencyOffeset);
+				*bufferAndHeader->waveFormatEx, p_audioHeader);
 			newSound = new Sound(soundVoice, bufferAndHeader->buffer);
 			break;
 		}
@@ -70,7 +69,7 @@ Sound* SoundFactory::createSoundFromHeader( const AudioHeader* p_audioHeader )
 			info.settings = dspSettings;
 
 			IXAudio2SourceVoice* soundVoice = createSourceVoice(*bufferAndHeader->buffer,
-				*bufferAndHeader->waveFormatEx, p_audioHeader->maxFrequencyOffeset);
+				*bufferAndHeader->waveFormatEx, p_audioHeader);
 			newSound = new PositionalSound(soundVoice, bufferAndHeader->buffer, info);
 			break;
 		}
@@ -259,7 +258,7 @@ void SoundFactory::createSoundBuffer(const char* p_fullFilePath, XAUDIO2_BUFFER*
 
 IXAudio2SourceVoice* SoundFactory::createSourceVoice(XAUDIO2_BUFFER& p_buffer, 
 													 WAVEFORMATEX& p_waveFormatEx, 
-													 float maxFreqOffset)
+													 const AudioHeader* p_audioHeader)
 {
 	/************************************************************************/
 	/* Create the source voice after the buffers has been formated.			*/
@@ -269,8 +268,12 @@ IXAudio2SourceVoice* SoundFactory::createSourceVoice(XAUDIO2_BUFFER& p_buffer,
 	XAUDIO2_VOICE_SENDS* sendList = NULL;
 	XAUDIO2_EFFECT_CHAIN* effectChain = NULL;
 
+	if(p_audioHeader->maxFrequencyOffeset==1.0f){
+		flags = XAUDIO2_VOICE_NOPITCH;
+	}
+
 	HRESULT hr = m_soundDevice->CreateSourceVoice(&soundVoice, &p_waveFormatEx, flags,
-		maxFreqOffset, NULL, sendList, effectChain);
+		p_audioHeader->maxFrequencyOffeset, NULL, sendList, effectChain);
 	if (FAILED(hr))
 	{
 		throw XAudio2Exception(hr, __FILE__, __FUNCTION__, __LINE__);

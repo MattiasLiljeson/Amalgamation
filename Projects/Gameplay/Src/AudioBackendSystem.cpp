@@ -1,6 +1,7 @@
 #include "AudioBackendSystem.h"
 #include <ToString.h>
 #include <SoundWrapper.h>
+#include <DebugUtil.h>
 
 
 AudioBackendSystem::AudioBackendSystem() : EntitySystem(SystemType::AudioBackendSystem)
@@ -16,7 +17,9 @@ AudioBackendSystem::~AudioBackendSystem()
 
 void AudioBackendSystem::processEntities( const vector<Entity*>& p_entities )
 {
-
+	if(m_soundWrapper->checkIfAnyErrorHasOccured()){
+		DEBUGWARNING(("XAUDIO2 has experienced a glitch!"));
+	}
 }
 
 void AudioBackendSystem::updateListener( const SoundOrientation& p_listenerInfo )

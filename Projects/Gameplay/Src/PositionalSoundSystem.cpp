@@ -15,6 +15,7 @@
 #include "AudioListenerSystem.h"
 #include <ValueClamp.h>
 #include "MeshOffsetTransform.h"
+#include "TimerSystem.h"
 
 PositionalSoundSystem::PositionalSoundSystem()
 	: EntitySystem( SystemType::PositionalSoundSystem, 2,
@@ -28,11 +29,16 @@ PositionalSoundSystem::~PositionalSoundSystem()
 
 void PositionalSoundSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	for(unsigned int i=0; i<p_entities.size(); i++){
+	auto timerSystem = static_cast<TimerSystem*>
+		(m_world->getSystem(SystemType::TimerSystem));
 
-		SoundComponent* soundComp = static_cast<SoundComponent*>
-			(p_entities[i]->getComponent(ComponentType::SoundComponent));
-		processSoundComponent(p_entities[i], soundComp);
+	if(timerSystem->checkTimeInterval(TimerIntervals::Every32Millisecond)){
+		for(unsigned int i=0; i<p_entities.size(); i++){
+
+			SoundComponent* soundComp = static_cast<SoundComponent*>
+				(p_entities[i]->getComponent(ComponentType::SoundComponent));
+			processSoundComponent(p_entities[i], soundComp);
+		}
 	}
 }
 
@@ -121,3 +127,4 @@ void PositionalSoundSystem::processSoundComponent(Entity* p_entity,
 	
 	
 }
+

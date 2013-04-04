@@ -3,6 +3,7 @@
 #include "AudioBackendSystem.h"
 
 class SoundComponent;
+class TimerSystem;
 // =======================================================================================
 //                                      SoundSystem
 // =======================================================================================
@@ -34,4 +35,5 @@ public:
 
 private:
 	AudioBackendSystem* m_audioBackend;
+	TimerSystem* m_timerSystem;
 };

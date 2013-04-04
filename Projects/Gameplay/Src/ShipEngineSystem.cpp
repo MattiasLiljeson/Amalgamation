@@ -20,27 +20,26 @@ ShipEngineSystem::~ShipEngineSystem()
 
 void ShipEngineSystem::processEntities( const vector<Entity*>& p_entities )
 {
-	if(p_entities.size() > 0){
-		for (unsigned int i = 0; i < p_entities.size(); i++){
+	for (unsigned int i = 0; i < p_entities.size(); i++){
 
-			SoundComponent* soundComp = static_cast<SoundComponent*>
-				(p_entities[i]->getComponent(ComponentType::SoundComponent));
-			AudioHeader* idle = soundComp->getSoundHeaderByIndex(AudioHeader::AMBIENT, 
-				m_shipIdleSoundIndex);
+		SoundComponent* soundComp = static_cast<SoundComponent*>
+			(p_entities[i]->getComponent(ComponentType::SoundComponent));
+		AudioHeader* idle = soundComp->getSoundHeaderByIndex(AudioHeader::AMBIENT, 
+			m_shipIdleSoundIndex);
 
-			ThrustComponent* thrust = static_cast<ThrustComponent*>
-				(p_entities[i]->getComponent(ComponentType::ThrustComponent));
+		ThrustComponent* thrust = static_cast<ThrustComponent*>
+			(p_entities[i]->getComponent(ComponentType::ThrustComponent));
 
-			float factor = thrust->m_thrustPower / (float)thrust->POWERCAP ;
-			float soundVolume = factor + 0.3f;
-			if(soundVolume>1.0f){
-				soundVolume = 1.0f;
-			}
-			factor += 1.0f;
-			idle->volume = soundVolume;
-			idle->frequency = factor;
+		float factor = thrust->m_thrustPower / (float)thrust->POWERCAP ;
+		float soundVolume = factor + 0.3f;
+		if(soundVolume>1.0f){
+			soundVolume = 1.0f;
 		}
+		factor += 1.0f;
+		idle->volume = soundVolume;
+		idle->frequency = factor;
 	}
+
 }
 
 void ShipEngineSystem::inserted( Entity* p_entity ){

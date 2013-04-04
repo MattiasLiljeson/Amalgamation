@@ -39,7 +39,7 @@ private:
 	void createSoundBuffer(const AudioHeader* p_audioHeader, 
 		SoundBufferAndHeader* p_soundBuffer);
 	IXAudio2SourceVoice* createSourceVoice(XAUDIO2_BUFFER& p_buffer,
-		WAVEFORMATEX& p_waveFormatEx, float maxFreqOffset);
+		WAVEFORMATEX& p_waveFormatEx, const AudioHeader* p_audioHeader);
 
 	void findChunk(HANDLE hFile, DWORD fourcc,DWORD& dwChunkSize, 
 		DWORD& dwChunkDataPosition);

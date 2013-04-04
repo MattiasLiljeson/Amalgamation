@@ -1,6 +1,7 @@
 #include "SoundSystem.h"
 #include "SoundComponent.h"
 #include <SoundWrapper.h>
+#include "TimerSystem.h"
 
 SoundSystem::SoundSystem(AudioBackendSystem* p_audioBackend) : 
 	EntitySystem(SystemType::SoundSystem, 1, ComponentType::SoundComponent)
@@ -15,7 +16,7 @@ SoundSystem::~SoundSystem()
 
 void SoundSystem::initialize()
 {
-
+	m_timerSystem = static_cast<TimerSystem*>(m_world->getSystem(SystemType::TimerSystem));
 }
 
 void SoundSystem::processEntities( const vector<Entity*>& p_entities )
@@ -64,16 +65,19 @@ void SoundSystem::updateSoundStatus( const SoundComponent* p_soundComponent )
 		for(unsigned int j = 0; j < p_soundComponent->m_sounds[i].size(); j++){
 			AudioHeader* header = p_soundComponent->m_sounds[i][j];
 
-			//Update the frequency 
-			m_audioBackend->getSoundWrapper()->
-				getSound(header->soundIndex)->setFrequency(header->frequency);
+			if(m_timerSystem->checkTimeInterval(TimerIntervals::Every32Millisecond)){
+				if(header->maxFrequencyOffeset!=1.0f){
+					//Update the frequency 
+					m_audioBackend->getSoundWrapper()->
+						getSound(header->soundIndex)->setFrequency(header->frequency);
+				}
 
-			//Update the volume
-			if(header->soundType != AudioHeader::AMBIENTRANGE){
-				m_audioBackend->getSoundWrapper()->getSound(header->soundIndex)->
-					getSourceVoice()->SetVolume(header->volume);
+				//Update the volume
+				if(header->soundType != AudioHeader::AMBIENTRANGE){
+					m_audioBackend->getSoundWrapper()->getSound(header->soundIndex)->
+						getSourceVoice()->SetVolume(header->volume);
+				}
 			}
-
 			//Update the sounds' playing status 
 			if( header->getPlayingState() != header->queuedPlayingState ){
 				header->setPlayingState(header->queuedPlayingState);

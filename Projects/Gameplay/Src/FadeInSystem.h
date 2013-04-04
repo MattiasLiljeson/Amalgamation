@@ -22,4 +22,6 @@ public:
 private:
 	bool m_fading;
 	float m_previousVolume;
+	float m_fadingTime;
+	static float FADINGSPEED;
 };
