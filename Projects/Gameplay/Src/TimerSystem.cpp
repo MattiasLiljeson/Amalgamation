@@ -37,9 +37,6 @@ void TimerSystem::process()
 
 bool TimerSystem::checkTimeInterval( TimerIntervals::Enum p_timerInterval )
 {
-	if(p_timerInterval == TimerIntervals::Every64Millisecond)
-		return m_timerIntervalReached[p_timerInterval];
-
 	return m_timerIntervalReached[p_timerInterval];
 }
 
