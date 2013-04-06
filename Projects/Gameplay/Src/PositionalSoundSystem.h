@@ -27,7 +27,6 @@ public:
 	void processEntities( const vector<Entity*>& p_entities );
 	void initialize();
 
-private:
 	void processSoundComponent(Entity* p_entity, SoundComponent* p_soundComponent);
 private:
 	AudioBackendSystem* m_audioBackendSystem;

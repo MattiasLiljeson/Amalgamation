@@ -234,9 +234,6 @@ void ClientApplication::run()
 				static_cast<SettingsSystem*>(
 					m_world->getSystem( SystemType::SettingsSystem ) )
 					->writeSettingsFile(SETTINGSPATH);
-				static_cast<GraphicsRendererSystem*>
-					(m_world->getSystem(SystemType::GraphicsRendererSystem))
-					->printLogFiles();
 				m_running = false;
 			}
 			else if (m_world->shouldRestart()) {

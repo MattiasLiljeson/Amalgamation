@@ -26,7 +26,7 @@ public:
 
 	void processEntities( const vector<Entity*>& p_entities );
 
-	void updateSoundStatus(const SoundComponent* p_soundComponent);
+	void updateSoundStatus(const SoundComponent* p_soundComponent, bool p_forceUpdate=false);
 
 	void inserted( Entity* p_entity );
 

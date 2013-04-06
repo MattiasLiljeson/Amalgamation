@@ -56,12 +56,19 @@ void PositionalSoundSystem::processSoundComponent(Entity* p_entity,
 {
 	Transform* trans = static_cast<Transform*>
 		(p_entity->getComponent(ComponentType::Transform));
-
+	if(trans == NULL)
+		return;
+	
 	vector<AudioHeader*>* ambientRange = 
 		p_soundComponent->getAllAudiosByType(AudioHeader::AMBIENTRANGE);
+	vector<AudioHeader*>* positionalSound = 
+		p_soundComponent->getAllAudiosByType(AudioHeader::POSITIONALSOUND);
 
-	MeshOffsetTransform* offsetTrans = static_cast<MeshOffsetTransform*>(
-		p_entity->getComponent( ComponentType::MeshOffsetTransform ));
+	MeshOffsetTransform* offsetTrans = NULL;
+	if(!positionalSound->empty()){
+		offsetTrans = static_cast<MeshOffsetTransform*>(
+			p_entity->getComponent( ComponentType::MeshOffsetTransform ));
+	}
 
 	SoundOrientation* listener = m_audioListenerSystem->getListenerOrientation();
 	for (unsigned int i = 0; i < ambientRange->size(); i++){
@@ -99,9 +106,6 @@ void PositionalSoundSystem::processSoundComponent(Entity* p_entity,
 			getSourceVoice()->SetVolume(newVolume);
 	}
 
-	vector<AudioHeader*>* positionalSound = 
-		p_soundComponent->getAllAudiosByType(AudioHeader::POSITIONALSOUND);
-
 	for (unsigned int i = 0; i < positionalSound->size(); i++){
 		AudioHeader* header = positionalSound->at(i);
 
@@ -124,7 +128,4 @@ void PositionalSoundSystem::processSoundComponent(Entity* p_entity,
 		sound->updateEmitter(header);
 		m_audioBackendSystem->updateOutputMatrix(header->soundIndex);
 	}
-	
-	
 }
-

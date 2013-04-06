@@ -772,29 +772,27 @@ Entity* EntityFactory::createMineClient(EntityCreationPacket p_packet)
 	SoundComponent* soundComponent = new SoundComponent();
 	entity->addComponent(soundComponent);
 
-	/*string name = "Unload";
-	AudioHeader* unload = new AudioHeader(AudioHeader::AMBIENT, name);
+	string name = "Unload";
+	AudioHeader* unload = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
 	unload->file = "Mine_Unload.wav";
 	unload->path = TESTSOUNDEFFECTPATH;
-	unload->maxFrequencyOffeset = 2.0f;
 	unload->playInterval	= (AudioHeader::PlayInterval)AudioHeader::ONCE;
-	unload->sourceChannels = 1;
+	unload->sourceChannels  = 1;
 	unload->queuedPlayingState = AudioHeader::PLAY;
 	unload->volume = 0.5f;
 	soundComponent->addAudioHeader(unload);
 
-	AudioHeader* blip = new AudioHeader(AudioHeader::POSITIONALSOUND, "Blip");
+	name = "Blip";
+	AudioHeader* blip = new AudioHeader(AudioHeader::POSITIONALSOUND, name);
 	blip->file = "Mine_Blip_v2.wav";
 	blip->path = TESTSOUNDEFFECTPATH;
-	blip->maxFrequencyOffeset = 2.0f;
 	blip->playInterval	= (AudioHeader::PlayInterval)AudioHeader::TIMERBASED;
-	blip->timerInterval = 1.0f;
-	blip->sourceChannels = 1;
+	blip->timerInterval = 1.5f;
 	blip->queuedPlayingState = AudioHeader::PLAY;
-	blip->volume = 1.0f;
+	blip->volume = 0.2f;
 	blip->minRange = 0.0f;
-	blip->maxRange = 100.0f;
-	soundComponent->addAudioHeader(blip);*/
+	blip->maxRange = 200.0f;
+	soundComponent->addAudioHeader(blip);
 
 
 	Vibration* v = new Vibration(100.0f,10.0f,40.0f);

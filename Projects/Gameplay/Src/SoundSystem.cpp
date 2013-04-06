@@ -2,6 +2,7 @@
 #include "SoundComponent.h"
 #include <SoundWrapper.h>
 #include "TimerSystem.h"
+#include "PositionalSoundSystem.h"
 
 SoundSystem::SoundSystem(AudioBackendSystem* p_audioBackend) : 
 	EntitySystem(SystemType::SoundSystem, 1, ComponentType::SoundComponent)
@@ -43,6 +44,13 @@ void SoundSystem::inserted( Entity* p_entity )
 			soundComp->m_sounds[i][j]->soundIndex = soundIndex;
 		}
 	}
+
+	updateSoundStatus(soundComp, true);
+
+	PositionalSoundSystem* posSystem = static_cast<PositionalSoundSystem*>
+		(m_world->getSystem(SystemType::PositionalSoundSystem));
+
+	if(posSystem) posSystem->processSoundComponent(p_entity, soundComp);
 }
 
 void SoundSystem::removed( Entity* p_entity )
@@ -59,13 +67,14 @@ void SoundSystem::removed( Entity* p_entity )
 	}
 }
 
-void SoundSystem::updateSoundStatus( const SoundComponent* p_soundComponent )
+void SoundSystem::updateSoundStatus(const SoundComponent* p_soundComponent, 
+									bool p_forceUpdate/* =false */)
 {
 	for(unsigned int i = 0; i < AudioHeader::SoundType::NUMSOUNDTYPES; i++){
 		for(unsigned int j = 0; j < p_soundComponent->m_sounds[i].size(); j++){
 			AudioHeader* header = p_soundComponent->m_sounds[i][j];
 
-			if(m_timerSystem->checkTimeInterval(TimerIntervals::Every32Millisecond)){
+			if(p_forceUpdate || m_timerSystem->checkTimeInterval(TimerIntervals::Every32Millisecond)){
 				if(header->maxFrequencyOffeset!=1.0f){
 					//Update the frequency 
 					m_audioBackend->getSoundWrapper()->

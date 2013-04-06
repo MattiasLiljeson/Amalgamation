@@ -78,7 +78,6 @@ Sound* SoundFactory::createSoundFromHeader( const AudioHeader* p_audioHeader )
 			__FILE__,__FUNCTION__,__LINE__);
 		break;
 	}
-
 	return newSound;
 }
 

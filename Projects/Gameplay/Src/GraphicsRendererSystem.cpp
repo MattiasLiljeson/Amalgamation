@@ -61,9 +61,9 @@ void GraphicsRendererSystem::initialize(){
 		AntTweakBarWrapper::MEASUREMENT,
 		"Enable GPU timers",TwType::TW_TYPE_BOOLCPP,
 		(void*)&m_measureGPU,"group=GPU");
+
 	for (unsigned int i=0;i < NUMRENDERINGPASSES; i++)
 	{
-
 		string variableName = m_profiles[i].profile;
 		AntTweakBarWrapper::getInstance()->addReadOnlyVariable(
 			AntTweakBarWrapper::MEASUREMENT,
@@ -151,6 +151,8 @@ void GraphicsRendererSystem::renderTheScene()
 	// if (isMeasuring()) m_wrapper->getGPUTimer()->Stop(m_profiles[SHADOW].profile);
 	m_wrapper->clearRenderTargets();
 
+	if (isMeasuring()) m_wrapper->getGPUTimer()->Start(m_profiles[TOTAL].profile);
+
 	// Meshes
 	if (isMeasuring()) m_wrapper->getGPUTimer()->Start(m_profiles[MESH].profile);
 	initMeshPass();
@@ -201,8 +203,10 @@ void GraphicsRendererSystem::renderTheScene()
 	m_antTweakBarSystem->render();
 	endGUIPass();
 	if (isMeasuring()) m_wrapper->getGPUTimer()->Stop(m_profiles[GUI].profile);
-
+	
 	flipBackbuffer();
+
+	if (isMeasuring()) m_wrapper->getGPUTimer()->Stop(m_profiles[TOTAL].profile);
 
 	if (isMeasuring()) updateTimers();
 }
@@ -366,14 +370,11 @@ void GraphicsRendererSystem::clearShadowStuf()
 
 void GraphicsRendererSystem::updateTimers()
 {
-	double total = 0;
 	GPUTimer* timer = m_wrapper->getGPUTimer();
 
-	for(unsigned int i = 0; i < NUMRENDERINGPASSES-1; i++){
+	for(unsigned int i = 0; i < NUMRENDERINGPASSES; i++){
 		m_profiles[i].pushNewTime(timer->getTheTimeAndReset(m_profiles[i].profile));
-		total += m_profiles[i].renderingTime;
 	}
-	m_profiles[TOTAL].pushNewTime(total);
 	m_wrapper->getGPUTimer()->tick();
 }
 
