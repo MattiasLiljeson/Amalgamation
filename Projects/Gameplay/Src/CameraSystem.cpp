@@ -85,8 +85,6 @@ void CameraSystem::updateRenderSceneInfo( Entity* p_entity )
 	//AglVector3::normalize(up);
 	
 	InputBackendSystem* input = static_cast<InputBackendSystem*>(m_world->getSystem(SystemType::InputBackendSystem));
-	if (input->getDeltaByEnum(InputHelper::KeyboardKeys_NUMPAD_1))
-		viewProjInv = viewProjInv;
 	AglVector3 w = lookTarget-position;
 	w.normalize();
 	AglVector3 u = AglVector3::crossProduct(up, w);

@@ -36,8 +36,8 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile(string p_path, strin
 		inFile >> m_settings.windowed;
 		inFile >> ignore;
 		inFile >> m_settings.enableHdr;
-		inFile >> ignore;
-		inFile >> m_settings.enableTesselation;
+		//inFile >> ignore;
+		//inFile >> m_settings.enableTesselation;
 		inFile >> ignore;
 		inFile >> m_settings.enableEffects;
 		inFile >> ignore;
@@ -48,10 +48,10 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile(string p_path, strin
 		// Sound settings
 		inFile >> ignore;
 		inFile >> m_settings.masterVolume;
-		inFile >> ignore;
-		inFile >> m_settings.sfxVolume;
-		inFile >> ignore;
-		inFile >> m_settings.musicVolume;
+		//inFile >> ignore;
+		//inFile >> m_settings.sfxVolume;
+		//inFile >> ignore;
+		//inFile >> m_settings.musicVolume;
 
 		// Network settings
 		inFile >> ignore;
@@ -105,8 +105,8 @@ SettingsSystem::FileStatus SettingsSystem::writeSettingsFile(string p_path, stri
 		outFile << m_settings.windowed			<< "\n";
 		outFile << "HDRLights= ";
 		outFile << m_settings.enableHdr			<< "\n";
-		outFile << "EnableTesselation= ";
-		outFile << m_settings.enableTesselation	<< "\n";
+		//outFile << "EnableTesselation= ";
+		//outFile << m_settings.enableTesselation	<< "\n";
 		outFile << "EnableEffects= ";
 		outFile << m_settings.enableEffects		<< "\n";
 		outFile << "EnableVSYNC= ";
@@ -117,10 +117,10 @@ SettingsSystem::FileStatus SettingsSystem::writeSettingsFile(string p_path, stri
 		// Sound settings
 		outFile << "MasterVolume= ";
 		outFile << m_settings.masterVolume		<< "\n";
-		outFile << "SoundEffectVolume= ";
-		outFile << m_settings.sfxVolume			<< "\n";
-		outFile << "MusicVolume= ";
-		outFile << m_settings.musicVolume		<< "\n";
+		//outFile << "SoundEffectVolume= ";
+		//outFile << m_settings.sfxVolume			<< "\n";
+		//outFile << "MusicVolume= ";
+		//outFile << m_settings.musicVolume		<< "\n";
 
 		// Networks settings
 		outFile << "PlayerName= ";

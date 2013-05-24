@@ -51,7 +51,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(ProjectDir)..\Obj\$(PlatformShortName)\$(Configuration)\</IntDir>
-    <TargetName>$(ProjectName)_$(PlatformShortName)_$(Configuration)</TargetName>
+    <TargetName>Dedicated_Server</TargetName>
     <IncludePath>$(SolutionDir)Projects/Assetsmanagement/Src;$(SolutionDir)Projects/Graphics/Src;$(SolutionDir)Projects/Audio/Src;$(SolutionDir)Projects/AgileUtility/Src;C:/Program Files (x86)/boost/boost_1_52;$(SolutionDir)/Projects/NetComm/Src;$(SolutionDir)/Projects/ES/Src;$(SolutionDir)Projects/Common/Src;$(SolutionDir)/Projects/Gameplay/Src;$(SolutionDir)External/Visual Leak Detector/include;$(SolutionDir)Projects/Util/Src;$(SolutionDir)Projects/AgilePhysics/Src;$(SolutionDir)Projects/AgileAssets/Src;$(SolutionDir)Projects/AssetsManagement/Src;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Projects/Assetsmanagement/Lib;$(SolutionDir)Projects/Graphics/Lib;$(SolutionDir)Projects/Audio/Lib;$(SolutionDir)Projects/AgileUtility/Lib;C:/Program Files (x86)/boost/boost_1_52/lib32;$(SolutionDir)/Projects/ES/Lib/;$(SolutionDir)/Projects/NetComm/Lib/;$(SolutionDir)Projects/Common/Lib/;$(SolutionDir)/Projects/Gameplay/Lib/;$(SolutionDir)External/Visual Leak Detector/lib/Win32;$(SolutionDir)Projects/Util/Lib;$(SolutionDir)Projects/AgilePhysics/Lib;$(SolutionDir)External/Ant/lib;$(SolutionDir)Projects/AgileAssets/Lib;$(SolutionDir)Projects/AssetsManagement/Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
