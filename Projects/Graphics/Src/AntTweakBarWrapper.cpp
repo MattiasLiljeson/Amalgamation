@@ -55,11 +55,11 @@ void AntTweakBarWrapper::destroy()
 	sInstance = NULL;
 }
 
-void AntTweakBarWrapper::handleMessage( HWND hWnd, UINT message, WPARAM wParam, 
-									   LPARAM lParam )
+bool AntTweakBarWrapper::handleMessage( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	if ( TwEventWin(hWnd, message, wParam, lParam) ) // send event message to AntTweakBar
-		return; // event has been handled by AntTweakBar
+		return true; // event has been handled by AntTweakBar
+	return false;
 }
 
 

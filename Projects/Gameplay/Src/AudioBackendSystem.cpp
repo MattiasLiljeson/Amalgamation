@@ -18,7 +18,7 @@ AudioBackendSystem::~AudioBackendSystem()
 void AudioBackendSystem::processEntities( const vector<Entity*>& p_entities )
 {
 	if(m_soundWrapper->checkIfAnyErrorHasOccured()){
-		DEBUGWARNING(("XAUDIO2 has experienced a glitch!"));
+		DEBUGPRINT(("XAUDIO2 has experienced a glitch!")); // changed to print instead of warning, as this often caused popups otherwise
 	}
 }
 

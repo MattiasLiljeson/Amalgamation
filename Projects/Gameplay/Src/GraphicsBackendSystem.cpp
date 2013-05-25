@@ -27,6 +27,7 @@ GraphicsBackendSystem::GraphicsBackendSystem(
 	m_newWidth = m_scrWidth;
 	m_newHeight = m_scrHeight;
 
+
 	/************************************************************************/
 	/* ONLY NEEDED OF THE ANTTWEAKBAR CALLBACK								*/
 	/************************************************************************/
@@ -41,7 +42,7 @@ GraphicsBackendSystem::~GraphicsBackendSystem()
 	delete m_graphicsWrapper;
 }
 
-void GraphicsBackendSystem::changeResolution( int p_scrWidth, int p_scrHeight )
+void GraphicsBackendSystem::changeResolution( int p_scrWidth, int p_scrHeight, bool p_updateWindow/*=true */ )
 {
 	m_scrWidth = p_scrWidth;
 	m_scrHeight = p_scrHeight;
@@ -50,7 +51,8 @@ void GraphicsBackendSystem::changeResolution( int p_scrWidth, int p_scrHeight )
 	m_world->setAspectRatio(getAspectRatio());
 
 	// Resize the actual window.
-	m_window->changeWindowRes( p_scrWidth, p_scrHeight );
+	if (p_updateWindow)
+		m_window->changeWindowRes( p_scrWidth, p_scrHeight );
 
 	// Resize the back buffer.
 	m_graphicsWrapper->changeBackbufferRes( p_scrWidth, p_scrHeight );	
@@ -72,6 +74,8 @@ void GraphicsBackendSystem::changeResolution( int p_scrWidth, int p_scrHeight )
 
 void GraphicsBackendSystem::initialize()
 {
+
+
 	// update info of aspect ratio to world
 	m_world->setAspectRatio(getAspectRatio());
 
@@ -89,6 +93,9 @@ void GraphicsBackendSystem::initialize()
 		m_enableHdr,
 		m_enableEffects,
 		settings->getSettings().enableVSYNC);
+
+	bool autoResize = settings->getSettingsRef()->enableViewportAutoResize!=0;
+	m_window->setAutoResize(autoResize);
 
 	AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice());
 
@@ -125,6 +132,18 @@ void GraphicsBackendSystem::initialize()
 
 void GraphicsBackendSystem::process()
 {
+	if (m_window->shutDownRequested())
+	{
+		m_world->requestToShutDown();
+	}
+	else
+	{
+		if (m_window->isDirty())
+		{
+			changeResolution(m_window->getWidth(),m_window->getHeight(),false);
+		}
+	}
+
 }
 
 // vector<Entity*> GraphicsBackendSystem::buildEntitiesFromMeshFile( const string& p_meshName, 

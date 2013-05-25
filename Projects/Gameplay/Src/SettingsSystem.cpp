@@ -44,6 +44,8 @@ SettingsSystem::FileStatus SettingsSystem::readSettingsFile(string p_path, strin
 		inFile >> m_settings.enableVSYNC;
 		inFile >> ignore;
 		inFile >> m_settings.enabledGPUMeasure;
+		inFile >> ignore;
+		inFile >> m_settings.enableViewportAutoResize;
 
 		// Sound settings
 		inFile >> ignore;
@@ -113,6 +115,8 @@ SettingsSystem::FileStatus SettingsSystem::writeSettingsFile(string p_path, stri
 		outFile << m_settings.enableVSYNC		<< "\n";
 		outFile << "EnableGPUMeasure= ";
 		outFile << m_settings.enabledGPUMeasure	<< "\n";
+		outFile << "EnableViewportAutoResize= ";
+		outFile << m_settings.enableViewportAutoResize	<< "\n";
 
 		// Sound settings
 		outFile << "MasterVolume= ";

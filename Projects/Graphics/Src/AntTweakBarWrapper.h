@@ -91,7 +91,7 @@ public:
 	/// \param lParam
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void handleMessage(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	bool handleMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 
 	///-----------------------------------------------------------------------------------

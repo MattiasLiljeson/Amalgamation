@@ -32,7 +32,7 @@ public:
 	GraphicsBackendSystem( HINSTANCE p_hInstance, GameSettingsInfo& p_settings );
 	~GraphicsBackendSystem(void);
 
-	void changeResolution( int p_scrWidth, int p_scrHeight );
+	void changeResolution( int p_scrWidth, int p_scrHeight, bool p_updateWindow=true );
 
 	virtual void initialize();
 	void process();

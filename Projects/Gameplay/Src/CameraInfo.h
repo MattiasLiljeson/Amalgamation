@@ -11,10 +11,13 @@ public:
 	~CameraInfo(){};
 
 	void createPerspectiveMatrix();
+	void createPerspectiveMatrix( float p_aspectRatio);
 	void createPerspectiveMatrix( float p_aspectRatio , 
-		float p_fieldOfViewAsRadians=0.785398163f, 
-		float p_nearClip=0.1f, 
-		float p_farClip=10000.0f);
+		float p_fieldOfViewAsRadians);
+	void createPerspectiveMatrix( float p_aspectRatio , 
+		float p_fieldOfViewAsRadians, 
+		float p_nearClip, 
+		float p_farClip);
 
 	AglMatrix m_projMat;
 	AglVector3 m_ambientColor;

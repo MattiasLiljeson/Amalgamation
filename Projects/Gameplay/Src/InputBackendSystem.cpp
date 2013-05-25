@@ -42,7 +42,7 @@ void InputBackendSystem::initialize()
 
 	XInputFetcher* xInput = new XInputFetcher();
 	HWND hWnd = m_graphicsBackend->getWindowRef();
-	IMouseKeyboardFetcher* directInput = new DirectInputFetcher( m_hInstance, hWnd, true, true );
+	IMouseKeyboardFetcher* directInput = new DirectInputFetcher( m_hInstance, hWnd, true, false );
 	directInput->setMouseSensitivity( 1.0f );
 	m_inputManager = new InputManager( directInput, xInput );
 

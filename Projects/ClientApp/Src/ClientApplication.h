@@ -22,6 +22,7 @@
 class EntityFactory;
 class EntityWorld;
 class TcpClient;
+class GraphicsBackendSystem;
 
 namespace Srv
 {
@@ -61,5 +62,6 @@ private:
 
 	EntityWorld* m_world;
 	TcpClient* m_client;
+	GraphicsBackendSystem* m_graphicsBackendHandle;
 	Srv::ServerApplication* m_serverApp;
 };

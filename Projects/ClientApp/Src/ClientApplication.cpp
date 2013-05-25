@@ -166,6 +166,7 @@ ClientApplication::ClientApplication( HINSTANCE p_hInstance )
 {
 
 	RandomUtil::seed();
+		m_graphicsBackendHandle=NULL;
 		m_running = false;
 		m_hInstance = p_hInstance;
 		m_client = new TcpClient();
@@ -213,7 +214,7 @@ void ClientApplication::run()
 
 	while(m_running)
 	{
-		if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE) )
+		if( PeekMessage( &msg, m_graphicsBackendHandle->getWindowRef(), 0, 0, PM_REMOVE) )
 		{
 			TranslateMessage( &msg );
 			DispatchMessage( &msg );
@@ -301,6 +302,8 @@ void ClientApplication::initSystems()
 	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance,
 		settings );
 	m_world->setSystem( graphicsBackend );
+	m_graphicsBackendHandle=graphicsBackend;
+
 	m_world->setSystem( new NetsyncDirectMapperSystem() );
 	AudioBackendSystem* audioBackend = new AudioBackendSystem();
 	m_world->setSystem( audioBackend );

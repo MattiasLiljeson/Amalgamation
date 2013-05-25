@@ -14,7 +14,8 @@ struct GameSettingsInfo
 	int enableTesselation;	// Treated as bool
 	int enableEffects;			// Treated as bool
 	int enableVSYNC;		// Treated as bool
-	int enabledGPUMeasure;
+	int enabledGPUMeasure; // Treated as bool
+	int enableViewportAutoResize; // Treated as bool
 
 	// Sound settings
 	int masterVolume;
@@ -42,7 +43,8 @@ struct GameSettingsInfo
 		enableTesselation	= false;
 		enableEffects			= true;
 		enableVSYNC			= 0;
-		enabledGPUMeasure	= false;
+		enabledGPUMeasure	= 0;
+		enableViewportAutoResize = 0;
 
 		defaultGameTime		= 600; 
 
