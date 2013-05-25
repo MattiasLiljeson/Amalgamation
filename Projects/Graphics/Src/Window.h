@@ -32,6 +32,7 @@ public:
 	void requestShutDown() {m_shutDownRequest=true;}
 	static Window* getInstance() {return m_instance;}
 	void lockMouse();
+	bool m_isFullscreen;
 protected:
 private:	
 	bool m_autoResize;

@@ -94,6 +94,8 @@ void GraphicsBackendSystem::initialize()
 		m_enableEffects,
 		settings->getSettings().enableVSYNC);
 
+	m_window->m_isFullscreen = !m_windowed;
+
 	bool autoResize = settings->getSettingsRef()->enableViewportAutoResize!=0;
 	m_window->setAutoResize(autoResize);
 
@@ -132,6 +134,11 @@ void GraphicsBackendSystem::initialize()
 
 void GraphicsBackendSystem::process()
 {
+	if (m_windowed != !m_window->m_isFullscreen)
+	{
+		m_windowed=!m_window->m_isFullscreen;
+		m_graphicsWrapper->changeToWindowed(m_windowed); // remove if not working, might result in double action now
+	}
 	if (m_window->shutDownRequested())
 	{
 		m_world->requestToShutDown();
@@ -177,6 +184,7 @@ HWND GraphicsBackendSystem::getWindowRef()
 void TW_CALL GraphicsBackendSystem::toggleFullScreen(void* p_clientData)
 {
 	m_selfPointer->m_windowed = !m_selfPointer->m_windowed;
+	m_selfPointer->getWindow()->m_isFullscreen = !m_selfPointer->m_windowed;
 	m_selfPointer->m_graphicsWrapper->changeToWindowed(m_selfPointer->m_windowed);
 }
 

@@ -28,7 +28,7 @@ public:
 	virtual void render();
 
 private:
-	void feedInput();
+	void feedInput(bool p_onlyMouseMovement=false);
 
 private:
 	GraphicsBackendSystem* m_gfxBackend;

@@ -1,6 +1,7 @@
 #include "Window.h"
 #include "AntTweakBarWrapper.h"
 #include "WindowException.h"
+#include <DebugUtil.h>
 
 Window* Window::m_instance=NULL;
 
@@ -50,9 +51,9 @@ Window::Window(HINSTANCE p_hInstance, int p_width, int p_height, int p_showWindo
 	m_autoResize=false;
 	m_sizeIsDirty=false;
 	m_shutDownRequest=false;
+	m_isFullscreen=false;
 	m_instance=this;
 	ShowWindow( m_hWnd, p_showWindowFlag );
-	ShowCursor(false);
 	lockMouse();
 }
 
@@ -114,7 +115,17 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 	PAINTSTRUCT ps;
 	HDC hdc;
 
-	bool handled = AntTweakBarWrapper::getInstance()->handleMessage(hWnd,message,wParam,lParam);
+	static int cursorIsHidden=ShowCursor(false);
+
+	bool handled = false;
+
+	Window* window = Window::getInstance();
+	// anttweakbar is handled by dinput in fullscreen as 
+	// cooperation is changed to exclusive then to allow for multimonitor
+	if (window && !window->m_isFullscreen) 
+	{
+		handled = AntTweakBarWrapper::getInstance()->handleMessage(hWnd,message,wParam,lParam);
+	}
 
 	CURSORINFO cursorInfo;
 	GetCursorInfo(&cursorInfo);
@@ -126,7 +137,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 	TRACKMOUSEEVENT mouseEventTracker;
 	TrackMouseEvent(&mouseEventTracker);
 
-	static bool cursorIsHidden=true;
 
 	if (!handled)
 	{
@@ -136,6 +146,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 			{
 				hdc = BeginPaint(hWnd, &ps);
 				EndPaint(hWnd, &ps);
+
 				break;
 			}
 
@@ -162,6 +173,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 				// if (cursorHidden) ShowCursor(true);
 				TrackMouseEvent(&mouseEventTracker);
 			}
+
+
 				
 		case WM_NCMOUSEHOVER:
 			{
@@ -173,15 +186,15 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 					mousepos.y>=clientRect.top 	 &&
 					mousepos.y<=clientRect.bottom))
 				{*/
-				if (cursorIsHidden)
+				if (cursorIsHidden<0)
 				{
-					cursorIsHidden=false;
-					ShowCursor(true);
+					cursorIsHidden=ShowCursor(true);
 				}
 				//}
 			}
 
 			break;
+
 
 		case WM_SIZE:
 			{
@@ -200,16 +213,38 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 				//PostQuitMessage(0);
 				break;
 			}
+			// fallthrough:
+		case WM_SYSKEYDOWN:
+			if (wParam == VK_RETURN)
+			{
+				if ((HIWORD(lParam) & KF_ALTDOWN))
+				{
+					Window* window = Window::getInstance();
+					if (window)
+					{
+						window->m_isFullscreen=!window->m_isFullscreen;
+					}
+				}
+			}
 			break;
 
 // 		case WM_MOUSEMOVE:
 // 			{
-// 				TrackMouseEvent(&mouseEventTracker);
+// 				if (cursorIsHidden<0) // constrain even during fullscreen mode
+// 				{
+// 					POINT mousepos;
+// 					GetCursorPos(&mousepos);
+// 					GetClientRect(hWnd,&clientRect);
+// 					if (mousepos.x >= clientRect.right) mousepos.x=clientRect.right-1;
+// 					if (mousepos.x <= clientRect.left) mousepos.x=clientRect.left+1;
+// 					if (mousepos.y >= clientRect.bottom) mousepos.y=clientRect.bottom-1;
+// 					if (mousepos.y <= clientRect.top) mousepos.y=clientRect.top+1;
+// 				}
 // 			}
 
 		case WM_LBUTTONDOWN:
 			{
-				if (!cursorIsHidden)
+				while (cursorIsHidden>=0)
 				{
 					POINT mousepos;
 					GetCursorPos(&mousepos);
@@ -222,9 +257,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 						mousepos.x>bounds.left 	 &&
 						mousepos.y>bounds.top 	 &&
 						mousepos.y<bounds.bottom)
-					{
-						ShowCursor(false);
-						cursorIsHidden=true;
+					{					
+						cursorIsHidden=ShowCursor(false);
 						Window* window = Window::getInstance();
 						if (window)
 						{

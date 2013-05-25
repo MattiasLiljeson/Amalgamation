@@ -643,8 +643,8 @@ void GraphicsWrapper::releaseBackBuffer()
 void GraphicsWrapper::changeToWindowed( bool p_windowed )
 {
 	HRESULT hr = S_OK;
-	m_windowed = !p_windowed;
-	hr = m_swapChain->SetFullscreenState((BOOL)m_windowed,nullptr);
+	m_windowed = p_windowed;
+	hr = m_swapChain->SetFullscreenState((BOOL)!m_windowed,nullptr);
 	if( FAILED(hr))
 		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
 }
