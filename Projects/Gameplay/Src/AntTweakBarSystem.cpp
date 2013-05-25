@@ -21,10 +21,10 @@ AntTweakBarSystem::~AntTweakBarSystem()
 
 void AntTweakBarSystem::process()
 {
-	feedInput(true);
+	feedInput();
 }
 
-void AntTweakBarSystem::feedInput( bool p_onlyMouseMovement/*=false*/ )
+void AntTweakBarSystem::feedInput()
 {
 	GraphicsWrapper* gfx = m_gfxBackend->getGfxWrapper();
 	AntTweakBarWrapper* antTweakBar = AntTweakBarWrapper::getInstance();
@@ -38,7 +38,7 @@ void AntTweakBarSystem::feedInput( bool p_onlyMouseMovement/*=false*/ )
 	antTweakBar->setMousePos(mouseX,mouseY);
 
 	// mouse key
-	if (!p_onlyMouseMovement)
+	if (!antTweakBar->shouldOnlyListenToMouseMovement())
 	{
 		double l_btn = cursor->getPrimaryDelta();
 		double r_btn = cursor->getSecondaryDelta();

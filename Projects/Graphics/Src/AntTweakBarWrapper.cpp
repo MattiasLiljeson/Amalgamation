@@ -6,7 +6,7 @@ AntTweakBarWrapper* AntTweakBarWrapper::sInstance = NULL;
 AntTweakBarWrapper::AntTweakBarWrapper( ID3D11Device* p_device)
 {
 	TwInit(TW_DIRECT3D11,p_device);
-
+	m_onlyMouseMovement=true;
 	m_overallBar	= TwNewBar(overall.c_str());
 	m_soundBar		= TwNewBar(sound.c_str());
 	m_graphicsBar	= TwNewBar(graphics.c_str());

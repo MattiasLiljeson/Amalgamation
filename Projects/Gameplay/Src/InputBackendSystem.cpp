@@ -213,6 +213,13 @@ void InputBackendSystem::initialize()
 void InputBackendSystem::process()
 {
 	float dt = m_world->getDelta();
+;
+
+	if (m_graphicsBackend->hasWindowedChanged())
+	{
+		DirectInputFetcher* dif = static_cast<DirectInputFetcher*>(m_inputManager->getMouseKeyboardFetcher());
+		dif->setMouseCooperation(!m_graphicsBackend->isWindowed());
+	}
 
 	m_inputManager->update( dt );
 

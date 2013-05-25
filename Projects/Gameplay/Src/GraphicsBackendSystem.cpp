@@ -26,7 +26,7 @@ GraphicsBackendSystem::GraphicsBackendSystem(
 
 	m_newWidth = m_scrWidth;
 	m_newHeight = m_scrHeight;
-
+	m_windowedChanged=false;
 
 	/************************************************************************/
 	/* ONLY NEEDED OF THE ANTTWEAKBAR CALLBACK								*/
@@ -46,6 +46,7 @@ void GraphicsBackendSystem::changeResolution( int p_scrWidth, int p_scrHeight, b
 {
 	m_scrWidth = p_scrWidth;
 	m_scrHeight = p_scrHeight;
+
 
 	// update info of aspect ratio to world
 	m_world->setAspectRatio(getAspectRatio());
@@ -137,6 +138,8 @@ void GraphicsBackendSystem::process()
 	if (m_windowed != !m_window->m_isFullscreen)
 	{
 		m_windowed=!m_window->m_isFullscreen;
+		m_windowedChanged=true;
+		AntTweakBarWrapper::getInstance()->listenToOnlyMouseMovement(m_windowed);
 		m_graphicsWrapper->changeToWindowed(m_windowed); // remove if not working, might result in double action now
 	}
 	if (m_window->shutDownRequested())
@@ -184,6 +187,8 @@ HWND GraphicsBackendSystem::getWindowRef()
 void TW_CALL GraphicsBackendSystem::toggleFullScreen(void* p_clientData)
 {
 	m_selfPointer->m_windowed = !m_selfPointer->m_windowed;
+	m_selfPointer->m_windowedChanged=true;
+	AntTweakBarWrapper::getInstance()->listenToOnlyMouseMovement(m_selfPointer->m_windowed);
 	m_selfPointer->getWindow()->m_isFullscreen = !m_selfPointer->m_windowed;
 	m_selfPointer->m_graphicsWrapper->changeToWindowed(m_selfPointer->m_windowed);
 }
@@ -224,4 +229,9 @@ void GraphicsBackendSystem::applySettings( GameSettingsInfo& p_settings )
 	m_enableEffects = p_settings.enableEffects;
 	m_vsync			= p_settings.enableVSYNC;
 	m_tesselation	= p_settings.enableTesselation;
+}
+
+bool GraphicsBackendSystem::hasWindowedChanged()
+{
+	 return m_windowedChanged; 
 }

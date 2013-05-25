@@ -54,6 +54,8 @@ public:
 	void setMouseSensitivity( const double p_sensitivity );
 	const double getMouseSensitivity() const;
 
+	void setMouseCooperation(bool p_exclusive); // special for setting only mouse exclusivity, added by Jarl 25-05-2013
+
 private:
 	void init();
 	void createInterfacesAndDevices();

@@ -54,6 +54,10 @@ public:
 	{
 		return m_window;
 	}
+
+	bool hasWindowedChanged();
+	void unsetWindowedChangedFlag() {m_windowed=false;}
+	bool isWindowed() {return m_windowed;}
 private:
 	GraphicsWrapper* m_graphicsWrapper;
 
@@ -63,6 +67,7 @@ private:
 	int m_scrWidth;
 	int m_scrHeight;
 	bool m_windowed;
+	bool m_windowedChanged;
 	bool m_enableHdr;
 	bool m_enableEffects;
 	bool m_vsync;

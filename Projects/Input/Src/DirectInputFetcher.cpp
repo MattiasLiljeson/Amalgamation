@@ -1,5 +1,6 @@
 #include "DirectInputFetcher.h"
 #include "DirectInputException.h"
+#include "..\..\Util\Src\DebugUtil.h"
 
 /************************************************************************/
 /* PUBLIC																*/
@@ -333,4 +334,24 @@ void DirectInputFetcher::detectInput(void)
 	{
 		int breakHere = 0;
 	}
+}
+
+void DirectInputFetcher::setMouseCooperation( bool p_exclusive )
+{
+	DWORD settings = DISCL_FOREGROUND;
+	m_dinmouse->Unacquire();
+	reset();
+	if( p_exclusive )
+	{
+		settings |= DISCL_EXCLUSIVE;
+		DEBUGPRINT(("\n\nNow exclusive\n\n"));
+	}
+	else
+	{
+		settings |= DISCL_NONEXCLUSIVE;
+		DEBUGPRINT(("\n\nNow non-exclusive\n\n"));
+	}
+
+	m_dinmouse->SetCooperativeLevel( m_hWnd, settings );
+	acquireDevices();
 }

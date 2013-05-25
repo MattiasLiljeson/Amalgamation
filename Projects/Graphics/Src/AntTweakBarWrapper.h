@@ -151,6 +151,9 @@ public:
 	///-----------------------------------------------------------------------------------
 	void defineParametersForABar(const char* p_nameOfBar, const char* p_params);
 
+
+	void listenToOnlyMouseMovement(bool p_set) {m_onlyMouseMovement=p_set;}
+	bool shouldOnlyListenToMouseMovement() {return m_onlyMouseMovement;}
 private:
 	///-----------------------------------------------------------------------------------
 	/// The constructor is private since ATBW is a singleton class
@@ -166,6 +169,7 @@ private:
 	///-----------------------------------------------------------------------------------
 	void initBars();
 private:
+	bool m_onlyMouseMovement;
 	TwBar* m_overallBar;
 	TwBar* m_soundBar;
 	TwBar* m_graphicsBar;
