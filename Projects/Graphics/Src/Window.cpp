@@ -211,7 +211,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 					Window* window = Window::getInstance();
 					if (window)
 					{
-						window->m_isFullscreen=!window->m_isFullscreen;
+						// window->m_isFullscreen=!window->m_isFullscreen;
 					}
 				}
 			}

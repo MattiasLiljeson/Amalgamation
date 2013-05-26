@@ -54,6 +54,18 @@ GraphicsWrapper::GraphicsWrapper( HWND p_hWnd, int p_width, int p_height, bool p
 	initHardware();
 	initBackBuffer();
 
+
+	HRESULT hr = S_OK;
+	IDXGIDevice * pDXGIDevice;
+	hr = m_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice);
+	IDXGIAdapter * pDXGIAdapter;
+	hr = pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&pDXGIAdapter);
+	IDXGIFactory * pIDXGIFactory;
+	pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&pIDXGIFactory);
+
+	pIDXGIFactory->MakeWindowAssociation(p_hWnd, DXGI_MWA_NO_ALT_ENTER);
+
+
 	m_shaderFactory		= new ShaderFactory(m_device, m_deviceContext, 
 		m_device->GetFeatureLevel());
 	m_bufferFactory		= new BufferFactory(m_device,m_deviceContext);
