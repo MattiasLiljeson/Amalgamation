@@ -645,7 +645,7 @@ void GraphicsWrapper::changeToWindowed( bool p_windowed )
 	HRESULT hr = S_OK;
 	m_windowed = p_windowed;
 	hr = m_swapChain->SetFullscreenState((BOOL)!m_windowed,nullptr);
-	if( FAILED(hr))
+	if( FAILED(hr) && hr!=DXGI_ERROR_NOT_CURRENTLY_AVAILABLE)
 		throw D3DException(hr,__FILE__,__FUNCTION__,__LINE__);
 }
 

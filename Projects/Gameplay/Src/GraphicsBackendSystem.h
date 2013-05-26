@@ -32,7 +32,7 @@ public:
 	GraphicsBackendSystem( HINSTANCE p_hInstance, GameSettingsInfo& p_settings );
 	~GraphicsBackendSystem(void);
 
-	void changeResolution( int p_scrWidth, int p_scrHeight, bool p_updateWindow=true );
+	void changeResolution( int p_scrWidth, int p_scrHeight, bool p_updateWindow=true, bool p_updateBackBuffer=true );
 
 	virtual void initialize();
 	void process();
@@ -45,6 +45,8 @@ public:
 	HWND getWindowRef();
 	float getAspectRatio();
 	AglVector2 getWindowSize();
+	void setRestartInfo(int p_clientWidth, int p_clientHeight,
+						bool p_fullscreen);
 
 	void renderParticleSystem( ParticleSystemAndTexture* p_system,
 		const InstanceData& p_worldTransform );
@@ -58,6 +60,7 @@ public:
 	bool hasWindowedChanged();
 	void unsetWindowedChangedFlag() {m_windowedChanged=false;}
 	bool isWindowed() {return m_windowed;}
+	void applyWindowedSettings(bool p_windowedMode);
 private:
 	GraphicsWrapper* m_graphicsWrapper;
 

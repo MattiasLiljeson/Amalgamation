@@ -22,7 +22,7 @@ public:
 	virtual ~Window();
 	HWND getWindowRef();
 	void changeWindowRes( int p_width, int p_height );
-	void resize(int p_width, int p_height );
+	void resize(int p_width, int p_height, bool p_setDirty=true );
 	bool isDirty();
 	int getWidth() {return m_width;}
 	int getHeight() {return m_height;}

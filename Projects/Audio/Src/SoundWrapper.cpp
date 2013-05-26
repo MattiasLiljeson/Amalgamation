@@ -60,6 +60,7 @@ void SoundWrapper::initSoundEngine()
 #ifdef _DEBUG
 	flags |= XAUDIO2_DEBUG_ENGINE;
 #endif
+
 	if ( FAILED (hr = XAudio2Create(&m_soundDevice,flags)))
 		throw XAudio2Exception(hr,__FILE__,__FUNCTION__,__LINE__);
 

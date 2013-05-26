@@ -50,7 +50,13 @@ public:
 	void run();
 
 private:
-	void initSystems();
+	struct RestartInfo
+	{
+		int m_clientWidth, m_clientHeight;
+		bool m_fullscreen;
+	};
+
+	void initSystems(RestartInfo* p_customRestartInfo=NULL);
 	void initEntities();
 
 	void InitModulesTestByAnton();

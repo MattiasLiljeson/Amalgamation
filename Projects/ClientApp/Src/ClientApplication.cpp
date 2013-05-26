@@ -249,12 +249,16 @@ void ClientApplication::run()
 
 				// keep window stats
 				// you've seen it before and here it is again: "HACK"
-				GraphicsBackendSystem* gbs = static_cast<GraphicsBackendSystem*>
-					(m_world->getSystem(SystemType::GraphicsBackendSystem));
-				Window* wnd = gbs->getWindow();
-				int kp_width=wnd->getWidth(),
-					kp_height=wnd->getHeight();
-				bool kp_fullscreen = wnd->m_isFullscreen;
+// 				GraphicsBackendSystem* gbs = static_cast<GraphicsBackendSystem*>
+// 					(m_world->getSystem(SystemType::GraphicsBackendSystem));
+// 				Window* wnd = gbs->getWindow();
+// 				int kpw_width=wnd->getWidth(),
+// 					kpw_height=wnd->getHeight();
+// 				AglVector2 kpr_size = gbs->getWindowSize();
+// 				bool kp_fullscreen = wnd->m_isFullscreen;
+// 				RestartInfo restartinfo = {(int)kpr_size.x,(int)kpr_size.y,
+// 											kp_fullscreen};
+// 				gbs->getGfxWrapper()->changeToWindowed(true);
 				//
 
 				delete m_world;
@@ -266,14 +270,14 @@ void ClientApplication::run()
 				//m_serverApp = NULL;
 
 				// Systems first!
-				initSystems();
+				initSystems(/*&restartinfo*/);
 
 				// force set window stats from before
-				gbs = static_cast<GraphicsBackendSystem*>
-					(m_world->getSystem(SystemType::GraphicsBackendSystem));
-				wnd = gbs->getWindow();
-				wnd->resize(kp_width,kp_height);
-				wnd->m_isFullscreen = kp_fullscreen;
+// 				gbs = static_cast<GraphicsBackendSystem*>
+// 					(m_world->getSystem(SystemType::GraphicsBackendSystem));
+//  				gbs->applyWindowedSettings(!kp_fullscreen);
+// 				gbs->changeResolution((int)kpr_size.x,(int)kpr_size.y,false,false);
+//  				wnd->resize(kpw_width,kpw_height);
 				//
 
 				// Test entities later!
@@ -303,7 +307,7 @@ void ClientApplication::run()
 	delete GraphicsBackendSystem::getWindow();
 }
 
-void ClientApplication::initSystems()
+void ClientApplication::initSystems(ClientApplication::RestartInfo* p_customRestartInfo/*=NULL*/)
 {
 	//----------------------------------------------------------------------------------
 	// Systems must be added in the order they are meant to be executed. The order the
@@ -321,6 +325,11 @@ void ClientApplication::initSystems()
 
 	GraphicsBackendSystem* graphicsBackend = new GraphicsBackendSystem( m_hInstance,
 		settings );
+	if (p_customRestartInfo!=NULL)
+	{
+		graphicsBackend->setRestartInfo(p_customRestartInfo->m_clientWidth, 
+			p_customRestartInfo->m_clientHeight,p_customRestartInfo->m_fullscreen);
+	}
 	m_world->setSystem( graphicsBackend );
 	m_graphicsBackendHandle=graphicsBackend;
 

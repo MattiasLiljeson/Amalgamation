@@ -42,7 +42,8 @@ GraphicsBackendSystem::~GraphicsBackendSystem()
 	delete m_graphicsWrapper;
 }
 
-void GraphicsBackendSystem::changeResolution( int p_scrWidth, int p_scrHeight, bool p_updateWindow/*=true */ )
+void GraphicsBackendSystem::changeResolution( int p_scrWidth, int p_scrHeight, 
+											 bool p_updateWindow/*=true*/, bool p_updateBackBuffer/*=true */ )
 {
 	m_scrWidth = p_scrWidth;
 	m_scrHeight = p_scrHeight;
@@ -56,7 +57,8 @@ void GraphicsBackendSystem::changeResolution( int p_scrWidth, int p_scrHeight, b
 		m_window->changeWindowRes( p_scrWidth, p_scrHeight );
 
 	// Resize the back buffer.
-	m_graphicsWrapper->changeBackbufferRes( p_scrWidth, p_scrHeight );	
+	if (p_updateBackBuffer)
+		m_graphicsWrapper->changeBackbufferRes( p_scrWidth, p_scrHeight );	
 
 	// recalc projection matrix
 	Entity* mainCamera =
@@ -85,7 +87,13 @@ void GraphicsBackendSystem::initialize()
 	auto settings = static_cast<SettingsSystem*>(m_world->getSystem(SystemType::SettingsSystem));
 
 	if (!m_window)
-		m_window = new Window( m_hInstance, m_scrWidth, m_scrHeight, 1);
+	{
+		m_window = new Window( m_hInstance, m_scrWidth, m_scrHeight, 1);	
+		m_window->m_isFullscreen = !m_windowed;	
+		bool autoResize = settings->getSettingsRef()->enableViewportAutoResize!=0;
+		m_window->setAutoResize(autoResize);
+	}
+
 	m_graphicsWrapper = new GraphicsWrapper( 
 		m_window->getWindowRef(), 
 		m_scrWidth, 
@@ -93,12 +101,8 @@ void GraphicsBackendSystem::initialize()
 		m_windowed,
 		m_enableHdr,
 		m_enableEffects,
-		settings->getSettings().enableVSYNC);
-
-	m_window->m_isFullscreen = !m_windowed;
-
-	bool autoResize = settings->getSettingsRef()->enableViewportAutoResize!=0;
-	m_window->setAutoResize(autoResize);
+		settings->getSettings().enableVSYNC);	
+	
 
 	AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice());
 
@@ -193,6 +197,7 @@ void TW_CALL GraphicsBackendSystem::toggleFullScreen(void* p_clientData)
 	m_selfPointer->m_graphicsWrapper->changeToWindowed(m_selfPointer->m_windowed);
 }
 
+
 void TW_CALL GraphicsBackendSystem::toggleWireframe(void* p_clientData)
 {
 	m_selfPointer->m_wireframe = !m_selfPointer->m_wireframe;
@@ -235,3 +240,25 @@ bool GraphicsBackendSystem::hasWindowedChanged()
 {
 	 return m_windowedChanged; 
 }
+
+void GraphicsBackendSystem::applyWindowedSettings(bool p_windowedMode)
+{
+	m_windowed=p_windowedMode;
+	m_windowedChanged=true;
+	AntTweakBarWrapper::getInstance()->listenToOnlyMouseMovement(m_windowed);
+	getWindow()->m_isFullscreen = !m_windowed;
+	m_graphicsWrapper->changeToWindowed(m_windowed);
+}
+
+void GraphicsBackendSystem::setRestartInfo(int p_clientWidth, int p_clientHeight, 
+										   bool p_fullscreen )
+{
+	m_scrWidth		= p_clientWidth;
+	m_scrHeight		= p_clientHeight;
+	m_windowed		= !p_fullscreen;
+
+	m_newWidth = m_scrWidth;
+	m_newHeight = m_scrHeight;
+	m_windowedChanged=false;
+}
+

@@ -78,13 +78,13 @@ void Window::changeWindowRes( int p_width, int p_height )
 		SWP_NOMOVE );
 }
 
-void Window::resize( int p_width, int p_height )
+void Window::resize( int p_width, int p_height, bool p_setDirty/*=true */ )
 {
 	if (p_width>1 && p_height>1)
 	{
 		m_width=p_width;
 		m_height=p_height;
-		m_sizeIsDirty=true;
+		if (p_setDirty) m_sizeIsDirty=true;
 	}
 }
 
