@@ -249,15 +249,15 @@ void ClientApplication::run()
 
 				// keep window stats
 				// you've seen it before and here it is again: "HACK"
-// 				GraphicsBackendSystem* gbs = static_cast<GraphicsBackendSystem*>
-// 					(m_world->getSystem(SystemType::GraphicsBackendSystem));
-// 				Window* wnd = gbs->getWindow();
+ 				GraphicsBackendSystem* gbs = static_cast<GraphicsBackendSystem*>
+ 					(m_world->getSystem(SystemType::GraphicsBackendSystem));
+ 				Window* wnd = gbs->getWindow();
 // 				int kpw_width=wnd->getWidth(),
 // 					kpw_height=wnd->getHeight();
-// 				AglVector2 kpr_size = gbs->getWindowSize();
-// 				bool kp_fullscreen = wnd->m_isFullscreen;
-// 				RestartInfo restartinfo = {kpw_width,kpw_height,
-// 											kp_fullscreen};
+ 				AglVector2 kpr_size = gbs->getWindowSize();
+ 				bool kp_fullscreen = wnd->m_isFullscreen;
+				RestartInfo restartinfo = {(int)kpr_size.x,(int)kpr_size.y,
+											kp_fullscreen};
 				//
 
 				delete m_world;
@@ -269,7 +269,7 @@ void ClientApplication::run()
 				//m_serverApp = NULL;
 
 				// Systems first!
-				initSystems(/*&restartinfo*/);
+				initSystems(&restartinfo);
 
 				// force set window stats from before
 // 				gbs = static_cast<GraphicsBackendSystem*>

@@ -89,6 +89,9 @@ void GraphicsBackendSystem::initialize()
 	if (!m_window)
 	{
 		m_window = new Window( m_hInstance, m_scrWidth, m_scrHeight, 1);	
+		m_window->m_isFullscreen = !m_windowed;	
+		bool autoResize = settings->getSettingsRef()->enableViewportAutoResize!=0;
+		m_window->setAutoResize(autoResize);	
 	}
 
 	m_graphicsWrapper = new GraphicsWrapper( 
@@ -100,9 +103,7 @@ void GraphicsBackendSystem::initialize()
 		m_enableEffects,
 		settings->getSettings().enableVSYNC);
 
-	m_window->m_isFullscreen = !m_windowed;	
-	bool autoResize = settings->getSettingsRef()->enableViewportAutoResize!=0;
-	m_window->setAutoResize(autoResize);	
+	
 
 	AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice());
 
