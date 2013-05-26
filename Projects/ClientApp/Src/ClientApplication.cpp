@@ -150,6 +150,7 @@ using namespace std;
 #include <ModuleStatusEffectSystem.h>
 #include <StateManagementSystem.h>
 #include <ShipManagerSystem.h>
+#include <Window.h>
 
 // unsorted includes. Sort these as soon as they're added!
 #include <PlayerSystem.h>
@@ -157,6 +158,7 @@ using namespace std;
 #include <ShipEngineSystem.h>
 #include <ValueClamp.h>
 #include <FadeInSystem.h>
+
 
 
 #define FORCE_VS_DBG_OUTPUT
@@ -214,7 +216,7 @@ void ClientApplication::run()
 
 	while(m_running)
 	{
-		if( PeekMessage( &msg, m_graphicsBackendHandle->getWindowRef(), 0, 0, PM_REMOVE) )
+		if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE) )
 		{
 			TranslateMessage( &msg );
 			DispatchMessage( &msg );
@@ -245,6 +247,16 @@ void ClientApplication::run()
 					(m_world->getSystem(SystemType::GraphicsRendererSystem))
 					->printLogFiles();
 
+				// keep window stats
+				// you've seen it before and here it is again: "HACK"
+				GraphicsBackendSystem* gbs = static_cast<GraphicsBackendSystem*>
+					(m_world->getSystem(SystemType::GraphicsBackendSystem));
+				Window* wnd = gbs->getWindow();
+				int kp_width=wnd->getWidth(),
+					kp_height=wnd->getHeight();
+				bool kp_fullscreen = wnd->m_isFullscreen;
+				//
+
 				delete m_world;
 				delete m_client;
 
@@ -255,6 +267,14 @@ void ClientApplication::run()
 
 				// Systems first!
 				initSystems();
+
+				// force set window stats from before
+				gbs = static_cast<GraphicsBackendSystem*>
+					(m_world->getSystem(SystemType::GraphicsBackendSystem));
+				wnd = gbs->getWindow();
+				wnd->resize(kp_width,kp_height);
+				wnd->m_isFullscreen = kp_fullscreen;
+				//
 
 				// Test entities later!
 				initEntities();
