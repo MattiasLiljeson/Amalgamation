@@ -56,7 +56,7 @@ public:
 	}
 
 	bool hasWindowedChanged();
-	void unsetWindowedChangedFlag() {m_windowed=false;}
+	void unsetWindowedChangedFlag() {m_windowedChanged=false;}
 	bool isWindowed() {return m_windowed;}
 private:
 	GraphicsWrapper* m_graphicsWrapper;

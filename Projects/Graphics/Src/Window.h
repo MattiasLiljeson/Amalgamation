@@ -30,6 +30,7 @@ public:
 	bool isAutoResizeEnabled() {return m_autoResize;}
 	bool shutDownRequested() {return m_shutDownRequest;}
 	void requestShutDown() {m_shutDownRequest=true;}
+	bool isWindowRegistered() {return m_windowRegistered;}
 	static Window* getInstance() {return m_instance;}
 	void lockMouse();
 	bool m_isFullscreen;
@@ -40,6 +41,7 @@ private:
 	int m_height;
 	bool m_sizeIsDirty;
 	bool m_shutDownRequest;
+	bool m_windowRegistered;
 	static Window* m_instance;
 	HINSTANCE	m_hInstance;
 	HWND		m_hWnd;

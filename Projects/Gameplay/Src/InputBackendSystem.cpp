@@ -219,6 +219,7 @@ void InputBackendSystem::process()
 	{
 		DirectInputFetcher* dif = static_cast<DirectInputFetcher*>(m_inputManager->getMouseKeyboardFetcher());
 		dif->setMouseCooperation(!m_graphicsBackend->isWindowed());
+		m_graphicsBackend->unsetWindowedChangedFlag();
 	}
 
 	m_inputManager->update( dt );

@@ -54,6 +54,7 @@ Window::Window(HINSTANCE p_hInstance, int p_width, int p_height, int p_showWindo
 	m_isFullscreen=false;
 	m_instance=this;
 	ShowWindow( m_hWnd, p_showWindowFlag );
+	m_windowRegistered=true;
 	lockMouse();
 }
 
@@ -127,17 +128,16 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 		handled = AntTweakBarWrapper::getInstance()->handleMessage(hWnd,message,wParam,lParam);
 	}
 
-	CURSORINFO cursorInfo;
-	GetCursorInfo(&cursorInfo);
+	CURSORINFO cursorInfo; cursorInfo.cbSize = sizeof(cursorInfo);
+	TRACKMOUSEEVENT mouseEventTracker; mouseEventTracker.cbSize = sizeof(mouseEventTracker);
 
 	RECT clientRect;
 	GetClientRect(hWnd,&clientRect);
 
-
-	TRACKMOUSEEVENT mouseEventTracker;
+	GetCursorInfo(&cursorInfo);
 	TrackMouseEvent(&mouseEventTracker);
 
-
+	
 	if (!handled)
 	{
 		switch (message) 
@@ -154,7 +154,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 		case WM_DESTROY:			
 			{
 				PostQuitMessage(0);
-				Window* window = Window::getInstance();
 				if (window)
 				{
 					window->requestShutDown();
@@ -178,19 +177,10 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 				
 		case WM_NCMOUSEHOVER:
 			{
-				/*POINT mousepos;
-				GetCursorPos(&mousepos);
-				ScreenToClient(hWnd,&mousepos);
-				if (!(mousepos.x<=clientRect.right  &&
-					mousepos.x>=clientRect.left 	 &&
-					mousepos.y>=clientRect.top 	 &&
-					mousepos.y<=clientRect.bottom))
-				{*/
 				if (cursorIsHidden<0)
 				{
 					cursorIsHidden=ShowCursor(true);
 				}
-				//}
 			}
 
 			break;
@@ -198,7 +188,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 
 		case WM_SIZE:
 			{
-				Window* window = Window::getInstance();
 				if (window && window->isAutoResizeEnabled())
 				{
 					window->resize(LOWORD(lParam),HIWORD(lParam));
@@ -228,19 +217,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 			}
 			break;
 
-// 		case WM_MOUSEMOVE:
-// 			{
-// 				if (cursorIsHidden<0) // constrain even during fullscreen mode
-// 				{
-// 					POINT mousepos;
-// 					GetCursorPos(&mousepos);
-// 					GetClientRect(hWnd,&clientRect);
-// 					if (mousepos.x >= clientRect.right) mousepos.x=clientRect.right-1;
-// 					if (mousepos.x <= clientRect.left) mousepos.x=clientRect.left+1;
-// 					if (mousepos.y >= clientRect.bottom) mousepos.y=clientRect.bottom-1;
-// 					if (mousepos.y <= clientRect.top) mousepos.y=clientRect.top+1;
-// 				}
-// 			}
+
 
 		case WM_LBUTTONDOWN:
 			{
