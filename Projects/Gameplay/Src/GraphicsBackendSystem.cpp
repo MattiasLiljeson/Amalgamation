@@ -89,9 +89,6 @@ void GraphicsBackendSystem::initialize()
 	if (!m_window)
 	{
 		m_window = new Window( m_hInstance, m_scrWidth, m_scrHeight, 1);	
-		m_window->m_isFullscreen = !m_windowed;	
-		bool autoResize = settings->getSettingsRef()->enableViewportAutoResize!=0;
-		m_window->setAutoResize(autoResize);
 	}
 
 	m_graphicsWrapper = new GraphicsWrapper( 
@@ -101,8 +98,11 @@ void GraphicsBackendSystem::initialize()
 		m_windowed,
 		m_enableHdr,
 		m_enableEffects,
-		settings->getSettings().enableVSYNC);	
-	
+		settings->getSettings().enableVSYNC);
+
+	m_window->m_isFullscreen = !m_windowed;	
+	bool autoResize = settings->getSettingsRef()->enableViewportAutoResize!=0;
+	m_window->setAutoResize(autoResize);	
 
 	AntTweakBarWrapper::getInstance( m_graphicsWrapper->getDevice());
 
@@ -135,6 +135,8 @@ void GraphicsBackendSystem::initialize()
 		TW_TYPE_FLOAT, shs->getMinDistance(), "min=0.0 max=1000.0");
 	TwAddVarRW(AntTweakBarWrapper::getInstance()->getAntBar(AntTweakBarWrapper::OVERALL), "Highlight Max", 
 		TW_TYPE_FLOAT, shs->getMaxDistance(), "min=0.0 max=1000.0");
+
+	AntTweakBarWrapper::getInstance()->listenToOnlyMouseMovement(m_windowed);
 }
 
 void GraphicsBackendSystem::process()

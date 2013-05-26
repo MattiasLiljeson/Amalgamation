@@ -256,9 +256,8 @@ void ClientApplication::run()
 // 					kpw_height=wnd->getHeight();
 // 				AglVector2 kpr_size = gbs->getWindowSize();
 // 				bool kp_fullscreen = wnd->m_isFullscreen;
-// 				RestartInfo restartinfo = {(int)kpr_size.x,(int)kpr_size.y,
+// 				RestartInfo restartinfo = {kpw_width,kpw_height,
 // 											kp_fullscreen};
-// 				gbs->getGfxWrapper()->changeToWindowed(true);
 				//
 
 				delete m_world;
@@ -275,7 +274,6 @@ void ClientApplication::run()
 				// force set window stats from before
 // 				gbs = static_cast<GraphicsBackendSystem*>
 // 					(m_world->getSystem(SystemType::GraphicsBackendSystem));
-//  				gbs->applyWindowedSettings(!kp_fullscreen);
 // 				gbs->changeResolution((int)kpr_size.x,(int)kpr_size.y,false,false);
 //  				wnd->resize(kpw_width,kpw_height);
 				//
