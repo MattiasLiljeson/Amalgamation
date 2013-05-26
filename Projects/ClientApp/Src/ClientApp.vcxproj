@@ -133,6 +133,13 @@
   <ItemGroup>
     <ClInclude Include="..\..\ServerApp\Src\ServerApplication.h" />
     <ClInclude Include="ClientApplication.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ClientApp.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="appico.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -12,10 +12,17 @@
     <ClInclude Include="..\..\ServerApp\Src\ServerApplication.h">
       <Filter>ServerApplication refs</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ServerApplication refs">
       <UniqueIdentifier>{7f38769d-effe-469b-aad1-12f2ce071d4b}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ClientApp.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="appico.ico" />
   </ItemGroup>
 </Project>

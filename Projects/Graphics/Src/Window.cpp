@@ -221,26 +221,26 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 
 		case WM_LBUTTONDOWN:
 			{
-				while (cursorIsHidden>=0)
-				{
-					POINT mousepos;
-					GetCursorPos(&mousepos);
-					GetClientRect(hWnd,&clientRect);
-					POINT p1 = {clientRect.left,clientRect.top};
-					POINT p2 = {clientRect.right,clientRect.bottom};
-					ClientToScreen(hWnd,&p1); ClientToScreen(hWnd,&p2);
-					RECT bounds={p1.x,p1.y,p2.x,p2.y};
-					if (mousepos.x<bounds.right  &&
-						mousepos.x>bounds.left 	 &&
-						mousepos.y>bounds.top 	 &&
-						mousepos.y<bounds.bottom)
-					{					
+				POINT mousepos;
+				GetCursorPos(&mousepos);
+				GetClientRect(hWnd,&clientRect);
+				POINT p1 = {clientRect.left,clientRect.top};
+				POINT p2 = {clientRect.right,clientRect.bottom};
+				ClientToScreen(hWnd,&p1); ClientToScreen(hWnd,&p2);
+				RECT bounds={p1.x,p1.y,p2.x,p2.y};
+				if (mousepos.x<bounds.right  &&
+					mousepos.x>bounds.left 	 &&
+					mousepos.y>bounds.top 	 &&
+					mousepos.y<bounds.bottom)
+				{					
+					while (cursorIsHidden>=-1)
+					{
 						cursorIsHidden=ShowCursor(false);
-						Window* window = Window::getInstance();
-						if (window)
-						{
-							window->lockMouse();
-						}
+					}
+					Window* window = Window::getInstance();
+					if (window)
+					{
+						window->lockMouse();
 					}
 				}
 			}
