@@ -62,7 +62,7 @@ unsigned int Packet::getDataSize() const
 
 void Packet::setData(char* p_data, unsigned int p_size)
 {
-	if (p_size <= 255)
+	if (p_size <= PACKET_BUFFER_SIZE)
 	{
 		m_dataSize = p_size;
 		memcpy(&m_data[0], p_data, p_size);
@@ -297,7 +297,7 @@ Packet& Packet::operator>>( string& p_data )
 
 void Packet::WriteData(void* p_data, unsigned int p_dataSize)
 {
-	if (m_dataSize + p_dataSize > 255)
+	if (m_dataSize + p_dataSize > PACKET_BUFFER_SIZE)
 	{
 		throw std::out_of_range( "Trying to stream in more data than\
 							what is allowed (255) to be written in the Packet." );

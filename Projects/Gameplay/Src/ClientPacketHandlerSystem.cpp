@@ -1243,7 +1243,8 @@ void ClientPacketHandlerSystem::handleIngameState()
 		}
 		else
 		{
-			DEBUGWARNING(( toString("Unhandled packet type " + toString((int)packetType) + "!\n").c_str()));
+			m_world->getOutputLogger()->write(toString("Unhandled packet type " + toString((int)packetType) + "!\n").c_str(), WRITETYPE_INFO);
+			//DEBUGWARNING(( toString("Unhandled packet type " + toString((int)packetType) + "!\n").c_str()));
 		}
 
 		// Pop packet!
