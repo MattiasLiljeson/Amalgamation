@@ -13,6 +13,7 @@
 #include "LevelPiece.h"
 #include "LevelPieceRoot.h"
 #include "EntityCreationPacket.h"
+#include <fstream>
 
 //COMPOUND BODIES HAR INTE STÖD FÖR ROTATION. DÄRFÖR BLIR DET KANSKE KNAS
 
@@ -227,6 +228,19 @@ void PhysicsSystem::initializeEntity(Entity* p_entity)
 			AglOBB obb = init->m_modelResource->meshHeader.minimumOBB;
 			AglBoundingSphere bs = init->m_modelResource->meshHeader.boundingSphere;
 			*bodyId = m_physicsController->AddMeshBody(rt, obb, bs, s, init->m_modelResource->looseBspTree);
+
+			// === ALEX logging stuff ===
+			//printf("Static physics entity %s found at [%f, %f, %f]\n", p_entity->getName().c_str(), pos.x, pos.y, pos.z);
+			std::ofstream matlabOut("matlab_out.m", std::ifstream::out | std::ifstream::app);
+			if (matlabOut.is_open())
+			{
+				matlabOut << pos.x << " " << pos.y << " " << pos.z << "\n";
+				//matlabOut << "surf(" << pos.x + bs.position.x << "+x*" << bs.radius << ", " << pos.y + bs.position.y << "+y*" << bs.radius << ", " << pos.z + bs.position.z << "+z*" << bs.radius << ");\n";
+				//matlabOut << "data(end+1, 1:3) = [" << pos.x << ", " << pos.y << ", " << pos.z << "];\n";
+				matlabOut.close();
+			}
+
+			// ==========================
 		}
 		else if (init->m_type == BodyInitData::BOXFROMMESHOBB && init->m_modelResource)
 		{

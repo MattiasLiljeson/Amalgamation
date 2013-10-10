@@ -394,6 +394,18 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 				plugPieceRoot->connectedRootPieces[CHAMBERSIDE_CHILD]	= piece->getPieceId();
 
 				m_generatedPieces.push_back(piece);
+
+				// === ALEX logging stuff ===
+				auto pos = piece->getBoundingSphere().position;//piece->getTransform()->getTranslation();
+				float radius = piece->getBoundingSphere().radius;
+				std::ofstream matlabOut("matlab_out_pieces.m", std::ifstream::out | std::ifstream::app);
+				if (matlabOut.is_open())
+				{
+					matlabOut << "surf(" << pos.x << "+x*" << radius << ", " << pos.y << "+y*" << radius << ", " << pos.z << "+z*" << radius << ");\n";
+					matlabOut.close();
+				}
+
+				// ==========================
 			}
 		}
 	}
