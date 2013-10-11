@@ -214,3 +214,8 @@ void LevelPiece::setGate( int p_inSlot, int p_id )
 	m_gates[p_inSlot] = p_id;
 }
 
+const vector<LevelPiece*>& LevelPiece::getChildren() const
+{
+	return m_children;
+}
+

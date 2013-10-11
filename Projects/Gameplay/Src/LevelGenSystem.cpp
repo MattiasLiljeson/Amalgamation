@@ -26,6 +26,7 @@
 #include "LevelInfo.h"
 #include "LevelPieceRoot.h"
 #include <OutputLogger.h>
+#include <numeric>
 
 LevelGenSystem::LevelGenSystem(TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem, 1, ComponentType::LevelInfo)
@@ -150,7 +151,20 @@ void LevelGenSystem::inserted( Entity* p_entity )
 
 
 	m_readyToRun = true;
+	srand(static_cast<unsigned int>(time(NULL)));
 
+	//* ALEX experiment, run the level gen 20 times! *//
+	for (int i = 0; i < 20; i++)
+	{
+		std::ofstream outfile("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
+		if (outfile.is_open())
+		{
+			outfile << "###\n";
+			outfile.close();
+		}
+		m_hasGeneratedLevel = false;
+		generateLevel(8);
+	}
 	//m_world->deleteEntity(p_entity);
 }
 
@@ -182,7 +196,6 @@ void LevelGenSystem::generateLevel(int p_nrOfPlayers)
 			clearGeneratedData();
 
 			m_nrOfPlayers = p_nrOfPlayers;
-			srand(static_cast<unsigned int>(time(NULL)));
 			generateLevelPieces(m_levelInfo->getBranchCount(), m_levelInfo->doRandomStartRotation());
 			createLevelEntities();
 			m_hasGeneratedLevel = true;
@@ -262,6 +275,10 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRo
 	}
 
 	testLevelMaxSizeHit();
+
+	int maxDiameter = computeDiameterOfTree(piece, 0);
+	m_world->getOutputLogger()
+		->write(("The created level has a diameter of " + toString(maxDiameter) + "\n").c_str(), WRITETYPE_INFO);
 }
 
 Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
@@ -669,6 +686,51 @@ void LevelGenSystem::printAddedLevelPiece( LevelPiece* p_piece )
 int LevelGenSystem::getLevelPieceRootCount()
 {
 	return m_pieceIds.getSize();
+}
+
+int LevelGenSystem::computeHeightOfTree( LevelPiece* p_node, int p_parentRadius )
+{
+	if (p_node == nullptr)
+		return 0;
+
+	vector<int> heights;
+	for each (auto child in p_node->getChildren())
+	{
+		heights.push_back(computeHeightOfTree(child, p_node->getBoundingSphere().radius));
+	}
+	int maxHeight = *max_element(heights.begin(), heights.end());
+	// Return the height as the max height returned from the children,
+	// + the radius of this node + the parent radius
+	return p_node->getBoundingSphere().radius + p_parentRadius + maxHeight;
+}
+
+int LevelGenSystem::computeDiameterOfTree( LevelPiece* p_node, int p_parentRadius )
+{
+	if (p_node == nullptr)
+		return 0;
+
+	// Get the height of all sub-trees
+	vector<int> heights;
+	for each (auto child in p_node->getChildren())
+	{
+		heights.push_back(computeHeightOfTree(child, p_node->getBoundingSphere().radius));
+	}
+	// Get the diameter of all sub-trees
+	vector<int> diameter;
+	for each (auto child in p_node->getChildren())
+	{
+		diameter.push_back(computeDiameterOfTree(child, p_node->getBoundingSphere().radius));
+	}
+
+	/* Return max of the following:
+	*	Diameter of any of the subtrees
+	*	Height of all subtrees + the current node's radius + parent node's radius
+	*/
+	int sumHeight = accumulate(heights.begin(), heights.end(), 0);
+	int maxDiameter = *max_element(diameter.begin(), diameter.end());
+
+	return max(sumHeight + p_node->getBoundingSphere().radius + p_parentRadius,
+				maxDiameter);
 }
 
 

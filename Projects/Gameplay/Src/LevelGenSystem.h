@@ -87,6 +87,11 @@ private:
 	void addResource(ModelResource* p_modelResource);
 	bool testLevelMaxSizeHit();
 
+	// Computes the height of the tree based on the current node,
+	// with consideration of the nodes' radii.
+	int computeHeightOfTree(LevelPiece* p_node, int p_parentRadius);
+	int computeDiameterOfTree(LevelPiece* p_node, int p_parentRadius);
+
 	EntityFactory*	m_entityFactory;
 	LevelInfo* m_levelInfo; // This is a component, be cautious!
 

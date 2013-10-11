@@ -54,7 +54,8 @@ public:
 	int			getTypeId() const;
 	int			getPieceId() const;
 	const LevelPiece* getChild(int p_inSlot) const;
-	
+	const vector<LevelPiece*>& getChildren() const;
+
 	int			getGate(int p_inSlot) const;		// returns an id, either to a gate in the
 													// m_endPlugs list, or to a chamber piece,
 													// in the m_generatedPieces list.
