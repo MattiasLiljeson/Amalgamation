@@ -244,6 +244,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRo
 	m_currentLevelSize = m_modelResources[id]->meshHeader.boundingSphere.radius;
 
 	testLevelMaxSizeHit();
+
 	// The algorithm generates pieces outwards based on a so called depth. For each depth
 	// the pieces from the previous depth are used to create and connect new pieces.
 	// If the specified depth is set to -1, then the level gen will generate a level that
@@ -298,6 +299,22 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
 		pieceRoot->boundingSphere = p_piece->getBoundingSphere();
 
 		pieceRoot->pieceRootType = PIECEROOTTYE_CHAMBER;
+
+		// === ALEX logging stuff ===
+		auto pos = p_piece->getBoundingSphere().position;//piece->getTransform()->getTranslation();
+		float radius = p_piece->getBoundingSphere().radius;
+		/*std::ofstream matlabOut("matlab_out_pieces.m", std::ifstream::out | std::ifstream::app);
+		if (matlabOut.is_open())
+		{
+			matlabOut << "surf(" << pos.x << "+x*" << radius << ", " << pos.y << "+y*" << radius << ", " << pos.z << "+z*" << radius << ");\n";
+			matlabOut.close();
+		}*/
+		std::ofstream outfile("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
+		if (outfile.is_open())
+		{
+			outfile << pos.x << " " << pos.y << " " << pos.z << " " << (radius*2) << " " << p_piece->getTypeId() << "\n";
+			outfile.close();
+		}
 
 		pieceRoot->connectedRootPieces.resize(p_piece->getMaxChildCount(), -1);
 		for (unsigned int i = 0; i < p_piece->getMaxChildCount(); i++)
@@ -396,15 +413,22 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 				m_generatedPieces.push_back(piece);
 
 				// === ALEX logging stuff ===
+				/*
 				auto pos = piece->getBoundingSphere().position;//piece->getTransform()->getTranslation();
 				float radius = piece->getBoundingSphere().radius;
-				std::ofstream matlabOut("matlab_out_pieces.m", std::ifstream::out | std::ifstream::app);
+				*//*std::ofstream matlabOut("matlab_out_pieces.m", std::ifstream::out | std::ifstream::app);
 				if (matlabOut.is_open())
 				{
 					matlabOut << "surf(" << pos.x << "+x*" << radius << ", " << pos.y << "+y*" << radius << ", " << pos.z << "+z*" << radius << ");\n";
 					matlabOut.close();
+				}*//*
+				std::ofstream outfile("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
+				if (outfile.is_open())
+				{
+					outfile << pos.x << " " << pos.y << " " << pos.z << " " << radius << "\n";
+					outfile.close();
 				}
-
+				*/
 				// ==========================
 			}
 		}

@@ -1,9 +1,16 @@
 #include <vld.h>
 #include "ClientApplication.h"
 #include <DebugUtil.h>
+#include <fstream>
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLine, int nCmdShow)
 {
+	auto outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::trunc);
+	if (outfile.is_open())
+	{
+		outfile.close();
+	}
+
 	ClientApplication* application;
 	try{
 		application = new ClientApplication( hInstance );

@@ -3,15 +3,20 @@
 
 int main(int argc, char** argv)
 {
-	std::ofstream matlabOut("matlab_out_pieces.m", std::ifstream::trunc);
-	if (matlabOut.is_open())
+	std::ofstream outfile("matlab_out_pieces.m", std::ifstream::trunc);
+	if (outfile.is_open())
 	{
-		matlabOut.close();
+		outfile.close();
 	}
-	matlabOut = std::ofstream("matlab_out.m", std::ifstream::trunc);
-	if (matlabOut.is_open())
+	outfile = std::ofstream("matlab_out.m", std::ifstream::trunc);
+	if (outfile.is_open())
 	{
-		matlabOut.close();
+		outfile.close();
+	}
+	outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::trunc);
+	if (outfile.is_open())
+	{
+		outfile.close();
 	}
 
 	Srv::ServerApplication* application;
