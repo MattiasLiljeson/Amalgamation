@@ -633,7 +633,7 @@ bool LevelGenSystem::tryConnectPieces( LevelPiece* p_target, LevelPiece* p_newPi
 	{
 		if (AglCollision::isColliding( p_newPiece->getBoundingSphere(),
 			m_generatedPieces[i]->getBoundingSphere()) && 
-			p_newPiece->getChild(0) != m_generatedPieces[i] )
+			p_newPiece->getConnectedPiece(0) != m_generatedPieces[i] )
 		{
 			m_world->getOutputLogger()
 				->write("Collision between chambers detected. A level plug has been created instead.\n");
@@ -645,12 +645,13 @@ bool LevelGenSystem::tryConnectPieces( LevelPiece* p_target, LevelPiece* p_newPi
 	if (colliding || tooLarge)
 	{
 		// Remove the connected component.
-		p_target->setChild(p_slot, NULL);
+		p_target->setConnectedPiece(p_slot, NULL);
 		delete p_newPiece;
 		return false;
 	}
 	else
 	{
+		p_target->addChild(p_newPiece);
 		return true;
 	}
 }
@@ -698,7 +699,9 @@ int LevelGenSystem::computeHeightOfTree( LevelPiece* p_node, int p_parentRadius 
 	{
 		heights.push_back(computeHeightOfTree(child, p_node->getBoundingSphere().radius));
 	}
-	int maxHeight = *max_element(heights.begin(), heights.end());
+	int maxHeight = 0;
+	if (!heights.empty())
+		maxHeight = *max_element(heights.begin(), heights.end());
 	// Return the height as the max height returned from the children,
 	// + the radius of this node + the parent radius
 	return p_node->getBoundingSphere().radius + p_parentRadius + maxHeight;
@@ -727,7 +730,9 @@ int LevelGenSystem::computeDiameterOfTree( LevelPiece* p_node, int p_parentRadiu
 	*	Height of all subtrees + the current node's radius + parent node's radius
 	*/
 	int sumHeight = accumulate(heights.begin(), heights.end(), 0);
-	int maxDiameter = *max_element(diameter.begin(), diameter.end());
+	int maxDiameter = 0;
+	if (!diameter.empty())
+		maxDiameter = *max_element(diameter.begin(), diameter.end());
 
 	return max(sumHeight + p_node->getBoundingSphere().radius + p_parentRadius,
 				maxDiameter);

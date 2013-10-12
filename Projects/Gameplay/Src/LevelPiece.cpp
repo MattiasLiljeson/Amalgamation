@@ -14,10 +14,11 @@ LevelPiece::LevelPiece(int p_typeId, ModelResource* p_modelResource, Transform* 
 	m_generation	= p_generation;
 
 	int maxChildCount = p_modelResource->connectionPoints.m_collection.size();
-	m_childSlotsOccupied.resize(maxChildCount);
-	m_children.resize(maxChildCount, NULL);
+	m_connectedSlotsOccupied.resize(maxChildCount);
+	m_connectedPieces.resize(maxChildCount, NULL);
 	m_connectionPoints.resize(maxChildCount);
 	m_gates.resize(maxChildCount, -1);
+	m_parent = nullptr;
 
 	updateConnectionPoints();
 	updateBoundingVolumes();
@@ -28,6 +29,8 @@ LevelPiece::~LevelPiece()
 {
 	// Delete main piece now, as it will be used as a copy for the created entity later,
 	// and not be owned by ES
+	m_parent = nullptr;
+	m_children.clear();
 	deleteMainTransform();
 }
 
@@ -35,9 +38,9 @@ vector<int> LevelPiece::findFreeConnectionPointSlots()
 {
 	vector<int> freeSlots;
 	// Check for unoccupied slots
-	for (unsigned int i = 0; i < m_children.size(); i++)
+	for (unsigned int i = 0; i < m_connectedPieces.size(); i++)
 	{
-		if ( !m_childSlotsOccupied[i] )
+		if ( !m_connectedSlotsOccupied[i] )
 			freeSlots.push_back(i);
 	}
 	return freeSlots;
@@ -53,18 +56,18 @@ int LevelPiece::getTypeId() const
 	return m_typeId;
 }
 
-const LevelPiece* LevelPiece::getChild( int p_inSlot ) const
+const LevelPiece* LevelPiece::getConnectedPiece( int p_inSlot ) const
 {
-	return m_children[p_inSlot];
+	return m_connectedPieces[p_inSlot];
 }
 
-void LevelPiece::setChild( int p_inSlot, LevelPiece* p_transform )
+void LevelPiece::setConnectedPiece( int p_inSlot, LevelPiece* p_transform )
 {
-	m_children[p_inSlot] = p_transform;
+	m_connectedPieces[p_inSlot] = p_transform;
 	if (p_transform)
-		m_childSlotsOccupied[p_inSlot] = true;
+		m_connectedSlotsOccupied[p_inSlot] = true;
 	else
-		m_childSlotsOccupied[p_inSlot] = false;
+		m_connectedSlotsOccupied[p_inSlot] = false;
 }
 
 bool LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
@@ -111,8 +114,8 @@ bool LevelPiece::connectTo( LevelPiece* p_targetPiece, int p_targetSlot )
 	updateConnectionPoints();
 
 	// Set this connection to be occupied!
-	p_targetPiece->setChild(p_targetSlot, this);
-	setChild(0, p_targetPiece);
+	p_targetPiece->setConnectedPiece(p_targetSlot, this);
+	setConnectedPiece(0, p_targetPiece);
 
 	updateBoundingVolumes();
 
@@ -186,12 +189,12 @@ void LevelPiece::deleteMainTransform()
 
 int LevelPiece::getMaxChildCount() const
 {
-	return m_children.size();
+	return m_connectedPieces.size();
 }
 
 bool LevelPiece::isChildSlotOccupied( int p_inSlot ) const
 {
-	return m_childSlotsOccupied[p_inSlot];
+	return m_connectedSlotsOccupied[p_inSlot];
 }
 
 int LevelPiece::getPieceId() const
@@ -217,5 +220,11 @@ void LevelPiece::setGate( int p_inSlot, int p_id )
 const vector<LevelPiece*>& LevelPiece::getChildren() const
 {
 	return m_children;
+}
+
+void LevelPiece::addChild( LevelPiece* p_piece )
+{
+	m_children.push_back(p_piece);
+	p_piece->m_parent = this; // Wiahkm priavet member access
 }
 

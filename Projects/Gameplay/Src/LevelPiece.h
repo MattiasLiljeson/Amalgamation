@@ -53,7 +53,7 @@ public:
 	Transform*  getTransform() const;
 	int			getTypeId() const;
 	int			getPieceId() const;
-	const LevelPiece* getChild(int p_inSlot) const;
+	const LevelPiece* getConnectedPiece(int p_inSlot) const;
 	const vector<LevelPiece*>& getChildren() const;
 
 	int			getGate(int p_inSlot) const;		// returns an id, either to a gate in the
@@ -63,7 +63,8 @@ public:
 
 	bool		isChildSlotOccupied(int p_inSlot) const;
 	int			getMaxChildCount() const;
-	void		setChild(int p_inSlot, LevelPiece* p_transform);
+	void		setConnectedPiece(int p_inSlot, LevelPiece* p_transform);
+	void		addChild(LevelPiece* p_piece);
 	bool		connectTo(LevelPiece* p_targetPiece, int p_targetSlot);
 	const AglOBB& getBoundingBox() const;
 	const AglBoundingSphere& getBoundingSphere() const;
@@ -78,11 +79,13 @@ private:
 	int							m_generation;
 	//ConnectionPointCollection*	m_localSpaceConnectionPoints;
 	//AglMeshHeader*				m_meshHeader;
-	vector<bool>				m_childSlotsOccupied;
+	vector<bool>				m_connectedSlotsOccupied;
 	Transform*					m_transform;
-	vector<LevelPiece*>			m_children;
+	vector<LevelPiece*>			m_connectedPieces;
 	vector<Transform>			m_connectionPoints;
 	vector<int>					m_gates;
+	vector<LevelPiece*>			m_children;
+	LevelPiece*					m_parent;
 
 	AglOBB						m_boundingBox;
 	AglBoundingSphere			m_boundingSphere;
