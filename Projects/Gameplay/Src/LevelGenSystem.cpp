@@ -580,7 +580,7 @@ bool LevelGenSystem::tryConnectPieces( LevelPiece* p_target, LevelPiece* p_newPi
 	{
 		if (AglCollision::isColliding( p_newPiece->getBoundingSphere(),
 			m_generatedPieces[i]->getBoundingSphere()) && 
-			p_newPiece->getChild(0) != m_generatedPieces[i] )
+			p_newPiece->getConnectedPiece(0) != m_generatedPieces[i] )
 		{
 			m_world->getOutputLogger()
 				->write("Collision between chambers detected. A level plug has been created instead.\n");
@@ -592,12 +592,13 @@ bool LevelGenSystem::tryConnectPieces( LevelPiece* p_target, LevelPiece* p_newPi
 	if (colliding || tooLarge)
 	{
 		// Remove the connected component.
-		p_target->setChild(p_slot, NULL);
+		p_target->setConnectedPiece(p_slot, NULL);
 		delete p_newPiece;
 		return false;
 	}
 	else
 	{
+		p_target->addChild(p_newPiece);
 		return true;
 	}
 }
