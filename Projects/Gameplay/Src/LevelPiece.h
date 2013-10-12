@@ -55,6 +55,7 @@ public:
 	int			getPieceId() const;
 	const LevelPiece* getConnectedPiece(int p_inSlot) const;
 	const vector<LevelPiece*>& getChildren() const;
+	const LevelPiece* getParent() const;
 
 	int			getGate(int p_inSlot) const;		// returns an id, either to a gate in the
 													// m_endPlugs list, or to a chamber piece,

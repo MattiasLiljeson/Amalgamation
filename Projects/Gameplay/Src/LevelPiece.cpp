@@ -228,3 +228,8 @@ void LevelPiece::addChild( LevelPiece* p_piece )
 	p_piece->m_parent = this; // Wiahkm priavet member access
 }
 
+const LevelPiece* LevelPiece::getParent() const
+{
+	return m_parent;
+}
+

@@ -163,7 +163,7 @@ void LevelGenSystem::inserted( Entity* p_entity )
 			outfile.close();
 		}
 		m_hasGeneratedLevel = false;
-		generateLevel(8);
+		generateLevel(2);
 	}
 	//m_world->deleteEntity(p_entity);
 }
@@ -276,7 +276,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRo
 
 	testLevelMaxSizeHit();
 
-	int maxDiameter = computeDiameterOfTree(piece, 0);
+	int maxDiameter = computeDiameterOfTree(piece);
 	m_world->getOutputLogger()
 		->write(("The created level has a diameter of " + toString(maxDiameter) + "\n").c_str(), WRITETYPE_INFO);
 }
@@ -689,7 +689,7 @@ int LevelGenSystem::getLevelPieceRootCount()
 	return m_pieceIds.getSize();
 }
 
-int LevelGenSystem::computeHeightOfTree( LevelPiece* p_node, int p_parentRadius )
+int LevelGenSystem::computeHeightOfTree( LevelPiece* p_node )
 {
 	if (p_node == nullptr)
 		return 0;
@@ -697,17 +697,20 @@ int LevelGenSystem::computeHeightOfTree( LevelPiece* p_node, int p_parentRadius 
 	vector<int> heights;
 	for each (auto child in p_node->getChildren())
 	{
-		heights.push_back(computeHeightOfTree(child, p_node->getBoundingSphere().radius));
+		heights.push_back(computeHeightOfTree(child));
 	}
 	int maxHeight = 0;
 	if (!heights.empty())
 		maxHeight = *max_element(heights.begin(), heights.end());
+
 	// Return the height as the max height returned from the children,
 	// + the radius of this node + the parent radius
-	return p_node->getBoundingSphere().radius + p_parentRadius + maxHeight;
+	return p_node->getBoundingSphere().radius 
+		+ p_node->getParent()->getBoundingSphere().radius 
+		+ maxHeight;
 }
 
-int LevelGenSystem::computeDiameterOfTree( LevelPiece* p_node, int p_parentRadius )
+int LevelGenSystem::computeDiameterOfTree( LevelPiece* p_node )
 {
 	if (p_node == nullptr)
 		return 0;
@@ -716,26 +719,33 @@ int LevelGenSystem::computeDiameterOfTree( LevelPiece* p_node, int p_parentRadiu
 	vector<int> heights;
 	for each (auto child in p_node->getChildren())
 	{
-		heights.push_back(computeHeightOfTree(child, p_node->getBoundingSphere().radius));
+		heights.push_back(computeHeightOfTree(child));
 	}
 	// Get the diameter of all sub-trees
 	vector<int> diameter;
 	for each (auto child in p_node->getChildren())
 	{
-		diameter.push_back(computeDiameterOfTree(child, p_node->getBoundingSphere().radius));
+		diameter.push_back(computeDiameterOfTree(child));
 	}
 
 	/* Return max of the following:
 	*	Diameter of any of the subtrees
 	*	Height of all subtrees + the current node's radius + parent node's radius
 	*/
-	int sumHeight = accumulate(heights.begin(), heights.end(), 0);
-	int maxDiameter = 0;
+	sort(heights.begin(), heights.end());
+	int diameterThroughSelf = 0;
+	if (heights.size() >= 1)
+	{
+		diameterThroughSelf = heights.back();
+		if (heights.size() >= 2)
+			diameterThroughSelf += heights[heights.size()-2];
+	}
+		
+	int maxChildDiameter = 0;
 	if (!diameter.empty())
-		maxDiameter = *max_element(diameter.begin(), diameter.end());
+		maxChildDiameter = *max_element(diameter.begin(), diameter.end());
 
-	return max(sumHeight + p_node->getBoundingSphere().radius + p_parentRadius,
-				maxDiameter);
+	return max(diameterThroughSelf, maxChildDiameter);
 }
 
 
