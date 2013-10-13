@@ -28,6 +28,8 @@
 #include <OutputLogger.h>
 #include <numeric>
 
+#define EXPERIMENT_MODIFIED_LEVELGEN
+
 LevelGenSystem::LevelGenSystem(TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem, 1, ComponentType::LevelInfo)
 {
@@ -128,12 +130,13 @@ void LevelGenSystem::inserted( Entity* p_entity )
 		
 		//delete resourcesFromModel;
 	}
-	//for (int i = 0; i < m_sortedResourceIds.size(); i++)
-	//{
-	//	float radius = m_modelResources[m_sortedResourceIds[i]]->meshHeader.boundingSphere.radius;
-	//	string logtext = " : r=" + toString(radius) + "\n";
-	//	DEBUGPRINT( (logtext.c_str()) );
-	//}
+	for (int i = 0; i < m_sortedResourceIds.size(); i++)
+	{
+		float radius = m_modelResources[m_sortedResourceIds[i]]->meshHeader.boundingSphere.radius;
+		string logtext = " : r=" + toString(radius) + "\n";
+		m_world->getOutputLogger()
+			->write(logtext.c_str());
+	}
 
 	LevelPieceFileData* endPlug = m_levelInfo->getEndPlugFileData(ENDPIECEMODE_CLOSED);
 	m_entityFactory->readAssemblageFile(LEVELPIECESPATH + endPlug->assemblageFileName,
@@ -161,7 +164,7 @@ void LevelGenSystem::inserted( Entity* p_entity )
 	}
 
 	//* ALEX experiment, run the level gen 20 times! *//
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 1000; i++)
 	{
 		outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
 		if (outfile.is_open())
@@ -185,6 +188,7 @@ void LevelGenSystem::inserted( Entity* p_entity )
 			outfile.close();
 		}
 	}
+	std::cout << "Done with init and experiment\n";
 	//m_world->deleteEntity(p_entity);
 }
 
@@ -450,25 +454,11 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 				plugPieceRoot->connectedRootPieces[CHAMBERSIDE_CHILD]	= piece->getPieceId();
 
 				m_generatedPieces.push_back(piece);
-
-				// === ALEX logging stuff ===
-				/*
-				auto pos = piece->getBoundingSphere().position;//piece->getTransform()->getTranslation();
-				float radius = piece->getBoundingSphere().radius;
-				*//*std::ofstream matlabOut("matlab_out_pieces.m", std::ifstream::out | std::ifstream::app);
-				if (matlabOut.is_open())
-				{
-					matlabOut << "surf(" << pos.x << "+x*" << radius << ", " << pos.y << "+y*" << radius << ", " << pos.z << "+z*" << radius << ");\n";
-					matlabOut.close();
-				}*//*
-				std::ofstream outfile("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
-				if (outfile.is_open())
-				{
-					outfile << pos.x << " " << pos.y << " " << pos.z << " " << radius << "\n";
-					outfile.close();
-				}
-				*/
-				// ==========================
+			}
+			else
+			{
+				// Since this piecetype was not valid, the algorithm should try insert a smaller chamber.
+				delete piece;
 			}
 		}
 	}
@@ -668,7 +658,7 @@ bool LevelGenSystem::tryConnectPieces( LevelPiece* p_target, LevelPiece* p_newPi
 	{
 		// Remove the connected component.
 		p_target->setConnectedPiece(p_slot, NULL);
-		delete p_newPiece;
+		//delete p_newPiece;
 		return false;
 	}
 	else
@@ -732,7 +722,10 @@ int LevelGenSystem::computeHeightOfTree( LevelPiece* p_node )
 		+ maxHeight;*/
 
 	// A more accurate result is to take the distance between the child and the parent as height.
-	AglVector3 deltaPos = p_node->getBoundingSphere().position - p_node->getParent()->getBoundingSphere().position;
+	/*AglVector3 deltaPos = p_node->getBoundingSphere().position - p_node->getParent()->getBoundingSphere().position;
+	return maxHeight + AglVector3::length(deltaPos);*/
+
+	AglVector3 deltaPos = p_node->getTransform()->getTranslation() - p_node->getParent()->getTransform()->getTranslation();
 	return maxHeight + AglVector3::length(deltaPos);
 }
 
