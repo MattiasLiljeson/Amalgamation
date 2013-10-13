@@ -115,6 +115,7 @@ private:
 	int			m_currentLevelSize;
 	bool		m_useLevelMaxSize;
 	bool		m_hasHitLevelMaxSize;
+	int			m_levelTreeDiameter;
 
 	AglMatrix m_startTransform;
 

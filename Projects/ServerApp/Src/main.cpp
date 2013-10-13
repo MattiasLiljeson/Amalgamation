@@ -18,6 +18,11 @@ int main(int argc, char** argv)
 	{
 		outfile.close();
 	}
+	outfile = std::ofstream("levelgen_result_size_diameter.txt", std::ifstream::trunc);
+	if (outfile.is_open())
+	{
+		outfile.close();
+	}
 
 	Srv::ServerApplication* application;
 	application = new Srv::ServerApplication();

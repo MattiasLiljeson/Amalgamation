@@ -153,10 +153,17 @@ void LevelGenSystem::inserted( Entity* p_entity )
 	m_readyToRun = true;
 	srand(static_cast<unsigned int>(time(NULL)));
 
-	//* ALEX experiment, run the level gen 20 times! *//
-	for (int i = 0; i < 20; i++)
+	std::ofstream outfile("levelgen_result_size_diameter.txt", std::ifstream::out | std::ifstream::app);
+	if (outfile.is_open())
 	{
-		std::ofstream outfile("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
+		outfile << "# Size Diameter\n";
+		outfile.close();
+	}
+
+	//* ALEX experiment, run the level gen 20 times! *//
+	for (int i = 0; i < 100; i++)
+	{
+		outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
 		if (outfile.is_open())
 		{
 			outfile << "###\n";
@@ -164,6 +171,19 @@ void LevelGenSystem::inserted( Entity* p_entity )
 		}
 		m_hasGeneratedLevel = false;
 		generateLevel(2);
+		
+		outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
+		if (outfile.is_open())
+		{
+			outfile << "size " << m_currentLevelSize << "\ndiameter " << m_levelTreeDiameter << "\n";
+			outfile.close();
+		}
+		outfile = std::ofstream("levelgen_result_size_diameter.txt",  std::ifstream::out | std::ifstream::app);
+		if (outfile.is_open())
+		{
+			outfile << (i+1) << " " << m_currentLevelSize << " " << m_levelTreeDiameter << "\n";
+			outfile.close();
+		}
 	}
 	//m_world->deleteEntity(p_entity);
 }
@@ -183,6 +203,7 @@ void LevelGenSystem::clearGeneratedData()
 	m_generatedPieces.clear();
 	m_endPlugs.clear();
 	m_pieceIds.clear();
+	m_levelTreeDiameter = 0;
 	// There's still data that exists, such as init data. These should not be destroyed
 	// or cleared here.
 }
@@ -277,6 +298,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRo
 	testLevelMaxSizeHit();
 
 	int maxDiameter = computeDiameterOfTree(piece);
+	m_levelTreeDiameter = maxDiameter;
 	m_world->getOutputLogger()
 		->write(("The created level has a diameter of " + toString(maxDiameter) + "\n").c_str(), WRITETYPE_INFO);
 }
@@ -705,9 +727,13 @@ int LevelGenSystem::computeHeightOfTree( LevelPiece* p_node )
 
 	// Return the height as the max height returned from the children,
 	// + the radius of this node + the parent radius
-	return p_node->getBoundingSphere().radius 
+	/*return p_node->getBoundingSphere().radius 
 		+ p_node->getParent()->getBoundingSphere().radius 
-		+ maxHeight;
+		+ maxHeight;*/
+
+	// A more accurate result is to take the distance between the child and the parent as height.
+	AglVector3 deltaPos = p_node->getBoundingSphere().position - p_node->getParent()->getBoundingSphere().position;
+	return maxHeight + AglVector3::length(deltaPos);
 }
 
 int LevelGenSystem::computeDiameterOfTree( LevelPiece* p_node )
