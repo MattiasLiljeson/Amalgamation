@@ -28,7 +28,7 @@
 #include <OutputLogger.h>
 #include <numeric>
 
-#define EXPERIMENT_MODIFIED_LEVELGEN
+//#define EXPERIMENT_MODIFIED_LEVELGEN
 
 LevelGenSystem::LevelGenSystem(TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem, 1, ComponentType::LevelInfo)
@@ -159,7 +159,7 @@ void LevelGenSystem::inserted( Entity* p_entity )
 	std::ofstream outfile("levelgen_result_size_diameter.txt", std::ifstream::out | std::ifstream::app);
 	if (outfile.is_open())
 	{
-		outfile << "# Size Diameter\n";
+		outfile << "# Diameter\n";
 		outfile.close();
 	}
 
@@ -173,7 +173,7 @@ void LevelGenSystem::inserted( Entity* p_entity )
 			outfile.close();
 		}
 		m_hasGeneratedLevel = false;
-		generateLevel(2);
+		generateLevel(8);
 		
 		outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
 		if (outfile.is_open())
@@ -184,7 +184,8 @@ void LevelGenSystem::inserted( Entity* p_entity )
 		outfile = std::ofstream("levelgen_result_size_diameter.txt",  std::ifstream::out | std::ifstream::app);
 		if (outfile.is_open())
 		{
-			outfile << (i+1) << " " << m_currentLevelSize << " " << m_levelTreeDiameter << "\n";
+			outfile << (i+1) << " " << m_levelTreeDiameter << "\n";
+			//outfile << (i+1) << " " << m_currentLevelSize << " " << m_levelTreeDiameter << "\n";
 			outfile.close();
 		}
 	}
@@ -344,7 +345,7 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
 		pieceRoot->pieceRootType = PIECEROOTTYE_CHAMBER;
 
 		// === ALEX logging stuff ===
-		auto pos = p_piece->getBoundingSphere().position;//piece->getTransform()->getTranslation();
+		auto spherePos = p_piece->getBoundingSphere().position;//piece->getTransform()->getTranslation();
 		float radius = p_piece->getBoundingSphere().radius;
 		/*std::ofstream matlabOut("matlab_out_pieces.m", std::ifstream::out | std::ifstream::app);
 		if (matlabOut.is_open())
@@ -355,7 +356,7 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
 		std::ofstream outfile("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
 		if (outfile.is_open())
 		{
-			outfile << pos.x << " " << pos.y << " " << pos.z << " " << (radius*2) << " " << p_piece->getTypeId() << "\n";
+			outfile << spherePos.x << " " << spherePos.y << " " << spherePos.z << " " << (radius*2) << " " << p_piece->getTypeId() << "\n";
 			outfile.close();
 		}
 
@@ -408,21 +409,73 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 			// Find a random piece type to use
 			int pieceType = m_levelInfo->getRandomFileData()->id;
 			
-			// Create a level piece
-			LevelPiece* piece = new LevelPiece( pieceType, m_modelResources[pieceType],
-												new Transform(), p_generation);
-
 			int slot = popIntVector(freeConnectSlots);
 
-			if (tryConnectPieces(p_targetPiece, piece, slot))
+			// Create a level piece
+			LevelPiece* piece = nullptr;
+
+			bool success;
+			bool outOfOptions = false;
+
+			do 
 			{
+				piece = new LevelPiece( pieceType, m_modelResources[pieceType],
+					new Transform(), p_generation);
+				
+				success = tryConnectPieces(p_targetPiece, piece, slot);
+
+				// If it was a failure, a new test needs to be initiated
+				// A new random piece will be selected as long as there is one to select, that is smaller than the previous 
+				if (!success)
+				{
+#ifdef EXPERIMENT_MODIFIED_LEVELGEN
+					int upperBound = 0;
+					for (int i = 0; i < m_sortedResourceIds.size(); i++)
+						if (m_sortedResourceIds[i] == pieceType)
+							upperBound = i;
+
+					if (upperBound > 0)
+					{
+						string info = "The piece type " + toString(pieceType) + " with radius " + toString(piece->getBoundingSphere().radius) + " is too large\n";
+						m_world->getOutputLogger()
+							->write(info.c_str());
+
+						pieceType = m_sortedResourceIds[rand() % upperBound];
+						
+						info = "Attempting to select a new piece type: " + toString(pieceType) + "\n";
+						m_world->getOutputLogger()
+							->write(info.c_str());
+					}
+					else
+						outOfOptions = true;
+#else
+					outOfOptions = true;
+#endif
+					delete piece;
+					piece = nullptr;
+				}
+			} while (!success && !outOfOptions);
+
+			if (outOfOptions)
+			{
+				string info = "Out of piece options\n";
+				m_world->getOutputLogger()
+					->write(info.c_str());
+			}
+
+			if (success)//tryConnectPieces(p_targetPiece, piece, slot))
+			{
+				string info = "Successfully connected piece type: " + toString(pieceType) + "\n";
+				m_world->getOutputLogger()
+					->write(info.c_str());
+
 				// Add an open gate
 				Entity* ent = addEndPlug(&p_targetPiece->getConnectionPoint(slot), ENDPIECEMODE_OPENED);
 				int gateUid = m_pieceIds.add(ent);
 				p_targetPiece->setGate(slot, gateUid);
 				piece->setGate(0, gateUid);
 
-				string info = "Added open gate with id " + toString(gateUid) + "\n";
+				info = "Added open gate with id " + toString(gateUid) + "\n";
 				m_world->getOutputLogger()
 					->write(info.c_str());
 
@@ -454,11 +507,6 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 				plugPieceRoot->connectedRootPieces[CHAMBERSIDE_CHILD]	= piece->getPieceId();
 
 				m_generatedPieces.push_back(piece);
-			}
-			else
-			{
-				// Since this piecetype was not valid, the algorithm should try insert a smaller chamber.
-				delete piece;
 			}
 		}
 	}
@@ -616,7 +664,7 @@ void LevelGenSystem::addResource(ModelResource* p_modelResource)
 	for (unsigned int i = 0; i < m_sortedResourceIds.size(); i++)
 	{
 		int resourceId = m_sortedResourceIds[i];
-		if (m_modelResources[resourceId]->meshHeader.boundingSphere.radius < boundingSphere.radius)
+		if (m_modelResources[resourceId]->meshHeader.boundingSphere.radius > boundingSphere.radius)
 		{
 			insertAtIndex = i;
 			break; // Break!
@@ -634,7 +682,7 @@ bool LevelGenSystem::tryConnectPieces( LevelPiece* p_target, LevelPiece* p_newPi
 	if (m_useLevelMaxSize && m_currentLevelSize + newPieceRadius > m_levelMaxSize)
 	{
 		m_world->getOutputLogger()
-			->write("Chamber piece too large. A level plug has been created instead.\n");
+			->write("Chamber piece too large.\n");// A level plug has been created instead.\n");
 
 		tooLarge = true;
 	}
@@ -648,7 +696,7 @@ bool LevelGenSystem::tryConnectPieces( LevelPiece* p_target, LevelPiece* p_newPi
 			p_newPiece->getConnectedPiece(0) != m_generatedPieces[i] )
 		{
 			m_world->getOutputLogger()
-				->write("Collision between chambers detected. A level plug has been created instead.\n");
+				->write("Collision between chambers detected.\n");//A level plug has been created instead.\n");
 			colliding = true;
 			break;
 		}
