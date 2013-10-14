@@ -102,6 +102,8 @@ private:
 													// model resources, sorted in
 													// size, with the highest first.
 
+	bool m_useModifiedVersion;
+
 	UniqueIndexList<void*> m_pieceIds; // Used both for generated pieces and end plugs.
 
 	vector<LevelPiece*> m_generatedPieces;

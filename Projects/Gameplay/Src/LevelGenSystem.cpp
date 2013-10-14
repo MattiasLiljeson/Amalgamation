@@ -27,8 +27,7 @@
 #include "LevelPieceRoot.h"
 #include <OutputLogger.h>
 #include <numeric>
-
-//#define EXPERIMENT_MODIFIED_LEVELGEN
+#include <array>
 
 LevelGenSystem::LevelGenSystem(TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem, 1, ComponentType::LevelInfo)
@@ -43,6 +42,7 @@ LevelGenSystem::LevelGenSystem(TcpServer* p_server)
 	m_endPlugModelResource	= NULL;
 	m_readyToRun			= false;
 	m_hasGeneratedLevel		= false;
+	m_useModifiedVersion	= false;
 }
 
 LevelGenSystem::~LevelGenSystem()
@@ -156,39 +156,63 @@ void LevelGenSystem::inserted( Entity* p_entity )
 	m_readyToRun = true;
 	srand(static_cast<unsigned int>(time(NULL)));
 
-	std::ofstream outfile("levelgen_result_size_diameter.txt", std::ifstream::out | std::ifstream::app);
-	if (outfile.is_open())
-	{
-		outfile << "# Diameter\n";
-		outfile.close();
-	}
-
 	//* ALEX experiment, run the level gen 20 times! *//
-	for (int i = 0; i < 1000; i++)
+	//std::vector<int> diameters;
+
+	std::array<int, 15> categorySortedDataA;
+	categorySortedDataA.fill(0);
+	std::array<int, 15> categorySortedDataB;
+	categorySortedDataB.fill(0);
+
+	for (int i = 0; i < 10000; i++)
 	{
-		outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
-		if (outfile.is_open())
-		{
-			outfile << "###\n";
-			outfile.close();
-		}
+		//outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
+		//if (outfile.is_open())
+		//{
+		//	outfile << "###\n";
+		//	outfile.close();
+		//}
 		m_hasGeneratedLevel = false;
+		m_useModifiedVersion = false;
 		generateLevel(8);
-		
-		outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
-		if (outfile.is_open())
-		{
-			outfile << "size " << m_currentLevelSize << "\ndiameter " << m_levelTreeDiameter << "\n";
-			outfile.close();
-		}
-		outfile = std::ofstream("levelgen_result_size_diameter.txt",  std::ifstream::out | std::ifstream::app);
+		categorySortedDataA[m_levelTreeDiameter/1000]++;
+
+		//outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
+		//if (outfile.is_open())
+		//{
+		//	outfile << "size " << m_currentLevelSize << "\ndiameter " << m_levelTreeDiameter << "\n";
+		//	outfile.close();
+		//}
+		/*outfile = std::ofstream("levelgen_result_size_diameter.txt",  std::ifstream::out | std::ifstream::app);
 		if (outfile.is_open())
 		{
 			outfile << (i+1) << " " << m_levelTreeDiameter << "\n";
 			//outfile << (i+1) << " " << m_currentLevelSize << " " << m_levelTreeDiameter << "\n";
 			outfile.close();
-		}
+		}*/
+
+		m_hasGeneratedLevel = false;
+		m_useModifiedVersion = true;
+		generateLevel(8);
+		categorySortedDataB[m_levelTreeDiameter/1000]++;
+		//diameters.push_back(m_levelTreeDiameter);
 	}
+
+	//sort(diameters.begin(), diameters.end());
+	std::ofstream outfile("levelgen_result_size_diameter.txt", std::ifstream::out | std::ifstream::app);
+	if (outfile.is_open())
+	{
+		outfile << "# Diameter\n";
+
+		for (int i = 0; i < 15; i++)
+		{
+			string interval = "\"" + toString(i*1000) + " - " + toString((i+1)*1000-1) + "\"";
+			outfile << interval << " " << categorySortedDataA[i] << " " << categorySortedDataB[i] << "\n";
+			//outfile << (i+1) << " " << m_currentLevelSize << " " << m_levelTreeDiameter << "\n";
+		}
+		outfile.close();
+	}
+
 	std::cout << "Done with init and experiment\n";
 	//m_world->deleteEntity(p_entity);
 }
@@ -428,29 +452,31 @@ void LevelGenSystem::generatePiecesOnPiece( LevelPiece* p_targetPiece,
 				// A new random piece will be selected as long as there is one to select, that is smaller than the previous 
 				if (!success)
 				{
-#ifdef EXPERIMENT_MODIFIED_LEVELGEN
-					int upperBound = 0;
-					for (int i = 0; i < m_sortedResourceIds.size(); i++)
-						if (m_sortedResourceIds[i] == pieceType)
-							upperBound = i;
-
-					if (upperBound > 0)
+					if (m_useModifiedVersion)
 					{
-						string info = "The piece type " + toString(pieceType) + " with radius " + toString(piece->getBoundingSphere().radius) + " is too large\n";
-						m_world->getOutputLogger()
-							->write(info.c_str());
-
-						pieceType = m_sortedResourceIds[rand() % upperBound];
-						
-						info = "Attempting to select a new piece type: " + toString(pieceType) + "\n";
-						m_world->getOutputLogger()
-							->write(info.c_str());
+						int upperBound = 0;
+						for (int i = 0; i < m_sortedResourceIds.size(); i++)
+							if (m_sortedResourceIds[i] == pieceType)
+								upperBound = i;
+	
+						if (upperBound > 0)
+						{
+							string info = "The piece type " + toString(pieceType) + " with radius " + toString(piece->getBoundingSphere().radius) + " is too large\n";
+							m_world->getOutputLogger()
+								->write(info.c_str());
+	
+							pieceType = m_sortedResourceIds[rand() % upperBound];
+							
+							info = "Attempting to select a new piece type: " + toString(pieceType) + "\n";
+							m_world->getOutputLogger()
+								->write(info.c_str());
+						}
+						else
+							outOfOptions = true;
 					}
 					else
 						outOfOptions = true;
-#else
-					outOfOptions = true;
-#endif
+
 					delete piece;
 					piece = nullptr;
 				}
