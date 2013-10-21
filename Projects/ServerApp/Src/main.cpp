@@ -18,12 +18,17 @@ int main(int argc, char** argv)
 	{
 		outfile.close();
 	}
-	outfile = std::ofstream("levelgen_result_size_diameter.txt", std::ifstream::trunc);
+	outfile = std::ofstream("levelgen_result_diameter_interval.txt", std::ifstream::trunc);
 	if (outfile.is_open())
 	{
 		outfile.close();
 	}
 	outfile = std::ofstream("levelgen_out_hiearchy.txt", std::ifstream::trunc);
+	if (outfile.is_open())
+	{
+		outfile.close();
+	}
+	outfile = std::ofstream("levelgen_result_diameter_cluster.txt", std::ifstream::trunc);
 	if (outfile.is_open())
 	{
 		outfile.close();

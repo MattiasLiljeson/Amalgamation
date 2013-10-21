@@ -156,64 +156,117 @@ void LevelGenSystem::inserted( Entity* p_entity )
 	m_readyToRun = true;
 	srand(static_cast<unsigned int>(time(NULL)));
 
+	std::cout << "Done with init\n";
+
 	//* ALEX experiment, run the level gen 20 times! *//
 	//std::vector<int> diameters;
 
-	std::array<int, 15> categorySortedDataA;
+	const int amountOfRuns = 10000;
+	const int intervalSize = 18;
+	const int intervalSpread = 1000;
+
+	// Data collected for normal algorithm
+	std::array<int, intervalSize> categorySortedDataA;
 	categorySortedDataA.fill(0);
-	std::array<int, 15> categorySortedDataB;
+
+	int minA = INT_MAX;
+	int maxA = INT_MIN;
+	int avgA = 0;
+	int sumA = 0;
+
+	// Data collected for modified algorithm
+	std::array<int, intervalSize> categorySortedDataB;
 	categorySortedDataB.fill(0);
 
-	for (int i = 0; i < 10000; i++)
-	{
-		//outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
-		//if (outfile.is_open())
-		//{
-		//	outfile << "###\n";
-		//	outfile.close();
-		//}
-		m_hasGeneratedLevel = false;
-		m_useModifiedVersion = false;
-		generateLevel(8);
-		categorySortedDataA[m_levelTreeDiameter/1000]++;
+	int minB = INT_MAX;
+	int maxB = INT_MIN;
+	int avgB = 0;
+	int sumB = 0;
 
-		//outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
-		//if (outfile.is_open())
-		//{
-		//	outfile << "size " << m_currentLevelSize << "\ndiameter " << m_levelTreeDiameter << "\n";
-		//	outfile.close();
-		//}
-		/*outfile = std::ofstream("levelgen_result_size_diameter.txt",  std::ifstream::out | std::ifstream::app);
-		if (outfile.is_open())
-		{
-			outfile << (i+1) << " " << m_levelTreeDiameter << "\n";
-			//outfile << (i+1) << " " << m_currentLevelSize << " " << m_levelTreeDiameter << "\n";
-			outfile.close();
-		}*/
-
-		m_hasGeneratedLevel = false;
-		m_useModifiedVersion = true;
-		generateLevel(8);
-		categorySortedDataB[m_levelTreeDiameter/1000]++;
-		//diameters.push_back(m_levelTreeDiameter);
-	}
-
-	//sort(diameters.begin(), diameters.end());
-	std::ofstream outfile("levelgen_result_size_diameter.txt", std::ifstream::out | std::ifstream::app);
+	std::ofstream outfile("levelgen_result_diameter_cluster.txt", std::ifstream::out | std::ifstream::app);
 	if (outfile.is_open())
 	{
-		outfile << "# Diameter\n";
-
-		for (int i = 0; i < 15; i++)
+		outfile << "# Sample Normal Modified\n";
+		// Run experiment, collect diameter data, and find min/max of data
+		for (int i = 0; i < amountOfRuns; i++)
 		{
-			string interval = "\"" + toString(i*1000) + " - " + toString((i+1)*1000-1) + "\"";
+			//outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
+			//if (outfile.is_open())
+			//{
+			//	outfile << "###\n";
+			//	outfile.close();
+			//}
+			m_hasGeneratedLevel = false;
+			m_useModifiedVersion = false;
+			generateLevel(8);
+			categorySortedDataA[m_levelTreeDiameter/intervalSpread]++;
+		
+			if (minA > m_levelTreeDiameter)
+				minA = m_levelTreeDiameter;
+			if (maxA < m_levelTreeDiameter)
+				maxA = m_levelTreeDiameter;
+			sumA += m_levelTreeDiameter;
+			
+			outfile << (i+1) << " " << m_levelTreeDiameter;
+
+			//outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
+			//if (outfile.is_open())
+			//{
+			//	outfile << "size " << m_currentLevelSize << "\ndiameter " << m_levelTreeDiameter << "\n";
+			//	outfile.close();
+			//}
+			/*outfile = std::ofstream("levelgen_result_size_diameter.txt",  std::ifstream::out | std::ifstream::app);
+			if (outfile.is_open())
+			{
+				outfile << (i+1) << " " << m_levelTreeDiameter << "\n";
+				//outfile << (i+1) << " " << m_currentLevelSize << " " << m_levelTreeDiameter << "\n";
+				outfile.close();
+			}*/
+
+			m_hasGeneratedLevel = false;
+			m_useModifiedVersion = true;
+			generateLevel(8);
+			categorySortedDataB[m_levelTreeDiameter/intervalSpread]++;
+
+			if (minB > m_levelTreeDiameter)
+				minB = m_levelTreeDiameter;
+			if (maxB < m_levelTreeDiameter)
+				maxB = m_levelTreeDiameter;
+			sumB += m_levelTreeDiameter;
+
+			outfile << " " << m_levelTreeDiameter << "\n";
+
+			//diameters.push_back(m_levelTreeDiameter);
+		}
+		avgA = static_cast<int>(1.0 * sumA / amountOfRuns);
+		avgB = static_cast<int>(1.0 * sumB / amountOfRuns);
+
+		outfile << "# avg " << avgA << " " << avgB << "\n";
+		outfile << "# min " << minA << " " << minB << "\n";
+		outfile << "# max " << maxA << " " << maxB << "\n";
+
+		outfile.close();
+
+		std::cout << "Done with generating and collecting data, and min/max/avg\n";
+		std::cout << "Done with writing diameter data to file [pass 1]\n";
+	}
+	//sort(diameters.begin(), diameters.end());
+	outfile = std::ofstream("levelgen_result_diameter_interval.txt", std::ifstream::out | std::ifstream::app);
+	if (outfile.is_open())
+	{
+		outfile << "# DiameterInterval Normal Modified\n";
+
+		for (int i = 0; i < intervalSize; i++)
+		{
+			string interval = "\"" + toString(i*intervalSpread) + "-" + toString((i+1)*intervalSpread-1) + "\"";
 			outfile << interval << " " << categorySortedDataA[i] << " " << categorySortedDataB[i] << "\n";
 			//outfile << (i+1) << " " << m_currentLevelSize << " " << m_levelTreeDiameter << "\n";
 		}
 		outfile.close();
 	}
+	std::cout << "Done with writing diameter data to file [pass 2]\n";
 
-	std::cout << "Done with init and experiment\n";
+	std::cout << "Done with experiment\n";
 	//m_world->deleteEntity(p_entity);
 }
 
