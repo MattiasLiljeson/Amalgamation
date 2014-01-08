@@ -1,4 +1,4 @@
-#License
+#License, The BSD 3-Clause License
 
 Copyright (c) 2013, Polyhedron
 All rights reserved.
