@@ -18,4 +18,4 @@ The players can use weapon modules to shoot away modules from other players’ s
 Victory during a round can be asserted by collecting and using as many modules as possible and preventing your opponents from doing the same. The player with the most modules collected at the end, most opponents shot and/or with the most modules used throughout the entire round wins the game.
 
 ## License
-Please see the license.md document
+The license can be seen in the the license.md document. The ES Project contained in Projects/ES is a port of the Artemis game engine by GAMADU.COM. The license for the Artemis game engine by GAMADU is contained in ArtemisLicense.txt
