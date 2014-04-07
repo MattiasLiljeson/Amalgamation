@@ -74,11 +74,11 @@ c LevelInfo
 	d i m_pieceWeight				3
 	d s piece end
 	# Piece 5
-	d s piece begin
-	d s m_pieceAssemblageFileName 	sandChamberServer.asd
-	d s m_pieceModelName			World_Sand.agl
-	d i m_pieceWeight 				0
-	d s piece end
+	#d s piece begin
+	#d s m_pieceAssemblageFileName 	sandChamberServer.asd
+	#d s m_pieceModelName			World_Sand.agl
+	#d i m_pieceWeight 				0
+	#d s piece end
 	# Piece 6
 	d s piece begin
 	d s m_pieceAssemblageFileName 	smallchamber1Server.asd

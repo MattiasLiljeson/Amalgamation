@@ -23,9 +23,9 @@ c LevelInfo
 	d s m_pieceAssemblageFileName ancientChamberClient.asd
 	d s piece end
 	# Piece 5
-	d s piece begin
-	d s m_pieceAssemblageFileName sandChamberClient.asd
-	d s piece end
+	#d s piece begin
+	#d s m_pieceAssemblageFileName sandChamberClient.asd
+	#d s piece end
 	# Piece 6
 	d s piece begin
 	d s m_pieceAssemblageFileName smallchamber1Client.asd

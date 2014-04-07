@@ -184,18 +184,20 @@ void LevelGenSystem::inserted( Entity* p_entity )
 	int sumB = 0;
 
 	std::ofstream outfile("levelgen_result_diameter_cluster.txt", std::ifstream::out | std::ifstream::app);
-	if (outfile.is_open())
+	//std::ofstream unityOut("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
+	if (outfile.is_open())// && unityOut.is_open())
 	{
 		outfile << "# Sample Normal Modified\n";
 		// Run experiment, collect diameter data, and find min/max of data
 		for (int i = 0; i < amountOfRuns; i++)
 		{
-			//outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
-			//if (outfile.is_open())
+			//std::ofstream unityOut("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
+			//if (unityOut.is_open())
 			//{
-			//	outfile << "###\n";
-			//	outfile.close();
+			//	unityOut << "###\n";
+			//	unityOut.close();
 			//}
+
 			m_hasGeneratedLevel = false;
 			m_useModifiedVersion = false;
 			generateLevel(8);
@@ -222,7 +224,12 @@ void LevelGenSystem::inserted( Entity* p_entity )
 				//outfile << (i+1) << " " << m_currentLevelSize << " " << m_levelTreeDiameter << "\n";
 				outfile.close();
 			}*/
-
+			//unityOut = std::ofstream("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
+			//if (unityOut.is_open())
+			//{
+			//	unityOut << "###\n";
+			//	unityOut.close();
+			//}
 			m_hasGeneratedLevel = false;
 			m_useModifiedVersion = true;
 			generateLevel(8);
@@ -246,6 +253,7 @@ void LevelGenSystem::inserted( Entity* p_entity )
 		outfile << "# max " << maxA << " " << maxB << "\n";
 
 		outfile.close();
+		//unityOut.close();
 
 		std::cout << "Done with generating and collecting data, and min/max/avg\n";
 		std::cout << "Done with writing diameter data to file [pass 1]\n";
@@ -430,12 +438,12 @@ Entity* LevelGenSystem::createEntity( LevelPiece* p_piece)
 			matlabOut << "surf(" << pos.x << "+x*" << radius << ", " << pos.y << "+y*" << radius << ", " << pos.z << "+z*" << radius << ");\n";
 			matlabOut.close();
 		}*/
-		std::ofstream outfile("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
-		if (outfile.is_open())
-		{
-			outfile << spherePos.x << " " << spherePos.y << " " << spherePos.z << " " << (radius*2) << " " << p_piece->getTypeId() << "\n";
-			outfile.close();
-		}
+		//std::ofstream outfile("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
+		//if (outfile.is_open())
+		//{
+		//	outfile << spherePos.x << " " << spherePos.y << " " << spherePos.z << " " << (radius*2) << " " << p_piece->getTypeId() << "\n";
+		//	outfile.close();
+		//}
 
 		pieceRoot->connectedRootPieces.resize(p_piece->getMaxChildCount(), -1);
 		for (unsigned int i = 0; i < p_piece->getMaxChildCount(); i++)
