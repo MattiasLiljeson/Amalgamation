@@ -28,6 +28,11 @@
 #include <OutputLogger.h>
 #include <numeric>
 #include <array>
+#include "PreciseTimer.h"
+#include <valarray>
+#include <climits>
+
+#include <FreeImage.h>
 
 LevelGenSystem::LevelGenSystem(TcpServer* p_server) 
 	: EntitySystem(SystemType::LevelGenSystem, 1, ComponentType::LevelInfo)
@@ -164,6 +169,8 @@ void LevelGenSystem::inserted( Entity* p_entity )
 	const int amountOfRuns = 10000;
 	const int intervalSize = 18;
 	const int intervalSpread = 1000;
+	const int heatmapWidth = 128;
+	const int heatmapHeight = 128;
 
 	// Data collected for normal algorithm
 	std::array<int, intervalSize> categorySortedDataA;
@@ -183,11 +190,31 @@ void LevelGenSystem::inserted( Entity* p_entity )
 	int avgB = 0;
 	int sumB = 0;
 
+	int previousPercentDone = -1;
+
+	//short matrix[1000][1000];
+	//memset(matrix, 0, sizeof(matrix));
+	//std::valarray<short> data(1000 * 1000);
+	std::vector<std::pair<short, float>> data;
+	data.resize(amountOfRuns, std::make_pair(0, 0.0f));
+	//data.fill(std::make_pair(0, 0.0f));
+	std::pair<short, float> maxData = std::make_pair(SHRT_MIN, SHRT_MIN);
+	std::pair<short, float> minData = std::make_pair(SHRT_MAX, SHRT_MAX);
+
+	std::valarray<short> diameterData(amountOfRuns);
+	std::valarray<float> timeData(amountOfRuns);
+
+	PreciseTimer timer;
+	float elapsedTime = 0;
+	std::cout << "Begin [pass 1]\n";
+
+	std::valarray<short> matrix(heatmapWidth * heatmapHeight);
+
 	std::ofstream outfile("levelgen_result_diameter_cluster.txt", std::ifstream::out | std::ifstream::app);
 	//std::ofstream unityOut("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
 	if (outfile.is_open())// && unityOut.is_open())
 	{
-		outfile << "# Sample Normal Modified\n";
+		outfile << "# Sample\tNormal(d)\tNormal(t)\tModified(d)\tModified(t)\n";
 		// Run experiment, collect diameter data, and find min/max of data
 		for (int i = 0; i < amountOfRuns; i++)
 		{
@@ -200,16 +227,39 @@ void LevelGenSystem::inserted( Entity* p_entity )
 
 			m_hasGeneratedLevel = false;
 			m_useModifiedVersion = false;
+			timer.start();
 			generateLevel(8);
+			elapsedTime = timer.stop();
 			categorySortedDataA[m_levelTreeDiameter/intervalSpread]++;
 		
-			if (minA > m_levelTreeDiameter)
+			if (minData.first > m_levelTreeDiameter)
+			{
 				minA = m_levelTreeDiameter;
-			if (maxA < m_levelTreeDiameter)
+				minData.first = m_levelTreeDiameter;
+			}
+			if (minData.first < m_levelTreeDiameter)
+			{
 				maxA = m_levelTreeDiameter;
+				maxData.first = m_levelTreeDiameter;
+			}
 			sumA += m_levelTreeDiameter;
 			
-			outfile << (i+1) << " " << m_levelTreeDiameter;
+			if (minData.second > elapsedTime)
+			{
+				minData.second = elapsedTime;
+			}
+			if (minData.second < elapsedTime)
+			{
+				maxData.second = elapsedTime;
+			}
+
+			data[i].first	= m_levelTreeDiameter;
+			data[i].second	= elapsedTime;
+
+			diameterData[i] = m_levelTreeDiameter;
+			timeData[i] = elapsedTime;
+
+			outfile << (i+1) << "\t" << m_levelTreeDiameter << "\t" << elapsedTime;
 
 			//outfile = std::ofstream("levelgen_out_spheres.txt", std::ifstream::out | std::ifstream::app);
 			//if (outfile.is_open())
@@ -232,7 +282,11 @@ void LevelGenSystem::inserted( Entity* p_entity )
 			//}
 			m_hasGeneratedLevel = false;
 			m_useModifiedVersion = true;
+			
+			timer.start();
 			generateLevel(8);
+			elapsedTime = timer.stop();
+			
 			categorySortedDataB[m_levelTreeDiameter/intervalSpread]++;
 
 			if (minB > m_levelTreeDiameter)
@@ -241,16 +295,67 @@ void LevelGenSystem::inserted( Entity* p_entity )
 				maxB = m_levelTreeDiameter;
 			sumB += m_levelTreeDiameter;
 
-			outfile << " " << m_levelTreeDiameter << "\n";
+			outfile << "\t" << m_levelTreeDiameter << "\t" << elapsedTime << "\n";
 
+			int percentDone = 100 * (float)i / amountOfRuns;
+			if (previousPercentDone != percentDone)
+			{
+				std::cout << percentDone << "%\n";
+				previousPercentDone = percentDone;
+			}
 			//diameters.push_back(m_levelTreeDiameter);
 		}
 		avgA = static_cast<int>(1.0 * sumA / amountOfRuns);
 		avgB = static_cast<int>(1.0 * sumB / amountOfRuns);
 
-		outfile << "# avg " << avgA << " " << avgB << "\n";
-		outfile << "# min " << minA << " " << minB << "\n";
-		outfile << "# max " << maxA << " " << maxB << "\n";
+#undef min
+#undef max
+		std::cout << "Begin [pass 2]\n";
+		// Interval should be between min/max
+
+		short maxDiameter	= diameterData.max();
+		short minDiameter	= diameterData.min();
+		short diameterDelta = maxDiameter - minDiameter;
+
+		float maxTime	= timeData.max();
+		float minTime	= timeData.min();
+		float timeDelta = maxTime - minTime;
+
+		int heatmapLastRow = heatmapWidth - 1;
+		int heatmapLastCol = heatmapHeight - 1;
+
+		const float overrideMaxDiameter = 17000.0f;
+		const float	overrideMaxTime		= 0.02f;
+
+		previousPercentDone = -1;
+		// Filter intervals and add them to a matrix
+		for (int i = 0; i < amountOfRuns; i++)
+		{
+			// Find proper x and y coordinates
+			// x = time data
+			// y = diameter data
+
+			//int x = ((timeData[i] - minTime) / timeDelta) * heatmapWidth;
+			//int y = ((diameterData[i] - minDiameter) / (float)diameterDelta) * heatmapHeight;
+			int x = timeData[i] / overrideMaxTime * heatmapWidth;
+			int y = diameterData[i] / overrideMaxDiameter * heatmapHeight;
+
+			matrix[y * heatmapWidth + x]++;
+
+			int percentDone = 100 * (float)i / amountOfRuns;
+			if (previousPercentDone != percentDone)
+			{
+				std::cout << percentDone << "%\n";
+				previousPercentDone = percentDone;
+			}
+		}
+		//
+		short peak = matrix.max();
+		matrix = (matrix * (short)255) / peak;
+
+		outfile << "# avg\t" << avgA << "\t" << avgB << "\n";
+		outfile << "# min\t" << minA << "\t" << minB << "\n";
+		outfile << "# max\t" << maxA << "\t" << maxB << "\n";
 
 		outfile.close();
 		//unityOut.close();
@@ -275,6 +380,36 @@ void LevelGenSystem::inserted( Entity* p_entity )
 	std::cout << "Done with writing diameter data to file [pass 2]\n";
 
 	std::cout << "Done with experiment\n";
+	std::cout << "Saving bitmap:\n";
+	FIBITMAP* image = FreeImage_Allocate(heatmapWidth, heatmapHeight, 32);
+	RGBQUAD color;
+
+	previousPercentDone = -1;
+	if (image)
+	{
+		for (int y = 0; y < heatmapHeight; y++)
+		{
+			for (int x = 0; x < heatmapWidth; x++)
+			{
+				int i = y * heatmapWidth + x;
+
+				color.rgbBlue	= matrix[i];
+				color.rgbGreen	= matrix[i];
+				color.rgbRed	= matrix[i];
+
+				FreeImage_SetPixelColor(image, x, y, &color);
+		
+				int percentDone = 100 * (float)i / (heatmapWidth * heatmapHeight);
+				if (previousPercentDone != percentDone)
+				{
+					std::cout << percentDone << "%\n";
+					previousPercentDone = percentDone;
+				}
+			}
+		}
+		FreeImage_Save(FIF_BMP, image, "heatmap.bmp", 0);
+		FreeImage_Unload(image);
+	}
 	//m_world->deleteEntity(p_entity);
 }
 
@@ -308,7 +443,7 @@ void LevelGenSystem::generateLevel(int p_nrOfPlayers)
 
 			m_nrOfPlayers = p_nrOfPlayers;
 			generateLevelPieces(m_levelInfo->getBranchCount(), m_levelInfo->doRandomStartRotation());
-			createLevelEntities();
+			//createLevelEntities();
 			m_hasGeneratedLevel = true;
 		}
 		else
@@ -349,7 +484,7 @@ void LevelGenSystem::generateLevelPieces( int p_maxDepth, bool p_doRandomStartRo
 	vector<LevelPiece*> pieces;
 	pieces.push_back(piece);
 	m_generatedPieces.push_back(piece);
-	printAddedLevelPiece(piece);
+	//printAddedLevelPiece(piece);
 
 	int usedMaxDepth;
 
